@@ -1181,7 +1181,7 @@ const int aiAccessorySocketPutPct[ITEM_ACCESSORY_SOCKET_MAX_NUM + 1] =
 };
 // END_OF_ACCESSORY_REFINE
 
-#include "../../common/length.h"
+#include "common/length.h"
 // from import_item_proto.c
 typedef struct SValueName
 {

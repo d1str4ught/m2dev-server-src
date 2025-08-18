@@ -97,7 +97,7 @@ END_OF_TIMER_EVENT:
 		info->name		= M2_NEW char[nameCapacity];
 
 		if (info->name)
-			strlcpy(info->name, name, nameCapacity);
+			std::strncpy(info->name, name, nameCapacity);
 
 		return event_create(quest_server_timer_event, info, ltime_cycle);
 	}
@@ -115,7 +115,7 @@ END_OF_TIMER_EVENT:
 		info->name		= M2_NEW char[nameCapacity];
 
 		if (info->name)
-			strlcpy(info->name, name, nameCapacity);
+			std::strncpy(info->name, name, nameCapacity);
 
 		sys_log(0, "QUEST timer name %s cycle %d pc %u npc %u loop? %d", name ? name : "<noname>", ltime_cycle, player_id, npc_id, loop ? 1 : 0);
 

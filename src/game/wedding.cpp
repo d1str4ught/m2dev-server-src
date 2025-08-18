@@ -68,7 +68,7 @@ namespace marriage
 	{
 		if (m_pEndEvent)
 		{
-			sys_err("WeddingMap::SetEnded - ALREADY EndEvent(m_pEndEvent=%x)", get_pointer(m_pEndEvent));
+			sys_err("WeddingMap::SetEnded - ALREADY EndEvent(m_pEndEvent=%x)", m_pEndEvent.get());
 			return;
 		}
 

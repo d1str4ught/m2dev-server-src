@@ -4,7 +4,7 @@
 
 #include <unordered_map>
 
-#include "../../common/stl.h"
+#include "common/stl.h"
 
 struct ForkedSungziMapInfo
 {

@@ -1,4 +1,4 @@
-#include "stdafx.h"
+Ôªø#include "stdafx.h"
 #include "empire_text_convert.h"
 
 namespace 
@@ -56,7 +56,7 @@ void ConvertEmpireText(DWORD dwEmpireID, char* szText, size_t len, int iPct)
 			{
 				if (g_iUseLocale)
 				{
-					static char s_cChinaTable[][3] = {"°Ú","££","£§","°˘","°" };
+					static char s_cChinaTable[][4] = { "Í∞Ä","ÎÇò","Îã§","Îùº","Îßà" };
 					int n = number(0, 4);
 					pbText[0] = s_cChinaTable[n][0];
 					pbText[1] = s_cChinaTable[n][1];

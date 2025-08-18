@@ -1,5 +1,5 @@
 ﻿#include "stdafx.h"
-#include "../../common/stl.h"
+#include "common/stl.h"
 #include "constants.h"
 #include "packet_info.h"
 // #include "HackShield_Impl.h"

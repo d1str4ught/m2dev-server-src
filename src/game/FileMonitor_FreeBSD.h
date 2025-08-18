@@ -1,6 +1,5 @@
-﻿#ifndef FILEMONITOR_FREEBSD_INCLUDED
-#define FILEMONITOR_FREEBSD_INCLUDED
-
+﻿#pragma once
+#ifdef OS_FREEBSD
 #include "IFileMonitor.h" 
 #include <unistd.h>
 #include <sys/event.h>
@@ -42,6 +41,4 @@ private:
 
 	int					m_KernelEventQueue;
 };
-
-
-#endif //FILEMONITOR_FREEBSD_INCLUDED
+#endif

@@ -165,7 +165,7 @@ ACMD(do_transfer)
 			TPacketGGTransfer pgg;
 
 			pgg.bHeader = HEADER_GG_TRANSFER;
-			strlcpy(pgg.szName, arg1, sizeof(pgg.szName));
+			std::strncpy(pgg.szName, arg1, sizeof(pgg.szName));
 			pgg.lX = ch->GetX();
 			pgg.lY = ch->GetY();
 
@@ -258,7 +258,7 @@ bool FindInString(const char * c_pszFind, const char * c_pszIn)
 
 		do
 		{
-			strlcpy(sz, c, MIN(sizeof(sz), (p - c) + 1));
+			std::strncpy(sz, c, MIN(sizeof(sz), (p - c) + 1));
 
 			if (!strncasecmp(c_pszFind, sz, strlen(c_pszFind)))
 				return true;
@@ -266,7 +266,7 @@ bool FindInString(const char * c_pszFind, const char * c_pszIn)
 			c = p + 1;
 		} while ((p = strchr(c, '|')));
 
-		strlcpy(sz, c, sizeof(sz));
+		std::strncpy(sz, c, sizeof(sz));
 
 		if (!strncasecmp(c_pszFind, sz, strlen(c_pszFind)))
 			return true;
@@ -1599,7 +1599,7 @@ ACMD(do_makeguild)
 	memset(&cp, 0, sizeof(cp));
 
 	cp.master = ch;
-	strlcpy(cp.name, arg1, sizeof(cp.name));
+	std::strncpy(cp.name, arg1, sizeof(cp.name));
 
 	if (!check_name(cp.name))
 	{
@@ -2719,7 +2719,7 @@ ACMD(do_vote_block_chat)
 			TPacketGGBlockChat p;
 
 			p.bHeader = HEADER_GG_BLOCK_CHAT;
-			strlcpy(p.szName, name, sizeof(p.szName));
+			std::strncpy(p.szName, name, sizeof(p.szName));
 			p.lBlockDuration = lBlockDuration;
 			P2P_MANAGER::instance().Send(&p, sizeof(TPacketGGBlockChat));
 		}
@@ -2727,7 +2727,7 @@ ACMD(do_vote_block_chat)
 		{
 			TPacketBlockChat p;
 
-			strlcpy(p.szName, name, sizeof(p.szName));
+			std::strncpy(p.szName, name, sizeof(p.szName));
 			p.lDuration = lBlockDuration;
 			db_clientdesc->DBPacket(HEADER_GD_BLOCK_CHAT, ch ? ch->GetDesc()->GetHandle() : 0, &p, sizeof(p));
 
@@ -2789,7 +2789,7 @@ ACMD(do_block_chat)
 			TPacketGGBlockChat p;
 
 			p.bHeader = HEADER_GG_BLOCK_CHAT;
-			strlcpy(p.szName, name, sizeof(p.szName));
+			std::strncpy(p.szName, name, sizeof(p.szName));
 			p.lBlockDuration = lBlockDuration;
 			P2P_MANAGER::instance().Send(&p, sizeof(TPacketGGBlockChat));
 		}
@@ -2797,7 +2797,7 @@ ACMD(do_block_chat)
 		{
 			TPacketBlockChat p;
 
-			strlcpy(p.szName, name, sizeof(p.szName));
+			std::strncpy(p.szName, name, sizeof(p.szName));
 			p.lDuration = lBlockDuration;
 			db_clientdesc->DBPacket(HEADER_GD_BLOCK_CHAT, ch ? ch->GetDesc()->GetHandle() : 0, &p, sizeof(p));
 		}

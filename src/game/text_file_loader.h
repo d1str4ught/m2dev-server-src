@@ -1,8 +1,8 @@
 ﻿#ifndef __INC_METIN_II_TEXTFILELOADER_H__
 #define __INC_METIN_II_TEXTFILELOADER_H__
 
-#include "../../common/d3dtype.h"
-#include "../../common/pool.h"
+#include "common/d3dtype.h"
+#include "common/pool.h"
 #include "file_loader.h"
 
 typedef std::map<std::string, TTokenVector>	TTokenVectorMap;

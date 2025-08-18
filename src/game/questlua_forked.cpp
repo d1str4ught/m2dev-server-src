@@ -2,7 +2,7 @@
 
 #include "threeway_war.h"
 
-#include "../../common/stl.h"
+#include "common/stl.h"
 
 #include "questlua.h"
 #include "questmanager.h"

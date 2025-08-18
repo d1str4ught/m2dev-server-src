@@ -135,7 +135,7 @@ void CInputAuth::Login(LPDESC d, const char * c_pData)
 	trim_and_lower(pinfo->login, login, sizeof(login));
 
 	char passwd[PASSWD_MAX_LEN + 1];
-	strlcpy(passwd, pinfo->passwd, sizeof(passwd));
+	std::strncpy(passwd, pinfo->passwd, sizeof(passwd));
 
 	sys_log(0, "InputAuth::Login : %s(%d) desc %p",
 			login, strlen(login), get_pointer(d));
@@ -154,7 +154,7 @@ void CInputAuth::Login(LPDESC d, const char * c_pData)
 		TPacketGCLoginFailure failurePacket;
 
 		failurePacket.header = HEADER_GC_LOGIN_FAILURE;
-		strlcpy(failurePacket.szStatus, "SHUTDOWN", sizeof(failurePacket.szStatus));
+		std::strncpy(failurePacket.szStatus, "SHUTDOWN", sizeof(failurePacket.szStatus));
 
 		d->Packet(&failurePacket, sizeof(failurePacket));
 		return;
@@ -287,7 +287,7 @@ void CInputAuth::LoginOpenID(LPDESC d, const char * c_pData)
 	trim_and_lower(pinfo->login, login, sizeof(login));
 
 	char passwd[PASSWD_MAX_LEN + 1];
-	strlcpy(passwd, pinfo->passwd, sizeof(passwd));
+	std::strncpy(passwd, pinfo->passwd, sizeof(passwd));
 
 	sys_log(0, "InputAuth::Login : %s(%d) desc %p",
 			login, strlen(login), get_pointer(d));
@@ -306,7 +306,7 @@ void CInputAuth::LoginOpenID(LPDESC d, const char * c_pData)
 		TPacketGCLoginFailure failurePacket;
 
 		failurePacket.header = HEADER_GC_LOGIN_FAILURE;
-		strlcpy(failurePacket.szStatus, "SHUTDOWN", sizeof(failurePacket.szStatus));
+		std::strncpy(failurePacket.szStatus, "SHUTDOWN", sizeof(failurePacket.szStatus));
 
 		d->Packet(&failurePacket, sizeof(failurePacket));
 		return;

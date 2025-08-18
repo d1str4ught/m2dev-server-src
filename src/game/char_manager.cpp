@@ -17,8 +17,6 @@
 #include "locale_service.h"
 // #include "XTrapManager.h"
 
-#include <boost/bind.hpp>
-
 CHARACTER_MANAGER::CHARACTER_MANAGER() :
 	m_iVIDCount(0),
 	m_pkChrSelectedStone(NULL),
@@ -655,7 +653,7 @@ void CHARACTER_MANAGER::Update(int iPulse)
 			// 컨테이너 복사
 			CHARACTER_VECTOR v;
 			v.reserve(m_map_pkPCChr.size());
-			transform(m_map_pkPCChr.begin(), m_map_pkPCChr.end(), back_inserter(v), boost::bind(&NAME_MAP::value_type::second, _1));
+			transform(m_map_pkPCChr.begin(), m_map_pkPCChr.end(), back_inserter(v), std::bind(&NAME_MAP::value_type::second, std::placeholders::_1));
 			if (0 == (iPulse % PASSES_PER_SEC(5)))
 			{
 				FuncUpdateAndResetChatCounter f;
@@ -783,9 +781,7 @@ void CHARACTER_MANAGER::UnregisterForMonsterLog(LPCHARACTER ch)
 
 void CHARACTER_MANAGER::PacketMonsterLog(LPCHARACTER ch, const void* buf, int size)
 {
-	itertype(m_set_pkChrMonsterLog) it;
-
-	for (it = m_set_pkChrMonsterLog.begin(); it!=m_set_pkChrMonsterLog.end();++it)
+	for (auto it = m_set_pkChrMonsterLog.begin(); it!=m_set_pkChrMonsterLog.end();++it)
 	{
 		LPCHARACTER c = *it;
 
@@ -880,10 +876,9 @@ bool CHARACTER_MANAGER::GetCharactersByRaceNum(DWORD dwRaceNum, CharacterVectorI
 LPCHARACTER CHARACTER_MANAGER::FindSpecifyPC(unsigned int uiJobFlag, long lMapIndex, LPCHARACTER except, int iMinLevel, int iMaxLevel)
 {
 	LPCHARACTER chFind = NULL;
-	itertype(m_map_pkChrByPID) it;
 	int n = 0;
 
-	for (it = m_map_pkChrByPID.begin(); it != m_map_pkChrByPID.end(); ++it)
+	for (auto it = m_map_pkChrByPID.begin(); it != m_map_pkChrByPID.end(); ++it)
 	{
 		LPCHARACTER ch = it->second;
 

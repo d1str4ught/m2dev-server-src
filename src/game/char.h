@@ -3,7 +3,7 @@
 
 #include <unordered_map>
 
-#include "../../common/stl.h"
+#include "common/stl.h"
 #include "entity.h"
 #include "FSM.h"
 #include "horse_rider.h"
@@ -1938,18 +1938,6 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 
 	private:
 		DWORD m_dwLastGoldDropTime;
-
-	// public:
-		// void StartHackShieldCheckCycle(int seconds);
-		// void StopHackShieldCheckCycle();
-
-		// bool GetHackShieldCheckMode() const { return m_HackShieldCheckMode; }
-		// void SetHackShieldCheckMode(bool m) { m_HackShieldCheckMode = m; }
-
-		// LPEVENT m_HackShieldCheckEvent;
-
-	// private:
-		// bool	m_HackShieldCheckMode;
 
 	public:
 		void AutoRecoveryItemProcess (const EAffectTypes);

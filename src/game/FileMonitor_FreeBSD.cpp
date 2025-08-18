@@ -1,6 +1,7 @@
 ﻿#include "stdafx.h"
+#ifdef OS_FREEBSD
 #include "FileMonitor_FreeBSD.h"
-#include "../../libthecore/include/log.h"
+#include "libthecore/log.h"
 
 
 #define INVALID_KERNEL_EVENT	-1
@@ -134,3 +135,4 @@ void FileMonitorFreeBSD::AddWatch(const std::string& strFileName, PFN_FileChange
 	m_TriggeredEventLists.push_back( kTriggerEvent );
 	m_MonitoredEventLists.push_back( kMonitorEvent );
 }
+#endif

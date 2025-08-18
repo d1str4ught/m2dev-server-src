@@ -3,12 +3,7 @@
 
 #include <string>
 #include <vector>
-
-#if _MSC_VER
-    #include <hash_map>
-#else
-    #include <map>
-#endif
+#include <unordered_map>
 
 ////////////////////////////////////////////////////////////////////////////////
 /// \class cCsvAlias
@@ -39,13 +34,8 @@
 class cCsvAlias
 {
 private:
-#if _MSC_VER
-    typedef stdext::hash_map<std::string, size_t> NAME2INDEX_MAP;
-    typedef stdext::hash_map<size_t, std::string> INDEX2NAME_MAP;
-#else
-    typedef std::map<std::string, size_t> NAME2INDEX_MAP;
-    typedef std::map<size_t, std::string> INDEX2NAME_MAP;
-#endif
+    typedef std::unordered_map<std::string, size_t> NAME2INDEX_MAP;
+    typedef std::unordered_map<size_t, std::string> INDEX2NAME_MAP;
 
     NAME2INDEX_MAP m_Name2Index;  ///< 셀 인덱스 대신으로 사용하기 위한 이름들
     INDEX2NAME_MAP m_Index2Name;  ///< 잘못된 alias를 검사하기 위한 추가적인 맵

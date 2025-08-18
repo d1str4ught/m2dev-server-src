@@ -31,7 +31,7 @@ void CClientManager::AckHorseName(DWORD dwPID, CPeer* peer)
 	else
 	{
 		MYSQL_ROW row = mysql_fetch_row(pmsg->Get()->pSQLResult);
-		strlcpy(packet.szHorseName, row[0], sizeof(packet.szHorseName));
+		std::strncpy(packet.szHorseName, row[0], sizeof(packet.szHorseName));
 	}
 
 	peer->EncodeHeader(HEADER_DG_ACK_HORSE_NAME, 0, sizeof(TPacketUpdateHorseName));

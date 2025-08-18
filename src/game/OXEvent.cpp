@@ -140,7 +140,7 @@ bool COXEventManager::AddQuiz(unsigned char level, const char* pszQuestion, bool
 	struct tag_Quiz tmpQuiz;
 
 	tmpQuiz.level = level;
-	strlcpy(tmpQuiz.Quiz, pszQuestion, sizeof(tmpQuiz.Quiz));
+	std::strncpy(tmpQuiz.Quiz, pszQuestion, sizeof(tmpQuiz.Quiz));
 	tmpQuiz.answer = answer;
 
 	m_vec_quiz[level].push_back(tmpQuiz);
@@ -272,8 +272,7 @@ bool COXEventManager::CheckAnswer(bool answer)
 {
 	if (m_map_attender.size() <= 0) return true;
 	
-	itertype(m_map_attender) iter = m_map_attender.begin();
-	itertype(m_map_attender) iter_tmp;
+	auto iter = m_map_attender.begin();
 	
 	m_map_miss.clear();
 
@@ -305,7 +304,7 @@ bool COXEventManager::CheckAnswer(bool answer)
 			if (pos.x < rect[0] || pos.x > rect[2] || pos.y < rect[1] || pos.y > rect[3])
 			{
 				pkChar->EffectPacket(SE_FAIL);
-				iter_tmp = iter;
+				auto iter_tmp = iter;
 				iter++;
 				m_map_attender.erase(iter_tmp);
 				m_map_miss.insert(std::make_pair(pkChar->GetPlayerID(), pkChar->GetPlayerID()));
@@ -349,7 +348,7 @@ bool COXEventManager::CheckAnswer(bool answer)
 			itertype(m_map_miss) err2 = m_map_miss.find(iter->first);
 			if (err2 != m_map_miss.end()) m_map_miss.erase(err2);
 
-			iter_tmp = iter;
+			auto iter_tmp = iter;
 			++iter;
 			m_map_attender.erase(iter_tmp);
 		}

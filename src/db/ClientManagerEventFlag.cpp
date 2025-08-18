@@ -19,7 +19,7 @@ void CClientManager::LoadEventFlag()
 		while ((row = mysql_fetch_row(pRes->pSQLResult)))
 		{
 			TPacketSetEventFlag p;
-			strlcpy(p.szFlagName, row[0], sizeof(p.szFlagName));
+			std::strncpy(p.szFlagName, row[0], sizeof(p.szFlagName));
 			str_to_number(p.lValue, row[1]);
 			sys_log(0, "EventFlag Load %s %d", p.szFlagName, p.lValue);
 			m_map_lEventFlag.insert(std::make_pair(std::string(p.szFlagName), p.lValue));
@@ -64,11 +64,10 @@ void CClientManager::SetEventFlag(TPacketSetEventFlag* p)
 
 void CClientManager::SendEventFlagsOnSetup(CPeer* peer)
 {
-	__typeof(m_map_lEventFlag.begin()) it;
-	for (it = m_map_lEventFlag.begin(); it != m_map_lEventFlag.end(); ++it)
+	for (auto it = m_map_lEventFlag.begin(); it != m_map_lEventFlag.end(); ++it)
 	{
 		TPacketSetEventFlag p;
-		strlcpy(p.szFlagName, it->first.c_str(), sizeof(p.szFlagName));
+		std::strncpy(p.szFlagName, it->first.c_str(), sizeof(p.szFlagName));
 		p.lValue = it->second;
 		peer->EncodeHeader(HEADER_DG_SET_EVENT_FLAG, 0, sizeof(TPacketSetEventFlag));
 		peer->Encode(&p, sizeof(TPacketSetEventFlag));

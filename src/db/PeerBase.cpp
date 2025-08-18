@@ -61,7 +61,7 @@ bool CPeerBase::Accept(socket_t fd_accept)
 	socket_sndbuf(m_fd, 233016);
 	socket_rcvbuf(m_fd, 233016);
 
-	strlcpy(m_host, inet_ntoa(peer.sin_addr), sizeof(m_host));
+	std::strncpy(m_host, inet_ntoa(peer.sin_addr), sizeof(m_host));
 	m_outBuffer = buffer_new(DEFAULT_PACKET_BUFFER_SIZE);
 	m_inBuffer = buffer_new(MAX_INPUT_LEN);
 
@@ -80,7 +80,7 @@ bool CPeerBase::Accept(socket_t fd_accept)
 
 bool CPeerBase::Connect(const char* host, WORD port)
 {
-	strlcpy(m_host, host, sizeof(m_host));
+	std::strncpy(m_host, host, sizeof(m_host));
 
 	if ((m_fd = socket_connect(host, port)) == INVALID_SOCKET)
 		return false;

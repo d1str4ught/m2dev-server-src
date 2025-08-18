@@ -1,7 +1,9 @@
 ﻿#ifndef __CLASS_ARENA_MANAGER__
 #define __CLASS_ARENA_MANAGER__
 
-#include <lua.h>
+extern "C" {
+	#include <lua.h>
+}
 
 enum MEMBER_IDENTITY
 {

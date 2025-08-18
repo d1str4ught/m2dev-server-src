@@ -169,7 +169,7 @@ namespace quest
 	{
 		RemoveTimer(name);
 		m_TimerMap.insert(make_pair(name, pEvent));
-		sys_log(0, "QUEST add timer %p %d", get_pointer(pEvent), m_TimerMap.size());
+		sys_log(0, "QUEST add timer %p %d", pEvent.get(), m_TimerMap.size());
 	}
 
 	void PC::RemoveTimerNotCancel(const string & name)
@@ -178,7 +178,7 @@ namespace quest
 
 		if (it != m_TimerMap.end())
 		{
-			sys_log(0, "QUEST remove with no cancel %p", get_pointer(it->second));
+			sys_log(0, "QUEST remove with no cancel %p", it->second.get());
 			m_TimerMap.erase(it);
 		}
 
@@ -191,7 +191,7 @@ namespace quest
 
 		if (it != m_TimerMap.end())
 		{
-			sys_log(0, "QUEST remove timer %p", get_pointer(it->second));
+			sys_log(0, "QUEST remove timer %p", it->second.get());
 			CancelTimerEvent(&it->second);
 			m_TimerMap.erase(it);
 		}
@@ -571,8 +571,8 @@ namespace quest
 			TQuestTable & r = s_table[i++];
 
 			r.dwPID = m_dwID;
-			strlcpy(r.szName, stName.c_str(), sizeof(r.szName));
-			strlcpy(r.szState, stState.c_str(), sizeof(r.szState));
+			std::strncpy(r.szName, stName.c_str(), sizeof(r.szName));
+			std::strncpy(r.szState, stState.c_str(), sizeof(r.szState));
 			r.lValue = lValue;
 		}
 
@@ -661,8 +661,7 @@ namespace quest
 
 	void PC::Build()
 	{
-		itertype(m_FlagMap) it;
-		for (it = m_FlagMap.begin(); it != m_FlagMap.end(); ++it)
+		for (auto it = m_FlagMap.begin(); it != m_FlagMap.end(); ++it)
 		{
 			if (it->first.size()>9 && it->first.compare(it->first.size()-9,9, ".__status") == 0)
 			{

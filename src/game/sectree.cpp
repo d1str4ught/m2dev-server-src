@@ -1,5 +1,5 @@
 ﻿#include "stdafx.h"
-#include "../../libgame/include/attribute.h"
+#include "libgame/attribute.h"
 #include "sectree_manager.h"
 #include "char.h"
 #include "char_manager.h"

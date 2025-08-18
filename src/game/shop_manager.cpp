@@ -1,5 +1,5 @@
 ﻿#include "stdafx.h"
-#include "../../libgame/include/grid.h"
+#include "libgame/grid.h"
 #include "constants.h"
 #include "utils.h"
 #include "config.h"
@@ -22,7 +22,6 @@
 #include "shop_manager.h"
 #include "group_text_parse_tree.h"
 #include "shopEx.h"
-#include <boost/algorithm/string/predicate.hpp>
 #include "shop_manager.h"
 #include <cctype>
 
@@ -402,11 +401,11 @@ bool ConvertToShopItemTable(IN CGroupNode* pNode, OUT TShopTableEx& shopTable)
 		stCoinType = "Gold";
 	}
 	
-	if (boost::iequals(stCoinType, "Gold"))
+	if (utils::iequals(stCoinType, "Gold"))
 	{
 		shopTable.coinType = SHOP_COIN_TYPE_GOLD;
 	}
-	else if (boost::iequals(stCoinType, "SecondaryCoin"))
+	else if (utils::iequals(stCoinType, "SecondaryCoin"))
 	{
 		shopTable.coinType = SHOP_COIN_TYPE_SECONDARY_COIN;
 	}
@@ -456,11 +455,11 @@ bool ConvertToShopItemTable(IN CGroupNode* pNode, OUT TShopTableEx& shopTable)
 		stSort = "None";
 	}
 
-	if (boost::iequals(stSort, "Asc"))
+	if (utils::iequals(stSort, "Asc"))
 	{
 		std::sort(shopItems.begin(), shopItems.end(), CompareShopItemName);
 	}
-	else if(boost::iequals(stSort, "Desc"))
+	else if(utils::iequals(stSort, "Desc"))
 	{
 		std::sort(shopItems.rbegin(), shopItems.rend(), CompareShopItemName);
 	}

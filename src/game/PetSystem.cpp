@@ -6,7 +6,7 @@
 #include "char_manager.h"
 #include "mob_manager.h"
 #include "PetSystem.h"
-#include "../../common/VnumHelper.h"
+#include "common/VnumHelper.h"
 #include "packet.h"
 #include "item_manager.h"
 #include "item.h"

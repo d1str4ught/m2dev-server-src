@@ -706,7 +706,7 @@ namespace quest
 				TPacketGGTransfer pgg;
 
 				pgg.bHeader = HEADER_GG_TRANSFER;
-				strlcpy(pgg.szName, name.c_str(), sizeof(pgg.szName));
+				std::strncpy(pgg.szName, name.c_str(), sizeof(pgg.szName));
 				pgg.lX = ch->GetX();
 				pgg.lY = ch->GetY();
 
@@ -793,7 +793,7 @@ namespace quest
 			return 0;
 
 		char vnum[256];
-		strlcpy(vnum, lua_tostring(L, 1), sizeof(vnum));
+		std::strncpy(vnum, lua_tostring(L, 1), sizeof(vnum));
 		do_monarch_mob(ch, vnum, 0, 0);
 		return 0;
 	}

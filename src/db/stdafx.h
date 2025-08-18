@@ -1,7 +1,6 @@
-﻿#ifndef __INC_METiN_II_DBSERV_STDAFX_H__
-#define __INC_METiN_II_DBSERV_STDAFX_H__
+﻿#pragma once
 
-#include "../../libthecore/include/stdafx.h"
+#include "libthecore/stdafx.h"
 
 #ifndef OS_WINDOWS
 #include <semaphore.h>
@@ -10,11 +9,11 @@
 #define isspace iswspace
 #endif
 
-#include "../../common/length.h"
-#include "../../common/tables.h"
-#include "../../common/singleton.h"
-#include "../../common/utils.h"
-#include "../../common/stl.h"
-#include "../../common/service.h"
+#include "common/length.h"
+#include "common/tables.h"
+#include "common/singleton.h"
+#include "common/utils.h"
+#include "common/stl.h"
+#include "common/service.h"
 
-#endif
+#include <memory>

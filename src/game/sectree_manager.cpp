@@ -1,7 +1,7 @@
 ﻿#include "stdafx.h"
 #include <sstream>
-#include "../../libgame/include/targa.h"
-#include "../../libgame/include/attribute.h"
+#include "libgame/targa.h"
+#include "libgame/attribute.h"
 #include "config.h"
 #include "utils.h"
 #include "sectree_manager.h"
@@ -465,8 +465,8 @@ bool SECTREE_MANAGER::LoadAttribute(LPSECTREE_MAP pkMapSectree, const char * c_p
 
 	int maxMemSize = LZOManager::instance().GetMaxCompressedSize(sizeof(DWORD) * (SECTREE_SIZE / CELL_SIZE) * (SECTREE_SIZE / CELL_SIZE));
 
-	unsigned int uiSize;
-	unsigned int uiDestSize;
+	lzo_uint uiSize;
+	lzo_uint uiDestSize;
 
 #ifndef _MSC_VER
 	BYTE abComp[maxMemSize];
@@ -1144,12 +1144,10 @@ void SECTREE_MANAGER::SendNPCPosition(LPCHARACTER ch)
 	TNPCPosition np;
 
 	// TODO m_mapNPCPosition[lMapIndex] 를 보내주세요
-	itertype(m_mapNPCPosition[lMapIndex]) it;
-
-	for (it = m_mapNPCPosition[lMapIndex].begin(); it != m_mapNPCPosition[lMapIndex].end(); ++it)
+	for (auto it = m_mapNPCPosition[lMapIndex].begin(); it != m_mapNPCPosition[lMapIndex].end(); ++it)
 	{
 		np.bType = it->bType;
-		strlcpy(np.name, it->name, sizeof(np.name));
+		std::strncpy(np.name, it->name, sizeof(np.name));
 		np.x = it->x;
 		np.y = it->y;
 		buf.write(&np, sizeof(np));

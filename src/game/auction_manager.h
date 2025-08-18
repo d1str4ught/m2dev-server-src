@@ -1,8 +1,8 @@
 ﻿#ifndef __INC_AUCTION_MANAGER_H
 #define __INC_AUCTION_MANAGER_H
 
-#include "../../libsql/AsyncSQL.h"
-#include "../../common/auction_table.h"
+#include "libsql/AsyncSQL.h"
+#include "common/auction_table.h"
 #include <unordered_map>
 #include <algorithm>
 

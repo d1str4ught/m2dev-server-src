@@ -1,8 +1,6 @@
-﻿
-#ifndef __INC_METIN_II_UTILS_H__
-#define __INC_METIN_II_UTILS_H__
-
+﻿#pragma once
 #include <math.h>
+#include <string>
 
 #define IS_SET(flag, bit)		((flag) & (bit))
 #define SET_BIT(var, bit)		((var) |= (bit))
@@ -67,5 +65,14 @@ extern int parse_time_str(const char* str);
 
 extern bool WildCaseCmp(const char *w, const char *s);
 
-#endif /* __INC_METIN_II_UTILS_H__ */
+namespace utils
+{
+	inline bool iequals(const std::string& a, const std::string& b) {
+		return a.size() == b.size()
+			&& std::equal(a.begin(), a.end(), b.begin(),
+				[](unsigned char ac, unsigned char bc) {
+			return std::tolower(ac) == std::tolower(bc);
+		});
+	}
+}
 

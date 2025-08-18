@@ -1101,9 +1101,8 @@ namespace quest
 	{
 		assert(idx > 0);
 
-		itertype(m_hmQuestName) it;
-
-		if ((it = m_hmQuestName.find(stQuestName)) != m_hmQuestName.end())
+		auto it = m_hmQuestName.find(stQuestName);
+		if (it != m_hmQuestName.end())
 			return;
 
 		m_hmQuestName.insert(make_pair(stQuestName, idx));
@@ -1125,9 +1124,9 @@ namespace quest
 
 	const string & CQuestManager::GetQuestNameByIndex(unsigned int idx)
 	{
-		itertype(m_mapQuestNameByIndex) it;
+		auto it = m_mapQuestNameByIndex.find(idx);
 
-		if ((it = m_mapQuestNameByIndex.find(idx)) == m_mapQuestNameByIndex.end())
+		if (it == m_mapQuestNameByIndex.end())
 		{
 			sys_err("cannot find quest name by index %u", idx);
 			assert(!"cannot find quest name by index");
@@ -1141,8 +1140,7 @@ namespace quest
 
 	void CQuestManager::SendEventFlagList(LPCHARACTER ch)
 	{
-		itertype(m_mapEventFlag) it;
-		for (it = m_mapEventFlag.begin(); it != m_mapEventFlag.end(); ++it)
+		for (auto it = m_mapEventFlag.begin(); it != m_mapEventFlag.end(); ++it)
 		{
 			const string& flagname = it->first;
 			int value = it->second;
@@ -1161,7 +1159,7 @@ namespace quest
 	void CQuestManager::RequestSetEventFlag(const string& name, int value)
 	{
 		TPacketSetEventFlag p;
-		strlcpy(p.szFlagName, name.c_str(), sizeof(p.szFlagName));
+		std::strncpy(p.szFlagName, name.c_str(), sizeof(p.szFlagName));
 		p.lValue = value;
 		db_clientdesc->DBPacket(HEADER_GD_SET_EVENT_FLAG, 0, &p, sizeof(TPacketSetEventFlag));
 	}
@@ -1703,7 +1701,7 @@ namespace quest
 
 	void CQuestManager::AddServerTimer(const std::string& name, DWORD arg, LPEVENT event)
 	{
-		sys_log(0, "XXX AddServerTimer %s %d %p", name.c_str(), arg, get_pointer(event));
+		sys_log(0, "XXX AddServerTimer %s %d %p", name.c_str(), arg, event.get());
 		if (m_mapServerTimer.find(make_pair(name, arg)) != m_mapServerTimer.end())
 		{
 			sys_err("already registered server timer name:%s arg:%u", name.c_str(), arg);

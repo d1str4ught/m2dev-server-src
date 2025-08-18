@@ -1,7 +1,7 @@
 ﻿#include "stdafx.h"
 
-#include "../../common/teen_packet.h"
-#include "../../common/VnumHelper.h"
+#include "common/teen_packet.h"
+#include "common/VnumHelper.h"
 
 #include "char.h"
 
@@ -533,7 +533,6 @@ void CHARACTER::Destroy()
 	event_cancel(&m_pkMiningEvent);
 	// END_OF_MINING
 
-	// StopHackShieldCheckCycle();
 
 	for (itertype(m_mapMobSkillEvent) it = m_mapMobSkillEvent.begin(); it != m_mapMobSkillEvent.end(); ++it)
 	{
@@ -617,7 +616,7 @@ void CHARACTER::OpenMyShop(const char * c_pszSign, TShopItemTable * pTable, BYTE
 	}
 
 	char szSign[SHOP_SIGN_MAX_LEN+1];
-	strlcpy(szSign, c_pszSign, sizeof(szSign));
+	std::strncpy(szSign, c_pszSign, sizeof(szSign));
 
 	m_stShopSign = szSign;
 
@@ -737,7 +736,7 @@ void CHARACTER::OpenMyShop(const char * c_pszSign, TShopItemTable * pTable, BYTE
 
 	p.bHeader = HEADER_GC_SHOP_SIGN;
 	p.dwVID = GetVID();
-	strlcpy(p.szSign, c_pszSign, sizeof(p.szSign));
+	std::strncpy(p.szSign, c_pszSign, sizeof(p.szSign));
 
 	PacketAround(&p, sizeof(TPacketGCShopSign));
 
@@ -933,7 +932,7 @@ void CHARACTER::EncodeInsertPacket(LPENTITY entity)
 		else
 		{
 		show_all_info:
-			strlcpy(addPacket.name, GetName(), sizeof(addPacket.name));
+			std::strncpy(addPacket.name, GetName(), sizeof(addPacket.name));
 
 			if (GetGuild() != NULL)
 			{	
@@ -983,7 +982,7 @@ void CHARACTER::EncodeInsertPacket(LPENTITY entity)
 
 		p.bHeader = HEADER_GC_SHOP_SIGN;
 		p.dwVID = GetVID();
-		strlcpy(p.szSign, m_stShopSign.c_str(), sizeof(p.szSign));
+		std::strncpy(p.szSign, m_stShopSign.c_str(), sizeof(p.szSign));
 
 		d->Packet(&p, sizeof(TPacketGCShopSign));
 	}
@@ -1166,14 +1165,14 @@ void CHARACTER::CreatePlayerProto(TPlayerTable & tab)
 
 	if (GetNewName().empty())
 	{
-		strlcpy(tab.name, GetName(), sizeof(tab.name));
+		std::strncpy(tab.name, GetName(), sizeof(tab.name));
 	}
 	else
 	{
-		strlcpy(tab.name, GetNewName().c_str(), sizeof(tab.name));
+		std::strncpy(tab.name, GetNewName().c_str(), sizeof(tab.name));
 	}
 
-	strlcpy(tab.ip, GetDesc()->GetHostName(), sizeof(tab.ip));
+	std::strncpy(tab.ip, GetDesc()->GetHostName(), sizeof(tab.ip));
 
 	tab.id			= m_dwPlayerID;
 	tab.voice		= GetPoint(POINT_VOICE);
@@ -1263,7 +1262,7 @@ void CHARACTER::CreatePlayerProto(TPlayerTable & tab)
 		tab.quickslot[i] = m_quickslot[i];
 
 	if (m_stMobile.length() && !*m_szMobileAuth)
-		strlcpy(tab.szMobile, m_stMobile.c_str(), sizeof(tab.szMobile));
+		std::strncpy(tab.szMobile, m_stMobile.c_str(), sizeof(tab.szMobile));
 
 	thecore_memcpy(tab.parts, m_pointsInstant.parts, sizeof(tab.parts));
 
@@ -1342,7 +1341,7 @@ void CHARACTER::Disconnect(const char * c_pszReason)
 	// P2P Logout
 	TPacketGGLogout p;
 	p.bHeader = HEADER_GG_LOGOUT;
-	strlcpy(p.szName, GetName(), sizeof(p.szName));
+	std::strncpy(p.szName, GetName(), sizeof(p.szName));
 	P2P_MANAGER::instance().Send(&p, sizeof(TPacketGGLogout));
 	char buf[51];
 	snprintf(buf, sizeof(buf), "%s %d %d %ld %d", 
@@ -1574,10 +1573,10 @@ void CHARACTER::MainCharacterPacket()
 			mainChrPacket.lz = GetZ();
 			mainChrPacket.empire = GetDesc()->GetEmpire();
 			mainChrPacket.skill_group = GetSkillGroup();
-			strlcpy(mainChrPacket.szChrName, GetName(), sizeof(mainChrPacket.szChrName));
+			std::strncpy(mainChrPacket.szChrName, GetName(), sizeof(mainChrPacket.szChrName));
 
 			mainChrPacket.fBGMVol = bgmInfo.vol;
-			strlcpy(mainChrPacket.szBGMName, bgmInfo.name.c_str(), sizeof(mainChrPacket.szBGMName));
+			std::strncpy(mainChrPacket.szBGMName, bgmInfo.name.c_str(), sizeof(mainChrPacket.szBGMName));
 			GetDesc()->Packet(&mainChrPacket, sizeof(TPacketGCMainCharacter4_BGM_VOL));
 		}
 		else
@@ -1592,8 +1591,8 @@ void CHARACTER::MainCharacterPacket()
 			mainChrPacket.lz = GetZ();
 			mainChrPacket.empire = GetDesc()->GetEmpire();
 			mainChrPacket.skill_group = GetSkillGroup();
-			strlcpy(mainChrPacket.szChrName, GetName(), sizeof(mainChrPacket.szChrName));
-			strlcpy(mainChrPacket.szBGMName, bgmInfo.name.c_str(), sizeof(mainChrPacket.szBGMName));
+			std::strncpy(mainChrPacket.szChrName, GetName(), sizeof(mainChrPacket.szChrName));
+			std::strncpy(mainChrPacket.szBGMName, bgmInfo.name.c_str(), sizeof(mainChrPacket.szBGMName));
 			GetDesc()->Packet(&mainChrPacket, sizeof(TPacketGCMainCharacter3_BGM));
 		}
 		//if (m_stMobile.length())
@@ -1613,7 +1612,7 @@ void CHARACTER::MainCharacterPacket()
 		pack.lz = GetZ();
 		pack.empire = GetDesc()->GetEmpire();
 		pack.skill_group = GetSkillGroup();
-		strlcpy(pack.szName, GetName(), sizeof(pack.szName));
+		std::strncpy(pack.szName, GetName(), sizeof(pack.szName));
 		GetDesc()->Packet(&pack, sizeof(TPacketGCMainCharacter));
 
 		if (m_stMobile.length())
@@ -4423,7 +4422,7 @@ bool CHARACTER::RequestToParty(LPCHARACTER leader)
 
 void CHARACTER::DenyToParty(LPCHARACTER member)
 {
-	sys_log(1, "DenyToParty %s member %s %p", GetName(), member->GetName(), get_pointer(member->m_pkPartyRequestEvent));
+	sys_log(1, "DenyToParty %s member %s %p", GetName(), member->GetName(), member->m_pkPartyRequestEvent.get());
 
 	if (!member->m_pkPartyRequestEvent)
 		return;
@@ -4449,7 +4448,7 @@ void CHARACTER::DenyToParty(LPCHARACTER member)
 
 void CHARACTER::AcceptToParty(LPCHARACTER member)
 {
-	sys_log(1, "AcceptToParty %s member %s %p", GetName(), member->GetName(), get_pointer(member->m_pkPartyRequestEvent));
+	sys_log(1, "AcceptToParty %s member %s %p", GetName(), member->GetName(), member->m_pkPartyRequestEvent.get());
 
 	if (!member->m_pkPartyRequestEvent)
 		return;
@@ -5356,7 +5355,7 @@ void CHARACTER::WarpEnd()
 		TPacketGGLogin p;
 
 		p.bHeader = HEADER_GG_LOGIN;
-		strlcpy(p.szName, GetName(), sizeof(p.szName));
+		std::strncpy(p.szName, GetName(), sizeof(p.szName));
 		p.dwPID = GetPlayerID();
 		p.bEmpire = GetEmpire();
 		p.lMapIndex = SECTREE_MANAGER::instance().GetMapIndex(GetX(), GetY());
@@ -5602,8 +5601,8 @@ void CHARACTER::ReqSafeboxLoad(const char* pszPassword)
 
 	TSafeboxLoadPacket p;
 	p.dwID = GetDesc()->GetAccountTable().id;
-	strlcpy(p.szLogin, GetDesc()->GetAccountTable().login, sizeof(p.szLogin));
-	strlcpy(p.szPassword, pszPassword, sizeof(p.szPassword));
+	std::strncpy(p.szLogin, GetDesc()->GetAccountTable().login, sizeof(p.szLogin));
+	std::strncpy(p.szPassword, pszPassword, sizeof(p.szPassword));
 
 	db_clientdesc->DBPacket(HEADER_GD_SAFEBOX_LOAD, GetDesc()->GetHandle(), &p, sizeof(p));
 }
@@ -6554,7 +6553,7 @@ void CHARACTER::ConfirmWithMsg(const char* szMsg, int iTimeout, DWORD dwRequestP
 	p.header = HEADER_GC_QUEST_CONFIRM;
 	p.requestPID = dwRequestPID;
 	p.timeout = iTimeout;
-	strlcpy(p.msg, szMsg, sizeof(p.msg));
+	std::strncpy(p.msg, szMsg, sizeof(p.msg));
 
 	GetDesc()->Packet(&p, sizeof(p));
 }

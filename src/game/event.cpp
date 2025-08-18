@@ -30,7 +30,7 @@ LPEVENT event_create_ex(TEVENTFUNC func, event_info_data* info, long when)
 #ifdef M2_USE_POOL
 	new_event = event_pool.Construct();
 #else
-	new_event = M2_NEW event;
+	new_event = std::make_shared<event>();
 #endif
 
 	assert(NULL != new_event);
@@ -137,7 +137,7 @@ int event_process(int pulse)
 		else
 		{
 			//sys_log(0, "EVENT: %s %d event %p info %p", the_event->file, the_event->line, the_event, the_event->info);
-			new_time = (the_event->func) (get_pointer(the_event), processing_time);
+			new_time = (the_event->func) (the_event, processing_time);
 			
 			if (new_time <= 0 || the_event->is_force_to_end)
 			{

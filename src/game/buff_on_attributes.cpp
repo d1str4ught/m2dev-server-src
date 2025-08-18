@@ -1,5 +1,5 @@
 ﻿#include "stdafx.h"
-#include "../../common/tables.h"
+#include "common/tables.h"
 #include "item.h"
 #include "char.h"
 #include "buff_on_attributes.h"

@@ -41,7 +41,7 @@
 #include "safebox.h"
 #include "shop.h"
 
-#include "../../common/VnumHelper.h"
+#include "common/VnumHelper.h"
 #include "DragonSoul.h"
 #include "buff_on_attributes.h"
 #include "belt_inventory_helper.h"

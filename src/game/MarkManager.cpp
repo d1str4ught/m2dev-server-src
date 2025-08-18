@@ -3,6 +3,8 @@
 
 #include "crc32.h"
 
+#include <iterator>
+
 CGuildMarkImage * CGuildMarkManager::__NewImage()
 {
 	return M2_NEW CGuildMarkImage;
@@ -390,84 +392,3 @@ void CGuildMarkManager::UploadSymbol(DWORD guildID, int iSize, const BYTE* pbyDa
 		rSymbol.crc = GetCRC32(reinterpret_cast<const char*>(pbyData), iSize);
 	}
 }
-
-#ifdef __UNITTEST__
-#include "lzo_manager.h"
-
-void heartbeat(LPHEART ht, int pulse)
-{
-	return;
-}
-
-void SaveMark(DWORD guildID, const char * filename)
-{
-	ILuint m_uImg;
-
-	ilGenImages(1, &m_uImg);
-	ilBindImage(m_uImg);
-	ilEnable(IL_ORIGIN_SET);
-	ilOriginFunc(IL_ORIGIN_UPPER_LEFT);
-
-	if (ilLoad(IL_TYPE_UNKNOWN, (const ILstring) filename))
-	{
-		ILuint width = ilGetInteger(IL_IMAGE_WIDTH);
-		ILuint height = ilGetInteger(IL_IMAGE_HEIGHT);
-
-		ilConvertImage(IL_BGRA, IL_UNSIGNED_BYTE);
-
-		BYTE * data = (BYTE *) malloc(sizeof(DWORD) * width * height);
-		ilCopyPixels(0, 0, 0, width, height, 1, IL_BGRA, IL_UNSIGNED_BYTE, data);
-		ilDeleteImages(1, &m_uImg);
-
-		printf("%s w%u h%u ", filename, width, height);
-		CGuildMarkManager::instance().SaveMark(guildID, data);
-	}
-	else
-		printf("%s cannot open file.\n", filename);
-}
-
-int main(int argc, char **argv)
-{
-	LZOManager lzo;
-	CGuildMarkManager mgr;
-	char f[64];
-
-	srandomdev();
-
-	ilInit(); // DevIL Initialize
-	thecore_init(25, heartbeat);
-
-	mgr.SetMarkPathPrefix("mark"); 
-	mgr.LoadMarkIndex();
-	for (int i = 0; i < 1279; ++i)
-	{
-		snprintf(f, sizeof(f), "%u.jpg", (random() % 5) + 1);
-		SaveMark(i, f);
-		//mgr.DeleteMark(i);
-	}
-	//snprintf(f, sizeof(f), "%u.jpg", (random() % 5) + 1);
-	//SaveMark(1, f);
-
-	DWORD idx_client[CGuildMarkImage::BLOCK_TOTAL_COUNT];
-	DWORD idx_server[CGuildMarkImage::BLOCK_TOTAL_COUNT];
-
-	mgr.GetBlockCRCList(0, idx_client);
-	mgr.GetBlockCRCList(1, idx_server);
-
-	std::map<BYTE, const SGuildMarkBlock *> mapDiff;
-	mgr.GetDiffBlocks(1, idx_client, mapDiff);
-
-	printf("#1 Diff %u\n", mapDiff.size());
-
-	for (itertype(mapDiff) it = mapDiff.begin(); it != mapDiff.end(); ++it)
-	{
-		printf("Put Block pos %u crc %u\n", it->first, it->second->m_crc);
-		mgr.SaveBlockFromCompressedData(0, it->first, it->second->m_abCompBuf, it->second->m_sizeCompBuf);
-	}
-
-	mgr.GetBlockCRCList(0, idx_client);
-	mgr.GetDiffBlocks(1, idx_client, mapDiff);
-	printf("#2 Diff %u\n", mapDiff.size());
-	return 1;
-}
-#endif

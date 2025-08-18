@@ -174,7 +174,7 @@ void CHARACTER::StartAffectEvent()
 	char_event_info* info = AllocEventInfo<char_event_info>();
 	info->ch = this;
 	m_pkAffectEvent = event_create(affect_event, info, passes_per_sec);
-	sys_log(1, "StartAffectEvent %s %p %p", GetName(), this, get_pointer(m_pkAffectEvent));
+	sys_log(1, "StartAffectEvent %s %p %p", GetName(), this, m_pkAffectEvent.get());
 }
 
 void CHARACTER::ClearAffect(bool bSave)
@@ -275,9 +275,7 @@ int CHARACTER::ProcessAffect()
 	long lMovSpd = GetPoint(POINT_MOV_SPEED);
 	long lAttSpd = GetPoint(POINT_ATT_SPEED);
 
-	itertype(m_list_pkAffect) it;
-
-	it = m_list_pkAffect.begin();
+	auto it = m_list_pkAffect.begin();
 
 	while (it != m_list_pkAffect.end())
 	{

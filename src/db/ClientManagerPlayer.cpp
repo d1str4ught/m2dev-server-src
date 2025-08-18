@@ -405,7 +405,7 @@ void CClientManager::QUERY_PLAYER_LOAD(CPeer * peer, DWORD dwHandle, TPlayerLoad
 void CClientManager::ItemAward(CPeer * peer,char* login)
 {
 	char login_t[LOGIN_MAX_LEN + 1] = "";
-	strlcpy(login_t,login,LOGIN_MAX_LEN + 1);	
+	std::strncpy(login_t,login,LOGIN_MAX_LEN + 1);	
 	std::set<TItemAward *> * pSet = ItemAwardManager::instance().GetByLogin(login_t);	
 	if(pSet == NULL)
 		return;
@@ -458,7 +458,7 @@ bool CreatePlayerTableFromRes(MYSQL_RES * res, TPlayerTable * pkTab)
 	// "stat_point,skill_point,sub_skill_point,stat_reset_count,part_base,part_hair,"
 	// "skill_level,quickslot,skill_group,alignment,mobile,horse_level,horse_riding,horse_hp,horse_stamina FROM player%s WHERE id=%d",
 	str_to_number(pkTab->id, row[col++]);
-	strlcpy(pkTab->name, row[col++], sizeof(pkTab->name));
+	std::strncpy(pkTab->name, row[col++], sizeof(pkTab->name));
 	str_to_number(pkTab->job, row[col++]);
 	str_to_number(pkTab->voice, row[col++]);
 	str_to_number(pkTab->dir, row[col++]);
@@ -509,7 +509,7 @@ bool CreatePlayerTableFromRes(MYSQL_RES * res, TPlayerTable * pkTab)
 
 	if (row[col])
 	{
-		strlcpy(pkTab->szMobile, row[col], sizeof(pkTab->szMobile));
+		std::strncpy(pkTab->szMobile, row[col], sizeof(pkTab->szMobile));
 	}
 
 	col++;
@@ -759,8 +759,8 @@ void CClientManager::RESULT_QUEST_LOAD(CPeer * peer, MYSQL_RES * pRes, DWORD dwH
 		row = mysql_fetch_row(pRes);
 
 		str_to_number(r.dwPID, row[0]);
-		strlcpy(r.szName, row[1], sizeof(r.szName));
-		strlcpy(r.szState, row[2], sizeof(r.szState));
+		std::strncpy(r.szName, row[1], sizeof(r.szName));
+		std::strncpy(r.szState, row[2], sizeof(r.szState));
 		str_to_number(r.lValue, row[3]);
 	}
 
@@ -939,7 +939,7 @@ void CClientManager::__QUERY_PLAYER_CREATE(CPeer *peer, DWORD dwHandle, TPlayerC
 	pack.bAccountCharacterIndex = packet->account_index;
 
 	pack.player.dwID			= player_id;
-	strlcpy(pack.player.szName, packet->player_table.name, sizeof(pack.player.szName));
+	std::strncpy(pack.player.szName, packet->player_table.name, sizeof(pack.player.szName));
 	pack.player.byJob			= packet->player_table.job;
 	pack.player.byLevel			= 1;
 	pack.player.dwPlayMinutes	= 0;
@@ -1045,7 +1045,7 @@ void CClientManager::__RESULT_PLAYER_DELETE(CPeer *peer, SQLMsg* msg)
 		str_to_number(deletedLevelLimit, row[1]);
 
 		char szName[64];
-		strlcpy(szName, row[2], sizeof(szName));
+		std::strncpy(szName, row[2], sizeof(szName));
 
 		if (deletedLevelLimit >= m_iPlayerDeleteLevelLimit && !IsChinaEventServer())
 		{
@@ -1220,7 +1220,7 @@ void CClientManager::QUERY_HIGHSCORE_REGISTER(CPeer* peer, TPacketGDHighscore * 
 	sys_log(0, "HEADER_GD_HIGHSCORE_REGISTER: PID %u", data->dwPID);
 
 	ClientHandleInfo * pi = new ClientHandleInfo(0);
-	strlcpy(pi->login, data->szBoard, sizeof(pi->login));
+	std::strncpy(pi->login, data->szBoard, sizeof(pi->login));
 	pi->account_id = (DWORD)data->lValue;
 	pi->player_id = data->dwPID;
 	pi->account_index = (data->cDir > 0);
@@ -1235,7 +1235,7 @@ void CClientManager::RESULT_HIGHSCORE_REGISTER(CPeer * pkPeer, SQLMsg * msg)
 	//DWORD dwHandle = pi->dwHandle;
 
 	char szBoard[21];
-	strlcpy(szBoard, pi->login, sizeof(szBoard));
+	std::strncpy(szBoard, pi->login, sizeof(szBoard));
 	int value = (int)pi->account_id;
 
 	SQLResult * res = msg->Get();

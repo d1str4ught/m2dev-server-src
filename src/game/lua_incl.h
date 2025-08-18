@@ -1,11 +1,7 @@
-﻿#if !defined(_MSC_VER) && defined(__cplusplus)
+﻿#pragma once
+
 extern "C" {
-#endif
-
-#include <lua.h>
-#include <lauxlib.h>
-#include <lualib.h>
-
-#if !defined(_MSC_VER) && defined(__cplusplus)
+	#include <lua.h>
+	#include <lauxlib.h>
+	#include <lualib.h>
 }
-#endif

@@ -1,6 +1,6 @@
 ﻿#include "stdafx.h"
 
-#ifdef OS_WIN32
+#ifdef OS_WINDOWS
 void signal_setup() {}
 void signal_timer_disable() {}
 void signal_timer_enable(int timeout_seconds) {}

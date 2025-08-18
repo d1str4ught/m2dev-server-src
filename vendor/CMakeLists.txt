@@ -1,5 +1,22 @@
+## MariaDB-Connector-C
+set(INSTALL_PLUGINDIR "${CMAKE_BINARY_DIR}/mariadb_plugins")
+set(WITH_CURL OFF CACHE BOOL "")
+set(WITH_UNIT_TESTS OFF CACHE BOOL "")
+set(CLIENT_PLUGIN_DIALOG STATIC CACHE STRING "")
+set(CLIENT_PLUGIN_CLIENT_ED25519 STATIC CACHE STRING "")
+set(CLIENT_PLUGIN_CACHING_SHA2_PASSWORD STATIC CACHE STRING "")
+set(CLIENT_PLUGIN_SHA256_PASSWORD STATIC CACHE STRING "")
+set(CLIENT_PLUGIN_PARSE_CLIENT STATIC CACHE STRING "")
+set(CLIENT_PLUGIN_AUTH_GSSAPI_CLIENT OFF CACHE STRING "")
+set(CLIENT_PLUGIN_MYSQL_CLEAR_PASSWORD OFF CACHE STRING "")
+set(CLIENT_PLUGIN_PVIO_SHMEM STATIC CACHE STRING "")
+
 add_subdirectory(mariadb-connector-c-3.4.5 EXCLUDE_FROM_ALL)
+add_subdirectory(cryptopp)
 
 if (WIN32)
-	# set_target_properties(vstl PROPERTIES FOLDER vendor)
+	set_target_properties(ed25519_ref10 PROPERTIES FOLDER vendor)
+	set_target_properties(mariadb_obj PROPERTIES FOLDER vendor)
+	set_target_properties(mariadbclient PROPERTIES FOLDER vendor)
+	set_target_properties(cryptopp-static PROPERTIES FOLDER vendor)
 endif()

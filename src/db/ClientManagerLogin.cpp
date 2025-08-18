@@ -116,7 +116,7 @@ void CClientManager::QUERY_LOGIN_BY_KEY(CPeer * pkPeer, DWORD dwHandle, TPacketG
 	{
 		sys_log(0, "LOGIN_BY_KEY already login %s %lu", r.login, p->dwLoginKey);
 		TPacketDGLoginAlready ptog;
-		strlcpy(ptog.szLogin, szLogin, sizeof(ptog.szLogin));
+		std::strncpy(ptog.szLogin, szLogin, sizeof(ptog.szLogin));
 		pkPeer->EncodeHeader(HEADER_DG_LOGIN_ALREADY, dwHandle, sizeof(TPacketDGLoginAlready));
 		pkPeer->Encode(&ptog, sizeof(TPacketDGLoginAlready));
 		return;
@@ -147,13 +147,13 @@ void CClientManager::QUERY_LOGIN_BY_KEY(CPeer * pkPeer, DWORD dwHandle, TPacketG
 
 	pkTab->id = r.id;
 	trim_and_lower(r.login, pkTab->login, sizeof(pkTab->login));
-	strlcpy(pkTab->passwd, r.passwd, sizeof(pkTab->passwd));
-	strlcpy(pkTab->social_id, r.social_id, sizeof(pkTab->social_id));
-	strlcpy(pkTab->status, "OK", sizeof(pkTab->status));
+	std::strncpy(pkTab->passwd, r.passwd, sizeof(pkTab->passwd));
+	std::strncpy(pkTab->social_id, r.social_id, sizeof(pkTab->social_id));
+	std::strncpy(pkTab->status, "OK", sizeof(pkTab->status));
 
 	ClientHandleInfo * info = new ClientHandleInfo(dwHandle);
 	info->pAccountTable = pkTab;
-	strlcpy(info->ip, p->szIP, sizeof(info->ip));
+	std::strncpy(info->ip, p->szIP, sizeof(info->ip));
 
 	sys_log(0, "LOGIN_BY_KEY success %s %lu %s", r.login, p->dwLoginKey, info->ip);
 	char szQuery[QUERY_MAX_LEN];
@@ -250,17 +250,17 @@ TAccountTable * CreateAccountTableFromRes(MYSQL_RES * res)
 	memset(pkTab, 0, sizeof(TAccountTable));
 
 	// 첫번째 컬럼 것만 참고 한다 (JOIN QUERY를 위한 것 임)
-	strlcpy(input_pwd, row[col++], sizeof(input_pwd));
+	std::strncpy(input_pwd, row[col++], sizeof(input_pwd));
 	str_to_number(pkTab->id, row[col++]);
-	strlcpy(pkTab->login, row[col++], sizeof(pkTab->login));
-	strlcpy(pkTab->passwd, row[col++], sizeof(pkTab->passwd));
-	strlcpy(pkTab->social_id, row[col++], sizeof(pkTab->social_id));
+	std::strncpy(pkTab->login, row[col++], sizeof(pkTab->login));
+	std::strncpy(pkTab->passwd, row[col++], sizeof(pkTab->passwd));
+	std::strncpy(pkTab->social_id, row[col++], sizeof(pkTab->social_id));
 	str_to_number(pkTab->bEmpire, row[col++]);
 
 	for (int j = 0; j < PLAYER_PER_ACCOUNT; ++j)
 		str_to_number(pkTab->players[j].dwID, row[col++]);
 
-	strlcpy(pkTab->status, row[col++], sizeof(pkTab->status));
+	std::strncpy(pkTab->status, row[col++], sizeof(pkTab->status));
 
 	if (strcmp(pkTab->passwd, input_pwd))
 	{
@@ -298,7 +298,7 @@ void CreateAccountPlayerDataFromRes(MYSQL_RES * pRes, TAccountTable * pkTab)
 
 				if (pt)
 				{
-					strlcpy(pkTab->players[j].szName, pt->name, sizeof(pkTab->players[j].szName));
+					std::strncpy(pkTab->players[j].szName, pt->name, sizeof(pkTab->players[j].szName));
 
 					pkTab->players[j].byJob			= pt->job;
 					pkTab->players[j].byLevel			= pt->level;
@@ -319,7 +319,7 @@ void CreateAccountPlayerDataFromRes(MYSQL_RES * pRes, TAccountTable * pkTab)
 					if (!row[col++])
 						*pkTab->players[j].szName = '\0';
 					else
-						strlcpy(pkTab->players[j].szName, row[col - 1], sizeof(pkTab->players[j].szName));
+						std::strncpy(pkTab->players[j].szName, row[col - 1], sizeof(pkTab->players[j].szName));
 
 					pkTab->players[j].byJob			= 0;
 					pkTab->players[j].byLevel		= 0;
@@ -428,7 +428,7 @@ void CClientManager::RESULT_LOGIN(CPeer * peer, SQLMsg * msg)
 			sys_log(0, "RESULT_LOGIN: already logon %s", info->pAccountTable->login);
 
 			TPacketDGLoginAlready p;
-			strlcpy(p.szLogin, info->pAccountTable->login, sizeof(p.szLogin));
+			std::strncpy(p.szLogin, info->pAccountTable->login, sizeof(p.szLogin));
 
 			peer->EncodeHeader(HEADER_DG_LOGIN_ALREADY, info->dwHandle, sizeof(TPacketDGLoginAlready));
 			peer->Encode(&p, sizeof(p));
@@ -538,7 +538,7 @@ void CClientManager::QUERY_CHANGE_NAME(CPeer * peer, DWORD dwHandle, TPacketGDCh
 	TPacketDGChangeName pdg;
 	peer->EncodeHeader(HEADER_DG_CHANGE_NAME, dwHandle, sizeof(TPacketDGChangeName));
 	pdg.pid = p->pid;
-	strlcpy(pdg.name, p->name, sizeof(pdg.name));
+	std::strncpy(pdg.name, p->name, sizeof(pdg.name));
 	peer->Encode(&pdg, sizeof(TPacketDGChangeName));
 }
 

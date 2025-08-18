@@ -18,7 +18,7 @@
 #include "item.h"
 #include "item_manager.h"
 
-#include "../../common/VnumHelper.h"
+#include "common/VnumHelper.h"
 #include "DragonSoul.h"
 #include "cube.h"
 
@@ -892,8 +892,7 @@ bool ITEM_MANAGER::CreateDropItem(LPCHARACTER pkChr, LPCHARACTER pkKiller, std::
 
 	// Drop Item Group
 	{
-		itertype(m_map_pkDropItemGroup) it;
-		it = m_map_pkDropItemGroup.find(pkChr->GetRaceNum());
+		auto it = m_map_pkDropItemGroup.find(pkChr->GetRaceNum());
 
 		if (it != m_map_pkDropItemGroup.end())
 		{
@@ -926,8 +925,7 @@ bool ITEM_MANAGER::CreateDropItem(LPCHARACTER pkChr, LPCHARACTER pkKiller, std::
 
 	// MobDropItem Group
 	{
-		itertype(m_map_pkMobItemGroup) it;
-		it = m_map_pkMobItemGroup.find(pkChr->GetRaceNum());
+		auto it = m_map_pkMobItemGroup.find(pkChr->GetRaceNum());
 
 		if ( it != m_map_pkMobItemGroup.end() )
 		{
@@ -952,14 +950,13 @@ bool ITEM_MANAGER::CreateDropItem(LPCHARACTER pkChr, LPCHARACTER pkKiller, std::
 
 	// Level Item Group
 	{
-		itertype(m_map_pkLevelItemGroup) it;
-		it = m_map_pkLevelItemGroup.find(pkChr->GetRaceNum());
+		auto it = m_map_pkLevelItemGroup.find(pkChr->GetRaceNum());
 
 		if ( it != m_map_pkLevelItemGroup.end() )
 		{
 			if ( it->second->GetLevelLimit() <= (DWORD)iLevel )
 			{
-				__typeof(it->second->GetVector()) v = it->second->GetVector();
+				auto v = it->second->GetVector();
 
 				for ( DWORD i=0; i < v.size(); i++ )
 				{
@@ -979,13 +976,10 @@ bool ITEM_MANAGER::CreateDropItem(LPCHARACTER pkChr, LPCHARACTER pkKiller, std::
 		if (pkKiller->GetPremiumRemainSeconds(PREMIUM_ITEM) > 0 ||
 				pkKiller->IsEquipUniqueGroup(UNIQUE_GROUP_DOUBLE_ITEM))
 		{
-			itertype(m_map_pkGloveItemGroup) it;
-			it = m_map_pkGloveItemGroup.find(pkChr->GetRaceNum());
-
+			auto it = m_map_pkGloveItemGroup.find(pkChr->GetRaceNum());
 			if (it != m_map_pkGloveItemGroup.end())
 			{
-				__typeof(it->second->GetVector()) v = it->second->GetVector();
-
+				auto v = it->second->GetVector();
 				for (DWORD i = 0; i < v.size(); ++i)
 				{
 					int iPercent = (v[i].dwPct * iDeltaPercent) / 100;

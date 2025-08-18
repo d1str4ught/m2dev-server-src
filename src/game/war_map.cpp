@@ -1026,8 +1026,7 @@ bool CWarMapManager::GetStartPosition(long lMapIndex, BYTE bIdx, PIXEL_POSITION 
 	{
 		sys_log(0, "GetStartPosition FAILED [%d] WarMapInfoSize(%d)", lMapIndex, m_map_kWarMapInfo.size());
 
-		itertype(m_map_kWarMapInfo) it;
-		for (it	= m_map_kWarMapInfo.begin(); it != m_map_kWarMapInfo.end(); ++it)
+		for (auto it = m_map_kWarMapInfo.begin(); it != m_map_kWarMapInfo.end(); ++it)
 		{
 			PIXEL_POSITION& cur=it->second->posStart[bIdx];
 			sys_log(0, "WarMap[%d]=Pos(%d, %d)", it->first, cur.x, cur.y);

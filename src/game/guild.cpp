@@ -61,14 +61,14 @@ CGuild::CGuild(TGuildCreateParameter & cp)
 
 	m_iMemberCountBonus = 0;
 
-	strlcpy(m_data.name, cp.name, sizeof(m_data.name));
+	std::strncpy(m_data.name, cp.name, sizeof(m_data.name));
 	m_data.master_pid = cp.master->GetPlayerID();
-	strlcpy(m_data.grade_array[0].grade_name, LC_TEXT("길드장"), sizeof(m_data.grade_array[0].grade_name));
+	std::strncpy(m_data.grade_array[0].grade_name, LC_TEXT("길드장"), sizeof(m_data.grade_array[0].grade_name));
 	m_data.grade_array[0].auth_flag = GUILD_AUTH_ADD_MEMBER | GUILD_AUTH_REMOVE_MEMBER | GUILD_AUTH_NOTICE | GUILD_AUTH_USE_SKILL;
 
 	for (int i = 1; i < GUILD_GRADE_COUNT; ++i)
 	{
-		strlcpy(m_data.grade_array[i].grade_name, LC_TEXT("길드원"), sizeof(m_data.grade_array[i].grade_name));
+		std::strncpy(m_data.grade_array[i].grade_name, LC_TEXT("길드원"), sizeof(m_data.grade_array[i].grade_name));
 		m_data.grade_array[i].auth_flag = 0;
 	}
 
@@ -446,7 +446,7 @@ void CGuild::SendListPacket(LPCHARACTER ch)
 
 		buf.write(&(it->second), sizeof(DWORD)*3+1);
 
-		strlcpy(c, it->second.name.c_str(), MIN(sizeof(c), it->second.name.length() + 1));
+		std::strncpy(c, it->second.name.c_str(), MIN(sizeof(c), it->second.name.length() + 1));
 
 		buf.write(c, CHARACTER_NAME_MAX_LEN+1 );
 
@@ -579,7 +579,7 @@ void CGuild::LoadGuildGradeData(SQLMsg* pmsg)
 		if (grade >= 1 && grade <= 15)
 		{
 			//sys_log(0, "GuildGradeLoad %s", name);
-			strlcpy(m_data.grade_array[grade-1].grade_name, name, sizeof(m_data.grade_array[grade-1].grade_name));
+			std::strncpy(m_data.grade_array[grade-1].grade_name, name, sizeof(m_data.grade_array[grade-1].grade_name));
 			m_data.grade_array[grade-1].auth_flag = auth;
 		}
 	}
@@ -596,7 +596,7 @@ void CGuild::LoadGuildData(SQLMsg* pmsg)
 	m_data.master_pid = strtoul(row[0], (char **)NULL, 10);
 	m_data.level = (BYTE)strtoul(row[1], (char **)NULL, 10);
 	m_data.exp = strtoul(row[2], (char **)NULL, 10);
-	strlcpy(m_data.name, row[3], sizeof(m_data.name));
+	std::strncpy(m_data.name, row[3], sizeof(m_data.name));
 
 	m_data.skill_point = (BYTE) strtoul(row[4], (char **) NULL, 10);
 	if (row[5])
@@ -703,7 +703,7 @@ void CGuild::__P2PUpdateGrade(SQLMsg* pmsg)
 		// 등급 명칭이 현재와 다르다면 업데이트
 		if (0 != strcmp(m_data.grade_array[grade].grade_name, name))
 		{
-			strlcpy(m_data.grade_array[grade].grade_name, name, sizeof(m_data.grade_array[grade].grade_name));
+			std::strncpy(m_data.grade_array[grade].grade_name, name, sizeof(m_data.grade_array[grade].grade_name));
 
 			TPacketGCGuild pack;
 			
@@ -715,7 +715,7 @@ void CGuild::__P2PUpdateGrade(SQLMsg* pmsg)
 
 			pack.size += sizeof(pack2);
 			pack2.grade = grade + 1;
-			strlcpy(pack2.grade_name, name, sizeof(pack2.grade_name));
+			std::strncpy(pack2.grade_name, name, sizeof(pack2.grade_name));
 
 			TEMP_BUFFER buf;
 
@@ -810,7 +810,7 @@ void CGuild::ChangeGradeName(BYTE grade, const char* grade_name)
 	DBManager::instance().FuncAfterQuery(FSendChangeGrade(GetID(), grade), "UPDATE guild_grade%s SET name = '%s' where guild_id = %u and grade = %d", get_table_postfix(), text, m_data.guild_id, grade);
 
 	grade--;
-	strlcpy(m_data.grade_array[grade].grade_name, grade_name, sizeof(m_data.grade_array[grade].grade_name));
+	std::strncpy(m_data.grade_array[grade].grade_name, grade_name, sizeof(m_data.grade_array[grade].grade_name));
 
 	TPacketGCGuild pack;
 	pack.header = HEADER_GC_GUILD;
@@ -820,7 +820,7 @@ void CGuild::ChangeGradeName(BYTE grade, const char* grade_name)
 	TOneGradeNamePacket pack2;
 	pack.size+=sizeof(pack2);
 	pack2.grade = grade+1;
-	strlcpy(pack2.grade_name,grade_name, sizeof(pack2.grade_name));
+	std::strncpy(pack2.grade_name,grade_name, sizeof(pack2.grade_name));
 
 	TEMP_BUFFER buf;
 	buf.write(&pack,sizeof(pack));
@@ -896,7 +896,7 @@ void CGuild::SendGuildInfoPacket(LPCHARACTER ch)
 	pack_sub.master_pid = m_data.master_pid;
 	pack_sub.exp	= m_data.exp;
 	pack_sub.level	= m_data.level;
-	strlcpy(pack_sub.name, m_data.name, sizeof(pack_sub.name));
+	std::strncpy(pack_sub.name, m_data.name, sizeof(pack_sub.name));
 	pack_sub.gold	= m_data.gold;
 	pack_sub.has_land	= HasLand();
 
@@ -1085,8 +1085,8 @@ void CGuild::RefreshCommentForce(DWORD player_id)
 		MYSQL_ROW row = mysql_fetch_row(pmsg->Get()->pSQLResult);
 		DWORD id = strtoul(row[0], NULL, 10);
 
-		strlcpy(szName, row[1], sizeof(szName));
-		strlcpy(szContent, row[2], sizeof(szContent));
+		std::strncpy(szName, row[1], sizeof(szName));
+		std::strncpy(szContent, row[2], sizeof(szContent));
 
 		d->BufferedPacket(&id, sizeof(id));
 		d->BufferedPacket(szName, sizeof(szName));
@@ -1685,7 +1685,7 @@ void CGuild::Chat(const char* c_pszText)
 	p1.bHeader = HEADER_GG_GUILD;
 	p1.bSubHeader = GUILD_SUBHEADER_GG_CHAT;
 	p1.dwGuild = GetID();
-	strlcpy(p2.szText, c_pszText, sizeof(p2.szText));
+	std::strncpy(p2.szText, c_pszText, sizeof(p2.szText));
 
 	P2P_MANAGER::instance().Send(&p1, sizeof(TPacketGGGuild));
 	P2P_MANAGER::instance().Send(&p2, sizeof(TPacketGGGuildChat));

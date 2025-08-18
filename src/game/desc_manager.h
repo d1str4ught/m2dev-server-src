@@ -3,8 +3,8 @@
 
 #include <unordered_map>
 
-#include "../../common/stl.h"
-#include "../../common/length.h"
+#include "common/stl.h"
+#include "common/length.h"
 #include "IFileMonitor.h"
 
 class CLoginKey;

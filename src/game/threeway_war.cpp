@@ -2,8 +2,8 @@
 
 #include "threeway_war.h"
 
-#include "../../common/length.h"
-#include "../../common/tables.h"
+#include "common/length.h"
+#include "common/tables.h"
 #include "p2p.h"
 #include "locale_service.h"
 #include "packet.h"

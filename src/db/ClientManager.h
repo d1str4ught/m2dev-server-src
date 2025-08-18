@@ -5,9 +5,9 @@
 #include <unordered_map>
 #include <unordered_set>
 
-#include "../../common/stl.h"
-#include "../../common/building.h"
-#include "../../common/auction_table.h"
+#include "common/stl.h"
+#include "common/building.h"
+#include "common/auction_table.h"
 
 #include "Peer.h"
 #include "DBManager.h"

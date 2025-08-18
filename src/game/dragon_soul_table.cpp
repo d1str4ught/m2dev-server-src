@@ -3,7 +3,7 @@
 #include "group_text_parse_tree.h"
 #include "dragon_soul_table.h"
 #include "item_manager.h"
-#include <boost/lexical_cast.hpp>
+
 const std::string g_astGradeName[] =
 {
 	"grade_normal",
@@ -788,7 +788,7 @@ bool DragonSoulTable::GetRefineStrengthValues(BYTE ds_type, BYTE material_type, 
 			stDragonSoulName.c_str(), g_astMaterialName[material_type].c_str());
 		return false;
 	}
-	std::string stStrengthIdx = boost::lexical_cast <std::string> ((int)strength_idx);
+	std::string stStrengthIdx = std::to_string((int)strength_idx);
 
 	if (!m_pRefineStrengthTableNode->GetGroupValue(stDragonSoulName, g_astMaterialName[material_type], stStrengthIdx, prob))
 	{

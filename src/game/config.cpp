@@ -19,7 +19,6 @@
 #include "dev_log.h"
 #include "db.h"
 #include "skill_power.h"
-#include "check_server.h"
 
 using std::string;
 
@@ -272,7 +271,7 @@ bool GetIPInfo()
 
 		if (!strncmp(netip, "192.168", 7)) // ignore if address is starting with 192
 		{
-			strlcpy(g_szInternalIP, netip, sizeof(g_szInternalIP));
+			std::strncpy(g_szInternalIP, netip, sizeof(g_szInternalIP));
 #ifndef OS_WINDOWS
 			fprintf(stderr, "INTERNAL_IP: %s interface %s\n", netip, ifap->ifa_name);
 #else
@@ -281,7 +280,7 @@ bool GetIPInfo()
 		}
 		else if (!strncmp(netip, "10.", 3))
 		{
-			strlcpy(g_szInternalIP, netip, sizeof(g_szInternalIP));
+			std::strncpy(g_szInternalIP, netip, sizeof(g_szInternalIP));
 #ifndef OS_WINDOWS
 			fprintf(stderr, "INTERNAL_IP: %s interface %s\n", netip, ifap->ifa_name);
 #else
@@ -290,7 +289,7 @@ bool GetIPInfo()
 		}
 		else if (g_szPublicIP[0] == '0')
 		{
-			strlcpy(g_szPublicIP, netip, sizeof(g_szPublicIP));
+			std::strncpy(g_szPublicIP, netip, sizeof(g_szPublicIP));
 #ifndef OS_WINDOWS
 			fprintf(stderr, "PUBLIC_IP: %s interface %s\n", netip, ifap->ifa_name);
 #else
@@ -318,7 +317,7 @@ bool GetIPInfo()
 		}
 		else
 		{
-			strlcpy(g_szPublicIP, g_szInternalIP, sizeof(g_szPublicIP));
+			std::strncpy(g_szPublicIP, g_szInternalIP, sizeof(g_szPublicIP));
 			fprintf(stderr, "PUBLIC_IP: %s (from INTERNAL_IP)\n", g_szPublicIP);
 			return true;
 		}
@@ -801,7 +800,7 @@ void config_init(const string& st_localeServiceName)
 
 		TOKEN("db_addr")
 		{
-			strlcpy(db_addr, value_string, sizeof(db_addr));
+			std::strncpy(db_addr, value_string, sizeof(db_addr));
 
 			for (int n =0; n < ADDRESS_MAX_LEN; ++n)
 			{
@@ -999,7 +998,7 @@ void config_init(const string& st_localeServiceName)
 
 		TOKEN("teen_addr")
 		{
-			strlcpy(teen_addr, value_string, sizeof(teen_addr));
+			std::strncpy(teen_addr, value_string, sizeof(teen_addr));
 
 			for (int n =0; n < ADDRESS_MAX_LEN; ++n)
 			{
@@ -1042,7 +1041,7 @@ void config_init(const string& st_localeServiceName)
 
 		TOKEN("bind_ip")
 		{
-			strlcpy(g_szPublicIP, value_string, sizeof(g_szPublicIP));
+			std::strncpy(g_szPublicIP, value_string, sizeof(g_szPublicIP));
 		}
 
 		TOKEN("view_range")
@@ -1151,12 +1150,6 @@ void config_init(const string& st_localeServiceName)
 			else
 				g_BlockCharCreation = true;
 
-			continue;
-		}
-
-		TOKEN("server_key")
-		{
-			CheckServer::AddServerKey(value_string);
 			continue;
 		}
 

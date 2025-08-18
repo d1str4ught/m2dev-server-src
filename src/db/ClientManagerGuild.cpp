@@ -60,7 +60,7 @@ void CClientManager::GuildAddMember(CPeer* peer, TPacketGDGuildAddMember * p)
 	str_to_number(dg.dwOffer, row[3]);
 	str_to_number(dg.bLevel, row[4]);
 	str_to_number(dg.bJob, row[5]);
-	strlcpy(dg.szName, row[6], sizeof(dg.szName));
+	std::strncpy(dg.szName, row[6], sizeof(dg.szName));
 
 	ForwardPacket(HEADER_DG_GUILD_ADD_MEMBER, &dg, sizeof(TPacketDGGuildMember));
 }

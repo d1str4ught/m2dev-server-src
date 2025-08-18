@@ -313,8 +313,8 @@ bool CClientManager::InitializeMobTable()
 			TMobTable *tempTable = it_map_mobTable->second;
 
 			mob_table->dwVnum = tempTable->dwVnum;
-			strlcpy(mob_table->szName, tempTable->szName, sizeof(tempTable->szName));
-			strlcpy(mob_table->szLocaleName, tempTable->szLocaleName, sizeof(tempTable->szName));
+			std::strncpy(mob_table->szName, tempTable->szName, sizeof(tempTable->szName));
+			std::strncpy(mob_table->szLocaleName, tempTable->szLocaleName, sizeof(tempTable->szName));
 			mob_table->bRank = tempTable->bRank;
 			mob_table->bType = tempTable->bType;
 			mob_table->bBattleType = tempTable->bBattleType;
@@ -324,7 +324,7 @@ bool CClientManager::InitializeMobTable()
 			mob_table->dwRaceFlag = tempTable->dwRaceFlag;
 			mob_table->dwImmuneFlag = tempTable->dwImmuneFlag;
 			mob_table->bEmpire = tempTable->bEmpire;
-			strlcpy(mob_table->szFolder, tempTable->szFolder, sizeof(tempTable->szName));
+			std::strncpy(mob_table->szFolder, tempTable->szFolder, sizeof(tempTable->szName));
 			mob_table->bOnClickType = tempTable->bOnClickType;
 			mob_table->bStr = tempTable->bStr;
 			mob_table->bDex = tempTable->bDex;
@@ -546,12 +546,12 @@ bool CClientManager::InitializeQuestItemTable()
 		str_to_number(tbl.dwVnum, row[col++]);
 
 		if (row[col])
-			strlcpy(tbl.szName, row[col], sizeof(tbl.szName));
+			std::strncpy(tbl.szName, row[col], sizeof(tbl.szName));
 
 		col++;
 
 		if (row[col])
-			strlcpy(tbl.szLocaleName, row[col], sizeof(tbl.szLocaleName));
+			std::strncpy(tbl.szLocaleName, row[col], sizeof(tbl.szLocaleName));
 
 		col++;
 
@@ -725,8 +725,8 @@ bool CClientManager::InitializeItemTable()
 			TItemTable *tempTable = it_map_itemTable->second;
 
 			item_table->dwVnum = tempTable->dwVnum;
-			strlcpy(item_table->szName, tempTable->szName, sizeof(item_table->szName));
-			strlcpy(item_table->szLocaleName, tempTable->szLocaleName, sizeof(item_table->szLocaleName));
+			std::strncpy(item_table->szName, tempTable->szName, sizeof(item_table->szName));
+			std::strncpy(item_table->szLocaleName, tempTable->szLocaleName, sizeof(item_table->szLocaleName));
 			item_table->bType = tempTable->bType;
 			item_table->bSubType = tempTable->bSubType;
 			item_table->bSize = tempTable->bSize;
@@ -889,33 +889,33 @@ bool CClientManager::InitializeSkillTable()
 		col = 0;
 
 		str_to_number(t.dwVnum, data[col++]);
-		strlcpy(t.szName, data[col++], sizeof(t.szName));
+		std::strncpy(t.szName, data[col++], sizeof(t.szName));
 		str_to_number(t.bType, data[col++]);
 		str_to_number(t.bMaxLevel, data[col++]);
 		str_to_number(t.dwSplashRange, data[col++]);
 
-		strlcpy(t.szPointOn, data[col++], sizeof(t.szPointOn));
-		strlcpy(t.szPointPoly, data[col++], sizeof(t.szPointPoly));
-		strlcpy(t.szSPCostPoly, data[col++], sizeof(t.szSPCostPoly));
-		strlcpy(t.szDurationPoly, data[col++], sizeof(t.szDurationPoly));
-		strlcpy(t.szDurationSPCostPoly, data[col++], sizeof(t.szDurationSPCostPoly));
-		strlcpy(t.szCooldownPoly, data[col++], sizeof(t.szCooldownPoly));
-		strlcpy(t.szMasterBonusPoly, data[col++], sizeof(t.szMasterBonusPoly));
+		std::strncpy(t.szPointOn, data[col++], sizeof(t.szPointOn));
+		std::strncpy(t.szPointPoly, data[col++], sizeof(t.szPointPoly));
+		std::strncpy(t.szSPCostPoly, data[col++], sizeof(t.szSPCostPoly));
+		std::strncpy(t.szDurationPoly, data[col++], sizeof(t.szDurationPoly));
+		std::strncpy(t.szDurationSPCostPoly, data[col++], sizeof(t.szDurationSPCostPoly));
+		std::strncpy(t.szCooldownPoly, data[col++], sizeof(t.szCooldownPoly));
+		std::strncpy(t.szMasterBonusPoly, data[col++], sizeof(t.szMasterBonusPoly));
 
 		str_to_number(t.dwFlag, data[col++]);
 		str_to_number(t.dwAffectFlag, data[col++]);
 
-		strlcpy(t.szPointOn2, data[col++], sizeof(t.szPointOn2));
-		strlcpy(t.szPointPoly2, data[col++], sizeof(t.szPointPoly2));
-		strlcpy(t.szDurationPoly2, data[col++], sizeof(t.szDurationPoly2));
+		std::strncpy(t.szPointOn2, data[col++], sizeof(t.szPointOn2));
+		std::strncpy(t.szPointPoly2, data[col++], sizeof(t.szPointPoly2));
+		std::strncpy(t.szDurationPoly2, data[col++], sizeof(t.szDurationPoly2));
 		str_to_number(t.dwAffectFlag2, data[col++]);
 
 		// ADD_GRANDMASTER_SKILL
-		strlcpy(t.szPointOn3, data[col++], sizeof(t.szPointOn3));
-		strlcpy(t.szPointPoly3, data[col++], sizeof(t.szPointPoly3));
-		strlcpy(t.szDurationPoly3, data[col++], sizeof(t.szDurationPoly3));
+		std::strncpy(t.szPointOn3, data[col++], sizeof(t.szPointOn3));
+		std::strncpy(t.szPointPoly3, data[col++], sizeof(t.szPointPoly3));
+		std::strncpy(t.szDurationPoly3, data[col++], sizeof(t.szDurationPoly3));
 
-		strlcpy(t.szGrandMasterAddSPCostPoly, data[col++], sizeof(t.szGrandMasterAddSPCostPoly));
+		std::strncpy(t.szGrandMasterAddSPCostPoly, data[col++], sizeof(t.szGrandMasterAddSPCostPoly));
 		// END_OF_ADD_GRANDMASTER_SKILL
 
 		str_to_number(t.bLevelStep, data[col++]);
@@ -925,7 +925,7 @@ bool CClientManager::InitializeSkillTable()
 
 		str_to_number(t.lMaxHit, data[col++]);
 
-		strlcpy(t.szSplashAroundDamageAdjustPoly, data[col++], sizeof(t.szSplashAroundDamageAdjustPoly));
+		std::strncpy(t.szSplashAroundDamageAdjustPoly, data[col++], sizeof(t.szSplashAroundDamageAdjustPoly));
 
 		str_to_number(t.bSkillAttrType, data[col++]);
 		str_to_number(t.dwTargetRange, data[col++]);
@@ -957,7 +957,7 @@ bool CClientManager::InitializeBanwordTable()
 
 		if (data[0])
 		{
-			strlcpy(t.szWord, data[0], sizeof(t.szWord));
+			std::strncpy(t.szWord, data[0], sizeof(t.szWord));
 			m_vec_banwordTable.push_back(t);
 		}
 	}
@@ -1000,7 +1000,7 @@ bool CClientManager::InitializeItemAttrTable()
 
 		int col = 0;
 
-		strlcpy(t.szApply, data[col++], sizeof(t.szApply));
+		std::strncpy(t.szApply, data[col++], sizeof(t.szApply));
 		str_to_number(t.dwApplyIndex, data[col++]);
 		str_to_number(t.dwProb, data[col++]);
 		str_to_number(t.lValues[0], data[col++]);
@@ -1074,7 +1074,7 @@ bool CClientManager::InitializeItemRareTable()
 
 		int col = 0;
 
-		strlcpy(t.szApply, data[col++], sizeof(t.szApply));
+		std::strncpy(t.szApply, data[col++], sizeof(t.szApply));
 		str_to_number(t.dwApplyIndex, data[col++]);
 		str_to_number(t.dwProb, data[col++]);
 		str_to_number(t.lValues[0], data[col++]);
@@ -1179,7 +1179,7 @@ void parse_pair_number_string(const char * c_pszString, std::vector<std::pair<in
 	{
 		if (isnhdigit(*t))
 		{
-			strlcpy(szNum, t, MIN(sizeof(szNum), (p-t)+1));
+			std::strncpy(szNum, t, MIN(sizeof(szNum), (p-t)+1));
 
 			comma = strchr(szNum, ',');
 
@@ -1201,7 +1201,7 @@ void parse_pair_number_string(const char * c_pszString, std::vector<std::pair<in
 
 	if (isnhdigit(*t))
 	{
-		strlcpy(szNum, t, sizeof(szNum));
+		std::strncpy(szNum, t, sizeof(szNum));
 
 		comma = strchr(const_cast<char*>(t), ',');
 

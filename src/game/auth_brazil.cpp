@@ -16,7 +16,7 @@
 #ifdef OS_FREEBSD
 #include <md5.h>
 #else
-#include "../../libthecore/include/xmd5.h"
+#include "libthecore/xmd5.h"
 #endif
 
 #include "auth_brazil.h"
@@ -57,7 +57,7 @@ static int FN_make_request(const char *login, const char *password, /*out*/ char
 static int FN_parse_reply(char *reply)
 {
     char buffer[2048];
-    strlcpy(buffer, reply, sizeof(buffer));
+    std::strncpy(buffer, reply, sizeof(buffer));
 
     const char *delim = "\r\n";
     char *last = 0;

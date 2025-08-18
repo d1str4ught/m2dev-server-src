@@ -9,7 +9,7 @@
 
 #include "stdafx.h" 
 #include "constants.h"
-#include "../../common/teen_packet.h"
+#include "common/teen_packet.h"
 #include "input.h"
 #include "desc.h"
 #include "desc_manager.h"

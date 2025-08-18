@@ -5,6 +5,11 @@
 #include "lzo_manager.h"
 #define CLZO LZOManager
 
+#define STB_IMAGE_IMPLEMENTATION
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+#include "stb_image.h"
+#include "stb_image_write.h"
+
 CGuildMarkImage * NewMarkImage()
 {
 	return M2_NEW CGuildMarkImage;
@@ -16,7 +21,6 @@ void DeleteMarkImage(CGuildMarkImage * pkImage)
 }
 
 CGuildMarkImage::CGuildMarkImage()
-	: m_uImg(INVALID_HANDLE)
 {
 	memset( &m_apxImage, 0, sizeof(m_apxImage) );
 }
@@ -28,29 +32,18 @@ CGuildMarkImage::~CGuildMarkImage()
 
 void CGuildMarkImage::Destroy()
 {
-	if (INVALID_HANDLE == m_uImg)
-		return;
-
-	ilDeleteImages(1, &m_uImg);
-	m_uImg = INVALID_HANDLE;
+	memset(m_apxImage, 0, sizeof(m_apxImage));
 }
 
 void CGuildMarkImage::Create()
 {
-	if (INVALID_HANDLE != m_uImg)
-		return;
-
-	ilGenImages(1, &m_uImg);
+	memset(m_apxImage, 0, sizeof(m_apxImage));
 }
 
 bool CGuildMarkImage::Save(const char* c_szFileName) 
 {
-	ilEnable(IL_FILE_OVERWRITE);
-	ilBindImage(m_uImg);
-
-	if (!ilSave(IL_TGA, (const ILstring)c_szFileName))
+	if (stbi_write_tga(c_szFileName, WIDTH, HEIGHT, 4, m_apxImage) == 0)
 		return false;
-
 	return true;
 }
 
@@ -58,60 +51,31 @@ bool CGuildMarkImage::Build(const char * c_szFileName)
 {
 	sys_log(0, "GuildMarkImage: creating new file %s", c_szFileName);
 
-	Destroy();
-	Create();
-
-	ilBindImage(m_uImg);
-	ilEnable(IL_ORIGIN_SET);
-	ilOriginFunc(IL_ORIGIN_UPPER_LEFT);
-
-	BYTE * data = (BYTE *) malloc(sizeof(Pixel) * WIDTH * HEIGHT);
-	memset(data, 0, sizeof(Pixel) * WIDTH * HEIGHT);
-
-	if (!ilTexImage(WIDTH, HEIGHT, 1, 4, IL_BGRA, IL_UNSIGNED_BYTE, data))
-	{
+	memset(m_apxImage, 0, sizeof(m_apxImage));
+	if (!Save(c_szFileName)) {
 		sys_err("GuildMarkImage: cannot initialize image");
 		return false;
 	}
-
-	free(data);
-
-	ilEnable(IL_FILE_OVERWRITE);
-
-	if (!ilSave(IL_TGA, (const ILstring)c_szFileName))
-		return false;
-
 	return true;
 }
 
 bool CGuildMarkImage::Load(const char * c_szFileName) 
 {
-	Destroy();
-	Create();	
-
-	ilBindImage(m_uImg);
-	ilEnable(IL_ORIGIN_SET);
-	ilOriginFunc(IL_ORIGIN_UPPER_LEFT);
-
-	if (!ilLoad(IL_TYPE_UNKNOWN, (const ILstring) c_szFileName))
-	{
+	int w, h, channels;
+	unsigned char* data = stbi_load(c_szFileName, &w, &h, &channels, 4);
+	if (!data) {
 		sys_err("GuildMarkImage: %s cannot open file.", c_szFileName);
 		return false;
 	}
 
-	if (ilGetInteger(IL_IMAGE_WIDTH) != WIDTH)	
-	{
-		sys_err("GuildMarkImage: %s width must be %u", c_szFileName, WIDTH);
+	if (w != WIDTH || h != HEIGHT) {
+		sys_err("GuildMarkImage: %s wrong dimensions (%d x %d)", c_szFileName, w, h);
+		stbi_image_free(data);
 		return false;
 	}
 
-	if (ilGetInteger(IL_IMAGE_HEIGHT) != HEIGHT)
-	{
-		sys_err("GuildMarkImage: %s height must be %u", c_szFileName, HEIGHT);
-		return false;
-	}
-
-	ilConvertImage(IL_BGRA, IL_UNSIGNED_BYTE);
+	memcpy(m_apxImage, data, WIDTH * HEIGHT * 4);
+	stbi_image_free(data);
 
 	BuildAllBlocks();
 	return true;
@@ -119,14 +83,20 @@ bool CGuildMarkImage::Load(const char * c_szFileName)
 
 void CGuildMarkImage::PutData(UINT x, UINT y, UINT width, UINT height, void * data)
 {
-	ilBindImage(m_uImg);
-	ilSetPixels(x, y, 0, width, height, 1, IL_BGRA, IL_UNSIGNED_BYTE, data);
+	for (UINT row = 0; row < height; ++row) {
+		Pixel* dst = m_apxImage + (y + row) * WIDTH + x;
+		Pixel* src = (Pixel*)data + row * width;
+		memcpy(dst, src, width * sizeof(Pixel));
+	}
 }
 
 void CGuildMarkImage::GetData(UINT x, UINT y, UINT width, UINT height, void * data)
 {
-	ilBindImage(m_uImg);
-	ilCopyPixels(x, y, 0, width, height, 1, IL_BGRA, IL_UNSIGNED_BYTE, data);	
+	for (UINT row = 0; row < height; ++row) {
+		Pixel* src = m_apxImage + (y + row) * WIDTH + x;
+		Pixel* dst = (Pixel*)data + row * width;
+		memcpy(dst, src, width * sizeof(Pixel));
+	}
 }
 
 // 이미지 = 512x512

@@ -156,7 +156,7 @@ LPDESC DESC_MANAGER::AcceptDesc(LPFDWATCH fdw, socket_t s)
 	if ((desc = socket_accept(s, &peer)) == -1)
 		return NULL;
 
-	strlcpy(host, inet_ntoa(peer.sin_addr), sizeof(host));
+	std::strncpy(host, inet_ntoa(peer.sin_addr), sizeof(host));
 
 	if (g_bAuthServer)
 	{
@@ -205,7 +205,7 @@ LPDESC DESC_MANAGER::AcceptP2PDesc(LPFDWATCH fdw, socket_t bind_fd)
 	if ((fd = socket_accept(bind_fd, &peer)) == -1)
 		return NULL;
 
-	strlcpy(host, inet_ntoa(peer.sin_addr), sizeof(host));
+	std::strncpy(host, inet_ntoa(peer.sin_addr), sizeof(host));
 
 	LPDESC_P2P pkDesc = M2_NEW DESC_P2P;
 

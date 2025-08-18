@@ -1,9 +1,9 @@
 ﻿#include "stdafx.h"
 #include "ClientPackageCryptInfo.h"
-#include "../../common/stl.h"
+#include "common/stl.h"
 
 #ifndef OS_FREEBSD
-#include "../../libthecore/include/xdirent.h"
+#include "libthecore/xdirent.h"
 #endif
 
 CClientPackageCryptInfo::CClientPackageCryptInfo() : m_pSerializedCryptKeyStream(NULL), m_nCryptKeyPackageCnt(0)

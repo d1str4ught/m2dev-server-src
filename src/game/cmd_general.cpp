@@ -2,7 +2,7 @@
 #ifdef OS_FREEBSD
 #include <md5.h>
 #else
-#include "../../libthecore/include/xmd5.h"
+#include "libthecore/xmd5.h"
 #endif
 
 #include "utils.h"
@@ -33,7 +33,7 @@
 #include "unique_item.h"
 #include "threeway_war.h"
 #include "log.h"
-#include "../../common/VnumHelper.h"
+#include "common/VnumHelper.h"
 #ifdef __AUCTION__
 #include "auction_manager.h"
 #endif
@@ -390,7 +390,7 @@ ACMD(do_cmd)
 
 				info->ch		= ch;
 				info->subcmd		= subcmd;
-				strlcpy(info->szReason, argument, sizeof(info->szReason));
+				std::strncpy(info->szReason, argument, sizeof(info->szReason));
 
 				ch->m_pkTimedEvent	= event_create(timed_event, info, 1);
 			}
@@ -928,8 +928,8 @@ ACMD(do_safebox_change_password)
 	TSafeboxChangePasswordPacket p;
 
 	p.dwID = ch->GetDesc()->GetAccountTable().id;
-	strlcpy(p.szOldPassword, arg1, sizeof(p.szOldPassword));
-	strlcpy(p.szNewPassword, arg2, sizeof(p.szNewPassword));
+	std::strncpy(p.szOldPassword, arg1, sizeof(p.szOldPassword));
+	std::strncpy(p.szNewPassword, arg2, sizeof(p.szNewPassword));
 
 	db_clientdesc->DBPacket(HEADER_GD_SAFEBOX_CHANGE_PASSWORD, ch->GetDesc()->GetHandle(), &p, sizeof(p));
 }
@@ -963,8 +963,8 @@ ACMD(do_mall_password)
 
 	TSafeboxLoadPacket p;
 	p.dwID = ch->GetDesc()->GetAccountTable().id;
-	strlcpy(p.szLogin, ch->GetDesc()->GetAccountTable().login, sizeof(p.szLogin));
-	strlcpy(p.szPassword, arg1, sizeof(p.szPassword));
+	std::strncpy(p.szLogin, ch->GetDesc()->GetAccountTable().login, sizeof(p.szLogin));
+	std::strncpy(p.szPassword, arg1, sizeof(p.szPassword));
 
 	db_clientdesc->DBPacket(HEADER_GD_MALL_LOAD, ch->GetDesc()->GetHandle(), &p, sizeof(p));
 }
@@ -1641,7 +1641,7 @@ ACMD(do_monarch_transfer)
 			TPacketGGTransfer pgg;
 
 			pgg.bHeader = HEADER_GG_TRANSFER;
-			strlcpy(pgg.szName, arg1, sizeof(pgg.szName));
+			std::strncpy(pgg.szName, arg1, sizeof(pgg.szName));
 			pgg.lX = ch->GetX();
 			pgg.lY = ch->GetY();
 

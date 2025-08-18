@@ -63,7 +63,6 @@
 #include "SpeedServer.h"
 // #include "XTrapManager.h"
 #include "DragonSoul.h"
-#include <boost/bind.hpp>
 #ifndef OS_WINDOWS
 	#include "limit_time.h"
 #endif
@@ -90,7 +89,6 @@
 #ifdef _WIN32
 	//#define _USE_SERVER_KEY_
 #endif
-#include "check_server.h"
 
 extern void WriteVersion();
 //extern const char * _malloc_options;
@@ -186,11 +184,11 @@ void ShutdownOnFatalError()
 		{
 			char buf[256];
 
-			strlcpy(buf, LC_TEXT("서버에 치명적인 오류가 발생하여 자동으로 재부팅됩니다."), sizeof(buf));
+			std::strncpy(buf, LC_TEXT("서버에 치명적인 오류가 발생하여 자동으로 재부팅됩니다."), sizeof(buf));
 			SendNotice(buf);
-			strlcpy(buf, LC_TEXT("10초후 자동으로 접속이 종료되며,"), sizeof(buf));
+			std::strncpy(buf, LC_TEXT("10초후 자동으로 접속이 종료되며,"), sizeof(buf));
 			SendNotice(buf);
-			strlcpy(buf, LC_TEXT("5분 후에 정상적으로 접속하실수 있습니다."), sizeof(buf));
+			std::strncpy(buf, LC_TEXT("5분 후에 정상적으로 접속하실수 있습니다."), sizeof(buf));
 			SendNotice(buf);
 		}
 
@@ -460,8 +458,6 @@ int main(int argc, char **argv)
 	// }
 // #endif
 
-	ilInit(); // DevIL Initialize
-
 	WriteVersion();
 	
 	SECTREE_MANAGER	sectree_manager;
@@ -722,7 +718,7 @@ int start(int argc, char **argv)
 		switch (ch)
 		{
 			case 'I': // IP
-				strlcpy(g_szPublicIP, argv[optind], sizeof(g_szPublicIP));
+				std::strncpy(g_szPublicIP, argv[optind], sizeof(g_szPublicIP));
 
 				printf("IP %s\n", g_szPublicIP);
 

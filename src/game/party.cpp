@@ -689,7 +689,7 @@ void CParty::SendPartyJoinOneToAll(DWORD pid)
 
 	p.header = HEADER_GC_PARTY_ADD;
 	p.pid = pid;
-	strlcpy(p.name, r.strName.c_str(), sizeof(p.name));
+	std::strncpy(p.name, r.strName.c_str(), sizeof(p.name));
 
 	for (TMemberMap::iterator it = m_memberMap.begin(); it != m_memberMap.end(); ++it)
 	{
@@ -711,7 +711,7 @@ void CParty::SendPartyJoinAllToOne(LPCHARACTER ch)
 	for (TMemberMap::iterator it = m_memberMap.begin();it!= m_memberMap.end(); ++it)
 	{
 		p.pid = it->first;
-		strlcpy(p.name, it->second.strName.c_str(), sizeof(p.name));
+		std::strncpy(p.name, it->second.strName.c_str(), sizeof(p.name));
 		ch->GetDesc()->Packet(&p, sizeof(p));
 	}
 }
@@ -1441,7 +1441,7 @@ void CParty::UpdateOnlineState(DWORD dwPID, const char* name)
 	p.header = HEADER_GC_PARTY_ADD;
 	p.pid = dwPID;
 	r.strName = name;
-	strlcpy(p.name, name, sizeof(p.name));
+	std::strncpy(p.name, name, sizeof(p.name));
 
 	for (TMemberMap::iterator it = m_memberMap.begin(); it != m_memberMap.end(); ++it)
 	{

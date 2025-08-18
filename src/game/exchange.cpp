@@ -1,5 +1,5 @@
 ﻿#include "stdafx.h"
-#include "../../libgame/include/grid.h"
+#include "libgame/grid.h"
 #include "utils.h"
 #include "desc.h"
 #include "desc_client.h"
@@ -10,7 +10,7 @@
 #include "log.h"
 #include "db.h"
 #include "locale_service.h"
-#include "../../common/length.h"
+#include "common/length.h"
 #include "exchange.h"
 #include "DragonSoul.h"
 

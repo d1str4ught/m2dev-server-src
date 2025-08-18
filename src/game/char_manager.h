@@ -5,8 +5,8 @@
 #include "pool.h"
 #endif
 
-#include "../../common/stl.h"
-#include "../../common/length.h"
+#include "common/stl.h"
+#include "common/length.h"
 
 #include "vid.h"
 

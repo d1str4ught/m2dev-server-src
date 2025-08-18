@@ -7,10 +7,8 @@
 #endif
 
 #ifdef OS_WINDOWS
-#define WIN32_LEAN_AND_MEAN
-
-#include <windows.h>
 #include <winsock2.h>
+#include <windows.h>
 #include <tchar.h>
 #include <errno.h>
 #include <time.h>
@@ -40,16 +38,12 @@
 
 // C runtime library adjustments
 
-#ifdef OS_FREEBSD
-#define strlcat(dst, src, size) strcat_s(dst, size, src)
-#define strtoull(str, endptr, base) _strtoui64(str, endptr, base)
-#define strtof(str, endptr) (float)strtod(str, endptr)
 #define strcasecmp(s1, s2) stricmp(s1, s2)
 #define strncasecmp(s1, s2, n) strnicmp(s1, s2, n)
-#define atoll(str) _atoi64(str)
-#define localtime_r(timet, result) localtime_s(result, timet)
 #define strtok_r(s, delim, ptrptr) strtok_s(s, delim, ptrptr)
-#endif
+#define strlcat(dst, src, size) strcat_s(dst, size, src)
+#define localtime_r(timet, result) localtime_s(result, timet)
+#define strlcpy(dst, src, size) strncpy_s(dst, size, src, _TRUNCATE)
 
 #define __typeof(t) auto
 

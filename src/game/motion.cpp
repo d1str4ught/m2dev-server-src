@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "../../common/stl.h"
+#include "common/stl.h"
 #include "constants.h"
 #include "motion.h"
 #include "text_file_loader.h"

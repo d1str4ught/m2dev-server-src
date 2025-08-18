@@ -1,4 +1,4 @@
-﻿file(GLOB_RECURSE GAME_SOURCES "*.h" "*.cpp")
+﻿file(GLOB_RECURSE GAME_SOURCES "*.h" "*.c" "*.cpp")
 
 add_executable(game ${GAME_SOURCES})
 
@@ -12,6 +12,7 @@ target_link_libraries(game
 
 	# external
 	mariadbclient
+	cryptopp-static
 )
 
 if (WIN32)

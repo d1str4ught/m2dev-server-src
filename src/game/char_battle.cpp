@@ -1474,7 +1474,7 @@ void CHARACTER::Dead(LPCHARACTER pkKiller, bool bImmediateDead)
 	{
 		if (m_pkDeadEvent)
 		{
-			sys_log(1, "DEAD_EVENT_CANCEL: %s %p %p", GetName(), this, get_pointer(m_pkDeadEvent));
+			sys_log(1, "DEAD_EVENT_CANCEL: %s %p %p", GetName(), this, m_pkDeadEvent.get());
 			event_cancel(&m_pkDeadEvent);
 		}
 
@@ -1510,7 +1510,7 @@ void CHARACTER::Dead(LPCHARACTER pkKiller, bool bImmediateDead)
 			}
 		}
 
-		sys_log(1, "DEAD_EVENT_CREATE: %s %p %p", GetName(), this, get_pointer(m_pkDeadEvent));
+		sys_log(1, "DEAD_EVENT_CREATE: %s %p %p", GetName(), this, m_pkDeadEvent.get());
 	}
 
 	if (m_pkExchange != NULL)

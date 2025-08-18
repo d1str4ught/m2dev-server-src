@@ -7,7 +7,7 @@
 #include <vector>
 #include <utility>
 
-#include "../../common/singleton.h"
+#include "common/singleton.h"
 #include "utils.h"
 
 class SpamManager : public singleton<SpamManager>

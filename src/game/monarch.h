@@ -1,7 +1,7 @@
 ﻿#ifndef __INC_METIN_II_MONARCH_H__
 #define __INC_METIN_II_MONARCH_H__
 
-#include "../../common/tables.h"
+#include "common/tables.h"
 
 class CMonarch : public singleton<CMonarch>
 {

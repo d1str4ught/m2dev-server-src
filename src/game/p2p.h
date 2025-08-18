@@ -5,7 +5,7 @@
 #include <unordered_map>
 
 #include "input.h"
-#include "../../common/stl.h"
+#include "common/stl.h"
 
 typedef struct _CCI
 {

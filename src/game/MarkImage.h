@@ -1,7 +1,6 @@
 ﻿#ifndef __INC_METIN_II_MARKIMAGE_H__
 #define __INC_METIN_II_MARKIMAGE_H__
 
-#include <IL/il.h>
 #include "minilzo.h"
 
 typedef unsigned long Pixel;
@@ -104,8 +103,6 @@ class CGuildMarkImage
 
 		SGuildMarkBlock	m_aakBlock[BLOCK_ROW_COUNT][BLOCK_COL_COUNT];
 		Pixel m_apxImage[WIDTH * HEIGHT * sizeof(Pixel)];
-
-		ILuint m_uImg;
 };
 
 #endif

@@ -1,6 +1,6 @@
 ﻿#include "stdafx.h"
 #include "constants.h"
-#include "../../common/teen_packet.h"
+#include "common/teen_packet.h"
 #include "config.h"
 #include "utils.h"
 #include "input.h"
@@ -98,7 +98,7 @@ void CInputLogin::Login(LPDESC d, const char * data)
 	if (g_iUseLocale && !test_server)
 	{
 		failurePacket.header = HEADER_GC_LOGIN_FAILURE;
-		strlcpy(failurePacket.szStatus, "VERSION", sizeof(failurePacket.szStatus));
+		std::strncpy(failurePacket.szStatus, "VERSION", sizeof(failurePacket.szStatus));
 		d->Packet(&failurePacket, sizeof(TPacketGCLoginFailure));
 		return;
 	}
@@ -106,7 +106,7 @@ void CInputLogin::Login(LPDESC d, const char * data)
 	if (g_bNoMoreClient)
 	{
 		failurePacket.header = HEADER_GC_LOGIN_FAILURE;
-		strlcpy(failurePacket.szStatus, "SHUTDOWN", sizeof(failurePacket.szStatus));
+		std::strncpy(failurePacket.szStatus, "SHUTDOWN", sizeof(failurePacket.szStatus));
 		d->Packet(&failurePacket, sizeof(TPacketGCLoginFailure));
 		return;
 	}
@@ -122,7 +122,7 @@ void CInputLogin::Login(LPDESC d, const char * data)
 		if (g_iUserLimit <= iTotal)
 		{
 			failurePacket.header = HEADER_GC_LOGIN_FAILURE;
-			strlcpy(failurePacket.szStatus, "FULL", sizeof(failurePacket.szStatus));
+			std::strncpy(failurePacket.szStatus, "FULL", sizeof(failurePacket.szStatus));
 			d->Packet(&failurePacket, sizeof(TPacketGCLoginFailure));
 			return;
 		}
@@ -130,8 +130,8 @@ void CInputLogin::Login(LPDESC d, const char * data)
 
 	TLoginPacket login_packet;
 
-	strlcpy(login_packet.login, login, sizeof(login_packet.login));
-	strlcpy(login_packet.passwd, pinfo->passwd, sizeof(login_packet.passwd));
+	std::strncpy(login_packet.login, login, sizeof(login_packet.login));
+	std::strncpy(login_packet.passwd, pinfo->passwd, sizeof(login_packet.passwd));
 
 	db_clientdesc->DBPacket(HEADER_GD_LOGIN, d->GetHandle(), &login_packet, sizeof(TLoginPacket)); 
 }
@@ -162,7 +162,7 @@ void CInputLogin::LoginByKey(LPDESC d, const char * data)
 		TPacketGCLoginFailure failurePacket;
 
 		failurePacket.header = HEADER_GC_LOGIN_FAILURE;
-		strlcpy(failurePacket.szStatus, "SHUTDOWN", sizeof(failurePacket.szStatus));
+		std::strncpy(failurePacket.szStatus, "SHUTDOWN", sizeof(failurePacket.szStatus));
 		d->Packet(&failurePacket, sizeof(TPacketGCLoginFailure));
 		return;
 	}
@@ -180,7 +180,7 @@ void CInputLogin::LoginByKey(LPDESC d, const char * data)
 			TPacketGCLoginFailure failurePacket;
 
 			failurePacket.header = HEADER_GC_LOGIN_FAILURE;
-			strlcpy(failurePacket.szStatus, "FULL", sizeof(failurePacket.szStatus));
+			std::strncpy(failurePacket.szStatus, "FULL", sizeof(failurePacket.szStatus));
 
 			d->Packet(&failurePacket, sizeof(TPacketGCLoginFailure));
 			return;
@@ -196,10 +196,10 @@ void CInputLogin::LoginByKey(LPDESC d, const char * data)
 
 	TPacketGDLoginByKey ptod;
 
-	strlcpy(ptod.szLogin, login, sizeof(ptod.szLogin));
+	std::strncpy(ptod.szLogin, login, sizeof(ptod.szLogin));
 	ptod.dwLoginKey = pinfo->dwLoginKey;
 	thecore_memcpy(ptod.adwClientKey, pinfo->adwClientKey, sizeof(DWORD) * 4);
-	strlcpy(ptod.szIP, d->GetHostName(), sizeof(ptod.szIP));
+	std::strncpy(ptod.szIP, d->GetHostName(), sizeof(ptod.szIP));
 
 	db_clientdesc->DBPacket(HEADER_GD_LOGIN_BY_KEY, d->GetHandle(), &ptod, sizeof(TPacketGDLoginByKey));
 }
@@ -230,7 +230,7 @@ void CInputLogin::ChangeName(LPDESC d, const char * data)
 	TPacketGDChangeName pdb;
 
 	pdb.pid = c_r.players[p->index].dwID;
-	strlcpy(pdb.name, p->name, sizeof(pdb.name));
+	std::strncpy(pdb.name, p->name, sizeof(pdb.name));
 	db_clientdesc->DBPacket(HEADER_GD_CHANGE_NAME, d->GetHandle(), &pdb, sizeof(TPacketGDChangeName));
 }
 
@@ -284,7 +284,7 @@ bool NewPlayerTable(TPlayerTable * table,
 
 	memset(table, 0, sizeof(TPlayerTable));
 
-	strlcpy(table->name, name, sizeof(table->name));
+	std::strncpy(table->name, name, sizeof(table->name));
 
 	table->level = 1;
 	table->job = job;
@@ -400,7 +400,7 @@ bool NewPlayerTable2(TPlayerTable * table, const char * name, BYTE race, BYTE sh
 
 	memset(table, 0, sizeof(TPlayerTable));
 
-	strlcpy(table->name, name, sizeof(table->name));
+	std::strncpy(table->name, name, sizeof(table->name));
 
 	table->level		= 1;
 	table->job			= race;	// 직업대신 종족을 넣는다
@@ -493,7 +493,7 @@ void CInputLogin::CharacterCreate(LPDESC d, const char * data)
 	const TAccountTable & c_rAccountTable = d->GetAccountTable();
 
 	trim_and_lower(c_rAccountTable.login, player_create_packet.login, sizeof(player_create_packet.login));
-	strlcpy(player_create_packet.passwd, c_rAccountTable.passwd, sizeof(player_create_packet.passwd));
+	std::strncpy(player_create_packet.passwd, c_rAccountTable.passwd, sizeof(player_create_packet.passwd));
 
 	player_create_packet.account_id	= c_rAccountTable.id;
 	player_create_packet.account_index	= pinfo->index;
@@ -538,7 +538,7 @@ void CInputLogin::CharacterDelete(LPDESC d, const char * data)
 	trim_and_lower(c_rAccountTable.login, player_delete_packet.login, sizeof(player_delete_packet.login));
 	player_delete_packet.player_id	= c_rAccountTable.players[pinfo->index].dwID;
 	player_delete_packet.account_index	= pinfo->index;
-	strlcpy(player_delete_packet.private_code, pinfo->private_code, sizeof(player_delete_packet.private_code));
+	std::strncpy(player_delete_packet.private_code, pinfo->private_code, sizeof(player_delete_packet.private_code));
 
 	db_clientdesc->DBPacket(HEADER_GD_PLAYER_DELETE, d->GetHandle(), &player_delete_packet, sizeof(TPlayerDeletePacket));
 }

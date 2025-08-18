@@ -50,7 +50,7 @@ void CHorseNameManager::BroadcastHorseName(DWORD dwPlayerID, const char* szHorse
 {
 	TPacketUpdateHorseName packet;
 	packet.dwPlayerID = dwPlayerID;
-	strlcpy(packet.szHorseName, szHorseName, sizeof(packet.szHorseName));
+	std::strncpy(packet.szHorseName, szHorseName, sizeof(packet.szHorseName));
 
 	db_clientdesc->DBPacket(HEADER_GD_UPDATE_HORSE_NAME, 0, &packet, sizeof(TPacketUpdateHorseName));
 }

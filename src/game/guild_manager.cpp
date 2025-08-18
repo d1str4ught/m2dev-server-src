@@ -186,8 +186,7 @@ CGuild* CGuildManager::FindGuild(DWORD guild_id)
 
 CGuild*	CGuildManager::FindGuildByName(const std::string guild_name)
 {
-	itertype(m_mapGuild) it;
-	for (it = m_mapGuild.begin(); it!=m_mapGuild.end(); ++it)
+	for (auto it = m_mapGuild.begin(); it!=m_mapGuild.end(); ++it)
 	{
 		if (it->second->GetName()==guild_name)
 			return it->second;
@@ -802,9 +801,7 @@ void CGuildManager::SendGuildWar(LPCHARACTER ch)
 	p.size = sizeof(p) + (sizeof(DWORD) * 2) * m_GuildWar.size();
 	buf.write(&p, sizeof(p));
 
-	itertype(m_GuildWar) it;
-
-	for (it = m_GuildWar.begin(); it != m_GuildWar.end(); ++it)
+	for (auto it = m_GuildWar.begin(); it != m_GuildWar.end(); ++it)
 	{
 		buf.write(&it->first, sizeof(DWORD));
 		buf.write(&it->second, sizeof(DWORD));

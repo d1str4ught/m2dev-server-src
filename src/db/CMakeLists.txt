@@ -8,7 +8,6 @@ target_link_libraries(db
 	libpoly 
 	libsql 
 	libthecore
-	libredis
 
 	# external
 	mariadbclient
