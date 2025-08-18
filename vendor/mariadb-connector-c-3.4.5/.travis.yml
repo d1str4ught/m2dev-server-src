@@ -1,0 +1,34 @@
+language: c
+version: ~> 1.0
+
+cache:
+  apt: true
+  ccache: true
+  directories:
+    - $HOME/docker
+
+before_install:
+  - |-
+    if [ -z "$server_branch" ] ; then
+      case $TRAVIS_OS_NAME in
+        windows)
+          choco install python --version=3.12.0
+          python --version
+          ;;
+      esac
+    fi
+
+env:
+  global: local=0 DB=testc CLEAR_TEXT=0
+
+import: mariadb-corporation/connector-test-machine:common-build.yml@master
+
+jobs:
+  include:
+    - stage: Community
+      env: srv=mariadb v=10.11 local=1 TEST_OPTION=--ps-protocol
+      name: "CS 10.11 with ps-protocol"
+    - env: server_branch=11.4
+      name: "11.4 Server unit testing"
+
+script: ./travis.sh
