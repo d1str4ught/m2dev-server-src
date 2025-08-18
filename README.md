@@ -22,3 +22,6 @@ It builds as it is, without external dependencies.
 
 - Distraught
 - Gurgarath
+- Mitachi
+- valki
+- Amun
