@@ -1,10 +1,10 @@
-#ifndef __INC_METIN_II_GAME_PVP_H__
+ï»¿#ifndef __INC_METIN_II_GAME_PVP_H__
 #define __INC_METIN_II_GAME_PVP_H__
 
 class CHARACTER;
 
-// CPVP¿¡´Â DWORD ¾ÆÀÌµð µÎ°³¸¦ ¹Þ¾Æ¼­ m_dwCRC¸¦ ¸¸µé¾î¼­ °¡Áö°í ÀÖ´Â´Ù.
-// CPVPManager¿¡¼­ ÀÌ·¸°Ô ¸¸µç CRC¸¦ ÅëÇØ °Ë»öÇÑ´Ù.
+// CPVPì—ëŠ” DWORD ì•„ì´ë”” ë‘ê°œë¥¼ ë°›ì•„ì„œ m_dwCRCë¥¼ ë§Œë“¤ì–´ì„œ ê°€ì§€ê³  ìžˆëŠ”ë‹¤.
+// CPVPManagerì—ì„œ ì´ë ‡ê²Œ ë§Œë“  CRCë¥¼ í†µí•´ ê²€ìƒ‰í•œë‹¤.
 class CPVP
 {
 	public:
@@ -26,8 +26,8 @@ class CPVP
 		CPVP(CPVP & v);
 		~CPVP();
 
-		void	Win(DWORD dwPID); // dwPID°¡ ÀÌ°å´Ù!
-		bool	CanRevenge(DWORD dwPID); // dwPID°¡ º¹¼öÇÒ ¼ö ÀÖ¾î?
+		void	Win(DWORD dwPID); // dwPIDê°€ ì´ê²¼ë‹¤!
+		bool	CanRevenge(DWORD dwPID); // dwPIDê°€ ë³µìˆ˜í•  ìˆ˜ ìžˆì–´?
 		bool	IsFight();
 		bool	Agree(DWORD dwPID);
 
@@ -57,7 +57,7 @@ class CPVPManager : public singleton<CPVPManager>
 
 	void			Insert(LPCHARACTER pkChr, LPCHARACTER pkVictim);
 	bool			CanAttack(LPCHARACTER pkChr, LPCHARACTER pkVictim);
-	bool			Dead(LPCHARACTER pkChr, DWORD dwKillerPID);	// PVP¿¡ ÀÖ¾ú³ª ¾ø¾ú³ª¸¦ ¸®ÅÏ
+	bool			Dead(LPCHARACTER pkChr, DWORD dwKillerPID);	// PVPì— ìžˆì—ˆë‚˜ ì—†ì—ˆë‚˜ë¥¼ ë¦¬í„´
 	void			GiveUp(LPCHARACTER pkChr, DWORD dwKillerPID);
 	void			Connect(LPCHARACTER pkChr);
 	void			Disconnect(LPCHARACTER pkChr);

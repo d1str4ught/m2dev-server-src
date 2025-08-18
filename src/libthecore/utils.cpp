@@ -1,8 +1,8 @@
-/*
+ï»¿/*
  *    Filename: utils.c
- * Description: °¢Á¾ À¯Æ¿¸®Æ¼
+ * Description: ê°ì¢… ìœ í‹¸ë¦¬í‹°
  *
- *      Author: ºñ¿± aka. Cronan
+ *      Author: ë¹„ì—½ aka. Cronan
  */
 #define __LIBTHECORE__
 #include "stdafx.h"
@@ -134,7 +134,7 @@ void trim_and_lower(const char * src, char * dest, size_t dest_size)
 	return;
     }
 
-    // ¾Õ¿¡ ºóÄ­ °Ç³Ê ¶Ù±â
+    // ì•ì— ë¹ˆì¹¸ ê±´ë„ˆ ë›°ê¸°
     while (*tmp)
     {
 	if (!isnhspace(*tmp))
@@ -143,12 +143,12 @@ void trim_and_lower(const char * src, char * dest, size_t dest_size)
 	tmp++;
     }
 
-    // \0 È®º¸
+    // \0 í™•ë³´
     --dest_size;
 
     while (*tmp && len < dest_size)
     {
-	*(dest++) = LOWER(*tmp); // LOWER´Â ¸ÅÅ©·Î¶ó ++ ¾²¸é ¾ÈµÊ
+	*(dest++) = LOWER(*tmp); // LOWERëŠ” ë§¤í¬ë¡œë¼ ++ ì“°ë©´ ì•ˆë¨
 	++tmp;
 	++len;
     }
@@ -157,7 +157,7 @@ void trim_and_lower(const char * src, char * dest, size_t dest_size)
 
     if (len > 0)
     {
-	// µÚ¿¡ ºóÄ­ Áö¿ì±â
+	// ë’¤ì— ë¹ˆì¹¸ ì§€ìš°ê¸°
 	--dest;
 
 	while (*dest && isnhspace(*dest) && len--)
@@ -179,12 +179,12 @@ void lower_string(const char *src, char *dest, size_t dest_size)
 	return;
     }
 
-    // \0 È®º¸
+    // \0 í™•ë³´
     --dest_size;
 
     while (*tmp && len < dest_size)
     {
-	*(dest++) = LOWER(*tmp); // LOWER´Â ¸ÅÅ©·Î¶ó ++ ¾²¸é ¾ÈµÊ
+	*(dest++) = LOWER(*tmp); // LOWERëŠ” ë§¤í¬ë¡œë¼ ++ ì“°ë©´ ì•ˆë¨
 	++tmp;
 	++len;
     }
@@ -200,7 +200,7 @@ char *str_dup(const char *source)
     return (strcpy(new_line, source));
 }
 
-/* arg1 ÀÌ arg2 ÀÇ ¾Õ´Ü°ú °°À» ¶§ 1 À» ¸®ÅÏÇÑ´Ù. */
+/* arg1 ì´ arg2 ì˜ ì•ë‹¨ê³¼ ê°™ì„ ë•Œ 1 ì„ ë¦¬í„´í•œë‹¤. */
 int is_abbrev(char *arg1, char *arg2)
 {
     if (!*arg1)
@@ -232,8 +232,8 @@ int filesize(FILE *fp)
 }
 
 
-/* "Name : ºñ¿±" °ú °°ÀÌ "Ç×¸ñ : °ª" À¸·Î ÀÌ·ç¾îÁø ¹®ÀÚ¿­¿¡¼­ 
-   Ç×¸ñÀ» token À¸·Î, °ªÀ» value ·Î º¹»çÇÏ¿© ¸®ÅÏÇÑ´Ù. */
+/* "Name : ë¹„ì—½" ê³¼ ê°™ì´ "í•­ëª© : ê°’" ìœ¼ë¡œ ì´ë£¨ì–´ì§„ ë¬¸ìì—´ì—ì„œ 
+   í•­ëª©ì„ token ìœ¼ë¡œ, ê°’ì„ value ë¡œ ë³µì‚¬í•˜ì—¬ ë¦¬í„´í•œë‹¤. */
 void parse_token(char *src, char *token, char *value)
 {
     char *tmp;

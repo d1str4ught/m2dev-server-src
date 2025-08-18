@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "constants.h"
 #include "questmanager.h"
 #include "questlua.h"
@@ -999,7 +999,7 @@ namespace quest
 		return 0;
 	}
 
-	int dungeon_exit(lua_State* L) // ´øÀü¿¡ µé¾î¿À±â Àü À§Ä¡·Î º¸³¿
+	int dungeon_exit(lua_State* L) // ë˜ì „ì— ë“¤ì–´ì˜¤ê¸° ì „ ìœ„ì¹˜ë¡œ ë³´ëƒ„
 	{
 		LPCHARACTER ch = CQuestManager::instance().GetCurrentCharacterPtr();
 
@@ -1007,7 +1007,7 @@ namespace quest
 		return 0;
 	}
 
-	int dungeon_exit_all(lua_State* L) // ´øÀü¿¡ ÀÖ´Â ¸ğµç »ç¶÷À» ´øÀü¿¡ µé¾î¿À±â Àü À§Ä¡·Î º¸³¿
+	int dungeon_exit_all(lua_State* L) // ë˜ì „ì— ìˆëŠ” ëª¨ë“  ì‚¬ëŒì„ ë˜ì „ì— ë“¤ì–´ì˜¤ê¸° ì „ ìœ„ì¹˜ë¡œ ë³´ëƒ„
 	{
 		CQuestManager& q = CQuestManager::instance();
 		LPDUNGEON pDungeon = q.GetCurrentDungeon();
@@ -1135,7 +1135,7 @@ namespace quest
 		}
 	};
 	
-	int dungeon_exit_all_by_item_group (lua_State* L) // Æ¯Á¤ ¾ÆÀÌÅÛ ±×·ì¿¡ ¼ÓÇÑ ¾ÆÀÌÅÛÀÌ ¾ø´Â»ç¶÷Àº °­Åğ
+	int dungeon_exit_all_by_item_group (lua_State* L) // íŠ¹ì • ì•„ì´í…œ ê·¸ë£¹ì— ì†í•œ ì•„ì´í…œì´ ì—†ëŠ”ì‚¬ëŒì€ ê°•í‡´
 	{
 		if (!lua_isstring(L, 1))
 		{
@@ -1200,7 +1200,7 @@ namespace quest
 		}
 	};
 	
-	int dungeon_delete_item_in_item_group_from_all(lua_State* L) // Æ¯Á¤ ¾ÆÀÌÅÛÀ» ´øÀü ³» pc¿¡°Ô¼­ »èÁ¦.
+	int dungeon_delete_item_in_item_group_from_all(lua_State* L) // íŠ¹ì • ì•„ì´í…œì„ ë˜ì „ ë‚´ pcì—ê²Œì„œ ì‚­ì œ.
 	{
 		if (!lua_isstring(L, 1))
 		{

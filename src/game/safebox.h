@@ -1,4 +1,4 @@
-#ifndef __INC_METIN_II_GAME_SAFEBOX_H__
+﻿#ifndef __INC_METIN_II_GAME_SAFEBOX_H__
 #define __INC_METIN_II_GAME_SAFEBOX_H__
 
 class CHARACTER;

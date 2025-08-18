@@ -1,4 +1,4 @@
-#pragma once
+ο»Ώ#pragma once
 
 extern volatile int	tics;
 extern volatile int shutdowned;
@@ -25,5 +25,5 @@ float		thecore_time(void);
 float		thecore_pulse_per_second(void);
 int			thecore_is_shutdowned(void);
 
-void		thecore_tick(void); // tics Αυ°΅
+void		thecore_tick(void); // tics μ¦κ°€
 

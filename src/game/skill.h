@@ -1,37 +1,37 @@
-#ifndef __INC_METIN_II_GAME_CSkillManager_H__
+ï»¿#ifndef __INC_METIN_II_GAME_CSkillManager_H__
 #define __INC_METIN_II_GAME_CSkillManager_H__
 
 #include "../../libpoly/Poly.h"
 
 enum ESkillFlags
 {
-	SKILL_FLAG_ATTACK			= (1 << 0),	// °ø°Ý ±â¼ú
-	SKILL_FLAG_USE_MELEE_DAMAGE		= (1 << 1),	// ±âº» ¹Ð¸® Å¸°ÝÄ¡¸¦ b °ªÀ¸·Î »ç¿ë
-	SKILL_FLAG_COMPUTE_ATTGRADE		= (1 << 2),	// °ø°Ýµî±ÞÀ» °è»êÇÑ´Ù
-	SKILL_FLAG_SELFONLY			= (1 << 3),	// ÀÚ½Å¿¡°Ô¸¸ ¾µ ¼ö ÀÖÀ½
-	SKILL_FLAG_USE_MAGIC_DAMAGE		= (1 << 4),	// ±âº» ¸¶¹ý Å¸°ÝÄ¡¸¦ b °ªÀ¸·Î »ç¿ë
-	SKILL_FLAG_USE_HP_AS_COST		= (1 << 5),	// HP¸¦ SP´ë½Å ¾´´Ù
+	SKILL_FLAG_ATTACK			= (1 << 0),	// ê³µê²© ê¸°ìˆ 
+	SKILL_FLAG_USE_MELEE_DAMAGE		= (1 << 1),	// ê¸°ë³¸ ë°€ë¦¬ íƒ€ê²©ì¹˜ë¥¼ b ê°’ìœ¼ë¡œ ì‚¬ìš©
+	SKILL_FLAG_COMPUTE_ATTGRADE		= (1 << 2),	// ê³µê²©ë“±ê¸‰ì„ ê³„ì‚°í•œë‹¤
+	SKILL_FLAG_SELFONLY			= (1 << 3),	// ìžì‹ ì—ê²Œë§Œ ì“¸ ìˆ˜ ìžˆìŒ
+	SKILL_FLAG_USE_MAGIC_DAMAGE		= (1 << 4),	// ê¸°ë³¸ ë§ˆë²• íƒ€ê²©ì¹˜ë¥¼ b ê°’ìœ¼ë¡œ ì‚¬ìš©
+	SKILL_FLAG_USE_HP_AS_COST		= (1 << 5),	// HPë¥¼ SPëŒ€ì‹  ì“´ë‹¤
 	SKILL_FLAG_COMPUTE_MAGIC_DAMAGE	= (1 << 6),
 	SKILL_FLAG_SPLASH			= (1 << 7),
-	SKILL_FLAG_GIVE_PENALTY		= (1 << 8),	// ¾²°í³ª¸é Àá½Ãµ¿¾È(3ÃÊ) 2¹è µ¥¹ÌÁö¸¦ ¹Þ´Â´Ù.
-	SKILL_FLAG_USE_ARROW_DAMAGE		= (1 << 9),	// ±âº» È­»ì Å¸°ÝÄ¡¸¦ b °ªÀ¸·Î »ç¿ë
-	SKILL_FLAG_PENETRATE		= (1 << 10),	// ¹æ¾î¹«½Ã
-	SKILL_FLAG_IGNORE_TARGET_RATING	= (1 << 11),	// »ó´ë ·¹ÀÌÆÃ ¹«½Ã
-	SKILL_FLAG_SLOW			= (1 << 12),	// ½½·Î¿ì °ø°Ý
-	SKILL_FLAG_STUN			= (1 << 13),	// ½ºÅÏ °ø°Ý
-	SKILL_FLAG_HP_ABSORB		= (1 << 14),	// HP Èí¼ö
-	SKILL_FLAG_SP_ABSORB		= (1 << 15),	// SP Èí¼ö
-	SKILL_FLAG_FIRE_CONT		= (1 << 16),	// FIRE Áö¼Ó µ¥¹ÌÁö
-	SKILL_FLAG_REMOVE_BAD_AFFECT	= (1 << 17),	// ³ª»ÛÈ¿°ú Á¦°Å
-	SKILL_FLAG_REMOVE_GOOD_AFFECT	= (1 << 18),	// ³ª»ÛÈ¿°ú Á¦°Å
-	SKILL_FLAG_CRUSH			= (1 << 19),	// »ó´ë¹æÀ» ³¯¸²
-	SKILL_FLAG_POISON			= (1 << 20),	// µ¶ °ø°Ý
-	SKILL_FLAG_TOGGLE			= (1 << 21),	// Åä±Û
-	SKILL_FLAG_DISABLE_BY_POINT_UP	= (1 << 22),	// Âï¾î¼­ ¿Ã¸± ¼ö ¾ø´Ù.
-	SKILL_FLAG_CRUSH_LONG		= (1 << 23),	// »ó´ë¹æÀ» ¸Ö¸® ³¯¸²
-	SKILL_FLAG_WIND		= (1 << 24),	// ¹Ù¶÷ ¼Ó¼º 
-	SKILL_FLAG_ELEC		= (1 << 25),	// Àü±â ¼Ó¼º
-	SKILL_FLAG_FIRE		= (1 << 26),	// ºÒ ¼Ó¼º
+	SKILL_FLAG_GIVE_PENALTY		= (1 << 8),	// ì“°ê³ ë‚˜ë©´ ìž ì‹œë™ì•ˆ(3ì´ˆ) 2ë°° ë°ë¯¸ì§€ë¥¼ ë°›ëŠ”ë‹¤.
+	SKILL_FLAG_USE_ARROW_DAMAGE		= (1 << 9),	// ê¸°ë³¸ í™”ì‚´ íƒ€ê²©ì¹˜ë¥¼ b ê°’ìœ¼ë¡œ ì‚¬ìš©
+	SKILL_FLAG_PENETRATE		= (1 << 10),	// ë°©ì–´ë¬´ì‹œ
+	SKILL_FLAG_IGNORE_TARGET_RATING	= (1 << 11),	// ìƒëŒ€ ë ˆì´íŒ… ë¬´ì‹œ
+	SKILL_FLAG_SLOW			= (1 << 12),	// ìŠ¬ë¡œìš° ê³µê²©
+	SKILL_FLAG_STUN			= (1 << 13),	// ìŠ¤í„´ ê³µê²©
+	SKILL_FLAG_HP_ABSORB		= (1 << 14),	// HP í¡ìˆ˜
+	SKILL_FLAG_SP_ABSORB		= (1 << 15),	// SP í¡ìˆ˜
+	SKILL_FLAG_FIRE_CONT		= (1 << 16),	// FIRE ì§€ì† ë°ë¯¸ì§€
+	SKILL_FLAG_REMOVE_BAD_AFFECT	= (1 << 17),	// ë‚˜ìœíš¨ê³¼ ì œê±°
+	SKILL_FLAG_REMOVE_GOOD_AFFECT	= (1 << 18),	// ë‚˜ìœíš¨ê³¼ ì œê±°
+	SKILL_FLAG_CRUSH			= (1 << 19),	// ìƒëŒ€ë°©ì„ ë‚ ë¦¼
+	SKILL_FLAG_POISON			= (1 << 20),	// ë… ê³µê²©
+	SKILL_FLAG_TOGGLE			= (1 << 21),	// í† ê¸€
+	SKILL_FLAG_DISABLE_BY_POINT_UP	= (1 << 22),	// ì°ì–´ì„œ ì˜¬ë¦´ ìˆ˜ ì—†ë‹¤.
+	SKILL_FLAG_CRUSH_LONG		= (1 << 23),	// ìƒëŒ€ë°©ì„ ë©€ë¦¬ ë‚ ë¦¼
+	SKILL_FLAG_WIND		= (1 << 24),	// ë°”ëžŒ ì†ì„± 
+	SKILL_FLAG_ELEC		= (1 << 25),	// ì „ê¸° ì†ì„±
+	SKILL_FLAG_FIRE		= (1 << 26),	// ë¶ˆ ì†ì„±
 };
 
 enum
@@ -44,84 +44,84 @@ enum ESkillIndexes
 {
 	SKILL_RESERVED = 0,
 
-	// ¹«»ç Àü»ç °è¿­
+	// ë¬´ì‚¬ ì „ì‚¬ ê³„ì—´
 	// A
-	SKILL_SAMYEON = 1,		// »ï¿¬Âü(¼¼¹øº£±â)
-	SKILL_PALBANG,		// ÆÈ¹æÇ³¿ì
+	SKILL_SAMYEON = 1,		// ì‚¼ì—°ì°¸(ì„¸ë²ˆë² ê¸°)
+	SKILL_PALBANG,		// íŒ”ë°©í’ìš°
 	// S
-	SKILL_JEONGWI,		// Àü±ÍÈ¥
-	SKILL_GEOMKYUNG,		// °Ë°æ
-	SKILL_TANHWAN,		// ÅºÈ¯°Ý
+	SKILL_JEONGWI,		// ì „ê·€í˜¼
+	SKILL_GEOMKYUNG,		// ê²€ê²½
+	SKILL_TANHWAN,		// íƒ„í™˜ê²©
 
-	// ¹«»ç ±â°ø °è¿­
+	// ë¬´ì‚¬ ê¸°ê³µ ê³„ì—´
 	// A
-	SKILL_GIGONGCHAM = 16,	// ±â°øÂü
-	SKILL_GYOKSAN,		// °Ý»êÅ¸¿ì
-	SKILL_DAEJINGAK,		// ´ëÁø°¢
+	SKILL_GIGONGCHAM = 16,	// ê¸°ê³µì°¸
+	SKILL_GYOKSAN,		// ê²©ì‚°íƒ€ìš°
+	SKILL_DAEJINGAK,		// ëŒ€ì§„ê°
 	// S
-	SKILL_CHUNKEON,		// Ãµ±ÙÃß
-	SKILL_GEOMPUNG,		// °ËÇ³
+	SKILL_CHUNKEON,		// ì²œê·¼ì¶”
+	SKILL_GEOMPUNG,		// ê²€í’
 
-	// ÀÚ°´ ¾Ï»ì °è¿­
+	// ìžê° ì•”ì‚´ ê³„ì—´
 	// A
-	SKILL_AMSEOP = 31,		// ¾Ï½À 
-	SKILL_GUNGSIN,		// ±Ã½ÅÅº¿µ 
-	SKILL_CHARYUN,		// Â÷·û»ì 
+	SKILL_AMSEOP = 31,		// ì•”ìŠµ 
+	SKILL_GUNGSIN,		// ê¶ì‹ íƒ„ì˜ 
+	SKILL_CHARYUN,		// ì°¨ë¥œì‚´ 
 	// S
-	SKILL_EUNHYUNG,		// ÀºÇü¹ý 
-	SKILL_SANGONG,		// »ê°øºÐ
+	SKILL_EUNHYUNG,		// ì€í˜•ë²• 
+	SKILL_SANGONG,		// ì‚°ê³µë¶„
 
-	// ÀÚ°´ ±Ã¼ö °è¿­
+	// ìžê° ê¶ìˆ˜ ê³„ì—´
 	// A
-	SKILL_YEONSA = 46,		// ¿¬»ç 
-	SKILL_KWANKYEOK,		// °ü°Ý¼ú 
-	SKILL_HWAJO,		// È­Á¶ÆÄ
+	SKILL_YEONSA = 46,		// ì—°ì‚¬ 
+	SKILL_KWANKYEOK,		// ê´€ê²©ìˆ  
+	SKILL_HWAJO,		// í™”ì¡°íŒŒ
 	// S
-	SKILL_GYEONGGONG,		// °æ°ø¼ú 
-	SKILL_GIGUNG,		// ±â±Ã
+	SKILL_GYEONGGONG,		// ê²½ê³µìˆ  
+	SKILL_GIGUNG,		// ê¸°ê¶
 
-	// ¼ö¶ó °Ë
+	// ìˆ˜ë¼ ê²€
 	// A
-	SKILL_SWAERYUNG = 61,	// ¼â·ÉÁö 
-	SKILL_YONGKWON,		// ¿ë±ÇÆÄ 
+	SKILL_SWAERYUNG = 61,	// ì‡„ë ¹ì§€ 
+	SKILL_YONGKWON,		// ìš©ê¶ŒíŒŒ 
 	// S
-	SKILL_GWIGEOM,		// ±Í°Ë
-	SKILL_TERROR,		// °øÆ÷ 
-	SKILL_JUMAGAP,		// ÁÖ¸¶°© 
-	SKILL_PABEOB,		// ÆÄ¹ý¼ú
+	SKILL_GWIGEOM,		// ê·€ê²€
+	SKILL_TERROR,		// ê³µí¬ 
+	SKILL_JUMAGAP,		// ì£¼ë§ˆê°‘ 
+	SKILL_PABEOB,		// íŒŒë²•ìˆ 
 
-	// ¼ö¶ó ¸¶¹ý
+	// ìˆ˜ë¼ ë§ˆë²•
 	// A
-	SKILL_MARYUNG = 76,		// ¸¶·É 
-	SKILL_HWAYEOMPOK,		// È­¿°Æø 
-	SKILL_MUYEONG,		// ¹«¿µÁø 
+	SKILL_MARYUNG = 76,		// ë§ˆë ¹ 
+	SKILL_HWAYEOMPOK,		// í™”ì—¼í­ 
+	SKILL_MUYEONG,		// ë¬´ì˜ì§„ 
 	// S
-	SKILL_MANASHILED,		// Èæ½Å¼öÈ£
-	SKILL_TUSOK,		// Åõ¼Ó¸¶·É 
-	SKILL_MAHWAN,		// ¸¶È¯°Ý
+	SKILL_MANASHILED,		// í‘ì‹ ìˆ˜í˜¸
+	SKILL_TUSOK,		// íˆ¬ì†ë§ˆë ¹ 
+	SKILL_MAHWAN,		// ë§ˆí™˜ê²©
 
-	// ¹«´ç ¿ë½Å
+	// ë¬´ë‹¹ ìš©ì‹ 
 	// A
 	SKILL_BIPABU = 91,
-	SKILL_YONGBI,		// ¿ëºñ±¤»çÆÄ 
-	SKILL_PAERYONG,		// ÆÐ·æ³ªÇÑ¹«
+	SKILL_YONGBI,		// ìš©ë¹„ê´‘ì‚¬íŒŒ 
+	SKILL_PAERYONG,		// íŒ¨ë£¡ë‚˜í•œë¬´
 	// S
-	//SKILL_BUDONG,		// ºÎµ¿¹ÚºÎ 
-	SKILL_HOSIN,		// È£½Å 
-	SKILL_REFLECT,		// º¸È£
-	SKILL_GICHEON,		// ±âÃµ´ë°ø
+	//SKILL_BUDONG,		// ë¶€ë™ë°•ë¶€ 
+	SKILL_HOSIN,		// í˜¸ì‹  
+	SKILL_REFLECT,		// ë³´í˜¸
+	SKILL_GICHEON,		// ê¸°ì²œëŒ€ê³µ
 
-	// ¹«´ç ³ú½Å
+	// ë¬´ë‹¹ ë‡Œì‹ 
 	// A
-	SKILL_NOEJEON = 106,	// ³úÀü·É 
-	SKILL_BYEURAK,		// º­¶ô 
-	SKILL_CHAIN,		// Ã¼ÀÎ¶óÀÌÆ®´× 
+	SKILL_NOEJEON = 106,	// ë‡Œì „ë ¹ 
+	SKILL_BYEURAK,		// ë²¼ë½ 
+	SKILL_CHAIN,		// ì²´ì¸ë¼ì´íŠ¸ë‹ 
 	// S
-	SKILL_JEONGEOP,		// Á¤¾÷ÀÎ 
-	SKILL_KWAESOK,		// ÀÌµ¿¼Óµµ¾÷
-	SKILL_JEUNGRYEOK,		// Áõ·Â¼ú
+	SKILL_JEONGEOP,		// ì •ì—…ì¸ 
+	SKILL_KWAESOK,		// ì´ë™ì†ë„ì—…
+	SKILL_JEUNGRYEOK,		// ì¦ë ¥ìˆ 
 
-	// °øÅë ½ºÅ³
+	// ê³µí†µ ìŠ¤í‚¬
 	// 7
 	SKILL_7_A_ANTI_TANHWAN = 112,
 	SKILL_7_B_ANTI_AMSEOP,
@@ -134,27 +134,27 @@ enum ESkillIndexes
 	SKILL_8_C_ANTI_MAHWAN,
 	SKILL_8_D_ANTI_BYEURAK,
 
-	// º¸Á¶ ½ºÅ³
+	// ë³´ì¡° ìŠ¤í‚¬
 
-	SKILL_LEADERSHIP = 121,	// Åë¼Ö·Â
-	SKILL_COMBO	= 122,		// ¿¬°è±â
-	SKILL_CREATE = 123,		// Á¦Á¶
+	SKILL_LEADERSHIP = 121,	// í†µì†”ë ¥
+	SKILL_COMBO	= 122,		// ì—°ê³„ê¸°
+	SKILL_CREATE = 123,		// ì œì¡°
 	SKILL_MINING = 124,
 
-	SKILL_LANGUAGE1 = 126,	// ½Å¼ö¾î ´É·Â
-	SKILL_LANGUAGE2 = 127,	// ÃµÁ¶¾î ´É·Â
-	SKILL_LANGUAGE3 = 128,	// Áø³ë¾î ´É·Â
-	SKILL_POLYMORPH = 129,	// µÐ°©
+	SKILL_LANGUAGE1 = 126,	// ì‹ ìˆ˜ì–´ ëŠ¥ë ¥
+	SKILL_LANGUAGE2 = 127,	// ì²œì¡°ì–´ ëŠ¥ë ¥
+	SKILL_LANGUAGE3 = 128,	// ì§„ë…¸ì–´ ëŠ¥ë ¥
+	SKILL_POLYMORPH = 129,	// ë‘”ê°‘
 
-	SKILL_HORSE			= 130,	// ½Â¸¶ ½ºÅ³
-	SKILL_HORSE_SUMMON		= 131,	// ¸» ¼ÒÈ¯ ½ºÅ³
-	SKILL_HORSE_WILDATTACK	= 137,	// ³­¹«
-	SKILL_HORSE_CHARGE		= 138,	// µ¹°Ý
-	SKILL_HORSE_ESCAPE		= 139,	// Å»Ãâ
-	SKILL_HORSE_WILDATTACK_RANGE = 140,	// ³­¹«(È°)
+	SKILL_HORSE			= 130,	// ìŠ¹ë§ˆ ìŠ¤í‚¬
+	SKILL_HORSE_SUMMON		= 131,	// ë§ ì†Œí™˜ ìŠ¤í‚¬
+	SKILL_HORSE_WILDATTACK	= 137,	// ë‚œë¬´
+	SKILL_HORSE_CHARGE		= 138,	// ëŒê²©
+	SKILL_HORSE_ESCAPE		= 139,	// íƒˆì¶œ
+	SKILL_HORSE_WILDATTACK_RANGE = 140,	// ë‚œë¬´(í™œ)
 
-	SKILL_ADD_HP	=	141,			// ÁõÇ÷
-	SKILL_RESIST_PENETRATE	=	142,	// Ã¶Åë
+	SKILL_ADD_HP	=	141,			// ì¦í˜ˆ
+	SKILL_RESIST_PENETRATE	=	142,	// ì² í†µ
 
 	GUILD_SKILL_START = 151,
 	GUILD_SKILL_EYE = 151,
@@ -176,35 +176,35 @@ class CSkillProto
 {
 	public:
 		char	szName[64];
-		DWORD	dwVnum;			// ¹øÈ£
+		DWORD	dwVnum;			// ë²ˆí˜¸
 
-		DWORD	dwType;			// 0: ÀüÁ÷¾÷, 1: ¹«»ç, 2: ÀÚ°´, 3: ¼ö¶ó, 4: ¹«´ç
-		BYTE	bMaxLevel;		// ÃÖ´ë ¼ö·Ãµµ
-		BYTE	bLevelLimit;		// ·¹º§Á¦ÇÑ
-		int	iSplashRange;		// ½ºÇÃ·¡½¬ °Å¸® Á¦ÇÑ
+		DWORD	dwType;			// 0: ì „ì§ì—…, 1: ë¬´ì‚¬, 2: ìžê°, 3: ìˆ˜ë¼, 4: ë¬´ë‹¹
+		BYTE	bMaxLevel;		// ìµœëŒ€ ìˆ˜ë ¨ë„
+		BYTE	bLevelLimit;		// ë ˆë²¨ì œí•œ
+		int	iSplashRange;		// ìŠ¤í”Œëž˜ì‰¬ ê±°ë¦¬ ì œí•œ
 
-		BYTE	bPointOn;		// ¾îµð¿¡ °á°ú°ªÀ» Àû¿ë ½ÃÅ°´Â°¡? (Å¸°ÝÄ¡, MAX HP, HP REGEN µîµîµî)
-		CPoly	kPointPoly;		// °á°ú°ª ¸¸µå´Â °ø½Ä
+		BYTE	bPointOn;		// ì–´ë””ì— ê²°ê³¼ê°’ì„ ì ìš© ì‹œí‚¤ëŠ”ê°€? (íƒ€ê²©ì¹˜, MAX HP, HP REGEN ë“±ë“±ë“±)
+		CPoly	kPointPoly;		// ê²°ê³¼ê°’ ë§Œë“œëŠ” ê³µì‹
 
-		CPoly	kSPCostPoly;		// »ç¿ë SP °ø½Ä
-		CPoly	kDurationPoly;		// Áö¼Ó ½Ã°£ °ø½Ä
-		CPoly	kDurationSPCostPoly;	// Áö¼Ó SP °ø½Ä
-		CPoly	kCooldownPoly;		// Äð´Ù¿î ½Ã°£ °ø½Ä
-		CPoly	kMasterBonusPoly;	// ¸¶½ºÅÍÀÏ ¶§ º¸³Ê½º °ø½Ä
-		CPoly	kSplashAroundDamageAdjustPoly;	// ½ºÇÃ·¡½¬ °ø°ÝÀÏ °æ¿ì ÁÖÀ§ Àû¿¡°Ô ÀÔÈ÷´Â µ¥¹ÌÁö °¨¼Ò ºñÀ²
+		CPoly	kSPCostPoly;		// ì‚¬ìš© SP ê³µì‹
+		CPoly	kDurationPoly;		// ì§€ì† ì‹œê°„ ê³µì‹
+		CPoly	kDurationSPCostPoly;	// ì§€ì† SP ê³µì‹
+		CPoly	kCooldownPoly;		// ì¿¨ë‹¤ìš´ ì‹œê°„ ê³µì‹
+		CPoly	kMasterBonusPoly;	// ë§ˆìŠ¤í„°ì¼ ë•Œ ë³´ë„ˆìŠ¤ ê³µì‹
+		CPoly	kSplashAroundDamageAdjustPoly;	// ìŠ¤í”Œëž˜ì‰¬ ê³µê²©ì¼ ê²½ìš° ì£¼ìœ„ ì ì—ê²Œ ìž…ížˆëŠ” ë°ë¯¸ì§€ ê°ì†Œ ë¹„ìœ¨
 
-		DWORD	dwFlag;			// ½ºÅ³¿É¼Ç
-		DWORD	dwAffectFlag;		// ½ºÅ³¿¡ ¸ÂÀº °æ¿ì Àû¿ëµÇ´Â Affect
+		DWORD	dwFlag;			// ìŠ¤í‚¬ì˜µì…˜
+		DWORD	dwAffectFlag;		// ìŠ¤í‚¬ì— ë§žì€ ê²½ìš° ì ìš©ë˜ëŠ” Affect
 
-		BYTE	bLevelStep;		// ÇÑ¹ø¿¡ ¿Ã¸®´Âµ¥ ÇÊ¿äÇÑ ½ºÅ³ Æ÷ÀÎÆ® ¼ö
-		DWORD	preSkillVnum;		// ¹è¿ì´Âµ¥ ÇÊ¿äÇÑ ÀÌÀü¿¡ ¹è¿ö¾ßÇÒ ½ºÅ³
-		BYTE	preSkillLevel;		// ÀÌÀü¿¡ ¹è¿ö¾ßÇÒ ½ºÅ³ÀÇ ·¹º§
+		BYTE	bLevelStep;		// í•œë²ˆì— ì˜¬ë¦¬ëŠ”ë° í•„ìš”í•œ ìŠ¤í‚¬ í¬ì¸íŠ¸ ìˆ˜
+		DWORD	preSkillVnum;		// ë°°ìš°ëŠ”ë° í•„ìš”í•œ ì´ì „ì— ë°°ì›Œì•¼í•  ìŠ¤í‚¬
+		BYTE	preSkillLevel;		// ì´ì „ì— ë°°ì›Œì•¼í•  ìŠ¤í‚¬ì˜ ë ˆë²¨
 
 		long	lMaxHit;
 
 		BYTE	bSkillAttrType;
 
-		// 2Â÷ Àû¿ë
+		// 2ì°¨ ì ìš©
 		BYTE	bPointOn2;		
 		CPoly	kPointPoly2;		
 		CPoly	kDurationPoly2;		
@@ -218,7 +218,7 @@ class CSkillProto
 			return dwVnum == SKILL_TANHWAN || dwVnum == SKILL_HORSE_CHARGE; 
 		}
 
-		// 3Â÷ Àû¿ë
+		// 3ì°¨ ì ìš©
 		BYTE bPointOn3;
 		CPoly kPointPoly3;
 		CPoly kDurationPoly3;

@@ -1,4 +1,4 @@
-#ifndef __INC_METIN_II_GAME_VECTOR_H__
+﻿#ifndef __INC_METIN_II_GAME_VECTOR_H__
 #define __INC_METIN_II_GAME_VECTOR_H__
 
 typedef struct SVector

@@ -1,4 +1,4 @@
-#ifndef __INC_AFFECT_H
+ï»¿#ifndef __INC_AFFECT_H
 #define __INC_AFFECT_H
 
 class CAffect
@@ -54,23 +54,23 @@ enum EAffectTypes
 	AFFECT_DEF_GRADE,		// 226
 
 	AFFECT_PREMIUM_START	= 500,
-	AFFECT_EXP_BONUS		= 500,	// °æÇèÀÇ ¹ÝÁö
-	AFFECT_ITEM_BONUS		= 501,	// µµµÏÀÇ Àå°©
+	AFFECT_EXP_BONUS		= 500,	// ê²½í—˜ì˜ ë°˜ì§€
+	AFFECT_ITEM_BONUS		= 501,	// ë„ë‘‘ì˜ ìž¥ê°‘
 	AFFECT_SAFEBOX		= 502,  // PREMIUM_SAFEBOX,
 	AFFECT_AUTOLOOT		= 503,	// PREMIUM_AUTOLOOT,
 	AFFECT_FISH_MIND		= 504,	// PREMIUM_FISH_MIND,
-	AFFECT_MARRIAGE_FAST	= 505,	// ¿ø¾ÓÀÇ ±êÅÐ
-	AFFECT_GOLD_BONUS		= 506,	// µ· µå·ÓÈ®·ü 50%Áõ°¡
+	AFFECT_MARRIAGE_FAST	= 505,	// ì›ì•™ì˜ ê¹ƒí„¸
+	AFFECT_GOLD_BONUS		= 506,	// ëˆ ë“œë¡­í™•ë¥  50%ì¦ê°€
 	AFFECT_PREMIUM_END		= 509,
 
-	AFFECT_MALL			= 510,	// ¸ô ¾ÆÀÌÅÛ ¿¡ÆåÆ®
-	AFFECT_NO_DEATH_PENALTY	= 511,	// ¿ë½ÅÀÇ °¡È£ (°æÇèÄ¡°¡ ÆÐ³ÎÆ¼¸¦ ÇÑ¹ø ¸·¾ÆÁØ´Ù)
-	AFFECT_SKILL_BOOK_BONUS	= 512,	// ¼±ÀÎÀÇ ±³ÈÆ (Ã¥ ¼ö·Ã ¼º°ø È®·üÀÌ 50% Áõ°¡)
-	AFFECT_SKILL_NO_BOOK_DELAY	= 513,	// ÁÖ¾È¼ú¼­
+	AFFECT_MALL			= 510,	// ëª° ì•„ì´í…œ ì—íŽ™íŠ¸
+	AFFECT_NO_DEATH_PENALTY	= 511,	// ìš©ì‹ ì˜ ê°€í˜¸ (ê²½í—˜ì¹˜ê°€ íŒ¨ë„í‹°ë¥¼ í•œë²ˆ ë§‰ì•„ì¤€ë‹¤)
+	AFFECT_SKILL_BOOK_BONUS	= 512,	// ì„ ì¸ì˜ êµí›ˆ (ì±… ìˆ˜ë ¨ ì„±ê³µ í™•ë¥ ì´ 50% ì¦ê°€)
+	AFFECT_SKILL_NO_BOOK_DELAY	= 513,	// ì£¼ì•ˆìˆ ì„œ
 
-	AFFECT_HAIR	= 514,	// Çì¾î È¿°ú
-	AFFECT_COLLECT = 515, //¼öÁýÄù½ºÆ® 
-	AFFECT_EXP_BONUS_EURO_FREE = 516, // °æÇèÀÇ ¹ÝÁö (À¯·´ ¹öÀü 14 ·¹º§ ÀÌÇÏ ±âº» È¿°ú)
+	AFFECT_HAIR	= 514,	// í—¤ì–´ íš¨ê³¼
+	AFFECT_COLLECT = 515, //ìˆ˜ì§‘í€˜ìŠ¤íŠ¸ 
+	AFFECT_EXP_BONUS_EURO_FREE = 516, // ê²½í—˜ì˜ ë°˜ì§€ (ìœ ëŸ½ ë²„ì „ 14 ë ˆë²¨ ì´í•˜ ê¸°ë³¸ íš¨ê³¼)
 	AFFECT_EXP_BONUS_EURO_FREE_UNDER_15 = 517,
 	AFFECT_UNIQUE_ABILITY = 518,
 
@@ -121,8 +121,8 @@ enum EAffectBits
 	AFF_SLOW,
 	AFF_STUN,
 
-	AFF_DUNGEON_READY,		// ´øÀü¿¡¼­ ÁØºñ »óÅÂ
-	AFF_DUNGEON_UNIQUE,		// ´øÀü À¯´ÏÅ© (Å¬¶óÀÌ¾ðÆ®¿¡¼­ ÄÃ¸µµÇÁö¾ÊÀ½)
+	AFF_DUNGEON_READY,		// ë˜ì „ì—ì„œ ì¤€ë¹„ ìƒíƒœ
+	AFF_DUNGEON_UNIQUE,		// ë˜ì „ ìœ ë‹ˆí¬ (í´ë¼ì´ì–¸íŠ¸ì—ì„œ ì»¬ë§ë˜ì§€ì•ŠìŒ)
 
 	AFF_BUILDING_CONSTRUCTION_SMALL,
 	AFF_BUILDING_CONSTRUCTION_LARGE,
@@ -133,34 +133,34 @@ enum EAffectBits
 
 	AFF_FISH_MIND,
 
-	AFF_JEONGWIHON,		// Àü±ÍÈ¥
-	AFF_GEOMGYEONG,		// °Ë°æ
-	AFF_CHEONGEUN,		// Ãµ±ÙÃß
-	AFF_GYEONGGONG,		// °æ°ø¼ú
-	AFF_EUNHYUNG,		// ÀºÇü¹ý
-	AFF_GWIGUM,			// ±Í°Ë
-	AFF_TERROR,			// °øÆ÷
-	AFF_JUMAGAP,		// ÁÖ¸¶°©
-	AFF_HOSIN,			// È£½Å
-	AFF_BOHO,			// º¸È£
-	AFF_KWAESOK,		// Äè¼Ó
-	AFF_MANASHIELD,		// ¸¶³ª½¯µå
-	AFF_MUYEONG,		// ¹«¿µÁø affect
-	AFF_REVIVE_INVISIBLE,	// ºÎÈ°½Ã Àá½Ãµ¿¾È ¹«Àû
-	AFF_FIRE,			// Áö¼Ó ºÒ µ¥¹ÌÁö
-	AFF_GICHEON,		// ±âÃµ´ë°ø
-	AFF_JEUNGRYEOK,		// Áõ·Â¼ú
-	AFF_TANHWAN_DASH,		// ÅºÈ¯°Ý¿ë ´Þ¸®±â¾îÆåÆ®
-	AFF_PABEOP,			// ÆÄ¹ý¼ú
-	AFF_CHEONGEUN_WITH_FALL,	// Ãµ±ÙÃß
+	AFF_JEONGWIHON,		// ì „ê·€í˜¼
+	AFF_GEOMGYEONG,		// ê²€ê²½
+	AFF_CHEONGEUN,		// ì²œê·¼ì¶”
+	AFF_GYEONGGONG,		// ê²½ê³µìˆ 
+	AFF_EUNHYUNG,		// ì€í˜•ë²•
+	AFF_GWIGUM,			// ê·€ê²€
+	AFF_TERROR,			// ê³µí¬
+	AFF_JUMAGAP,		// ì£¼ë§ˆê°‘
+	AFF_HOSIN,			// í˜¸ì‹ 
+	AFF_BOHO,			// ë³´í˜¸
+	AFF_KWAESOK,		// ì¾Œì†
+	AFF_MANASHIELD,		// ë§ˆë‚˜ì‰´ë“œ
+	AFF_MUYEONG,		// ë¬´ì˜ì§„ affect
+	AFF_REVIVE_INVISIBLE,	// ë¶€í™œì‹œ ìž ì‹œë™ì•ˆ ë¬´ì 
+	AFF_FIRE,			// ì§€ì† ë¶ˆ ë°ë¯¸ì§€
+	AFF_GICHEON,		// ê¸°ì²œëŒ€ê³µ
+	AFF_JEUNGRYEOK,		// ì¦ë ¥ìˆ 
+	AFF_TANHWAN_DASH,		// íƒ„í™˜ê²©ìš© ë‹¬ë¦¬ê¸°ì–´íŽ™íŠ¸
+	AFF_PABEOP,			// íŒŒë²•ìˆ 
+	AFF_CHEONGEUN_WITH_FALL,	// ì²œê·¼ì¶”
 	AFF_POLYMORPH,
 	AFF_WAR_FLAG1,
 	AFF_WAR_FLAG2,
 	AFF_WAR_FLAG3,
 
 	AFF_CHINA_FIREWORK,
-	AFF_HAIR,	// Çì¾î
-	AFF_GERMANY, // µ¶ÀÏ 
+	AFF_HAIR,	// í—¤ì–´
+	AFF_GERMANY, // ë…ì¼ 
 
 	AFF_BITS_MAX
 };
@@ -170,11 +170,11 @@ extern void SendAffectAddPacket(LPDESC d, CAffect * pkAff);
 // AFFECT_DURATION_BUG_FIX
 enum AffectVariable
 {
-	// Affect°¡ ¹«ÇÑ´ë·Î µé¾î°¡ ÀÖ¾î¾ß ÇÒ °æ¿ì »ç¿ë.
-	// ½Ã°£À» °è¼Ó ÁÙÀÌ±â ¶§¹®¿¡ ¸Å¿ì Å«°ªÀ¸·Î ¹«ÇÑ´ë¸¦ ¿¡¹Ä·¹ÀÌ¼ÇÇÔ.
-	//// 24ºñÆ®´Â ÀûÀ¸¹Ç·Î 25ºñÆ®¸¦ »ç¿ë.
-	// ... 25ºñÆ® »ç¿ëÇÑ´Ù°í ÇØ³õ°í¼± 29bit »ç¿ëÇÏ°í ÀÖ´Â ¾öÃ»³­ ÁÖ¼®ÀÌ¶õ...
-	// collect quest¿¡¼­ ¹«ÇÑ ½Ã°£À» 60³âÀ¸·Î »ç¿ëÇÏ°í ÀÖÀ¸¹Ç·Î, ¿©±âµµ 60³âÀ¸·Î ÇÏÀÚ.
+	// Affectê°€ ë¬´í•œëŒ€ë¡œ ë“¤ì–´ê°€ ìžˆì–´ì•¼ í•  ê²½ìš° ì‚¬ìš©.
+	// ì‹œê°„ì„ ê³„ì† ì¤„ì´ê¸° ë•Œë¬¸ì— ë§¤ìš° í°ê°’ìœ¼ë¡œ ë¬´í•œëŒ€ë¥¼ ì—ë®¬ë ˆì´ì…˜í•¨.
+	//// 24ë¹„íŠ¸ëŠ” ì ìœ¼ë¯€ë¡œ 25ë¹„íŠ¸ë¥¼ ì‚¬ìš©.
+	// ... 25ë¹„íŠ¸ ì‚¬ìš©í•œë‹¤ê³  í•´ë†“ê³ ì„  29bit ì‚¬ìš©í•˜ê³  ìžˆëŠ” ì—„ì²­ë‚œ ì£¼ì„ì´ëž€...
+	// collect questì—ì„œ ë¬´í•œ ì‹œê°„ì„ 60ë…„ìœ¼ë¡œ ì‚¬ìš©í•˜ê³  ìžˆìœ¼ë¯€ë¡œ, ì—¬ê¸°ë„ 60ë…„ìœ¼ë¡œ í•˜ìž.
 
 	INFINITE_AFFECT_DURATION = 60 * 365 * 24 * 60 * 60
 };

@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "utils.h"
 #include "config.h"
 #include "char.h"
@@ -168,7 +168,7 @@ ACMD(do_add_socket);
 
 ACMD(do_inputall)
 {
-	ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("¸í·É¾î¸¦ ¸ðµÎ ÀÔ·ÂÇÏ¼¼¿ä."));
+	ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ëª…ë ¹ì–´ë¥¼ ëª¨ë‘ ìž…ë ¥í•˜ì„¸ìš”."));
 }
 
 ACMD(do_show_arena_list);
@@ -188,7 +188,7 @@ ACMD(do_effect);
 ACMD(do_threeway_war_info );
 ACMD(do_threeway_war_myinfo );
 //
-//±ºÁÖ Àü¿ë±â´É
+//êµ°ì£¼ ì „ìš©ê¸°ëŠ¥
 ACMD(do_monarch_warpto);
 ACMD(do_monarch_transfer);
 ACMD(do_monarch_info);
@@ -197,7 +197,7 @@ ACMD(do_monarch_tax);
 ACMD(do_monarch_mob);
 ACMD(do_monarch_notice);
 
-//±ºÁÖ °ü¸® ±â´É
+//êµ°ì£¼ ê´€ë¦¬ ê¸°ëŠ¥
 ACMD(do_rmcandidacy);
 ACMD(do_setmonarch);
 ACMD(do_rmmonarch);
@@ -205,10 +205,10 @@ ACMD(do_rmmonarch);
 ACMD(do_hair);
 //gift notify quest command
 ACMD(do_gift);
-// Å¥ºê°ü·Ã
+// íë¸Œê´€ë ¨
 ACMD(do_inventory);
 ACMD(do_cube);
-// °ø¼ºÀü
+// ê³µì„±ì „
 ACMD(do_siege);
 ACMD(do_temp);
 ACMD(do_frog);
@@ -236,7 +236,7 @@ ACMD(do_ride);
 ACMD(do_get_item_id_list);
 ACMD(do_set_socket);
 #ifdef __AUCTION__
-// temp_auction ÀÓ½Ã
+// temp_auction ìž„ì‹œ
 ACMD(do_get_auction_list);
 ACMD (do_get_my_auction_list);
 ACMD (do_get_my_purchase_list);
@@ -256,21 +256,21 @@ ACMD (do_cancel_sale);
 ACMD (do_rebid);
 ACMD (do_bid_cancel);
 #endif
-// ÄÚ½ºÃõ »óÅÂº¸±â ¹× ¹þ±â
+// ì½”ìŠ¤ì¸” ìƒíƒœë³´ê¸° ë° ë²—ê¸°
 ACMD(do_costume);
 ACMD(do_set_stat);
 
-// ¹«Àû
+// ë¬´ì 
 ACMD (do_can_dead);
 
 ACMD (do_full_set);
-// Á÷±º°ú ·¹º§¿¡ µû¸¥ ÃÖ°í ¾ÆÀÌÅÛ
+// ì§êµ°ê³¼ ë ˆë²¨ì— ë”°ë¥¸ ìµœê³  ì•„ì´í…œ
 ACMD (do_item_full_set);
-// Á÷±º¿¡ µû¸¥ ÃÖ°í ¿É¼ÇÀÇ ¼Ó¼º ¼ÂÆÃ
+// ì§êµ°ì— ë”°ë¥¸ ìµœê³  ì˜µì…˜ì˜ ì†ì„± ì…‹íŒ…
 ACMD (do_attr_full_set);
-// ¸ðµç ½ºÅ³ ¸¶½ºÅÍ
+// ëª¨ë“  ìŠ¤í‚¬ ë§ˆìŠ¤í„°
 ACMD (do_all_skill_master);
-// ¾ÆÀÌÅÛ Âø¿ë. iconÀÌ ¾ø¾î Å¬¶ó¿¡¼­ È®ÀÎ ÇÒ ¼ö ¾ø´Â ¾ÆÀÌÅÛ Âø¿ëÀ» À§ÇØ ¸¸µê.
+// ì•„ì´í…œ ì°©ìš©. iconì´ ì—†ì–´ í´ë¼ì—ì„œ í™•ì¸ í•  ìˆ˜ ì—†ëŠ” ì•„ì´í…œ ì°©ìš©ì„ ìœ„í•´ ë§Œë“¦.
 ACMD (do_use_item);
 ACMD (do_dragon_soul);
 ACMD (do_ds_list);
@@ -278,7 +278,7 @@ ACMD (do_clear_affect);
 
 struct command_info cmd_info[] =
 {
-	{ "!RESERVED!",	NULL,			0,			POS_DEAD,	GM_IMPLEMENTOR	}, /* ¹Ýµå½Ã ÀÌ °ÍÀÌ Ã³À½ÀÌ¾î¾ß ÇÑ´Ù. */
+	{ "!RESERVED!",	NULL,			0,			POS_DEAD,	GM_IMPLEMENTOR	}, /* ë°˜ë“œì‹œ ì´ ê²ƒì´ ì²˜ìŒì´ì–´ì•¼ í•œë‹¤. */
 	{ "who",		do_who,			0,			POS_DEAD,	GM_IMPLEMENTOR	},
 	{ "war",		do_war,			0,			POS_DEAD,	GM_PLAYER	},
 	{ "warp",		do_warp,		0,			POS_DEAD,	GM_LOW_WIZARD	},
@@ -299,7 +299,7 @@ struct command_info cmd_info[] =
 	{ "item",		do_item,		0,			POS_DEAD,	GM_GOD		},
 
 	{ "mob",		do_mob,			0,			POS_DEAD,	GM_HIGH_WIZARD	},
-	{ "mob_ld",		do_mob_ld,			0,			POS_DEAD,	GM_HIGH_WIZARD	}, /* ¸÷ÀÇ À§Ä¡¿Í ¹æÇâÀ» ¼³Á¤ÇØ ¼ÒÈ¯ /mob_ld vnum x y dir */
+	{ "mob_ld",		do_mob_ld,			0,			POS_DEAD,	GM_HIGH_WIZARD	}, /* ëª¹ì˜ ìœ„ì¹˜ì™€ ë°©í–¥ì„ ì„¤ì •í•´ ì†Œí™˜ /mob_ld vnum x y dir */
 	{ "ma",		do_mob_aggresive,	0,			POS_DEAD,	GM_HIGH_WIZARD	},
 	{ "mc",		do_mob_coward,		0,			POS_DEAD,	GM_HIGH_WIZARD	},
 	{ "mm",		do_mob_map,		0,			POS_DEAD,	GM_HIGH_WIZARD	},
@@ -397,8 +397,8 @@ struct command_info cmd_info[] =
 	{ "delqf",		do_delqf,		0,			POS_DEAD,	GM_LOW_WIZARD	},
 	{ "set_state",	do_set_state,		0,			POS_DEAD,	GM_LOW_WIZARD	},
 
-	{ "·Î±×¸¦º¸¿©Áà",	do_detaillog,		0,			POS_DEAD,	GM_LOW_WIZARD	},
-	{ "¸ó½ºÅÍº¸¿©Áà",	do_monsterlog,		0,			POS_DEAD,	GM_LOW_WIZARD	},
+	{ "ë¡œê·¸ë¥¼ë³´ì—¬ì¤˜",	do_detaillog,		0,			POS_DEAD,	GM_LOW_WIZARD	},
+	{ "ëª¬ìŠ¤í„°ë³´ì—¬ì¤˜",	do_monsterlog,		0,			POS_DEAD,	GM_LOW_WIZARD	},
 
 	{ "detaillog",	do_detaillog,		0,			POS_DEAD,	GM_LOW_WIZARD	},
 	{ "monsterlog",	do_monsterlog,		0,			POS_DEAD,	GM_LOW_WIZARD	},
@@ -538,7 +538,7 @@ struct command_info cmd_info[] =
 	{ "get_mob_count",		do_get_mob_count,		0,	POS_DEAD,	GM_LOW_WIZARD	},
 
 	{ "dice",				do_dice,				0,	POS_DEAD,	GM_PLAYER		},
-	{ "ÁÖ»çÀ§",				do_dice,				0,	POS_DEAD,	GM_PLAYER		},
+	{ "ì£¼ì‚¬ìœ„",				do_dice,				0,	POS_DEAD,	GM_PLAYER		},
 	{ "special_item",			do_special_item,	0,	POS_DEAD,	GM_IMPLEMENTOR		},
 
 	{ "click_mall",			do_click_mall,			0,	POS_DEAD,	GM_PLAYER		},
@@ -548,7 +548,7 @@ struct command_info cmd_info[] =
 	{ "item_id_list",	do_get_item_id_list,	0,	POS_DEAD,	GM_LOW_WIZARD	},
 	{ "set_socket",		do_set_socket,			0,	POS_DEAD,	GM_LOW_WIZARD	},
 #ifdef __AUCTION__
-	// auction ÀÓ½Ã
+	// auction ìž„ì‹œ
 	{ "auction_list",	do_get_auction_list,	0,	POS_DEAD,	GM_PLAYER	},
 	{ "my_auction_list", do_get_my_auction_list, 0, POS_DEAD,	GM_PLAYER	},
 	{ "my_purchase_list", do_get_my_purchase_list, 0, POS_DEAD,	GM_PLAYER	},
@@ -588,7 +588,7 @@ struct command_info cmd_info[] =
 	{ "ds_list",				do_ds_list,				0,	POS_DEAD,	GM_PLAYER	},
 	{ "do_clear_affect", do_clear_affect, 	0, POS_DEAD,		GM_LOW_WIZARD},
 
-	{ "\n",		NULL,			0,			POS_DEAD,	GM_IMPLEMENTOR	}  /* ¹Ýµå½Ã ÀÌ °ÍÀÌ ¸¶Áö¸·ÀÌ¾î¾ß ÇÑ´Ù. */
+	{ "\n",		NULL,			0,			POS_DEAD,	GM_IMPLEMENTOR	}  /* ë°˜ë“œì‹œ ì´ ê²ƒì´ ë§ˆì§€ë§‰ì´ì–´ì•¼ í•œë‹¤. */
 };
 
 void interpreter_set_privilege(const char *cmd, int lvl)
@@ -611,7 +611,7 @@ void double_dollar(const char *src, size_t src_len, char *dest, size_t dest_len)
 	const char * tmp = src;
 	size_t cur_len = 0;
 
-	// \0 ³ÖÀ» ÀÚ¸® È®º¸
+	// \0 ë„£ì„ ìžë¦¬ í™•ë³´
 	dest_len -= 1;
 
 	while (src_len-- && *tmp)
@@ -646,7 +646,7 @@ void interpret_command(LPCHARACTER ch, const char * argument, size_t len)
 		return ;
 	}
 
-	char cmd[128 + 1];  // buffer overflow ¹®Á¦°¡ »ý±âÁö ¾Êµµ·Ï ÀÏºÎ·¯ ±æÀÌ¸¦ Âª°Ô ÀâÀ½
+	char cmd[128 + 1];  // buffer overflow ë¬¸ì œê°€ ìƒê¸°ì§€ ì•Šë„ë¡ ì¼ë¶€ëŸ¬ ê¸¸ì´ë¥¼ ì§§ê²Œ ìž¡ìŒ
 	char new_line[256 + 1];
 	const char * line;
 	int icmd;
@@ -663,7 +663,7 @@ void interpret_command(LPCHARACTER ch, const char * argument, size_t len)
 	{
 		if (cmd_info[icmd].command_pointer == do_cmd)
 		{
-			if (!strcmp(cmd_info[icmd].command, cmd)) // do_cmd´Â ¸ðµç ¸í·É¾î¸¦ ÃÄ¾ß ÇÒ ¼ö ÀÖ´Ù.
+			if (!strcmp(cmd_info[icmd].command, cmd)) // do_cmdëŠ” ëª¨ë“  ëª…ë ¹ì–´ë¥¼ ì³ì•¼ í•  ìˆ˜ ìžˆë‹¤.
 				break;
 		}
 		else if (!strncmp(cmd_info[icmd].command, cmd, cmdlen))
@@ -675,24 +675,24 @@ void interpret_command(LPCHARACTER ch, const char * argument, size_t len)
 		switch (ch->GetPosition())
 		{
 			case POS_MOUNTING:
-				ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Åº »óÅÂ¿¡¼­´Â ÇÒ ¼ö ¾ø½À´Ï´Ù."));
+				ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("íƒ„ ìƒíƒœì—ì„œëŠ” í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 				break;
 
 			case POS_DEAD:
-				ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("¾²·¯Áø »óÅÂ¿¡¼­´Â ÇÒ ¼ö ¾ø½À´Ï´Ù."));
+				ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì“°ëŸ¬ì§„ ìƒíƒœì—ì„œëŠ” í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 				break;
 
 			case POS_SLEEPING:
-				ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("²Þ¼Ó¿¡¼­ ¾î¶»°Ô¿ä?"));
+				ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ê¿ˆì†ì—ì„œ ì–´ë–»ê²Œìš”?"));
 				break;
 
 			case POS_RESTING:
 			case POS_SITTING:
-				ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("¸ÕÀú ÀÏ¾î ³ª¼¼¿ä."));
+				ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ë¨¼ì € ì¼ì–´ ë‚˜ì„¸ìš”."));
 				break;
 				/*
 				   case POS_FIGHTING:
-				   ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("¸ñ¼ûÀ» °É°í ÀüÅõ Áß ÀÔ´Ï´Ù. ÁýÁß ÇÏ¼¼¿ä."));
+				   ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ëª©ìˆ¨ì„ ê±¸ê³  ì „íˆ¬ ì¤‘ ìž…ë‹ˆë‹¤. ì§‘ì¤‘ í•˜ì„¸ìš”."));
 				   break;
 				 */
 			default:
@@ -705,17 +705,17 @@ void interpret_command(LPCHARACTER ch, const char * argument, size_t len)
 
 	if (*cmd_info[icmd].command == '\n')
 	{   
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("±×·± ¸í·É¾î´Â ¾ø½À´Ï´Ù"));
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ê·¸ëŸ° ëª…ë ¹ì–´ëŠ” ì—†ìŠµë‹ˆë‹¤"));
 		return;
 	}
 
 	if (cmd_info[icmd].gm_level && cmd_info[icmd].gm_level > ch->GetGMLevel())
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("±×·± ¸í·É¾î´Â ¾ø½À´Ï´Ù"));
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ê·¸ëŸ° ëª…ë ¹ì–´ëŠ” ì—†ìŠµë‹ˆë‹¤"));
 		return;
 	}
 
-	if (strncmp("phase", cmd_info[icmd].command, 5) != 0) // È÷µç ¸í·É¾î Ã³¸® 
+	if (strncmp("phase", cmd_info[icmd].command, 5) != 0) // ížˆë“  ëª…ë ¹ì–´ ì²˜ë¦¬ 
 		sys_log(0, "COMMAND: %s: %s", ch->GetName(), cmd_info[icmd].command);
 
 	((*cmd_info[icmd].command_pointer) (ch, line, icmd, cmd_info[icmd].subcmd));

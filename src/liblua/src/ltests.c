@@ -1,4 +1,4 @@
-/*
+﻿/*
 ** $Id: ltests.c,v 1.158 2003/04/07 14:35:00 roberto Exp $
 ** Internal Module for Debugging of the Lua Implementation
 ** See Copyright Notice in lua.h

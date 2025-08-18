@@ -1,4 +1,4 @@
-#ifndef __INC_FISHING_H
+﻿#ifndef __INC_FISHING_H
 #define __INC_FISHING_H
 
 #include "item.h"

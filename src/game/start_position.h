@@ -1,4 +1,4 @@
-#ifndef __START_POSITION_H
+﻿#ifndef __START_POSITION_H
 #define __START_POSITION_H
 
 #include "locale_service.h"

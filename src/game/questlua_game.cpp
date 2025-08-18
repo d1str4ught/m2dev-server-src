@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "questlua.h"
 #include "questmanager.h"
 #include "desc_client.h"

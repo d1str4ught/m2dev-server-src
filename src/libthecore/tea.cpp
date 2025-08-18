@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 
 #define TEA_ROUND		32
 #define DELTA			0x9E3779B9

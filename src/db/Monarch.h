@@ -1,4 +1,4 @@
-// vim: ts=4 sw=4
+﻿// vim: ts=4 sw=4
 #ifndef METIN2_MONARCH_H
 #define METIN2_MONARCH_H
 

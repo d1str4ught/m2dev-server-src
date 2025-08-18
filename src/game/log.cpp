@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "constants.h"
 #include "config.h"
 #include "log.h"

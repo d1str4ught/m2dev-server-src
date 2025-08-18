@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 
 #include "../../common/teen_packet.h"
 #include "../../common/VnumHelper.h"
@@ -484,7 +484,7 @@ void CHARACTER::Destroy()
 				party->Quit(GetVID());
 		}
 
-		SetParty(NULL); // ¾ÈÇØµµ µÇÁö¸¸ ¾ÈÀüÇÏ°Ô.
+		SetParty(NULL); // ì•ˆí•´ë„ ë˜ì§€ë§Œ ì•ˆì „í•˜ê²Œ.
 	}
 
 	if (m_pkMobInst)
@@ -580,20 +580,20 @@ void CHARACTER::OpenMyShop(const char * c_pszSign, TShopItemTable * pTable, BYTE
 {
 	if (GetPart(PART_MAIN) > 2)
 	{
-		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("°©¿ÊÀ» ¹ş¾î¾ß °³ÀÎ »óÁ¡À» ¿­ ¼ö ÀÖ½À´Ï´Ù."));
+		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ê°‘ì˜·ì„ ë²—ì–´ì•¼ ê°œì¸ ìƒì ì„ ì—´ ìˆ˜ ìˆìŠµë‹ˆë‹¤."));
 		return;
 	}
 
-	if (GetMyShop())	// ÀÌ¹Ì ¼¥ÀÌ ¿­·Á ÀÖÀ¸¸é ´İ´Â´Ù.
+	if (GetMyShop())	// ì´ë¯¸ ìƒµì´ ì—´ë ¤ ìˆìœ¼ë©´ ë‹«ëŠ”ë‹¤.
 	{
 		CloseMyShop();
 		return;
 	}
 
-	// ÁøÇàÁßÀÎ Äù½ºÆ®°¡ ÀÖÀ¸¸é »óÁ¡À» ¿­ ¼ö ¾ø´Ù.
+	// ì§„í–‰ì¤‘ì¸ í€˜ìŠ¤íŠ¸ê°€ ìˆìœ¼ë©´ ìƒì ì„ ì—´ ìˆ˜ ì—†ë‹¤.
 	quest::PC * pPC = quest::CQuestManager::instance().GetPCForce(GetPlayerID());
 
-	// GetPCForce´Â NULLÀÏ ¼ö ¾øÀ¸¹Ç·Î µû·Î È®ÀÎÇÏÁö ¾ÊÀ½
+	// GetPCForceëŠ” NULLì¼ ìˆ˜ ì—†ìœ¼ë¯€ë¡œ ë”°ë¡œ í™•ì¸í•˜ì§€ ì•ŠìŒ
 	if (pPC->IsRunning())
 		return;
 
@@ -612,7 +612,7 @@ void CHARACTER::OpenMyShop(const char * c_pszSign, TShopItemTable * pTable, BYTE
 	if (GOLD_MAX <= nTotalMoney)
 	{
 		sys_err("[OVERFLOW_GOLD] Overflow (GOLD_MAX) id %u name %s", GetPlayerID(), GetName());
-		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("20¾ï ³ÉÀ» ÃÊ°úÇÏ¿© »óÁ¡À» ¿­¼ö°¡ ¾ø½À´Ï´Ù"));
+		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("20ì–µ ëƒ¥ì„ ì´ˆê³¼í•˜ì—¬ ìƒì ì„ ì—´ìˆ˜ê°€ ì—†ìŠµë‹ˆë‹¤"));
 		return;
 	}
 
@@ -628,13 +628,13 @@ void CHARACTER::OpenMyShop(const char * c_pszSign, TShopItemTable * pTable, BYTE
 	{
 		if (CBanwordManager::instance().CheckString(m_stShopSign.c_str(), m_stShopSign.length()))
 		{
-			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ºñ¼Ó¾î³ª Àº¾î°¡ Æ÷ÇÔµÈ »óÁ¡ ÀÌ¸§À¸·Î »óÁ¡À» ¿­ ¼ö ¾ø½À´Ï´Ù."));	
+			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ë¹„ì†ì–´ë‚˜ ì€ì–´ê°€ í¬í•¨ëœ ìƒì  ì´ë¦„ìœ¼ë¡œ ìƒì ì„ ì—´ ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));	
 			return;
 		}
 	}
 
 	// MYSHOP_PRICE_LIST
-	std::map<DWORD, DWORD> itemkind;  // ¾ÆÀÌÅÛ Á¾·ùº° °¡°İ, first: vnum, second: ´ÜÀÏ ¼ö·® °¡°İ
+	std::map<DWORD, DWORD> itemkind;  // ì•„ì´í…œ ì¢…ë¥˜ë³„ ê°€ê²©, first: vnum, second: ë‹¨ì¼ ìˆ˜ëŸ‰ ê°€ê²©
 	// END_OF_MYSHOP_PRICE_LIST	
 
 	std::set<TItemPos> cont;
@@ -655,19 +655,19 @@ void CHARACTER::OpenMyShop(const char * c_pszSign, TShopItemTable * pTable, BYTE
 
 			if (item_table && (IS_SET(item_table->dwAntiFlags, ITEM_ANTIFLAG_GIVE | ITEM_ANTIFLAG_MYSHOP)))
 			{
-				ChatPacket(CHAT_TYPE_INFO, LC_TEXT("À¯·áÈ­ ¾ÆÀÌÅÛÀº °³ÀÎ»óÁ¡¿¡¼­ ÆÇ¸ÅÇÒ ¼ö ¾ø½À´Ï´Ù."));
+				ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ìœ ë£Œí™” ì•„ì´í…œì€ ê°œì¸ìƒì ì—ì„œ íŒë§¤í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 				return;
 			}
 
 			if (pkItem->IsEquipped() == true)
 			{
-				ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ÀåºñÁßÀÎ ¾ÆÀÌÅÛÀº °³ÀÎ»óÁ¡¿¡¼­ ÆÇ¸ÅÇÒ ¼ö ¾ø½À´Ï´Ù."));
+				ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì¥ë¹„ì¤‘ì¸ ì•„ì´í…œì€ ê°œì¸ìƒì ì—ì„œ íŒë§¤í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 				return;
 			}
 
 			if (true == pkItem->isLocked())
 			{
-				ChatPacket(CHAT_TYPE_INFO, LC_TEXT("»ç¿ëÁßÀÎ ¾ÆÀÌÅÛÀº °³ÀÎ»óÁ¡¿¡¼­ ÆÇ¸ÅÇÒ ¼ö ¾ø½À´Ï´Ù."));
+				ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì‚¬ìš©ì¤‘ì¸ ì•„ì´í…œì€ ê°œì¸ìƒì ì—ì„œ íŒë§¤í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 				return;
 			}
 
@@ -680,11 +680,11 @@ void CHARACTER::OpenMyShop(const char * c_pszSign, TShopItemTable * pTable, BYTE
 	}
 
 	// MYSHOP_PRICE_LIST
-	// º¸µû¸® °³¼ö¸¦ °¨¼Ò½ÃÅ²´Ù. 
-	if (CountSpecifyItem(71049)) { // ºñ´Ü º¸µû¸®´Â ¾ø¾ÖÁö ¾Ê°í °¡°İÁ¤º¸¸¦ ÀúÀåÇÑ´Ù.
+	// ë³´ë”°ë¦¬ ê°œìˆ˜ë¥¼ ê°ì†Œì‹œí‚¨ë‹¤. 
+	if (CountSpecifyItem(71049)) { // ë¹„ë‹¨ ë³´ë”°ë¦¬ëŠ” ì—†ì• ì§€ ì•Šê³  ê°€ê²©ì •ë³´ë¥¼ ì €ì¥í•œë‹¤.
 
 		//
-		// ¾ÆÀÌÅÛ °¡°İÁ¤º¸¸¦ ÀúÀåÇÏ±â À§ÇØ ¾ÆÀÌÅÛ °¡°İÁ¤º¸ ÆĞÅ¶À» ¸¸µé¾î DB Ä³½Ã¿¡ º¸³½´Ù.
+		// ì•„ì´í…œ ê°€ê²©ì •ë³´ë¥¼ ì €ì¥í•˜ê¸° ìœ„í•´ ì•„ì´í…œ ê°€ê²©ì •ë³´ íŒ¨í‚·ì„ ë§Œë“¤ì–´ DB ìºì‹œì— ë³´ë‚¸ë‹¤.
 		//
 		
 		// Old code:
@@ -728,7 +728,7 @@ void CHARACTER::OpenMyShop(const char * c_pszSign, TShopItemTable * pTable, BYTE
 	else if (CountSpecifyItem(50200))
 		RemoveSpecifyItem(50200, 1);
 	else
-		return; // º¸µû¸®°¡ ¾øÀ¸¸é Áß´Ü.
+		return; // ë³´ë”°ë¦¬ê°€ ì—†ìœ¼ë©´ ì¤‘ë‹¨.
 
 	if (m_pkExchange)
 		m_pkExchange->Cancel();
@@ -752,8 +752,8 @@ void CHARACTER::OpenMyShop(const char * c_pszSign, TShopItemTable * pTable, BYTE
 	{
 		HorseSummon( false, true );
 	}
-	// new mount ÀÌ¿ë Áß¿¡, °³ÀÎ »óÁ¡ ¿­¸é ÀÚµ¿ unmount
-	// StopRidingÀ¸·Î ´º¸¶¿îÆ®±îÁö Ã³¸®ÇÏ¸é ÁÁÀºµ¥ ¿Ö ±×·¸°Ô ¾ÈÇØ³ù´ÂÁö ¾Ë ¼ö ¾ø´Ù.
+	// new mount ì´ìš© ì¤‘ì—, ê°œì¸ ìƒì  ì—´ë©´ ìë™ unmount
+	// StopRidingìœ¼ë¡œ ë‰´ë§ˆìš´íŠ¸ê¹Œì§€ ì²˜ë¦¬í•˜ë©´ ì¢‹ì€ë° ì™œ ê·¸ë ‡ê²Œ ì•ˆí•´ë†¨ëŠ”ì§€ ì•Œ ìˆ˜ ì—†ë‹¤.
 	else if (GetMountVnum())
 	{
 		RemoveAffect(AFFECT_MOUNT);
@@ -836,7 +836,7 @@ void CHARACTER::RestartAtSamePos()
 }
 
 
-// Entity¿¡ ³»°¡ ³ªÅ¸³µ´Ù°í ÆĞÅ¶À» º¸³½´Ù.
+// Entityì— ë‚´ê°€ ë‚˜íƒ€ë‚¬ë‹¤ê³  íŒ¨í‚·ì„ ë³´ë‚¸ë‹¤.
 void CHARACTER::EncodeInsertPacket(LPENTITY entity)
 {
 
@@ -845,10 +845,10 @@ void CHARACTER::EncodeInsertPacket(LPENTITY entity)
 	if (!(d = entity->GetDesc()))
 		return;
 
-	// ±æµåÀÌ¸§ ¹ö±× ¼öÁ¤ ÄÚµå
+	// ê¸¸ë“œì´ë¦„ ë²„ê·¸ ìˆ˜ì • ì½”ë“œ
 	LPCHARACTER ch = (LPCHARACTER) entity;
 	ch->SendGuildName(GetGuild());
-	// ±æµåÀÌ¸§ ¹ö±× ¼öÁ¤ ÄÚµå
+	// ê¸¸ë“œì´ë¦„ ë²„ê·¸ ìˆ˜ì • ì½”ë“œ
 
 	TPacketGCCharacterAdd pack;
 
@@ -1137,14 +1137,14 @@ void CHARACTER::SetPosition(int pos)
 		{
 			case POS_FIGHTING:
 				if (!IsState(m_stateBattle))
-					MonsterLog("[BATTLE] ½Î¿ì´Â »óÅÂ");
+					MonsterLog("[BATTLE] ì‹¸ìš°ëŠ” ìƒíƒœ");
 
 				GotoState(m_stateBattle);
 				break;
 
 			default:
 				if (!IsState(m_stateIdle))
-					MonsterLog("[IDLE] ½¬´Â »óÅÂ");
+					MonsterLog("[IDLE] ì‰¬ëŠ” ìƒíƒœ");
 
 				GotoState(m_stateIdle);
 				break;
@@ -1307,7 +1307,7 @@ void CHARACTER::SaveReal()
 
 void CHARACTER::FlushDelayedSaveItem()
 {
-	// ÀúÀå ¾ÈµÈ ¼ÒÁöÇ°À» ÀüºÎ ÀúÀå½ÃÅ²´Ù.
+	// ì €ì¥ ì•ˆëœ ì†Œì§€í’ˆì„ ì „ë¶€ ì €ì¥ì‹œí‚¨ë‹¤.
 	LPITEM item;
 
 	for (int i = 0; i < INVENTORY_AND_EQUIP_SLOT_MAX; ++i)
@@ -1375,7 +1375,7 @@ void CHARACTER::Disconnect(const char * c_pszReason)
 	if (GetParty())
 		GetParty()->Unlink(this);
 
-	// Á×¾úÀ» ¶§ Á¢¼Ó²÷À¸¸é °æÇèÄ¡ ÁÙ°Ô ÇÏ±â
+	// ì£½ì—ˆì„ ë•Œ ì ‘ì†ëŠìœ¼ë©´ ê²½í—˜ì¹˜ ì¤„ê²Œ í•˜ê¸°
 	if (IsStun() || IsDead())
 	{
 		DeathPenalty(0);
@@ -1393,7 +1393,7 @@ void CHARACTER::Disconnect(const char * c_pszReason)
 	SaveAffect();
 	m_bIsLoadedAffect = false;
 
-	m_bSkipSave = true; // ÀÌ ÀÌÈÄ¿¡´Â ´õÀÌ»ó ÀúÀåÇÏ¸é ¾ÈµÈ´Ù.
+	m_bSkipSave = true; // ì´ ì´í›„ì—ëŠ” ë”ì´ìƒ ì €ì¥í•˜ë©´ ì•ˆëœë‹¤.
 
 	quest::CQuestManager::instance().DisconnectPC(this);
 
@@ -1824,7 +1824,7 @@ void CHARACTER::SetPlayerProto(const TPlayerTable * t)
 	SetSP(t->sp);
 	SetStamina(t->stamina);
 
-	//GMÀÏ¶§ º¸È£¸ğµå  
+	//GMì¼ë•Œ ë³´í˜¸ëª¨ë“œ  
 	if (!test_server)
 	{
 		if (GetGMLevel() > GM_LOW_WIZARD)
@@ -1857,7 +1857,7 @@ void CHARACTER::SetPlayerProto(const TPlayerTable * t)
 	}
 
 #ifdef __PET_SYSTEM__
-	// NOTE: ÀÏ´Ü Ä³¸¯ÅÍ°¡ PCÀÎ °æ¿ì¿¡¸¸ PetSystemÀ» °®µµ·Ï ÇÔ. À¯·´ ¸Ó½Å´ç ¸Ş¸ğ¸® »ç¿ë·ü¶§¹®¿¡ NPC±îÁö ÇÏ±ä Á»..
+	// NOTE: ì¼ë‹¨ ìºë¦­í„°ê°€ PCì¸ ê²½ìš°ì—ë§Œ PetSystemì„ ê°–ë„ë¡ í•¨. ìœ ëŸ½ ë¨¸ì‹ ë‹¹ ë©”ëª¨ë¦¬ ì‚¬ìš©ë¥ ë•Œë¬¸ì— NPCê¹Œì§€ í•˜ê¸´ ì¢€..
 	if (m_petSystem)
 	{
 		m_petSystem->Destroy();
@@ -1944,9 +1944,9 @@ void CHARACTER::SetProto(const CMob * pkMob)
 		else
 			SetPoint(POINT_DEF_GRADE_BONUS, 15);
 
-		//»êÅ¸¿ë
+		//ì‚°íƒ€ìš©
 		//m_dwPlayStartTime = get_dword_time() + 10 * 60 * 1000;
-		//½Å¼±ÀÚ ³ëÇØ 
+		//ì‹ ì„ ì ë…¸í•´ 
 		m_dwPlayStartTime = get_dword_time() + 30 * 1000;
 		if (test_server)
 			m_dwPlayStartTime = get_dword_time() + 30 * 1000;
@@ -2021,7 +2021,7 @@ float CHARACTER::GetMobDamageMultiply() const
 	float fDamMultiply = GetMobTable().fDamMultiply;
 
 	if (IsBerserk())
-		fDamMultiply = fDamMultiply * 2.0f; // BALANCE: ±¤ÆøÈ­ ½Ã µÎ¹è
+		fDamMultiply = fDamMultiply * 2.0f; // BALANCE: ê´‘í­í™” ì‹œ ë‘ë°°
 
 	return fDamMultiply;
 }
@@ -2054,7 +2054,7 @@ DWORD CHARACTER::GetMonsterDrainSPPoint() const
 BYTE CHARACTER::GetMobRank() const
 {
 	if (!m_pkMobData)
-		return MOB_RANK_KNIGHT;	// PCÀÏ °æ¿ì KNIGHT±Ş
+		return MOB_RANK_KNIGHT;	// PCì¼ ê²½ìš° KNIGHTê¸‰
 
 	return m_pkMobData->m_table.bRank;
 }
@@ -2117,7 +2117,7 @@ void CHARACTER::ComputeBattlePoints()
 		SetPoint(POINT_MAGIC_DEF_GRADE, GetPoint(POINT_DEF_GRADE));
 
 		//
-		// ±âº» ATK = 2lev + 2str, Á÷¾÷¿¡ ¸¶´Ù 2strÀº ¹Ù²ğ ¼ö ÀÖÀ½
+		// ê¸°ë³¸ ATK = 2lev + 2str, ì§ì—…ì— ë§ˆë‹¤ 2strì€ ë°”ë€” ìˆ˜ ìˆìŒ
 		//
 		int iAtk = GetLevel() * 2;
 		int iStatAtk = 0;
@@ -2143,14 +2143,14 @@ void CHARACTER::ComputeBattlePoints()
 				break;
 		}
 
-		// ¸»À» Å¸°í ÀÖ°í, ½ºÅÈÀ¸·Î ÀÎÇÑ °ø°İ·ÂÀÌ ST*2 º¸´Ù ³·À¸¸é ST*2·Î ÇÑ´Ù.
-		// ½ºÅÈÀ» Àß¸ø ÂïÀº »ç¶÷ °ø°İ·ÂÀÌ ´õ ³·Áö ¾Ê°Ô ÇÏ±â À§ÇØ¼­´Ù.
+		// ë§ì„ íƒ€ê³  ìˆê³ , ìŠ¤íƒ¯ìœ¼ë¡œ ì¸í•œ ê³µê²©ë ¥ì´ ST*2 ë³´ë‹¤ ë‚®ìœ¼ë©´ ST*2ë¡œ í•œë‹¤.
+		// ìŠ¤íƒ¯ì„ ì˜ëª» ì°ì€ ì‚¬ëŒ ê³µê²©ë ¥ì´ ë” ë‚®ì§€ ì•Šê²Œ í•˜ê¸° ìœ„í•´ì„œë‹¤.
 		if (GetMountVnum() && iStatAtk < 2 * GetPoint(POINT_ST))
 			iStatAtk = (2 * GetPoint(POINT_ST));
 
 		iAtk += iStatAtk;
 
-		// ½Â¸¶(¸») : °Ë¼ö¶ó µ¥¹ÌÁö °¨¼Ò  
+		// ìŠ¹ë§ˆ(ë§) : ê²€ìˆ˜ë¼ ë°ë¯¸ì§€ ê°ì†Œ  
 		if (GetMountVnum())
 		{
 			if (GetJob() == JOB_SURA && GetSkillGroup() == 1)
@@ -2171,7 +2171,7 @@ void CHARACTER::ComputeBattlePoints()
 		PointChange(POINT_ATT_GRADE, iAtk);
 
 		// DEF = LEV + CON + ARMOR
-		int iShowDef = GetLevel() + GetPoint(POINT_HT); // For Ymir(Ãµ¸¶)
+		int iShowDef = GetLevel() + GetPoint(POINT_HT); // For Ymir(ì²œë§ˆ)
 		int iDef = GetLevel() + (int) (GetPoint(POINT_HT) / 1.25); // For Other
 		int iArmor = 0;
 
@@ -2187,7 +2187,7 @@ void CHARACTER::ComputeBattlePoints()
 				}
 			}
 
-		// ¸» Å¸°í ÀÖÀ» ¶§ ¹æ¾î·ÂÀÌ ¸»ÀÇ ±âÁØ ¹æ¾î·Âº¸´Ù ³·À¸¸é ±âÁØ ¹æ¾î·ÂÀ¸·Î ¼³Á¤
+		// ë§ íƒ€ê³  ìˆì„ ë•Œ ë°©ì–´ë ¥ì´ ë§ì˜ ê¸°ì¤€ ë°©ì–´ë ¥ë³´ë‹¤ ë‚®ìœ¼ë©´ ê¸°ì¤€ ë°©ì–´ë ¥ìœ¼ë¡œ ì„¤ì •
 		if( true == IsHorseRiding() )
 		{
 			if (iArmor < GetHorseArmor())
@@ -2293,7 +2293,7 @@ void CHARACTER::ComputePoints()
 
 	if (IsPC())
 	{
-		// ÃÖ´ë »ı¸í·Â/Á¤½Å·Â
+		// ìµœëŒ€ ìƒëª…ë ¥/ì •ì‹ ë ¥
 		iMaxHP = JobInitialPoints[GetJob()].max_hp + m_points.iRandomHP + GetPoint(POINT_HT) * JobInitialPoints[GetJob()].hp_per_ht;
 		iMaxSP = JobInitialPoints[GetJob()].max_sp + m_points.iRandomSP + GetPoint(POINT_IQ) * JobInitialPoints[GetJob()].sp_per_iq;
 		iMaxStamina = JobInitialPoints[GetJob()].max_stamina + GetPoint(POINT_HT) * JobInitialPoints[GetJob()].stamina_per_con;
@@ -2309,7 +2309,7 @@ void CHARACTER::ComputePoints()
 			}
 		}
 
-		// ±âº» °ªµé
+		// ê¸°ë³¸ ê°’ë“¤
 		SetPoint(POINT_MOV_SPEED,	100);
 		SetPoint(POINT_ATT_SPEED,	100);
 		PointChange(POINT_ATT_SPEED, GetPoint(POINT_PARTY_HASTE_BONUS));
@@ -2328,9 +2328,9 @@ void CHARACTER::ComputePoints()
 
 	if (IsPC())
 	{
-		// ¸» Å¸°í ÀÖÀ» ¶§´Â ±âº» ½ºÅÈÀÌ ¸»ÀÇ ±âÁØ ½ºÅÈº¸´Ù ³·À¸¸é ³ô°Ô ¸¸µç´Ù.
-		// µû¶ó¼­ ¸»ÀÇ ±âÁØ ½ºÅÈÀÌ ¹«»ç ±âÁØÀÌ¹Ç·Î, ¼ö¶ó/¹«´çÀº ÀüÃ¼ ½ºÅÈ ÇÕÀÌ
-		// ´ëÃ¤ÀûÀ¸·Î ´õ ¿Ã¶ó°¡°Ô µÉ °ÍÀÌ´Ù.
+		// ë§ íƒ€ê³  ìˆì„ ë•ŒëŠ” ê¸°ë³¸ ìŠ¤íƒ¯ì´ ë§ì˜ ê¸°ì¤€ ìŠ¤íƒ¯ë³´ë‹¤ ë‚®ìœ¼ë©´ ë†’ê²Œ ë§Œë“ ë‹¤.
+		// ë”°ë¼ì„œ ë§ì˜ ê¸°ì¤€ ìŠ¤íƒ¯ì´ ë¬´ì‚¬ ê¸°ì¤€ì´ë¯€ë¡œ, ìˆ˜ë¼/ë¬´ë‹¹ì€ ì „ì²´ ìŠ¤íƒ¯ í•©ì´
+		// ëŒ€ì±„ì ìœ¼ë¡œ ë” ì˜¬ë¼ê°€ê²Œ ë  ê²ƒì´ë‹¤.
 		if (GetMountVnum()) 
 		{
 			if (GetHorseST() > GetPoint(POINT_ST))
@@ -2350,17 +2350,17 @@ void CHARACTER::ComputePoints()
 
 	ComputeBattlePoints();
 
-	// ±âº» HP/SP ¼³Á¤
+	// ê¸°ë³¸ HP/SP ì„¤ì •
 	if (iMaxHP != GetMaxHP())
 	{
-		SetRealPoint(POINT_MAX_HP, iMaxHP); // ±âº»HP¸¦ RealPoint¿¡ ÀúÀåÇØ ³õ´Â´Ù.
+		SetRealPoint(POINT_MAX_HP, iMaxHP); // ê¸°ë³¸HPë¥¼ RealPointì— ì €ì¥í•´ ë†“ëŠ”ë‹¤.
 	}
 
 	PointChange(POINT_MAX_HP, 0);
 
 	if (iMaxSP != GetMaxSP())
 	{
-		SetRealPoint(POINT_MAX_SP, iMaxSP); // ±âº»SP¸¦ RealPoint¿¡ ÀúÀåÇØ ³õ´Â´Ù.
+		SetRealPoint(POINT_MAX_SP, iMaxSP); // ê¸°ë³¸SPë¥¼ RealPointì— ì €ì¥í•´ ë†“ëŠ”ë‹¤.
 	}
 
 	PointChange(POINT_MAX_SP, 0);
@@ -2379,10 +2379,10 @@ void CHARACTER::ComputePoints()
 		}
 	}
 
-	// ¿ëÈ¥¼® ½Ã½ºÅÛ
-	// ComputePoints¿¡¼­´Â ÄÉ¸¯ÅÍÀÇ ¸ğµç ¼Ó¼º°ªÀ» ÃÊ±âÈ­ÇÏ°í,
-	// ¾ÆÀÌÅÛ, ¹öÇÁ µî¿¡ °ü·ÃµÈ ¸ğµç ¼Ó¼º°ªÀ» Àç°è»êÇÏ±â ¶§¹®¿¡,
-	// ¿ëÈ¥¼® ½Ã½ºÅÛµµ ActiveDeck¿¡ ÀÖ´Â ¸ğµç ¿ëÈ¥¼®ÀÇ ¼Ó¼º°ªÀ» ´Ù½Ã Àû¿ë½ÃÄÑ¾ß ÇÑ´Ù.
+	// ìš©í˜¼ì„ ì‹œìŠ¤í…œ
+	// ComputePointsì—ì„œëŠ” ì¼€ë¦­í„°ì˜ ëª¨ë“  ì†ì„±ê°’ì„ ì´ˆê¸°í™”í•˜ê³ ,
+	// ì•„ì´í…œ, ë²„í”„ ë“±ì— ê´€ë ¨ëœ ëª¨ë“  ì†ì„±ê°’ì„ ì¬ê³„ì‚°í•˜ê¸° ë•Œë¬¸ì—,
+	// ìš©í˜¼ì„ ì‹œìŠ¤í…œë„ ActiveDeckì— ìˆëŠ” ëª¨ë“  ìš©í˜¼ì„ì˜ ì†ì„±ê°’ì„ ë‹¤ì‹œ ì ìš©ì‹œì¼œì•¼ í•œë‹¤.
 	if (DragonSoul_IsDeckActivated())
 	{
 		for (int i = WEAR_MAX_NUM + DS_SLOT_MAX * DragonSoul_GetActiveDeck(); 
@@ -2420,9 +2420,9 @@ void CHARACTER::ComputePoints()
 	UpdatePacket();
 }
 
-// m_dwPlayStartTimeÀÇ ´ÜÀ§´Â milisecond´Ù. µ¥ÀÌÅÍº£ÀÌ½º¿¡´Â ºĞ´ÜÀ§·Î ±â·ÏÇÏ±â
-// ¶§¹®¿¡ ÇÃ·¹ÀÌ½Ã°£À» °è»êÇÒ ¶§ / 60000 À¸·Î ³ª´²¼­ ÇÏ´Âµ¥, ±× ³ª¸ÓÁö °ªÀÌ ³²¾Ò
-// À» ¶§ ¿©±â¿¡ dwTimeRemainÀ¸·Î ³Ö¾î¼­ Á¦´ë·Î °è»êµÇµµ·Ï ÇØÁÖ¾î¾ß ÇÑ´Ù.
+// m_dwPlayStartTimeì˜ ë‹¨ìœ„ëŠ” milisecondë‹¤. ë°ì´í„°ë² ì´ìŠ¤ì—ëŠ” ë¶„ë‹¨ìœ„ë¡œ ê¸°ë¡í•˜ê¸°
+// ë•Œë¬¸ì— í”Œë ˆì´ì‹œê°„ì„ ê³„ì‚°í•  ë•Œ / 60000 ìœ¼ë¡œ ë‚˜ëˆ ì„œ í•˜ëŠ”ë°, ê·¸ ë‚˜ë¨¸ì§€ ê°’ì´ ë‚¨ì•˜
+// ì„ ë•Œ ì—¬ê¸°ì— dwTimeRemainìœ¼ë¡œ ë„£ì–´ì„œ ì œëŒ€ë¡œ ê³„ì‚°ë˜ë„ë¡ í•´ì£¼ì–´ì•¼ í•œë‹¤.
 void CHARACTER::ResetPlayTime(DWORD dwTimeRemain)
 {
 	m_dwPlayStartTime = get_dword_time() - dwTimeRemain;
@@ -2448,7 +2448,7 @@ EVENTFUNC(recovery_event)
 	if (!ch->IsPC())
 	{
 		//
-		// ¸ó½ºÅÍ È¸º¹
+		// ëª¬ìŠ¤í„° íšŒë³µ
 		//
 		if (ch->IsAffectFlag(AFF_POISON))
 			return PASSES_PER_SEC(MAX(1, ch->GetMobTable().bRegenCycle));
@@ -2506,23 +2506,23 @@ EVENTFUNC(recovery_event)
 	else
 	{
 		//
-		// PC È¸º¹
+		// PC íšŒë³µ
 		//
 		ch->CheckTarget();
-		//ch->UpdateSectree(); // ¿©±â¼­ ÀÌ°É ¿ÖÇÏÁö?
+		//ch->UpdateSectree(); // ì—¬ê¸°ì„œ ì´ê±¸ ì™œí•˜ì§€?
 		ch->UpdateKillerMode();
 
 		if (ch->IsAffectFlag(AFF_POISON) == true)
 		{
-			// Áßµ¶ÀÎ °æ¿ì ÀÚµ¿È¸º¹ ±İÁö
-			// ÆÄ¹ı¼úÀÎ °æ¿ì ÀÚµ¿È¸º¹ ±İÁö
+			// ì¤‘ë…ì¸ ê²½ìš° ìë™íšŒë³µ ê¸ˆì§€
+			// íŒŒë²•ìˆ ì¸ ê²½ìš° ìë™íšŒë³µ ê¸ˆì§€
 			return 3;
 		}
 
 		int iSec = (get_dword_time() - ch->GetLastMoveTime()) / 3000;
 
-		// SP È¸º¹ ·çÆ¾.
-		// ¿Ö ÀÌ°É·Î ÇØ¼­ ÇÔ¼ö·Î »©³ù´Â°¡ ?!
+		// SP íšŒë³µ ë£¨í‹´.
+		// ì™œ ì´ê±¸ë¡œ í•´ì„œ í•¨ìˆ˜ë¡œ ë¹¼ë†¨ëŠ”ê°€ ?!
 		ch->DistributeSP(ch);
 
 		if (ch->GetMaxHP() <= ch->GetHP())
@@ -2553,7 +2553,7 @@ void CHARACTER::StartRecoveryEvent()
 	if (IsDead() || IsStun())
 		return;
 
-	if (IsNPC() && GetHP() >= GetMaxHP()) // ¸ó½ºÅÍ´Â Ã¼·ÂÀÌ ´Ù Â÷ÀÖÀ¸¸é ½ÃÀÛ ¾ÈÇÑ´Ù.
+	if (IsNPC() && GetHP() >= GetMaxHP()) // ëª¬ìŠ¤í„°ëŠ” ì²´ë ¥ì´ ë‹¤ ì°¨ìˆìœ¼ë©´ ì‹œì‘ ì•ˆí•œë‹¤.
 		return;
 
 	char_event_info* info = AllocEventInfo<char_event_info>();
@@ -2603,7 +2603,7 @@ void CHARACTER::SetRotation(float fRot)
 	m_pointsInstant.fRot = fRot;
 }
 
-// x, y ¹æÇâÀ¸·Î º¸°í ¼±´Ù.
+// x, y ë°©í–¥ìœ¼ë¡œ ë³´ê³  ì„ ë‹¤.
 void CHARACTER::SetRotationToXY(long x, long y)
 {
 	SetRotation(GetDegreeFromPositionXY(GetX(), GetY(), x, y));
@@ -2619,10 +2619,10 @@ bool CHARACTER::CanMove() const
 	if (CannotMoveByAffect())
 		return false;
 
-	if (GetMyShop())	// »óÁ¡ ¿¬ »óÅÂ¿¡¼­´Â ¿òÁ÷ÀÏ ¼ö ¾øÀ½
+	if (GetMyShop())	// ìƒì  ì—° ìƒíƒœì—ì„œëŠ” ì›€ì§ì¼ ìˆ˜ ì—†ìŒ
 		return false;
 
-	// 0.2ÃÊ ÀüÀÌ¶ó¸é ¿òÁ÷ÀÏ ¼ö ¾ø´Ù.
+	// 0.2ì´ˆ ì „ì´ë¼ë©´ ì›€ì§ì¼ ìˆ˜ ì—†ë‹¤.
 	/*
 	   if (get_float_time() - m_fSyncTime < 0.2f)
 	   return false;
@@ -2630,7 +2630,7 @@ bool CHARACTER::CanMove() const
 	return true;
 }
 
-// ¹«Á¶°Ç x, y À§Ä¡·Î ÀÌµ¿ ½ÃÅ²´Ù.
+// ë¬´ì¡°ê±´ x, y ìœ„ì¹˜ë¡œ ì´ë™ ì‹œí‚¨ë‹¤.
 bool CHARACTER::Sync(long x, long y)
 {
 	if (!GetSectree())
@@ -2659,7 +2659,7 @@ bool CHARACTER::Sync(long x, long y)
 
 	if (GetDungeon())
 	{
-		// ´øÁ¯¿ë ÀÌº¥Æ® ¼Ó¼º º¯È­
+		// ë˜ì ¼ìš© ì´ë²¤íŠ¸ ì†ì„± ë³€í™”
 		int iLastEventAttr = m_iEventAttr;
 		m_iEventAttr = new_tree->GetEventAttribute(x, y);
 
@@ -2702,7 +2702,7 @@ bool CHARACTER::Sync(long x, long y)
 void CHARACTER::Stop()
 {
 	if (!IsState(m_stateIdle))
-		MonsterLog("[IDLE] Á¤Áö");
+		MonsterLog("[IDLE] ì •ì§€");
 
 	GotoState(m_stateIdle);
 
@@ -2712,8 +2712,8 @@ void CHARACTER::Stop()
 
 bool CHARACTER::Goto(long x, long y)
 {
-	// TODO °Å¸®Ã¼Å© ÇÊ¿ä
-	// °°Àº À§Ä¡¸é ÀÌµ¿ÇÒ ÇÊ¿ä ¾øÀ½ (ÀÚµ¿ ¼º°ø)
+	// TODO ê±°ë¦¬ì²´í¬ í•„ìš”
+	// ê°™ì€ ìœ„ì¹˜ë©´ ì´ë™í•  í•„ìš” ì—†ìŒ (ìë™ ì„±ê³µ)
 	if (GetX() == x && GetY() == y)
 		return false;
 
@@ -2737,7 +2737,7 @@ bool CHARACTER::Goto(long x, long y)
 	
 	if (!IsState(m_stateMove))
 	{
-		MonsterLog("[MOVE] %s", GetVictim() ? "´ë»óÃßÀû" : "±×³ÉÀÌµ¿");
+		MonsterLog("[MOVE] %s", GetVictim() ? "ëŒ€ìƒì¶”ì " : "ê·¸ëƒ¥ì´ë™");
 
 		if (GetVictim())
 		{
@@ -2843,14 +2843,14 @@ void CHARACTER::CalculateMoveDuration()
 	m_dwMoveStartTime = get_dword_time();
 }
 
-// x y À§Ä¡·Î ÀÌµ¿ ÇÑ´Ù. (ÀÌµ¿ÇÒ ¼ö ÀÖ´Â °¡ ¾ø´Â °¡¸¦ È®ÀÎ ÇÏ°í Sync ¸Ş¼Òµå·Î ½ÇÁ¦ ÀÌµ¿ ÇÑ´Ù)
-// ¼­¹ö´Â charÀÇ x, y °ªÀ» ¹Ù·Î ¹Ù²ÙÁö¸¸,
-// Å¬¶ó¿¡¼­´Â ÀÌÀü À§Ä¡¿¡¼­ ¹Ù²Û x, y±îÁö interpolationÇÑ´Ù.
-// °È°Å³ª ¶Ù´Â °ÍÀº charÀÇ m_bNowWalking¿¡ ´Ş·ÁÀÖ´Ù.
-// Warp¸¦ ÀÇµµÇÑ °ÍÀÌ¶ó¸é Show¸¦ »ç¿ëÇÒ °Í.
+// x y ìœ„ì¹˜ë¡œ ì´ë™ í•œë‹¤. (ì´ë™í•  ìˆ˜ ìˆëŠ” ê°€ ì—†ëŠ” ê°€ë¥¼ í™•ì¸ í•˜ê³  Sync ë©”ì†Œë“œë¡œ ì‹¤ì œ ì´ë™ í•œë‹¤)
+// ì„œë²„ëŠ” charì˜ x, y ê°’ì„ ë°”ë¡œ ë°”ê¾¸ì§€ë§Œ,
+// í´ë¼ì—ì„œëŠ” ì´ì „ ìœ„ì¹˜ì—ì„œ ë°”ê¾¼ x, yê¹Œì§€ interpolationí•œë‹¤.
+// ê±·ê±°ë‚˜ ë›°ëŠ” ê²ƒì€ charì˜ m_bNowWalkingì— ë‹¬ë ¤ìˆë‹¤.
+// Warpë¥¼ ì˜ë„í•œ ê²ƒì´ë¼ë©´ Showë¥¼ ì‚¬ìš©í•  ê²ƒ.
 bool CHARACTER::Move(long x, long y)
 {
-	// °°Àº À§Ä¡¸é ÀÌµ¿ÇÒ ÇÊ¿ä ¾øÀ½ (ÀÚµ¿ ¼º°ø)
+	// ê°™ì€ ìœ„ì¹˜ë©´ ì´ë™í•  í•„ìš” ì—†ìŒ (ìë™ ì„±ê³µ)
 	if (GetX() == x && GetY() == y)
 		return true;
 
@@ -3012,7 +3012,7 @@ void CHARACTER::SetPoint(BYTE type, int val)
 
 	m_pointsInstant.points[type] = val;
 
-	// ¾ÆÁ÷ ÀÌµ¿ÀÌ ´Ù ¾È³¡³µ´Ù¸é ÀÌµ¿ ½Ã°£ °è»êÀ» ´Ù½Ã ÇØ¾ß ÇÑ´Ù.
+	// ì•„ì§ ì´ë™ì´ ë‹¤ ì•ˆëë‚¬ë‹¤ë©´ ì´ë™ ì‹œê°„ ê³„ì‚°ì„ ë‹¤ì‹œ í•´ì•¼ í•œë‹¤.
 	if (type == POINT_MOV_SPEED && get_dword_time() < m_dwMoveStartTime + m_dwMoveDuration)
 	{
 		CalculateMoveDuration();
@@ -3080,7 +3080,7 @@ void CHARACTER::PointChange(BYTE type, int amount, bool bAmount, bool bBroadcast
 
 		case POINT_NEXT_EXP:
 			val = GetNextExp();
-			bAmount = false;	// ¹«Á¶°Ç bAmount´Â false ¿©¾ß ÇÑ´Ù.
+			bAmount = false;	// ë¬´ì¡°ê±´ bAmountëŠ” false ì—¬ì•¼ í•œë‹¤.
 			break;
 
 		case POINT_EXP:
@@ -3088,7 +3088,7 @@ void CHARACTER::PointChange(BYTE type, int amount, bool bAmount, bool bBroadcast
 				DWORD exp = GetExp();
 				DWORD next_exp = GetNextExp();
 
-				// Ã»¼Ò³âº¸È£
+				// ì²­ì†Œë…„ë³´í˜¸
 				if (LC_IsNewCIBN())
 				{
 					if (IsOverTime(OT_NONE))
@@ -3107,7 +3107,7 @@ void CHARACTER::PointChange(BYTE type, int amount, bool bAmount, bool bBroadcast
 					}
 				}
 
-				// exp°¡ 0 ÀÌÇÏ·Î °¡Áö ¾Êµµ·Ï ÇÑ´Ù
+				// expê°€ 0 ì´í•˜ë¡œ ê°€ì§€ ì•Šë„ë¡ í•œë‹¤
 				if (amount < 0 && exp < -amount)
 				{
 					sys_log(1, "%s AMOUNT < 0 %d, CUR EXP: %d", GetName(), -amount, exp);
@@ -3126,7 +3126,7 @@ void CHARACTER::PointChange(BYTE type, int amount, bool bAmount, bool bBroadcast
 
 					DWORD iExpBalance = 0;
 
-					// ·¹º§ ¾÷!
+					// ë ˆë²¨ ì—…!
 					if (exp + amount >= next_exp)
 					{
 						iExpBalance = (exp + amount) - next_exp;
@@ -3144,7 +3144,7 @@ void CHARACTER::PointChange(BYTE type, int amount, bool bAmount, bool bBroadcast
 					DWORD q = DWORD(next_exp / 4.0f);
 					int iLevStep = GetRealPoint(POINT_LEVEL_STEP);
 
-					// iLevStepÀÌ 4 ÀÌ»óÀÌ¸é ·¹º§ÀÌ ¿Ã¶ú¾î¾ß ÇÏ¹Ç·Î ¿©±â¿¡ ¿Ã ¼ö ¾ø´Â °ªÀÌ´Ù.
+					// iLevStepì´ 4 ì´ìƒì´ë©´ ë ˆë²¨ì´ ì˜¬ëì–´ì•¼ í•˜ë¯€ë¡œ ì—¬ê¸°ì— ì˜¬ ìˆ˜ ì—†ëŠ” ê°’ì´ë‹¤.
 					if (iLevStep >= 4)
 					{
 						sys_err("%s LEVEL_STEP bigger than 4! (%d)", GetName(), iLevStep);
@@ -3284,16 +3284,16 @@ void CHARACTER::PointChange(BYTE type, int amount, bool bAmount, bool bBroadcast
 				
 				if (val == 0)
 				{
-					// Stamina°¡ ¾øÀ¸´Ï °ÈÀÚ!
+					// Staminaê°€ ì—†ìœ¼ë‹ˆ ê±·ì!
 					SetNowWalking(true);
 				}
 				else if (prev_val == 0)
 				{
-					// ¾ø´ø ½ºÅ×¹Ì³ª°¡ »ı°åÀ¸´Ï ÀÌÀü ¸ğµå º¹±Í
+					// ì—†ë˜ ìŠ¤í…Œë¯¸ë‚˜ê°€ ìƒê²¼ìœ¼ë‹ˆ ì´ì „ ëª¨ë“œ ë³µê·€
 					ResetWalking();
 				}
 
-				if (amount < 0 && val != 0) // °¨¼Ò´Â º¸³»Áö¾Ê´Â´Ù.
+				if (amount < 0 && val != 0) // ê°ì†ŒëŠ” ë³´ë‚´ì§€ì•ŠëŠ”ë‹¤.
 					return;
 			}
 			break;
@@ -3303,7 +3303,7 @@ void CHARACTER::PointChange(BYTE type, int amount, bool bAmount, bool bBroadcast
 				SetPoint(type, GetPoint(type) + amount);
 
 				//SetMaxHP(GetMaxHP() + amount);
-				// ÃÖ´ë »ı¸í·Â = (±âº» ÃÖ´ë »ı¸í·Â + Ãß°¡) * ÃÖ´ë»ı¸í·Â%
+				// ìµœëŒ€ ìƒëª…ë ¥ = (ê¸°ë³¸ ìµœëŒ€ ìƒëª…ë ¥ + ì¶”ê°€) * ìµœëŒ€ìƒëª…ë ¥%
 				int hp = GetRealPoint(POINT_MAX_HP);
 				int add_hp = MIN(3500, hp * GetPoint(POINT_MAX_HP_PCT) / 100);
 				add_hp += GetPoint(POINT_MAX_HP);
@@ -3320,7 +3320,7 @@ void CHARACTER::PointChange(BYTE type, int amount, bool bAmount, bool bBroadcast
 				SetPoint(type, GetPoint(type) + amount);
 
 				//SetMaxSP(GetMaxSP() + amount);
-				// ÃÖ´ë Á¤½Å·Â = (±âº» ÃÖ´ë Á¤½Å·Â + Ãß°¡) * ÃÖ´ëÁ¤½Å·Â%
+				// ìµœëŒ€ ì •ì‹ ë ¥ = (ê¸°ë³¸ ìµœëŒ€ ì •ì‹ ë ¥ + ì¶”ê°€) * ìµœëŒ€ì •ì‹ ë ¥%
 				int sp = GetRealPoint(POINT_MAX_SP);
 				int add_sp = MIN(800, sp * GetPoint(POINT_MAX_SP_PCT) / 100);
 				add_sp += GetPoint(POINT_MAX_SP);
@@ -3362,7 +3362,7 @@ void CHARACTER::PointChange(BYTE type, int amount, bool bAmount, bool bBroadcast
 					return;
 				}
 
-				// Ã»¼Ò³âº¸È£
+				// ì²­ì†Œë…„ë³´í˜¸
 				if (LC_IsNewCIBN() && amount > 0)
 				{
 					if (IsOverTime(OT_NONE))
@@ -3425,12 +3425,12 @@ void CHARACTER::PointChange(BYTE type, int amount, bool bAmount, bool bBroadcast
 		case POINT_HP_RECOVERY:
 		case POINT_SP_RECOVERY:
 
-		case POINT_ATTBONUS_HUMAN:	// 42 ÀÎ°£¿¡°Ô °­ÇÔ
-		case POINT_ATTBONUS_ANIMAL:	// 43 µ¿¹°¿¡°Ô µ¥¹ÌÁö % Áõ°¡
-		case POINT_ATTBONUS_ORC:		// 44 ¿õ±Í¿¡°Ô µ¥¹ÌÁö % Áõ°¡
-		case POINT_ATTBONUS_MILGYO:	// 45 ¹Ğ±³¿¡°Ô µ¥¹ÌÁö % Áõ°¡
-		case POINT_ATTBONUS_UNDEAD:	// 46 ½ÃÃ¼¿¡°Ô µ¥¹ÌÁö % Áõ°¡
-		case POINT_ATTBONUS_DEVIL:	// 47 ¸¶±Í(¾Ç¸¶)¿¡°Ô µ¥¹ÌÁö % Áõ°¡
+		case POINT_ATTBONUS_HUMAN:	// 42 ì¸ê°„ì—ê²Œ ê°•í•¨
+		case POINT_ATTBONUS_ANIMAL:	// 43 ë™ë¬¼ì—ê²Œ ë°ë¯¸ì§€ % ì¦ê°€
+		case POINT_ATTBONUS_ORC:		// 44 ì›…ê·€ì—ê²Œ ë°ë¯¸ì§€ % ì¦ê°€
+		case POINT_ATTBONUS_MILGYO:	// 45 ë°€êµì—ê²Œ ë°ë¯¸ì§€ % ì¦ê°€
+		case POINT_ATTBONUS_UNDEAD:	// 46 ì‹œì²´ì—ê²Œ ë°ë¯¸ì§€ % ì¦ê°€
+		case POINT_ATTBONUS_DEVIL:	// 47 ë§ˆê·€(ì•…ë§ˆ)ì—ê²Œ ë°ë¯¸ì§€ % ì¦ê°€
 
 		case POINT_ATTBONUS_MONSTER:
 		case POINT_ATTBONUS_SURA:
@@ -3451,11 +3451,11 @@ void CHARACTER::PointChange(BYTE type, int amount, bool bAmount, bool bBroadcast
 		case POINT_RESIST_PENETRATE:
 		case POINT_CURSE_PCT:
 
-		case POINT_STEAL_HP:		// 48 »ı¸í·Â Èí¼ö
-		case POINT_STEAL_SP:		// 49 Á¤½Å·Â Èí¼ö
+		case POINT_STEAL_HP:		// 48 ìƒëª…ë ¥ í¡ìˆ˜
+		case POINT_STEAL_SP:		// 49 ì •ì‹ ë ¥ í¡ìˆ˜
 
-		case POINT_MANA_BURN_PCT:	// 50 ¸¶³ª ¹ø
-		case POINT_DAMAGE_SP_RECOVER:	// 51 °ø°İ´çÇÒ ½Ã Á¤½Å·Â È¸º¹ È®·ü
+		case POINT_MANA_BURN_PCT:	// 50 ë§ˆë‚˜ ë²ˆ
+		case POINT_DAMAGE_SP_RECOVER:	// 51 ê³µê²©ë‹¹í•  ì‹œ ì •ì‹ ë ¥ íšŒë³µ í™•ë¥ 
 		case POINT_RESIST_NORMAL_DAMAGE:
 		case POINT_RESIST_SWORD:
 		case POINT_RESIST_TWOHAND:
@@ -3470,10 +3470,10 @@ void CHARACTER::PointChange(BYTE type, int amount, bool bAmount, bool bBroadcast
 		case POINT_RESIST_ICE:
 		case POINT_RESIST_EARTH:
 		case POINT_RESIST_DARK:
-		case POINT_REFLECT_MELEE:	// 67 °ø°İ ¹İ»ç
-		case POINT_REFLECT_CURSE:	// 68 ÀúÁÖ ¹İ»ç
-		case POINT_POISON_REDUCE:	// 69 µ¶µ¥¹ÌÁö °¨¼Ò
-		case POINT_KILL_SP_RECOVER:	// 70 Àû ¼Ò¸ê½Ã MP È¸º¹
+		case POINT_REFLECT_MELEE:	// 67 ê³µê²© ë°˜ì‚¬
+		case POINT_REFLECT_CURSE:	// 68 ì €ì£¼ ë°˜ì‚¬
+		case POINT_POISON_REDUCE:	// 69 ë…ë°ë¯¸ì§€ ê°ì†Œ
+		case POINT_KILL_SP_RECOVER:	// 70 ì  ì†Œë©¸ì‹œ MP íšŒë³µ
 		case POINT_KILL_HP_RECOVERY:	// 75  
 		case POINT_HIT_HP_RECOVERY:
 		case POINT_HIT_SP_RECOVERY:
@@ -3702,7 +3702,7 @@ void CHARACTER::ApplyPoint(BYTE bApplyType, int iVal)
 		case APPLY_SKILL:
 			// SKILL_DAMAGE_BONUS
 			{
-				// ÃÖ»óÀ§ ºñÆ® ±âÁØÀ¸·Î 8ºñÆ® vnum, 9ºñÆ® add, 15ºñÆ® change
+				// ìµœìƒìœ„ ë¹„íŠ¸ ê¸°ì¤€ìœ¼ë¡œ 8ë¹„íŠ¸ vnum, 9ë¹„íŠ¸ add, 15ë¹„íŠ¸ change
 				// 00000000 00000000 00000000 00000000
 				// ^^^^^^^^  ^^^^^^^^^^^^^^^^^^^^^^^^^
 				// vnum     ^ add       change
@@ -3812,11 +3812,11 @@ void CHARACTER::ApplyPoint(BYTE bApplyType, int iVal)
 		case APPLY_RESIST_ASSASSIN :
 		case APPLY_RESIST_SURA :
 		case APPLY_RESIST_SHAMAN :	
-		case APPLY_ENERGY:					// 82 ±â·Â
-		case APPLY_DEF_GRADE:				// 83 ¹æ¾î·Â. DEF_GRADE_BONUS´Â Å¬¶ó¿¡¼­ µÎ¹è·Î º¸¿©Áö´Â ÀÇµµµÈ ¹ö±×(...)°¡ ÀÖ´Ù.
-		case APPLY_COSTUME_ATTR_BONUS:		// 84 ÄÚ½ºÆ¬ ¾ÆÀÌÅÛ¿¡ ºÙÀº ¼Ó¼ºÄ¡ º¸³Ê½º
-		case APPLY_MAGIC_ATTBONUS_PER:		// 85 ¸¶¹ı °ø°İ·Â +x%
-		case APPLY_MELEE_MAGIC_ATTBONUS_PER:			// 86 ¸¶¹ı + ¹Ğ¸® °ø°İ·Â +x%
+		case APPLY_ENERGY:					// 82 ê¸°ë ¥
+		case APPLY_DEF_GRADE:				// 83 ë°©ì–´ë ¥. DEF_GRADE_BONUSëŠ” í´ë¼ì—ì„œ ë‘ë°°ë¡œ ë³´ì—¬ì§€ëŠ” ì˜ë„ëœ ë²„ê·¸(...)ê°€ ìˆë‹¤.
+		case APPLY_COSTUME_ATTR_BONUS:		// 84 ì½”ìŠ¤íŠ¬ ì•„ì´í…œì— ë¶™ì€ ì†ì„±ì¹˜ ë³´ë„ˆìŠ¤
+		case APPLY_MAGIC_ATTBONUS_PER:		// 85 ë§ˆë²• ê³µê²©ë ¥ +x%
+		case APPLY_MELEE_MAGIC_ATTBONUS_PER:			// 86 ë§ˆë²• + ë°€ë¦¬ ê³µê²©ë ¥ +x%
 			PointChange(aApplyInfo[bApplyType].bPointType, iVal);
 			break;
 
@@ -3901,7 +3901,7 @@ void CHARACTER::MonsterLog(const char* format, ...)
 	else
 		len += len2;
 
-	// \0 ¹®ÀÚ Æ÷ÇÔ
+	// \0 ë¬¸ì í¬í•¨
 	++len;
 
 	va_end(args);
@@ -3965,7 +3965,7 @@ void CHARACTER::mining_cancel()
 	{
 		sys_log(0, "XXX MINING CANCEL");
 		event_cancel(&m_pkMiningEvent);
-		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Ã¤±¤À» Áß´ÜÇÏ¿´½À´Ï´Ù."));
+		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì±„ê´‘ì„ ì¤‘ë‹¨í•˜ì˜€ìŠµë‹ˆë‹¤."));
 	}
 }
 
@@ -3987,13 +3987,13 @@ void CHARACTER::mining(LPCHARACTER chLoad)
 
 	if (!pick || pick->GetType() != ITEM_PICK)
 	{
-		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("°î±ªÀÌ¸¦ ÀåÂøÇÏ¼¼¿ä."));
+		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ê³¡ê´­ì´ë¥¼ ì¥ì°©í•˜ì„¸ìš”."));
 		return;
 	}
 
-	int count = number(5, 15); // µ¿ÀÛ È½¼ö, ÇÑ µ¿ÀÛ´ç 2ÃÊ
+	int count = number(5, 15); // ë™ì‘ íšŸìˆ˜, í•œ ë™ì‘ë‹¹ 2ì´ˆ
 
-	// Ã¤±¤ µ¿ÀÛÀ» º¸¿©ÁÜ
+	// ì±„ê´‘ ë™ì‘ì„ ë³´ì—¬ì¤Œ
 	TPacketGCDigMotion p;
 	p.header = HEADER_GC_DIG_MOTION;
 	p.vid = GetVID();
@@ -4014,7 +4014,7 @@ void CHARACTER::fishing()
 		return;
 	}
 
-	// ¸ø°¨ ¼Ó¼º¿¡¼­ ³¬½Ã¸¦ ½ÃµµÇÑ´Ù?
+	// ëª»ê° ì†ì„±ì—ì„œ ë‚šì‹œë¥¼ ì‹œë„í•œë‹¤?
 	{
 		LPSECTREE_MAP pkSectreeMap = SECTREE_MANAGER::instance().GetMap(GetMapIndex());
 
@@ -4026,23 +4026,23 @@ void CHARACTER::fishing()
 
 		if (IS_SET(dwAttr, ATTR_BLOCK))
 		{
-			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("³¬½Ã¸¦ ÇÒ ¼ö ÀÖ´Â °÷ÀÌ ¾Æ´Õ´Ï´Ù"));
+			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ë‚šì‹œë¥¼ í•  ìˆ˜ ìˆëŠ” ê³³ì´ ì•„ë‹™ë‹ˆë‹¤"));
 			return;
 		}
 	}
 
 	LPITEM rod = GetWear(WEAR_WEAPON);
 
-	// ³¬½Ã´ë ÀåÂø
+	// ë‚šì‹œëŒ€ ì¥ì°©
 	if (!rod || rod->GetType() != ITEM_ROD)
 	{
-		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("³¬½Ã´ë¸¦ ÀåÂø ÇÏ¼¼¿ä."));
+		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ë‚šì‹œëŒ€ë¥¼ ì¥ì°© í•˜ì„¸ìš”."));
 		return;
 	}
 
 	if (0 == rod->GetSocket(2))
 	{
-		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("¹Ì³¢¸¦ ³¢°í ´øÁ® ÁÖ¼¼¿ä."));
+		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ë¯¸ë¼ë¥¼ ë¼ê³  ë˜ì ¸ ì£¼ì„¸ìš”."));
 		return;
 	}
 
@@ -4068,7 +4068,7 @@ void CHARACTER::fishing_take()
 	}
 	else
 	{
-		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("³¬½Ã´ë°¡ ¾Æ´Ñ ¹°°ÇÀ¸·Î ³¬½Ã¸¦ ÇÒ ¼ö ¾ø½À´Ï´Ù!"));
+		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ë‚šì‹œëŒ€ê°€ ì•„ë‹Œ ë¬¼ê±´ìœ¼ë¡œ ë‚šì‹œë¥¼ í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤!"));
 	}
 
 	event_cancel(&m_pkFishingEvent);
@@ -4108,11 +4108,11 @@ void CHARACTER::SetNextStatePulse(int iNextPulse)
 	m_dwNextStatePulse = iNextPulse;
 
 	if (iNextPulse < 10)
-		MonsterLog("´ÙÀ½»óÅÂ·Î¾î¼­°¡ÀÚ");
+		MonsterLog("ë‹¤ìŒìƒíƒœë¡œì–´ì„œê°€ì");
 }
 
 
-// Ä³¸¯ÅÍ ÀÎ½ºÅÏ½º ¾÷µ¥ÀÌÆ® ÇÔ¼ö.
+// ìºë¦­í„° ì¸ìŠ¤í„´ìŠ¤ ì—…ë°ì´íŠ¸ í•¨ìˆ˜.
 void CHARACTER::UpdateCharacter(DWORD dwPulse)
 {
 	CFSM::Update();
@@ -4151,7 +4151,7 @@ WORD CHARACTER::GetOriginalPart(BYTE bPartPos) const
 	switch (bPartPos)
 	{
 		case PART_MAIN:
-			if (!IsPC()) // PC°¡ ¾Æ´Ñ °æ¿ì ÇöÀç ÆÄÆ®¸¦ ±×´ë·Î ¸®ÅÏ
+			if (!IsPC()) // PCê°€ ì•„ë‹Œ ê²½ìš° í˜„ì¬ íŒŒíŠ¸ë¥¼ ê·¸ëŒ€ë¡œ ë¦¬í„´
 				return GetPart(PART_MAIN);
 			else
 				return m_pointsInstant.bBasePart;
@@ -4192,7 +4192,7 @@ bool CHARACTER::SetSyncOwner(LPCHARACTER ch, bool bRemoveFromList)
 		if (m_pkChrSyncOwner)
 			sys_log(1, "SyncRelease %s %p from %s", GetName(), this, m_pkChrSyncOwner->GetName());
 
-		// ¸®½ºÆ®¿¡¼­ Á¦°ÅÇÏÁö ¾Ê´õ¶óµµ Æ÷ÀÎÅÍ´Â NULL·Î ¼ÂÆÃµÇ¾î¾ß ÇÑ´Ù.
+		// ë¦¬ìŠ¤íŠ¸ì—ì„œ ì œê±°í•˜ì§€ ì•Šë”ë¼ë„ í¬ì¸í„°ëŠ” NULLë¡œ ì…‹íŒ…ë˜ì–´ì•¼ í•œë‹¤.
 		m_pkChrSyncOwner = NULL;
 	}
 	else
@@ -4200,12 +4200,12 @@ bool CHARACTER::SetSyncOwner(LPCHARACTER ch, bool bRemoveFromList)
 		if (!IsSyncOwner(ch))
 			return false;
 
-		// °Å¸®°¡ 200 ÀÌ»óÀÌ¸é SyncOwner°¡ µÉ ¼ö ¾ø´Ù.
+		// ê±°ë¦¬ê°€ 200 ì´ìƒì´ë©´ SyncOwnerê°€ ë  ìˆ˜ ì—†ë‹¤.
 		if (DISTANCE_APPROX(GetX() - ch->GetX(), GetY() - ch->GetY()) > 250)
 		{
 			sys_log(1, "SetSyncOwner distance over than 250 %s %s", GetName(), ch->GetName());
 
-			// SyncOwnerÀÏ °æ¿ì Owner·Î Ç¥½ÃÇÑ´Ù.
+			// SyncOwnerì¼ ê²½ìš° Ownerë¡œ í‘œì‹œí•œë‹¤.
 			if (m_pkChrSyncOwner == ch)
 				return true;
 
@@ -4223,7 +4223,7 @@ bool CHARACTER::SetSyncOwner(LPCHARACTER ch, bool bRemoveFromList)
 			m_pkChrSyncOwner = ch;
 			m_pkChrSyncOwner->m_kLst_pkChrSyncOwned.push_back(this);
 
-			// SyncOwner°¡ ¹Ù²î¸é LastSyncTimeÀ» ÃÊ±âÈ­ÇÑ´Ù.
+			// SyncOwnerê°€ ë°”ë€Œë©´ LastSyncTimeì„ ì´ˆê¸°í™”í•œë‹¤.
 			static const timeval zero_tv = {0, 0};
 			SetLastSyncTime(zero_tv);
 
@@ -4233,9 +4233,9 @@ bool CHARACTER::SetSyncOwner(LPCHARACTER ch, bool bRemoveFromList)
 		m_fSyncTime = get_float_time();
 	}
 
-	// TODO: Sync Owner°¡ °°´õ¶óµµ °è¼Ó ÆĞÅ¶À» º¸³»°í ÀÖÀ¸¹Ç·Î,
-	//       µ¿±âÈ­ µÈ ½Ã°£ÀÌ 3ÃÊ ÀÌ»ó Áö³µÀ» ¶§ Ç®¾îÁÖ´Â ÆĞÅ¶À»
-	//       º¸³»´Â ¹æ½ÄÀ¸·Î ÇÏ¸é ÆĞÅ¶À» ÁÙÀÏ ¼ö ÀÖ´Ù.
+	// TODO: Sync Ownerê°€ ê°™ë”ë¼ë„ ê³„ì† íŒ¨í‚·ì„ ë³´ë‚´ê³  ìˆìœ¼ë¯€ë¡œ,
+	//       ë™ê¸°í™” ëœ ì‹œê°„ì´ 3ì´ˆ ì´ìƒ ì§€ë‚¬ì„ ë•Œ í’€ì–´ì£¼ëŠ” íŒ¨í‚·ì„
+	//       ë³´ë‚´ëŠ” ë°©ì‹ìœ¼ë¡œ í•˜ë©´ íŒ¨í‚·ì„ ì¤„ì¼ ìˆ˜ ìˆë‹¤.
 	TPacketGCOwnership pack;
 
 	pack.bHeader	= HEADER_GC_OWNERSHIP;
@@ -4251,7 +4251,7 @@ struct FuncClearSync
 	void operator () (LPCHARACTER ch)
 	{
 		assert(ch != NULL);
-		ch->SetSyncOwner(NULL, false);	// false ÇÃ·¡±×·Î ÇØ¾ß for_each °¡ Á¦´ë·Î µ·´Ù.
+		ch->SetSyncOwner(NULL, false);	// false í”Œë˜ê·¸ë¡œ í•´ì•¼ for_each ê°€ ì œëŒ€ë¡œ ëˆë‹¤.
 	}
 };
 
@@ -4259,7 +4259,7 @@ void CHARACTER::ClearSync()
 {
 	SetSyncOwner(NULL);
 
-	// ¾Æ·¡ for_each¿¡¼­ ³ª¸¦ m_pkChrSyncOwner·Î °¡Áø ÀÚµéÀÇ Æ÷ÀÎÅÍ¸¦ NULL·Î ÇÑ´Ù.
+	// ì•„ë˜ for_eachì—ì„œ ë‚˜ë¥¼ m_pkChrSyncOwnerë¡œ ê°€ì§„ ìë“¤ì˜ í¬ì¸í„°ë¥¼ NULLë¡œ í•œë‹¤.
 	std::for_each(m_kLst_pkChrSyncOwned.begin(), m_kLst_pkChrSyncOwned.end(), FuncClearSync());
 	m_kLst_pkChrSyncOwned.clear();
 }
@@ -4269,8 +4269,8 @@ bool CHARACTER::IsSyncOwner(LPCHARACTER ch) const
 	if (m_pkChrSyncOwner == ch)
 		return true;
 
-	// ¸¶Áö¸·À¸·Î µ¿±âÈ­ µÈ ½Ã°£ÀÌ 3ÃÊ ÀÌ»ó Áö³µ´Ù¸é ¼ÒÀ¯±ÇÀÌ ¾Æ¹«¿¡°Ôµµ
-	// ¾ø´Ù. µû¶ó¼­ ¾Æ¹«³ª SyncOwnerÀÌ¹Ç·Î true ¸®ÅÏ
+	// ë§ˆì§€ë§‰ìœ¼ë¡œ ë™ê¸°í™” ëœ ì‹œê°„ì´ 3ì´ˆ ì´ìƒ ì§€ë‚¬ë‹¤ë©´ ì†Œìœ ê¶Œì´ ì•„ë¬´ì—ê²Œë„
+	// ì—†ë‹¤. ë”°ë¼ì„œ ì•„ë¬´ë‚˜ SyncOwnerì´ë¯€ë¡œ true ë¦¬í„´
 	if (get_float_time() - m_fSyncTime >= 3.0f)
 		return true;
 
@@ -4307,11 +4307,11 @@ void CHARACTER::SetParty(LPPARTY pkParty)
 }
 
 // PARTY_JOIN_BUG_FIX
-/// ÆÄÆ¼ °¡ÀÔ event Á¤º¸
+/// íŒŒí‹° ê°€ì… event ì •ë³´
 EVENTINFO(TPartyJoinEventInfo)
 {
-	DWORD	dwGuestPID;		///< ÆÄÆ¼¿¡ Âü¿©ÇÒ Ä³¸¯ÅÍÀÇ PID
-	DWORD	dwLeaderPID;		///< ÆÄÆ¼ ¸®´õÀÇ PID
+	DWORD	dwGuestPID;		///< íŒŒí‹°ì— ì°¸ì—¬í•  ìºë¦­í„°ì˜ PID
+	DWORD	dwLeaderPID;		///< íŒŒí‹° ë¦¬ë”ì˜ PID
 
 	TPartyJoinEventInfo() 
 	: dwGuestPID( 0 )
@@ -4349,7 +4349,7 @@ bool CHARACTER::RequestToParty(LPCHARACTER leader)
 
 	if (!leader)
 	{
-		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ÆÄÆ¼ÀåÀÌ Á¢¼Ó »óÅÂ°¡ ¾Æ´Ï¶ó¼­ ¿äÃ»À» ÇÒ ¼ö ¾ø½À´Ï´Ù."));
+		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("íŒŒí‹°ì¥ì´ ì ‘ì† ìƒíƒœê°€ ì•„ë‹ˆë¼ì„œ ìš”ì²­ì„ í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 		return false;
 	}
 
@@ -4370,38 +4370,38 @@ bool CHARACTER::RequestToParty(LPCHARACTER leader)
 			break;
 
 		case PERR_SERVER:
-			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<ÆÄÆ¼> ¼­¹ö ¹®Á¦·Î ÆÄÆ¼ °ü·Ã Ã³¸®¸¦ ÇÒ ¼ö ¾ø½À´Ï´Ù."));
+			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<íŒŒí‹°> ì„œë²„ ë¬¸ì œë¡œ íŒŒí‹° ê´€ë ¨ ì²˜ë¦¬ë¥¼ í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 			return false;
 
 		case PERR_DIFFEMPIRE:
-			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<ÆÄÆ¼> ´Ù¸¥ Á¦±¹°ú ÆÄÆ¼¸¦ ÀÌ·ê ¼ö ¾ø½À´Ï´Ù."));
+			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<íŒŒí‹°> ë‹¤ë¥¸ ì œêµ­ê³¼ íŒŒí‹°ë¥¼ ì´ë£° ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 			return false;
 
 		case PERR_DUNGEON:
-			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<ÆÄÆ¼> ´øÀü ¾È¿¡¼­´Â ÆÄÆ¼ ÃÊ´ë¸¦ ÇÒ ¼ö ¾ø½À´Ï´Ù.")); 
+			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<íŒŒí‹°> ë˜ì „ ì•ˆì—ì„œëŠ” íŒŒí‹° ì´ˆëŒ€ë¥¼ í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤.")); 
 			return false;
 
 		case PERR_OBSERVER:
-			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<ÆÄÆ¼> °üÀü ¸ğµå¿¡¼± ÆÄÆ¼ ÃÊ´ë¸¦ ÇÒ ¼ö ¾ø½À´Ï´Ù.")); 
+			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<íŒŒí‹°> ê´€ì „ ëª¨ë“œì—ì„  íŒŒí‹° ì´ˆëŒ€ë¥¼ í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤.")); 
 			return false;
 
 		case PERR_LVBOUNDARY:
-			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<ÆÄÆ¼> -30 ~ +30 ·¹º§ ÀÌ³»ÀÇ »ó´ë¹æ¸¸ ÃÊ´ëÇÒ ¼ö ÀÖ½À´Ï´Ù.")); 
+			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<íŒŒí‹°> -30 ~ +30 ë ˆë²¨ ì´ë‚´ì˜ ìƒëŒ€ë°©ë§Œ ì´ˆëŒ€í•  ìˆ˜ ìˆìŠµë‹ˆë‹¤.")); 
 			return false;
 
 		case PERR_LOWLEVEL:
-			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<ÆÄÆ¼> ÆÄÆ¼³» ÃÖ°í ·¹º§ º¸´Ù 30·¹º§ÀÌ ³·¾Æ ÃÊ´ëÇÒ ¼ö ¾ø½À´Ï´Ù."));
+			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<íŒŒí‹°> íŒŒí‹°ë‚´ ìµœê³  ë ˆë²¨ ë³´ë‹¤ 30ë ˆë²¨ì´ ë‚®ì•„ ì´ˆëŒ€í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 			return false;
 
 		case PERR_HILEVEL:
-			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<ÆÄÆ¼> ÆÄÆ¼³» ÃÖÀú ·¹º§ º¸´Ù 30·¹º§ÀÌ ³ô¾Æ ÃÊ´ëÇÒ ¼ö ¾ø½À´Ï´Ù.")); 
+			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<íŒŒí‹°> íŒŒí‹°ë‚´ ìµœì € ë ˆë²¨ ë³´ë‹¤ 30ë ˆë²¨ì´ ë†’ì•„ ì´ˆëŒ€í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤.")); 
 			return false;
 
 		case PERR_ALREADYJOIN: 	
 			return false;
 
 		case PERR_PARTYISFULL:
-			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<ÆÄÆ¼> ´õ ÀÌ»ó ÆÄÆ¼¿øÀ» ÃÊ´ëÇÒ ¼ö ¾ø½À´Ï´Ù.")); 
+			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<íŒŒí‹°> ë” ì´ìƒ íŒŒí‹°ì›ì„ ì´ˆëŒ€í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤.")); 
 			return false;
 
 		default:
@@ -4417,7 +4417,7 @@ bool CHARACTER::RequestToParty(LPCHARACTER leader)
 	SetPartyRequestEvent(event_create(party_request_event, info, PASSES_PER_SEC(10)));
 
 	leader->ChatPacket(CHAT_TYPE_COMMAND, "PartyRequest %u", (DWORD) GetVID());
-	ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%s ´Ô¿¡°Ô ÆÄÆ¼°¡ÀÔ ½ÅÃ»À» Çß½À´Ï´Ù."), leader->GetName());
+	ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%s ë‹˜ì—ê²Œ íŒŒí‹°ê°€ì… ì‹ ì²­ì„ í–ˆìŠµë‹ˆë‹¤."), leader->GetName());
 	return true;
 }
 
@@ -4471,7 +4471,7 @@ void CHARACTER::AcceptToParty(LPCHARACTER member)
 	event_cancel(&member->m_pkPartyRequestEvent);
 
 	if (!GetParty())
-		member->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("»ó´ë¹æÀÌ ÆÄÆ¼¿¡ ¼ÓÇØÀÖÁö ¾Ê½À´Ï´Ù."));
+		member->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ìƒëŒ€ë°©ì´ íŒŒí‹°ì— ì†í•´ìˆì§€ ì•ŠìŠµë‹ˆë‹¤."));
 	else 
 	{
 		if (GetPlayerID() != GetParty()->GetLeaderPID())
@@ -4481,16 +4481,16 @@ void CHARACTER::AcceptToParty(LPCHARACTER member)
 		switch (errcode) 
 		{
 			case PERR_NONE: 		member->PartyJoin(this); return;
-			case PERR_SERVER:		member->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<ÆÄÆ¼> ¼­¹ö ¹®Á¦·Î ÆÄÆ¼ °ü·Ã Ã³¸®¸¦ ÇÒ ¼ö ¾ø½À´Ï´Ù.")); break;
-			case PERR_DUNGEON:		member->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<ÆÄÆ¼> ´øÀü ¾È¿¡¼­´Â ÆÄÆ¼ ÃÊ´ë¸¦ ÇÒ ¼ö ¾ø½À´Ï´Ù.")); break;
-			case PERR_OBSERVER: 	member->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<ÆÄÆ¼> °üÀü ¸ğµå¿¡¼± ÆÄÆ¼ ÃÊ´ë¸¦ ÇÒ ¼ö ¾ø½À´Ï´Ù.")); break;
-			case PERR_LVBOUNDARY:	member->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<ÆÄÆ¼> -30 ~ +30 ·¹º§ ÀÌ³»ÀÇ »ó´ë¹æ¸¸ ÃÊ´ëÇÒ ¼ö ÀÖ½À´Ï´Ù.")); break;
-			case PERR_LOWLEVEL: 	member->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<ÆÄÆ¼> ÆÄÆ¼³» ÃÖ°í ·¹º§ º¸´Ù 30·¹º§ÀÌ ³·¾Æ ÃÊ´ëÇÒ ¼ö ¾ø½À´Ï´Ù.")); break;
-			case PERR_HILEVEL: 		member->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<ÆÄÆ¼> ÆÄÆ¼³» ÃÖÀú ·¹º§ º¸´Ù 30·¹º§ÀÌ ³ô¾Æ ÃÊ´ëÇÒ ¼ö ¾ø½À´Ï´Ù.")); break;
+			case PERR_SERVER:		member->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<íŒŒí‹°> ì„œë²„ ë¬¸ì œë¡œ íŒŒí‹° ê´€ë ¨ ì²˜ë¦¬ë¥¼ í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤.")); break;
+			case PERR_DUNGEON:		member->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<íŒŒí‹°> ë˜ì „ ì•ˆì—ì„œëŠ” íŒŒí‹° ì´ˆëŒ€ë¥¼ í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤.")); break;
+			case PERR_OBSERVER: 	member->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<íŒŒí‹°> ê´€ì „ ëª¨ë“œì—ì„  íŒŒí‹° ì´ˆëŒ€ë¥¼ í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤.")); break;
+			case PERR_LVBOUNDARY:	member->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<íŒŒí‹°> -30 ~ +30 ë ˆë²¨ ì´ë‚´ì˜ ìƒëŒ€ë°©ë§Œ ì´ˆëŒ€í•  ìˆ˜ ìˆìŠµë‹ˆë‹¤.")); break;
+			case PERR_LOWLEVEL: 	member->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<íŒŒí‹°> íŒŒí‹°ë‚´ ìµœê³  ë ˆë²¨ ë³´ë‹¤ 30ë ˆë²¨ì´ ë‚®ì•„ ì´ˆëŒ€í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤.")); break;
+			case PERR_HILEVEL: 		member->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<íŒŒí‹°> íŒŒí‹°ë‚´ ìµœì € ë ˆë²¨ ë³´ë‹¤ 30ë ˆë²¨ì´ ë†’ì•„ ì´ˆëŒ€í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤.")); break;
 			case PERR_ALREADYJOIN: 	break;
 			case PERR_PARTYISFULL: {
-									   ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<ÆÄÆ¼> ´õ ÀÌ»ó ÆÄÆ¼¿øÀ» ÃÊ´ëÇÒ ¼ö ¾ø½À´Ï´Ù."));
-									   member->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<ÆÄÆ¼> ÆÄÆ¼ÀÇ ÀÎ¿øÁ¦ÇÑÀÌ ÃÊ°úÇÏ¿© ÆÄÆ¼¿¡ Âü°¡ÇÒ ¼ö ¾ø½À´Ï´Ù."));
+									   ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<íŒŒí‹°> ë” ì´ìƒ íŒŒí‹°ì›ì„ ì´ˆëŒ€í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
+									   member->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<íŒŒí‹°> íŒŒí‹°ì˜ ì¸ì›ì œí•œì´ ì´ˆê³¼í•˜ì—¬ íŒŒí‹°ì— ì°¸ê°€í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 									   break;
 								   }
 			default: sys_err("Do not process party join error(%d)", errcode);
@@ -4501,8 +4501,8 @@ void CHARACTER::AcceptToParty(LPCHARACTER member)
 }
 
 /**
- * ÆÄÆ¼ ÃÊ´ë event callback ÇÔ¼ö.
- * event °¡ ¹ßµ¿ÇÏ¸é ÃÊ´ë °ÅÀı·Î Ã³¸®ÇÑ´Ù.
+ * íŒŒí‹° ì´ˆëŒ€ event callback í•¨ìˆ˜.
+ * event ê°€ ë°œë™í•˜ë©´ ì´ˆëŒ€ ê±°ì ˆë¡œ ì²˜ë¦¬í•œë‹¤.
  */
 EVENTFUNC(party_invite_event)
 {
@@ -4529,12 +4529,12 @@ void CHARACTER::PartyInvite(LPCHARACTER pchInvitee)
 {
 	if (GetParty() && GetParty()->GetLeaderPID() != GetPlayerID())
 	{
-		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<ÆÄÆ¼> ÆÄÆ¼¿øÀ» ÃÊ´ëÇÒ ¼ö ÀÖ´Â ±ÇÇÑÀÌ ¾ø½À´Ï´Ù."));
+		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<íŒŒí‹°> íŒŒí‹°ì›ì„ ì´ˆëŒ€í•  ìˆ˜ ìˆëŠ” ê¶Œí•œì´ ì—†ìŠµë‹ˆë‹¤."));
 		return;
 	}
 	else if (pchInvitee->IsBlockMode(BLOCK_PARTY_INVITE))
 	{
-		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<ÆÄÆ¼> %s ´ÔÀÌ ÆÄÆ¼ °ÅºÎ »óÅÂÀÔ´Ï´Ù."), pchInvitee->GetName());
+		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<íŒŒí‹°> %s ë‹˜ì´ íŒŒí‹° ê±°ë¶€ ìƒíƒœì…ë‹ˆë‹¤."), pchInvitee->GetName());
 		return;
 	}
 
@@ -4546,39 +4546,39 @@ void CHARACTER::PartyInvite(LPCHARACTER pchInvitee)
 			break;
 
 		case PERR_SERVER:
-			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<ÆÄÆ¼> ¼­¹ö ¹®Á¦·Î ÆÄÆ¼ °ü·Ã Ã³¸®¸¦ ÇÒ ¼ö ¾ø½À´Ï´Ù."));
+			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<íŒŒí‹°> ì„œë²„ ë¬¸ì œë¡œ íŒŒí‹° ê´€ë ¨ ì²˜ë¦¬ë¥¼ í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 			return;
 
 		case PERR_DIFFEMPIRE:
-			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<ÆÄÆ¼> ´Ù¸¥ Á¦±¹°ú ÆÄÆ¼¸¦ ÀÌ·ê ¼ö ¾ø½À´Ï´Ù."));
+			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<íŒŒí‹°> ë‹¤ë¥¸ ì œêµ­ê³¼ íŒŒí‹°ë¥¼ ì´ë£° ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 			return;
 
 		case PERR_DUNGEON:
-			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<ÆÄÆ¼> ´øÀü ¾È¿¡¼­´Â ÆÄÆ¼ ÃÊ´ë¸¦ ÇÒ ¼ö ¾ø½À´Ï´Ù."));
+			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<íŒŒí‹°> ë˜ì „ ì•ˆì—ì„œëŠ” íŒŒí‹° ì´ˆëŒ€ë¥¼ í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 			return;
 
 		case PERR_OBSERVER:
-			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<ÆÄÆ¼> °üÀü ¸ğµå¿¡¼± ÆÄÆ¼ ÃÊ´ë¸¦ ÇÒ ¼ö ¾ø½À´Ï´Ù."));
+			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<íŒŒí‹°> ê´€ì „ ëª¨ë“œì—ì„  íŒŒí‹° ì´ˆëŒ€ë¥¼ í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 			return;
 
 		case PERR_LVBOUNDARY:
-			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<ÆÄÆ¼> -30 ~ +30 ·¹º§ ÀÌ³»ÀÇ »ó´ë¹æ¸¸ ÃÊ´ëÇÒ ¼ö ÀÖ½À´Ï´Ù."));
+			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<íŒŒí‹°> -30 ~ +30 ë ˆë²¨ ì´ë‚´ì˜ ìƒëŒ€ë°©ë§Œ ì´ˆëŒ€í•  ìˆ˜ ìˆìŠµë‹ˆë‹¤."));
 			return;
 
 		case PERR_LOWLEVEL:
-			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<ÆÄÆ¼> ÆÄÆ¼³» ÃÖ°í ·¹º§ º¸´Ù 30·¹º§ÀÌ ³·¾Æ ÃÊ´ëÇÒ ¼ö ¾ø½À´Ï´Ù."));
+			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<íŒŒí‹°> íŒŒí‹°ë‚´ ìµœê³  ë ˆë²¨ ë³´ë‹¤ 30ë ˆë²¨ì´ ë‚®ì•„ ì´ˆëŒ€í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 			return;
 
 		case PERR_HILEVEL:
-			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<ÆÄÆ¼> ÆÄÆ¼³» ÃÖÀú ·¹º§ º¸´Ù 30·¹º§ÀÌ ³ô¾Æ ÃÊ´ëÇÒ ¼ö ¾ø½À´Ï´Ù."));
+			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<íŒŒí‹°> íŒŒí‹°ë‚´ ìµœì € ë ˆë²¨ ë³´ë‹¤ 30ë ˆë²¨ì´ ë†’ì•„ ì´ˆëŒ€í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 			return;
 
 		case PERR_ALREADYJOIN:
-			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<ÆÄÆ¼> ÀÌ¹Ì %s´ÔÀº ÆÄÆ¼¿¡ ¼ÓÇØ ÀÖ½À´Ï´Ù."), pchInvitee->GetName());
+			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<íŒŒí‹°> ì´ë¯¸ %së‹˜ì€ íŒŒí‹°ì— ì†í•´ ìˆìŠµë‹ˆë‹¤."), pchInvitee->GetName());
 			return;
 
 		case PERR_PARTYISFULL:
-			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<ÆÄÆ¼> ´õ ÀÌ»ó ÆÄÆ¼¿øÀ» ÃÊ´ëÇÒ ¼ö ¾ø½À´Ï´Ù."));
+			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<íŒŒí‹°> ë” ì´ìƒ íŒŒí‹°ì›ì„ ì´ˆëŒ€í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 			return;
 
 		default:
@@ -4590,7 +4590,7 @@ void CHARACTER::PartyInvite(LPCHARACTER pchInvitee)
 		return;
 
 	//
-	// EventMap ¿¡ ÀÌº¥Æ® Ãß°¡
+	// EventMap ì— ì´ë²¤íŠ¸ ì¶”ê°€
 	// 
 	TPartyJoinEventInfo* info = AllocEventInfo<TPartyJoinEventInfo>();
 
@@ -4600,7 +4600,7 @@ void CHARACTER::PartyInvite(LPCHARACTER pchInvitee)
 	m_PartyInviteEventMap.insert(EventMap::value_type(pchInvitee->GetPlayerID(), event_create(party_invite_event, info, PASSES_PER_SEC(10))));
 
 	//
-	// ÃÊ´ë ¹Ş´Â character ¿¡°Ô ÃÊ´ë ÆĞÅ¶ Àü¼Û
+	// ì´ˆëŒ€ ë°›ëŠ” character ì—ê²Œ ì´ˆëŒ€ íŒ¨í‚· ì „ì†¡
 	// 
 
 	TPacketGCPartyInvite p;
@@ -4624,7 +4624,7 @@ void CHARACTER::PartyInviteAccept(LPCHARACTER pchInvitee)
 
 	if (GetParty() && GetParty()->GetLeaderPID() != GetPlayerID())
 	{
-		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<ÆÄÆ¼> ÆÄÆ¼¿øÀ» ÃÊ´ëÇÒ ¼ö ÀÖ´Â ±ÇÇÑÀÌ ¾ø½À´Ï´Ù."));
+		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<íŒŒí‹°> íŒŒí‹°ì›ì„ ì´ˆëŒ€í•  ìˆ˜ ìˆëŠ” ê¶Œí•œì´ ì—†ìŠµë‹ˆë‹¤."));
 		return;
 	}
 
@@ -4636,36 +4636,36 @@ void CHARACTER::PartyInviteAccept(LPCHARACTER pchInvitee)
 			break;
 
 		case PERR_SERVER:
-			pchInvitee->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<ÆÄÆ¼> ¼­¹ö ¹®Á¦·Î ÆÄÆ¼ °ü·Ã Ã³¸®¸¦ ÇÒ ¼ö ¾ø½À´Ï´Ù."));
+			pchInvitee->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<íŒŒí‹°> ì„œë²„ ë¬¸ì œë¡œ íŒŒí‹° ê´€ë ¨ ì²˜ë¦¬ë¥¼ í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 			return;
 
 		case PERR_DUNGEON:
-			pchInvitee->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<ÆÄÆ¼> ´øÀü ¾È¿¡¼­´Â ÆÄÆ¼ ÃÊ´ë¿¡ ÀÀÇÒ ¼ö ¾ø½À´Ï´Ù."));
+			pchInvitee->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<íŒŒí‹°> ë˜ì „ ì•ˆì—ì„œëŠ” íŒŒí‹° ì´ˆëŒ€ì— ì‘í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 			return;
 
 		case PERR_OBSERVER:
-			pchInvitee->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<ÆÄÆ¼> °üÀü ¸ğµå¿¡¼± ÆÄÆ¼ ÃÊ´ë¸¦ ÇÒ ¼ö ¾ø½À´Ï´Ù."));
+			pchInvitee->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<íŒŒí‹°> ê´€ì „ ëª¨ë“œì—ì„  íŒŒí‹° ì´ˆëŒ€ë¥¼ í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 			return;
 
 		case PERR_LVBOUNDARY:
-			pchInvitee->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<ÆÄÆ¼> -30 ~ +30 ·¹º§ ÀÌ³»ÀÇ »ó´ë¹æ¸¸ ÃÊ´ëÇÒ ¼ö ÀÖ½À´Ï´Ù."));
+			pchInvitee->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<íŒŒí‹°> -30 ~ +30 ë ˆë²¨ ì´ë‚´ì˜ ìƒëŒ€ë°©ë§Œ ì´ˆëŒ€í•  ìˆ˜ ìˆìŠµë‹ˆë‹¤."));
 			return;
 
 		case PERR_LOWLEVEL:
-			pchInvitee->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<ÆÄÆ¼> ÆÄÆ¼³» ÃÖ°í ·¹º§ º¸´Ù 30·¹º§ÀÌ ³·¾Æ ÃÊ´ëÇÒ ¼ö ¾ø½À´Ï´Ù."));
+			pchInvitee->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<íŒŒí‹°> íŒŒí‹°ë‚´ ìµœê³  ë ˆë²¨ ë³´ë‹¤ 30ë ˆë²¨ì´ ë‚®ì•„ ì´ˆëŒ€í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 			return;
 
 		case PERR_HILEVEL:
-			pchInvitee->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<ÆÄÆ¼> ÆÄÆ¼³» ÃÖÀú ·¹º§ º¸´Ù 30·¹º§ÀÌ ³ô¾Æ ÃÊ´ëÇÒ ¼ö ¾ø½À´Ï´Ù."));
+			pchInvitee->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<íŒŒí‹°> íŒŒí‹°ë‚´ ìµœì € ë ˆë²¨ ë³´ë‹¤ 30ë ˆë²¨ì´ ë†’ì•„ ì´ˆëŒ€í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 			return;
 
 		case PERR_ALREADYJOIN:
-			pchInvitee->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<ÆÄÆ¼> ÆÄÆ¼ ÃÊ´ë¿¡ ÀÀÇÒ ¼ö ¾ø½À´Ï´Ù."));
+			pchInvitee->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<íŒŒí‹°> íŒŒí‹° ì´ˆëŒ€ì— ì‘í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 			return;
 
 		case PERR_PARTYISFULL:
-			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<ÆÄÆ¼> ´õ ÀÌ»ó ÆÄÆ¼¿øÀ» ÃÊ´ëÇÒ ¼ö ¾ø½À´Ï´Ù."));
-			pchInvitee->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<ÆÄÆ¼> ÆÄÆ¼ÀÇ ÀÎ¿øÁ¦ÇÑÀÌ ÃÊ°úÇÏ¿© ÆÄÆ¼¿¡ Âü°¡ÇÒ ¼ö ¾ø½À´Ï´Ù."));
+			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<íŒŒí‹°> ë” ì´ìƒ íŒŒí‹°ì›ì„ ì´ˆëŒ€í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
+			pchInvitee->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<íŒŒí‹°> íŒŒí‹°ì˜ ì¸ì›ì œí•œì´ ì´ˆê³¼í•˜ì—¬ íŒŒí‹°ì— ì°¸ê°€í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 			return;
 
 		default:
@@ -4674,7 +4674,7 @@ void CHARACTER::PartyInviteAccept(LPCHARACTER pchInvitee)
 	}
 
 	//
-	// ÆÄÆ¼ °¡ÀÔ Ã³¸®
+	// íŒŒí‹° ê°€ì… ì²˜ë¦¬
 	// 
 
 	if (GetParty())
@@ -4704,13 +4704,13 @@ void CHARACTER::PartyInviteDeny(DWORD dwPID)
 
 	LPCHARACTER pchInvitee = CHARACTER_MANAGER::instance().FindByPID(dwPID);
 	if (pchInvitee)
-		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<ÆÄÆ¼> %s´ÔÀÌ ÆÄÆ¼ ÃÊ´ë¸¦ °ÅÀıÇÏ¼Ì½À´Ï´Ù."), pchInvitee->GetName());
+		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<íŒŒí‹°> %së‹˜ì´ íŒŒí‹° ì´ˆëŒ€ë¥¼ ê±°ì ˆí•˜ì…¨ìŠµë‹ˆë‹¤."), pchInvitee->GetName());
 }
 
 void CHARACTER::PartyJoin(LPCHARACTER pLeader)
 {
-	pLeader->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<ÆÄÆ¼> %s´ÔÀÌ ÆÄÆ¼¿¡ Âü°¡ÇÏ¼Ì½À´Ï´Ù."), GetName());
-	ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<ÆÄÆ¼> %s´ÔÀÇ ÆÄÆ¼¿¡ Âü°¡ÇÏ¼Ì½À´Ï´Ù."), pLeader->GetName());
+	pLeader->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<íŒŒí‹°> %së‹˜ì´ íŒŒí‹°ì— ì°¸ê°€í•˜ì…¨ìŠµë‹ˆë‹¤."), GetName());
+	ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<íŒŒí‹°> %së‹˜ì˜ íŒŒí‹°ì— ì°¸ê°€í•˜ì…¨ìŠµë‹ˆë‹¤."), pLeader->GetName());
 
 	pLeader->GetParty()->Join(GetPlayerID());
 	pLeader->GetParty()->Link(this);
@@ -4887,9 +4887,9 @@ void CHARACTER::OnClick(LPCHARACTER pkChrCauser)
 	DWORD vid = GetVID();
 	sys_log(0, "OnClick %s[vnum %d ServerUniqueID %d, pid %d] by %s", GetName(), GetRaceNum(), vid, GetPlayerID(), pkChrCauser->GetName());
 
-	// »óÁ¡À» ¿¬»óÅÂ·Î Äù½ºÆ®¸¦ ÁøÇàÇÒ ¼ö ¾ø´Ù.
+	// ìƒì ì„ ì—°ìƒíƒœë¡œ í€˜ìŠ¤íŠ¸ë¥¼ ì§„í–‰í•  ìˆ˜ ì—†ë‹¤.
 	{
-		// ´Ü, ÀÚ½ÅÀº ÀÚ½ÅÀÇ »óÁ¡À» Å¬¸¯ÇÒ ¼ö ÀÖ´Ù.
+		// ë‹¨, ìì‹ ì€ ìì‹ ì˜ ìƒì ì„ í´ë¦­í•  ìˆ˜ ìˆë‹¤.
 		if (pkChrCauser->GetMyShop() && pkChrCauser != this) 
 		{
 			sys_err("OnClick Fail (%s->%s) - pc has shop", pkChrCauser->GetName(), GetName());
@@ -4897,7 +4897,7 @@ void CHARACTER::OnClick(LPCHARACTER pkChrCauser)
 		}
 	}
 
-	// ±³È¯ÁßÀÏ¶§ Äù½ºÆ®¸¦ ÁøÇàÇÒ ¼ö ¾ø´Ù.
+	// êµí™˜ì¤‘ì¼ë•Œ í€˜ìŠ¤íŠ¸ë¥¼ ì§„í–‰í•  ìˆ˜ ì—†ë‹¤.
 	{
 		if (pkChrCauser->GetExchange())
 		{
@@ -4908,37 +4908,37 @@ void CHARACTER::OnClick(LPCHARACTER pkChrCauser)
 
 	if (IsPC())
 	{
-		// Å¸°ÙÀ¸·Î ¼³Á¤µÈ °æ¿ì´Â PC¿¡ ÀÇÇÑ Å¬¸¯µµ Äù½ºÆ®·Î Ã³¸®ÇÏµµ·Ï ÇÕ´Ï´Ù.
+		// íƒ€ê²Ÿìœ¼ë¡œ ì„¤ì •ëœ ê²½ìš°ëŠ” PCì— ì˜í•œ í´ë¦­ë„ í€˜ìŠ¤íŠ¸ë¡œ ì²˜ë¦¬í•˜ë„ë¡ í•©ë‹ˆë‹¤.
 		if (!CTargetManager::instance().GetTargetInfo(pkChrCauser->GetPlayerID(), TARGET_TYPE_VID, GetVID()))
 		{
-			// 2005.03.17.myevan.Å¸°ÙÀÌ ¾Æ´Ñ °æ¿ì´Â °³ÀÎ »óÁ¡ Ã³¸® ±â´ÉÀ» ÀÛµ¿½ÃÅ²´Ù.
+			// 2005.03.17.myevan.íƒ€ê²Ÿì´ ì•„ë‹Œ ê²½ìš°ëŠ” ê°œì¸ ìƒì  ì²˜ë¦¬ ê¸°ëŠ¥ì„ ì‘ë™ì‹œí‚¨ë‹¤.
 			if (GetMyShop())
 			{
 				if (pkChrCauser->IsDead() == true) return;
 
 				//PREVENT_TRADE_WINDOW
-				if (pkChrCauser == this) // ÀÚ±â´Â °¡´É
+				if (pkChrCauser == this) // ìê¸°ëŠ” ê°€ëŠ¥
 				{
 					if ((GetExchange() || IsOpenSafebox() || GetShopOwner()) || IsCubeOpen())
 					{
-						pkChrCauser->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("´Ù¸¥ °Å·¡Áß(Ã¢°í,±³È¯,»óÁ¡)¿¡´Â °³ÀÎ»óÁ¡À» »ç¿ëÇÒ ¼ö ¾ø½À´Ï´Ù."));
+						pkChrCauser->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ë‹¤ë¥¸ ê±°ë˜ì¤‘(ì°½ê³ ,êµí™˜,ìƒì )ì—ëŠ” ê°œì¸ìƒì ì„ ì‚¬ìš©í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 						return;
 					}
 				}
-				else // ´Ù¸¥ »ç¶÷ÀÌ Å¬¸¯ÇßÀ»¶§
+				else // ë‹¤ë¥¸ ì‚¬ëŒì´ í´ë¦­í–ˆì„ë•Œ
 				{
-					// Å¬¸¯ÇÑ »ç¶÷ÀÌ ±³È¯/Ã¢°í/°³ÀÎ»óÁ¡/»óÁ¡ÀÌ¿ëÁßÀÌ¶ó¸é ºÒ°¡
+					// í´ë¦­í•œ ì‚¬ëŒì´ êµí™˜/ì°½ê³ /ê°œì¸ìƒì /ìƒì ì´ìš©ì¤‘ì´ë¼ë©´ ë¶ˆê°€
 					if ((pkChrCauser->GetExchange() || pkChrCauser->IsOpenSafebox() || pkChrCauser->GetMyShop() || pkChrCauser->GetShopOwner()) || pkChrCauser->IsCubeOpen() )
 					{
-						pkChrCauser->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("´Ù¸¥ °Å·¡Áß(Ã¢°í,±³È¯,»óÁ¡)¿¡´Â °³ÀÎ»óÁ¡À» »ç¿ëÇÒ ¼ö ¾ø½À´Ï´Ù."));
+						pkChrCauser->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ë‹¤ë¥¸ ê±°ë˜ì¤‘(ì°½ê³ ,êµí™˜,ìƒì )ì—ëŠ” ê°œì¸ìƒì ì„ ì‚¬ìš©í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 						return;
 					}
 
-					// Å¬¸¯ÇÑ ´ë»óÀÌ ±³È¯/Ã¢°í/»óÁ¡ÀÌ¿ëÁßÀÌ¶ó¸é ºÒ°¡
+					// í´ë¦­í•œ ëŒ€ìƒì´ êµí™˜/ì°½ê³ /ìƒì ì´ìš©ì¤‘ì´ë¼ë©´ ë¶ˆê°€
 					//if ((GetExchange() || IsOpenSafebox() || GetShopOwner()))
 					if ((GetExchange() || IsOpenSafebox() || IsCubeOpen()))
 					{
-						pkChrCauser->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("»ó´ë¹æÀÌ ´Ù¸¥ °Å·¡¸¦ ÇÏ°í ÀÖ´Â ÁßÀÔ´Ï´Ù."));
+						pkChrCauser->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ìƒëŒ€ë°©ì´ ë‹¤ë¥¸ ê±°ë˜ë¥¼ í•˜ê³  ìˆëŠ” ì¤‘ì…ë‹ˆë‹¤."));
 						return;
 					}
 				}
@@ -4962,7 +4962,7 @@ void CHARACTER::OnClick(LPCHARACTER pkChrCauser)
 		}
 	}
 
-	// Ã»¼Ò³âÀº Äù½ºÆ® ¸øÇÔ
+	// ì²­ì†Œë…„ì€ í€˜ìŠ¤íŠ¸ ëª»í•¨
 	if (LC_IsNewCIBN())
 	{
 		if (pkChrCauser->IsOverTime(OT_3HOUR))
@@ -4986,12 +4986,12 @@ void CHARACTER::OnClick(LPCHARACTER pkChrCauser)
 	}
 
 
-	// NPC Àü¿ë ±â´É ¼öÇà : »óÁ¡ ¿­±â µî
+	// NPC ì „ìš© ê¸°ëŠ¥ ìˆ˜í–‰ : ìƒì  ì—´ê¸° ë“±
 	if (!IsPC())
 	{
 		if (!m_triggerOnClick.pFunc)
 		{
-			// NPC Æ®¸®°Å ½Ã½ºÅÛ ·Î±× º¸±â
+			// NPC íŠ¸ë¦¬ê±° ì‹œìŠ¤í…œ ë¡œê·¸ ë³´ê¸°
 			//sys_err("%s.OnClickFailure(%s) : triggerOnClick.pFunc is EMPTY(pid=%d)", 
 			//			pkChrCauser->GetName(),
 			//			GetName(),
@@ -5056,7 +5056,7 @@ void CHARACTER::ClearStone()
 {
 	if (!m_set_pkChrSpawnedBy.empty())
 	{
-		// ³»°¡ ½ºÆù½ÃÅ² ¸ó½ºÅÍµéÀ» ¸ğµÎ Á×ÀÎ´Ù.
+		// ë‚´ê°€ ìŠ¤í°ì‹œí‚¨ ëª¬ìŠ¤í„°ë“¤ì„ ëª¨ë‘ ì£½ì¸ë‹¤.
 		FuncDeadSpawnedByStone f;
 		std::for_each(m_set_pkChrSpawnedBy.begin(), m_set_pkChrSpawnedBy.end(), f);
 		m_set_pkChrSpawnedBy.clear();
@@ -5232,9 +5232,9 @@ void CHARACTER::ExitToSavedLocation()
 }
 
 // fixme 
-// Áö±İ±îÁø privateMapIndex °¡ ÇöÀç ¸Ê ÀÎµ¦½º¿Í °°ÀºÁö Ã¼Å© ÇÏ´Â °ÍÀ» ¿ÜºÎ¿¡¼­ ÇÏ°í,
-// ´Ù¸£¸é warpsetÀ» ºÒ·¶´Âµ¥
-// ÀÌ¸¦ warpset ¾ÈÀ¸·Î ³ÖÀÚ.
+// ì§€ê¸ˆê¹Œì§„ privateMapIndex ê°€ í˜„ì¬ ë§µ ì¸ë±ìŠ¤ì™€ ê°™ì€ì§€ ì²´í¬ í•˜ëŠ” ê²ƒì„ ì™¸ë¶€ì—ì„œ í•˜ê³ ,
+// ë‹¤ë¥´ë©´ warpsetì„ ë¶ˆë €ëŠ”ë°
+// ì´ë¥¼ warpset ì•ˆìœ¼ë¡œ ë„£ì.
 bool CHARACTER::WarpSet(long x, long y, long lPrivateMapIndex)
 {
 	if (!IsPC())
@@ -5337,7 +5337,7 @@ void CHARACTER::WarpEnd()
 
 	if (!map_allow_find(index))
 	{
-		// ÀÌ °÷À¸·Î ¿öÇÁÇÒ ¼ö ¾øÀ¸¹Ç·Î ¿öÇÁÇÏ±â Àü ÁÂÇ¥·Î µÇµ¹¸®ÀÚ.
+		// ì´ ê³³ìœ¼ë¡œ ì›Œí”„í•  ìˆ˜ ì—†ìœ¼ë¯€ë¡œ ì›Œí”„í•˜ê¸° ì „ ì¢Œí‘œë¡œ ë˜ëŒë¦¬ì.
 		sys_err("location %d %d not allowed to login this server", m_posWarp.x, m_posWarp.y);
 		GetDesc()->SetPhase(PHASE_CLOSE);
 		return;
@@ -5392,7 +5392,7 @@ bool CHARACTER::Return()
 	SendMovePacket(FUNC_WAIT, 0, 0, 0, 0);
 
 	if (test_server)
-		sys_log(0, "%s %p Æ÷±âÇÏ°í µ¹¾Æ°¡ÀÚ! %d %d", GetName(), this, x, y);
+		sys_log(0, "%s %p í¬ê¸°í•˜ê³  ëŒì•„ê°€ì! %d %d", GetName(), this, x, y);
 
 	if (GetParty())
 		GetParty()->SendMessage(this, PM_RETURN, x, y);
@@ -5411,14 +5411,14 @@ bool CHARACTER::Follow(LPCHARACTER pkChr, float fMinDistance)
 	// TRENT_MONSTER
 	if (IS_SET(m_pointsInstant.dwAIFlag, AIFLAG_NOMOVE))
 	{
-		if (pkChr->IsPC()) // ÂÑ¾Æ°¡´Â »ó´ë°¡ PCÀÏ ¶§
+		if (pkChr->IsPC()) // ì«“ì•„ê°€ëŠ” ìƒëŒ€ê°€ PCì¼ ë•Œ
 		{
 			// If i'm in a party. I must obey party leader's AI.
 			if (!GetParty() || !GetParty()->GetLeader() || GetParty()->GetLeader() == this)
 			{
-				if (get_dword_time() - m_pkMobInst->m_dwLastAttackedTime >= 15000) // ¸¶Áö¸·À¸·Î °ø°İ¹ŞÀºÁö 15ÃÊ°¡ Áö³µ°í
+				if (get_dword_time() - m_pkMobInst->m_dwLastAttackedTime >= 15000) // ë§ˆì§€ë§‰ìœ¼ë¡œ ê³µê²©ë°›ì€ì§€ 15ì´ˆê°€ ì§€ë‚¬ê³ 
 				{
-					// ¸¶Áö¸· ¸ÂÀº °÷À¸·Î ºÎÅÍ 50¹ÌÅÍ ÀÌ»ó Â÷ÀÌ³ª¸é Æ÷±âÇÏ°í µ¹¾Æ°£´Ù.
+					// ë§ˆì§€ë§‰ ë§ì€ ê³³ìœ¼ë¡œ ë¶€í„° 50ë¯¸í„° ì´ìƒ ì°¨ì´ë‚˜ë©´ í¬ê¸°í•˜ê³  ëŒì•„ê°„ë‹¤.
 					if (m_pkMobData->m_table.wAttackRange < DISTANCE_APPROX(pkChr->GetX() - GetX(), pkChr->GetY() - GetY()))
 						if (Return())
 							return true;
@@ -5432,14 +5432,14 @@ bool CHARACTER::Follow(LPCHARACTER pkChr, float fMinDistance)
 	long x = pkChr->GetX();
 	long y = pkChr->GetY();
 
-	if (pkChr->IsPC()) // ÂÑ¾Æ°¡´Â »ó´ë°¡ PCÀÏ ¶§
+	if (pkChr->IsPC()) // ì«“ì•„ê°€ëŠ” ìƒëŒ€ê°€ PCì¼ ë•Œ
 	{
 		// If i'm in a party. I must obey party leader's AI.
 		if (!GetParty() || !GetParty()->GetLeader() || GetParty()->GetLeader() == this)
 		{
-			if (get_dword_time() - m_pkMobInst->m_dwLastAttackedTime >= 15000) // ¸¶Áö¸·À¸·Î °ø°İ¹ŞÀºÁö 15ÃÊ°¡ Áö³µ°í
+			if (get_dword_time() - m_pkMobInst->m_dwLastAttackedTime >= 15000) // ë§ˆì§€ë§‰ìœ¼ë¡œ ê³µê²©ë°›ì€ì§€ 15ì´ˆê°€ ì§€ë‚¬ê³ 
 			{
-				// ¸¶Áö¸· ¸ÂÀº °÷À¸·Î ºÎÅÍ 50¹ÌÅÍ ÀÌ»ó Â÷ÀÌ³ª¸é Æ÷±âÇÏ°í µ¹¾Æ°£´Ù.
+				// ë§ˆì§€ë§‰ ë§ì€ ê³³ìœ¼ë¡œ ë¶€í„° 50ë¯¸í„° ì´ìƒ ì°¨ì´ë‚˜ë©´ í¬ê¸°í•˜ê³  ëŒì•„ê°„ë‹¤.
 				if (5000 < DISTANCE_APPROX(m_pkMobInst->m_posLastAttacked.x - GetX(), m_pkMobInst->m_posLastAttacked.y - GetY()))
 					if (Return())
 						return true;
@@ -5459,9 +5459,9 @@ bool CHARACTER::Follow(LPCHARACTER pkChr, float fMinDistance)
 		GetMobBattleType() != BATTLE_TYPE_MAGIC &&
 		false == IsPet())
 	{
-		// ´ë»óÀÌ ÀÌµ¿ÁßÀÌ¸é ¿¹Ãø ÀÌµ¿À» ÇÑ´Ù
-		// ³ª¿Í »ó´ë¹æÀÇ ¼ÓµµÂ÷¿Í °Å¸®·ÎºÎÅÍ ¸¸³¯ ½Ã°£À» ¿¹»óÇÑ ÈÄ
-		// »ó´ë¹æÀÌ ±× ½Ã°£±îÁö Á÷¼±À¸·Î ÀÌµ¿ÇÑ´Ù°í °¡Á¤ÇÏ¿© °Å±â·Î ÀÌµ¿ÇÑ´Ù.
+		// ëŒ€ìƒì´ ì´ë™ì¤‘ì´ë©´ ì˜ˆì¸¡ ì´ë™ì„ í•œë‹¤
+		// ë‚˜ì™€ ìƒëŒ€ë°©ì˜ ì†ë„ì°¨ì™€ ê±°ë¦¬ë¡œë¶€í„° ë§Œë‚  ì‹œê°„ì„ ì˜ˆìƒí•œ í›„
+		// ìƒëŒ€ë°©ì´ ê·¸ ì‹œê°„ê¹Œì§€ ì§ì„ ìœ¼ë¡œ ì´ë™í•œë‹¤ê³  ê°€ì •í•˜ì—¬ ê±°ê¸°ë¡œ ì´ë™í•œë‹¤.
 		float rot = pkChr->GetRotation();
 		float rot_delta = GetDegreeDelta(rot, GetDegreeFromPositionXY(GetX(), GetY(), pkChr->GetX(), pkChr->GetY()));
 
@@ -5493,7 +5493,7 @@ bool CHARACTER::Follow(LPCHARACTER pkChr, float fMinDistance)
 		}
 	}
 
-	// °¡·Á´Â À§Ä¡¸¦ ¹Ù¶óºÁ¾ß ÇÑ´Ù.
+	// ê°€ë ¤ëŠ” ìœ„ì¹˜ë¥¼ ë°”ë¼ë´ì•¼ í•œë‹¤.
 	SetRotationToXY(x, y);
 
 	float fDist = DISTANCE_SQRT(x - GetX(), y - GetY());
@@ -5505,7 +5505,7 @@ bool CHARACTER::Follow(LPCHARACTER pkChr, float fMinDistance)
 
 	if (IsChangeAttackPosition(pkChr) && GetMobRank() < MOB_RANK_BOSS)
 	{
-		// »ó´ë¹æ ÁÖº¯ ·£´ıÇÑ °÷À¸·Î ÀÌµ¿
+		// ìƒëŒ€ë°© ì£¼ë³€ ëœë¤í•œ ê³³ìœ¼ë¡œ ì´ë™
 		SetChangeAttackPositionTime();
 
 		int retry = 16;
@@ -5531,23 +5531,23 @@ bool CHARACTER::Follow(LPCHARACTER pkChr, float fMinDistance)
 				break;
 		}
 
-		//sys_log(0, "±ÙÃ³ ¾îµò°¡·Î ÀÌµ¿ %s retry %d", GetName(), retry);
+		//sys_log(0, "ê·¼ì²˜ ì–´ë”˜ê°€ë¡œ ì´ë™ %s retry %d", GetName(), retry);
 		if (!Goto(dx, dy))
 			return false;
 	}
 	else
 	{
-		// Á÷¼± µû¶ó°¡±â
+		// ì§ì„  ë”°ë¼ê°€ê¸°
 		float fDistToGo = fDist - fMinDistance;
 		GetDeltaByDegree(GetRotation(), fDistToGo, &fx, &fy);
 
-		//sys_log(0, "Á÷¼±À¸·Î ÀÌµ¿ %s", GetName());
+		//sys_log(0, "ì§ì„ ìœ¼ë¡œ ì´ë™ %s", GetName());
 		if (!Goto(GetX() + (int) fx, GetY() + (int) fy))
 			return false;
 	}
 
 	SendMovePacket(FUNC_WAIT, 0, 0, 0, 0);
-	//MonsterLog("ÂÑ¾Æ°¡±â; %s", pkChr->GetName());
+	//MonsterLog("ì«“ì•„ê°€ê¸°; %s", pkChr->GetName());
 	return true;
 }
 
@@ -5570,12 +5570,12 @@ void CHARACTER::ReqSafeboxLoad(const char* pszPassword)
 {
 	if (!*pszPassword || strlen(pszPassword) > SAFEBOX_PASSWORD_MAX_LEN)
 	{
-		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<Ã¢°í> Àß¸øµÈ ¾ÏÈ£¸¦ ÀÔ·ÂÇÏ¼Ì½À´Ï´Ù."));
+		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<ì°½ê³ > ì˜ëª»ëœ ì•”í˜¸ë¥¼ ì…ë ¥í•˜ì…¨ìŠµë‹ˆë‹¤."));
 		return;
 	}
 	else if (m_pkSafebox)
 	{
-		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<Ã¢°í> Ã¢°í°¡ ÀÌ¹Ì ¿­·ÁÀÖ½À´Ï´Ù."));
+		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<ì°½ê³ > ì°½ê³ ê°€ ì´ë¯¸ ì—´ë ¤ìˆìŠµë‹ˆë‹¤."));
 		return;
 	}
 
@@ -5583,12 +5583,12 @@ void CHARACTER::ReqSafeboxLoad(const char* pszPassword)
 
 	if (iPulse - GetSafeboxLoadTime()  < PASSES_PER_SEC(10))
 	{
-		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<Ã¢°í> Ã¢°í¸¦ ´İÀºÁö 10ÃÊ ¾È¿¡´Â ¿­ ¼ö ¾ø½À´Ï´Ù."));
+		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<ì°½ê³ > ì°½ê³ ë¥¼ ë‹«ì€ì§€ 10ì´ˆ ì•ˆì—ëŠ” ì—´ ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 		return;
 	}
 	else if (GetDistanceFromSafeboxOpen() > 1000)
 	{
-		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<Ã¢°í> °Å¸®°¡ ¸Ö¾î¼­ Ã¢°í¸¦ ¿­ ¼ö ¾ø½À´Ï´Ù."));
+		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<ì°½ê³ > ê±°ë¦¬ê°€ ë©€ì–´ì„œ ì°½ê³ ë¥¼ ì—´ ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 		return;
 	}
 	else if (m_bOpeningSafebox)
@@ -5859,9 +5859,9 @@ void CHARACTER::SetNowWalking(bool bWalkFlag)
 		if (IsNPC())
 		{
 			if (m_bNowWalking)
-				MonsterLog("°È´Â´Ù");
+				MonsterLog("ê±·ëŠ”ë‹¤");
 			else
-				MonsterLog("¶Ú´Ù");
+				MonsterLog("ë›´ë‹¤");
 		}
 
 		//sys_log(0, "%s is now %s", GetName(), m_bNowWalking?"walking.":"running.");
@@ -5940,7 +5940,7 @@ void CHARACTER::ResetPoint(int iLv)
 
 	ComputePoints();
 
-	// È¸º¹
+	// íšŒë³µ
 	PointChange(POINT_HP, GetMaxHP() - GetHP());
 	PointChange(POINT_SP, GetMaxSP() - GetSP());
 
@@ -6217,11 +6217,11 @@ void CHARACTER::SetPolymorph(DWORD dwRaceNum, bool bMaintainStat)
 		PointChange(POINT_HT, 0);
 	}
 
-	// Æú¸®¸ğÇÁ »óÅÂ¿¡¼­ Á×´Â °æ¿ì, Æú¸®¸ğÇÁ°¡ Ç®¸®°Ô µÇ´Âµ¥
-	// Æú¸® ¸ğÇÁ ÀüÈÄ·Î valid combo intervalÀÌ ´Ù¸£±â ¶§¹®¿¡
-	// Combo ÇÙ ¶Ç´Â Hacker·Î ÀÎ½ÄÇÏ´Â °æ¿ì°¡ ÀÖ´Ù.
-	// µû¶ó¼­ Æú¸®¸ğÇÁ¸¦ Ç®°Å³ª Æú¸®¸ğÇÁ ÇÏ°Ô µÇ¸é,
-	// valid combo intervalÀ» resetÇÑ´Ù.
+	// í´ë¦¬ëª¨í”„ ìƒíƒœì—ì„œ ì£½ëŠ” ê²½ìš°, í´ë¦¬ëª¨í”„ê°€ í’€ë¦¬ê²Œ ë˜ëŠ”ë°
+	// í´ë¦¬ ëª¨í”„ ì „í›„ë¡œ valid combo intervalì´ ë‹¤ë¥´ê¸° ë•Œë¬¸ì—
+	// Combo í•µ ë˜ëŠ” Hackerë¡œ ì¸ì‹í•˜ëŠ” ê²½ìš°ê°€ ìˆë‹¤.
+	// ë”°ë¼ì„œ í´ë¦¬ëª¨í”„ë¥¼ í’€ê±°ë‚˜ í´ë¦¬ëª¨í”„ í•˜ê²Œ ë˜ë©´,
+	// valid combo intervalì„ resetí•œë‹¤.
 	SetValidComboInterval(0);
 	SetComboSequence(0);
 
@@ -6285,7 +6285,7 @@ void CHARACTER::DetermineDropMetinStone()
 				else
 				{
 					iGradePct -= iLevelGradePortion;
-					m_dwDropMetinStone += 100; // µ¹ +a -> +(a+1)ÀÌ µÉ¶§¸¶´Ù 100¾¿ Áõ°¡
+					m_dwDropMetinStone += 100; // ëŒ +a -> +(a+1)ì´ ë ë•Œë§ˆë‹¤ 100ì”© ì¦ê°€
 				}
 			}
 		}
@@ -6333,9 +6333,9 @@ void CHARACTER::MountVnum(DWORD vnum)
 	if (m_bIsObserver)
 		return;
 
-	//NOTE : MountÇÑ´Ù°í ÇØ¼­ Client SideÀÇ °´Ã¼¸¦ »èÁ¦ÇÏÁø ¾Ê´Â´Ù.
-	//±×¸®°í ¼­¹öSide¿¡¼­ ÅÀÀ»¶§ À§Ä¡ ÀÌµ¿Àº ÇÏÁö ¾Ê´Â´Ù. ¿Ö³ÄÇÏ¸é Client Side¿¡¼­ Coliision Adjust¸¦ ÇÒ¼ö ÀÖ´Âµ¥
-	//°´Ã¼¸¦ ¼Ò¸ê½ÃÄ×´Ù°¡ ¼­¹öÀ§Ä¡·Î ÀÌµ¿½ÃÅ°¸é ÀÌ¶§ collision check¸¦ ÇÏÁö´Â ¾ÊÀ¸¹Ç·Î ¹è°æ¿¡ ³¢°Å³ª ¶Õ°í ³ª°¡´Â ¹®Á¦°¡ Á¸ÀçÇÑ´Ù.
+	//NOTE : Mountí•œë‹¤ê³  í•´ì„œ Client Sideì˜ ê°ì²´ë¥¼ ì‚­ì œí•˜ì§„ ì•ŠëŠ”ë‹¤.
+	//ê·¸ë¦¬ê³  ì„œë²„Sideì—ì„œ íƒ”ì„ë•Œ ìœ„ì¹˜ ì´ë™ì€ í•˜ì§€ ì•ŠëŠ”ë‹¤. ì™œëƒí•˜ë©´ Client Sideì—ì„œ Coliision Adjustë¥¼ í• ìˆ˜ ìˆëŠ”ë°
+	//ê°ì²´ë¥¼ ì†Œë©¸ì‹œì¼°ë‹¤ê°€ ì„œë²„ìœ„ì¹˜ë¡œ ì´ë™ì‹œí‚¤ë©´ ì´ë•Œ collision checkë¥¼ í•˜ì§€ëŠ” ì•Šìœ¼ë¯€ë¡œ ë°°ê²½ì— ë¼ê±°ë‚˜ ëš«ê³  ë‚˜ê°€ëŠ” ë¬¸ì œê°€ ì¡´ì¬í•œë‹¤.
 	m_posDest.x = m_posStart.x = GetX();
 	m_posDest.y = m_posStart.y = GetY();
 	//EncodeRemovePacket(this);
@@ -6347,7 +6347,7 @@ void CHARACTER::MountVnum(DWORD vnum)
 	{
 		LPENTITY entity = (it++)->first;
 
-		//MountÇÑ´Ù°í ÇØ¼­ Client SideÀÇ °´Ã¼¸¦ »èÁ¦ÇÏÁø ¾Ê´Â´Ù.
+		//Mountí•œë‹¤ê³  í•´ì„œ Client Sideì˜ ê°ì²´ë¥¼ ì‚­ì œí•˜ì§„ ì•ŠëŠ”ë‹¤.
 		//EncodeRemovePacket(entity);
 		//if (!m_bIsObserver)
 		EncodeInsertPacket(entity);
@@ -6581,45 +6581,45 @@ bool CHARACTER::WarpToPID(DWORD dwPID)
 			}
 			else
 			{
-				ChatPacket(CHAT_TYPE_INFO, LC_TEXT("»ó´ë¹æÀÌ ÀÖ´Â °÷À¸·Î ¿öÇÁÇÒ ¼ö ¾ø½À´Ï´Ù."));
+				ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ìƒëŒ€ë°©ì´ ìˆëŠ” ê³³ìœ¼ë¡œ ì›Œí”„í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 				return false;
 			}
 		}
 		else
 		{
-			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("»ó´ë¹æÀÌ ÀÖ´Â °÷À¸·Î ¿öÇÁÇÒ ¼ö ¾ø½À´Ï´Ù."));
+			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ìƒëŒ€ë°©ì´ ìˆëŠ” ê³³ìœ¼ë¡œ ì›Œí”„í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 			return false;
 		}
 	}
 	else
 	{
-		// ´Ù¸¥ ¼­¹ö¿¡ ·Î±×ÀÎµÈ »ç¶÷ÀÌ ÀÖÀ½ -> ¸Ş½ÃÁö º¸³» ÁÂÇ¥¸¦ ¹Ş¾Æ¿ÀÀÚ
-		// 1. A.pid, B.pid ¸¦ »Ñ¸²
-		// 2. B.pid¸¦ °¡Áø ¼­¹ö°¡ »Ñ¸°¼­¹ö¿¡°Ô A.pid, ÁÂÇ¥ ¸¦ º¸³¿
-		// 3. ¿öÇÁ
+		// ë‹¤ë¥¸ ì„œë²„ì— ë¡œê·¸ì¸ëœ ì‚¬ëŒì´ ìˆìŒ -> ë©”ì‹œì§€ ë³´ë‚´ ì¢Œí‘œë¥¼ ë°›ì•„ì˜¤ì
+		// 1. A.pid, B.pid ë¥¼ ë¿Œë¦¼
+		// 2. B.pidë¥¼ ê°€ì§„ ì„œë²„ê°€ ë¿Œë¦°ì„œë²„ì—ê²Œ A.pid, ì¢Œí‘œ ë¥¼ ë³´ëƒ„
+		// 3. ì›Œí”„
 		CCI * pcci = P2P_MANAGER::instance().FindByPID(dwPID);
 
 		if (!pcci)
 		{
-			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("»ó´ë¹æÀÌ ¿Â¶óÀÎ »óÅÂ°¡ ¾Æ´Õ´Ï´Ù."));
+			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ìƒëŒ€ë°©ì´ ì˜¨ë¼ì¸ ìƒíƒœê°€ ì•„ë‹™ë‹ˆë‹¤."));
 			return false;
 		}
 
 		if (pcci->bChannel != g_bChannel)
 		{
-			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("»ó´ë¹æÀÌ %d Ã¤³Î¿¡ ÀÖ½À´Ï´Ù. (ÇöÀç Ã¤³Î %d)"), pcci->bChannel, g_bChannel);
+			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ìƒëŒ€ë°©ì´ %d ì±„ë„ì— ìˆìŠµë‹ˆë‹¤. (í˜„ì¬ ì±„ë„ %d)"), pcci->bChannel, g_bChannel);
 			return false;
 		}
 		else if (false == IS_SUMMONABLE_ZONE(pcci->lMapIndex))
 		{
-			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("»ó´ë¹æÀÌ ÀÖ´Â °÷À¸·Î ¿öÇÁÇÒ ¼ö ¾ø½À´Ï´Ù."));
+			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ìƒëŒ€ë°©ì´ ìˆëŠ” ê³³ìœ¼ë¡œ ì›Œí”„í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 			return false;
 		}
 		else
 		{
 			if (!CAN_ENTER_ZONE(this, pcci->lMapIndex))
 			{
-				ChatPacket(CHAT_TYPE_INFO, LC_TEXT("»ó´ë¹æÀÌ ÀÖ´Â °÷À¸·Î ¿öÇÁÇÒ ¼ö ¾ø½À´Ï´Ù."));
+				ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ìƒëŒ€ë°©ì´ ìˆëŠ” ê³³ìœ¼ë¡œ ì›Œí”„í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 				return false;
 			}
 
@@ -6657,7 +6657,7 @@ int CHARACTER::ComputeRefineFee(int iCost, int iMultiply) const
 		if (pGuild == GetGuild())
 			return iCost * iMultiply * 9 / 10;
 
-		// ´Ù¸¥ Á¦±¹ »ç¶÷ÀÌ ½ÃµµÇÏ´Â °æ¿ì Ãß°¡·Î 3¹è ´õ
+		// ë‹¤ë¥¸ ì œêµ­ ì‚¬ëŒì´ ì‹œë„í•˜ëŠ” ê²½ìš° ì¶”ê°€ë¡œ 3ë°° ë”
 		LPCHARACTER chRefineNPC = CHARACTER_MANAGER::instance().Find(m_dwRefineNPCVID);
 		if (chRefineNPC && chRefineNPC->GetEmpire() != GetEmpire())
 			return iCost * iMultiply * 3;
@@ -6677,7 +6677,7 @@ void CHARACTER::PayRefineFee(int iTotalMoney)
 
 	if (pGuild)
 	{
-		// ÀÚ±â ±æµåÀÌ¸é iTotalMoney¿¡ ÀÌ¹Ì 10%°¡ Á¦¿ÜµÇ¾îÀÖ´Ù
+		// ìê¸° ê¸¸ë“œì´ë©´ iTotalMoneyì— ì´ë¯¸ 10%ê°€ ì œì™¸ë˜ì–´ìˆë‹¤
 		if (pGuild != GetGuild())
 		{
 			pGuild->RequestDepositMoney(this, iFee);
@@ -6689,7 +6689,7 @@ void CHARACTER::PayRefineFee(int iTotalMoney)
 }
 // END_OF_ADD_REFINE_BUILDING
 
-//Hack ¹æÁö¸¦ À§ÇÑ Ã¼Å©.
+//Hack ë°©ì§€ë¥¼ ìœ„í•œ ì²´í¬.
 bool CHARACTER::IsHack(bool bSendMsg, bool bCheckShopOwner, int limittime)
 {
 	const int iPulse = thecore_pulse();
@@ -6697,24 +6697,24 @@ bool CHARACTER::IsHack(bool bSendMsg, bool bCheckShopOwner, int limittime)
 	if (test_server)
 		bSendMsg = true;
 
-	//Ã¢°í ¿¬ÈÄ Ã¼Å©
+	//ì°½ê³  ì—°í›„ ì²´í¬
 	if (iPulse - GetSafeboxLoadTime() < PASSES_PER_SEC(limittime))
 	{
 		if (bSendMsg)
-			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Ã¢°í¸¦ ¿¬ÈÄ %dÃÊ ÀÌ³»¿¡´Â ´Ù¸¥°÷À¸·Î ÀÌµ¿ÇÒ¼ö ¾ø½À´Ï´Ù."), limittime);
+			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì°½ê³ ë¥¼ ì—°í›„ %dì´ˆ ì´ë‚´ì—ëŠ” ë‹¤ë¥¸ê³³ìœ¼ë¡œ ì´ë™í• ìˆ˜ ì—†ìŠµë‹ˆë‹¤."), limittime);
 
 		if (test_server)
 			ChatPacket(CHAT_TYPE_INFO, "[TestOnly]Pulse %d LoadTime %d PASS %d", iPulse, GetSafeboxLoadTime(), PASSES_PER_SEC(limittime));
 		return true; 
 	}
 
-	//°Å·¡°ü·Ã Ã¢ Ã¼Å©
+	//ê±°ë˜ê´€ë ¨ ì°½ ì²´í¬
 	if (bCheckShopOwner)
 	{
 		if (GetExchange() || GetMyShop() || GetShopOwner() || IsOpenSafebox() || IsCubeOpen())
 		{
 			if (bSendMsg)
-				ChatPacket(CHAT_TYPE_INFO, LC_TEXT("°Å·¡Ã¢,Ã¢°í µîÀ» ¿¬ »óÅÂ¿¡¼­´Â ´Ù¸¥°÷À¸·Î ÀÌµ¿,Á¾·á ÇÒ¼ö ¾ø½À´Ï´Ù"));
+				ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ê±°ë˜ì°½,ì°½ê³  ë“±ì„ ì—° ìƒíƒœì—ì„œëŠ” ë‹¤ë¥¸ê³³ìœ¼ë¡œ ì´ë™,ì¢…ë£Œ í• ìˆ˜ ì—†ìŠµë‹ˆë‹¤"));
 
 			return true;
 		}
@@ -6724,18 +6724,18 @@ bool CHARACTER::IsHack(bool bSendMsg, bool bCheckShopOwner, int limittime)
 		if (GetExchange() || GetMyShop() || IsOpenSafebox() || IsCubeOpen())
 		{
 			if (bSendMsg)
-				ChatPacket(CHAT_TYPE_INFO, LC_TEXT("°Å·¡Ã¢,Ã¢°í µîÀ» ¿¬ »óÅÂ¿¡¼­´Â ´Ù¸¥°÷À¸·Î ÀÌµ¿,Á¾·á ÇÒ¼ö ¾ø½À´Ï´Ù"));
+				ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ê±°ë˜ì°½,ì°½ê³  ë“±ì„ ì—° ìƒíƒœì—ì„œëŠ” ë‹¤ë¥¸ê³³ìœ¼ë¡œ ì´ë™,ì¢…ë£Œ í• ìˆ˜ ì—†ìŠµë‹ˆë‹¤"));
 
 			return true;
 		}
 	}
 
 	//PREVENT_PORTAL_AFTER_EXCHANGE
-	//±³È¯ ÈÄ ½Ã°£Ã¼Å©
+	//êµí™˜ í›„ ì‹œê°„ì²´í¬
 	if (iPulse - GetExchangeTime()  < PASSES_PER_SEC(limittime))
 	{
 		if (bSendMsg)
-			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("°Å·¡ ÈÄ %dÃÊ ÀÌ³»¿¡´Â ´Ù¸¥Áö¿ªÀ¸·Î ÀÌµ¿ ÇÒ ¼ö ¾ø½À´Ï´Ù."), limittime );
+			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ê±°ë˜ í›„ %dì´ˆ ì´ë‚´ì—ëŠ” ë‹¤ë¥¸ì§€ì—­ìœ¼ë¡œ ì´ë™ í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤."), limittime );
 		return true;
 	}
 	//END_PREVENT_PORTAL_AFTER_EXCHANGE
@@ -6744,14 +6744,14 @@ bool CHARACTER::IsHack(bool bSendMsg, bool bCheckShopOwner, int limittime)
 	if (iPulse - GetMyShopTime() < PASSES_PER_SEC(limittime))
 	{
 		if (bSendMsg)
-			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("°Å·¡ ÈÄ %dÃÊ ÀÌ³»¿¡´Â ´Ù¸¥Áö¿ªÀ¸·Î ÀÌµ¿ ÇÒ ¼ö ¾ø½À´Ï´Ù."), limittime);
+			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ê±°ë˜ í›„ %dì´ˆ ì´ë‚´ì—ëŠ” ë‹¤ë¥¸ì§€ì—­ìœ¼ë¡œ ì´ë™ í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤."), limittime);
 		return true;
 	}
 
 	if (iPulse - GetRefineTime() < PASSES_PER_SEC(limittime))
 	{
 		if (bSendMsg)
-			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("¾ÆÀÌÅÛ °³·®ÈÄ %dÃÊ ÀÌ³»¿¡´Â ±ÍÈ¯ºÎ,±ÍÈ¯±â¾ïºÎ¸¦ »ç¿ëÇÒ ¼ö ¾ø½À´Ï´Ù."), limittime);
+			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì•„ì´í…œ ê°œëŸ‰í›„ %dì´ˆ ì´ë‚´ì—ëŠ” ê·€í™˜ë¶€,ê·€í™˜ê¸°ì–µë¶€ë¥¼ ì‚¬ìš©í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤."), limittime);
 		return true; 
 	}
 	//END_PREVENT_ITEM_COPY
@@ -6863,7 +6863,7 @@ bool CHARACTER::IsSiegeNPC() const
 //------------------------------------------------
 void CHARACTER::UpdateDepositPulse()
 {
-	m_deposit_pulse = thecore_pulse() + PASSES_PER_SEC(60*5);	// 5ºĞ
+	m_deposit_pulse = thecore_pulse() + PASSES_PER_SEC(60*5);	// 5ë¶„
 }
 
 bool CHARACTER::CanDeposit() const
@@ -7065,7 +7065,7 @@ void CHARACTER::StartCheckSpeedHackEvent()
 
 	info->ch = this;
 
-	m_pkCheckSpeedHackEvent = event_create(check_speedhack_event, info, PASSES_PER_SEC(60));	// 1ºĞ
+	m_pkCheckSpeedHackEvent = event_create(check_speedhack_event, info, PASSES_PER_SEC(60));	// 1ë¶„
 }
 
 void CHARACTER::GoHome()
@@ -7219,7 +7219,7 @@ BYTE CHARACTER::GetChatCounter() const
 	return m_bChatCounter;
 }
 
-// ¸»ÀÌ³ª ´Ù¸¥°ÍÀ» Å¸°í ÀÖ³ª?
+// ë§ì´ë‚˜ ë‹¤ë¥¸ê²ƒì„ íƒ€ê³  ìˆë‚˜?
 bool CHARACTER::IsRiding() const
 {
 	return IsHorseRiding() || GetMountVnum();

@@ -1,4 +1,4 @@
-#ifndef __HEADER_BELT_INVENTORY_HELPER__
+ï»¿#ifndef __HEADER_BELT_INVENTORY_HELPER__
 #define __HEADER_BELT_INVENTORY_HELPER__
 
 #include "char.h"
@@ -13,7 +13,7 @@ public:
 	{
 		static TGradeUnit beltGradeByLevelTable[] = 
 		{
-			0,			// º§Æ®+0
+			0,			// ë²¨íŠ¸+0
 			1,			// +1
 			1,			// +2
 			2,			// +3
@@ -34,20 +34,20 @@ public:
 		return beltGradeByLevelTable[level];
 	}
 
-	// ÇöÀç º§Æ® ·¹º§À» ±âÁØÀ¸·Î, ¾î¶² ¼¿µéÀ» ÀÌ¿ëÇÒ ¼ö ÀÖ´ÂÁö ¸®ÅÏ
+	// í˜„ì¬ ë²¨íŠ¸ ë ˆë²¨ì„ ê¸°ì¤€ìœ¼ë¡œ, ì–´ë–¤ ì…€ë“¤ì„ ì´ìš©í•  ìˆ˜ ìˆëŠ”ì§€ ë¦¬í„´
 	static const TGradeUnit* GetAvailableRuleTableByGrade()
 	{
 		/**
-			º§Æ®´Â ÃÑ +0 ~ +9 ·¹º§À» °¡Áú ¼ö ÀÖÀ¸¸ç, ·¹º§¿¡ µû¶ó 7´Ü°è µî±ŞÀ¸·Î ±¸ºĞµÇ¾î ÀÎº¥Åä¸®°¡ È°¼º È­ µÈ´Ù.
-			º§Æ® ·¹º§¿¡ µû¸¥ »ç¿ë °¡´ÉÇÑ ¼¿Àº ¾Æ·¡ ±×¸²°ú °°À½. ÇöÀç µî±Ş >= È°¼º°¡´É µî±ŞÀÌ¸é »ç¿ë °¡´É.
-			(´Ü, ÇöÀç ·¹º§ÀÌ 0ÀÌ¸é ¹«Á¶°Ç »ç¿ë ºÒ°¡, °ıÈ£ ¾ÈÀÇ ¼ıÀÚ´Â µî±Ş)
+			ë²¨íŠ¸ëŠ” ì´ +0 ~ +9 ë ˆë²¨ì„ ê°€ì§ˆ ìˆ˜ ìˆìœ¼ë©°, ë ˆë²¨ì— ë”°ë¼ 7ë‹¨ê³„ ë“±ê¸‰ìœ¼ë¡œ êµ¬ë¶„ë˜ì–´ ì¸ë²¤í† ë¦¬ê°€ í™œì„± í™” ëœë‹¤.
+			ë²¨íŠ¸ ë ˆë²¨ì— ë”°ë¥¸ ì‚¬ìš© ê°€ëŠ¥í•œ ì…€ì€ ì•„ë˜ ê·¸ë¦¼ê³¼ ê°™ìŒ. í˜„ì¬ ë“±ê¸‰ >= í™œì„±ê°€ëŠ¥ ë“±ê¸‰ì´ë©´ ì‚¬ìš© ê°€ëŠ¥.
+			(ë‹¨, í˜„ì¬ ë ˆë²¨ì´ 0ì´ë©´ ë¬´ì¡°ê±´ ì‚¬ìš© ë¶ˆê°€, ê´„í˜¸ ì•ˆì˜ ìˆ«ìëŠ” ë“±ê¸‰)
 			
 				2(1)  4(2)  6(4)  8(6)
 				5(3)  5(3)  6(4)  8(6)
 				7(5)  7(5)  7(5)  8(6)
 				9(7)  9(7)  9(7)  9(7)
 
-			º§Æ® ÀÎº¥Åä¸®ÀÇ Å©±â´Â 4x4 (16Ä­)
+			ë²¨íŠ¸ ì¸ë²¤í† ë¦¬ì˜ í¬ê¸°ëŠ” 4x4 (16ì¹¸)
 		*/
 
 		static TGradeUnit availableRuleByGrade[BELT_INVENTORY_SLOT_COUNT] = {
@@ -62,14 +62,14 @@ public:
 
 	static bool IsAvailableCell(WORD cell, int beltGrade /*int beltLevel*/)
 	{
-		// ±âÈ¹ ¶Ç ¹Ù²ñ.. ¾Æ³ö...
+		// ê¸°íš ë˜ ë°”ë€œ.. ì•„ë†”...
 		//const TGradeUnit beltGrade = GetBeltGradeByRefineLevel(beltLevel);		
 		const TGradeUnit* ruleTable = GetAvailableRuleTableByGrade();
 
 		return ruleTable[cell] <= beltGrade;
 	}
 
-	/// pcÀÇ º§Æ® ÀÎº¥Åä¸®¿¡ ¾ÆÀÌÅÛÀÌ ÇÏ³ª¶óµµ Á¸ÀçÇÏ´Â Áö °Ë»çÇÏ´Â ÇÔ¼ö.
+	/// pcì˜ ë²¨íŠ¸ ì¸ë²¤í† ë¦¬ì— ì•„ì´í…œì´ í•˜ë‚˜ë¼ë„ ì¡´ì¬í•˜ëŠ” ì§€ ê²€ì‚¬í•˜ëŠ” í•¨ìˆ˜.
 	static bool IsExistItemInBeltInventory(LPCHARACTER pc)
 	{
 		for (WORD i = BELT_INVENTORY_SLOT_START; i < BELT_INVENTORY_SLOT_END; ++i)
@@ -83,7 +83,7 @@ public:
 		return false;
 	}
 
-	/// itemÀÌ º§Æ® ÀÎº¥Åä¸®¿¡ µé¾î°¥ ¼ö ÀÖ´Â Å¸ÀÔÀÎÁö °Ë»çÇÏ´Â ÇÔ¼ö. (ÀÌ ±ÔÄ¢Àº ±âÈ¹ÀÚ°¡ °áÁ¤ÇÔ)
+	/// itemì´ ë²¨íŠ¸ ì¸ë²¤í† ë¦¬ì— ë“¤ì–´ê°ˆ ìˆ˜ ìˆëŠ” íƒ€ì…ì¸ì§€ ê²€ì‚¬í•˜ëŠ” í•¨ìˆ˜. (ì´ ê·œì¹™ì€ ê¸°íšìê°€ ê²°ì •í•¨)
 	static bool CanMoveIntoBeltInventory(LPITEM item)
 	{
 		bool canMove = false;

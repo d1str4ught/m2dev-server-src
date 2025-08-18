@@ -1,4 +1,4 @@
-#ifndef __POLY_SYMBOL_H__
+﻿#ifndef __POLY_SYMBOL_H__
 #define __POLY_SYMBOL_H__
 
 #include "Base.h"

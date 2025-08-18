@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "constants.h"
 #include "monarch.h"
 #include "char.h"
@@ -41,7 +41,7 @@ struct FHealMyEmpire
 
 			if (ch->IsPC() && m_bEmpire == ch->GetEmpire())
 			{
-				ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("±ºÁÖ°¡ ³»¸° Ãàº¹À¸·Î ¸ğµç ¿¡³ÊÁö°¡ °¡µæ Ã¤¿öÁı´Ï´Ù"));
+				ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("êµ°ì£¼ê°€ ë‚´ë¦° ì¶•ë³µìœ¼ë¡œ ëª¨ë“  ì—ë„ˆì§€ê°€ ê°€ë“ ì±„ì›Œì§‘ë‹ˆë‹¤"));
 				ch->PointChange(POINT_HP, ch->GetMaxHP() - ch->GetHP());
 				ch->PointChange(POINT_SP, ch->GetMaxSP() - ch->GetSP());
 				ch->EffectPacket(SE_SPUP_BLUE);
@@ -62,7 +62,7 @@ int CMonarch::HealMyEmpire(LPCHARACTER ch ,DWORD price)
 	{
 		if (!ch->IsGM())
 		{
-			ch->ChatPacket(CHAT_TYPE_INFO ,LC_TEXT("±ºÁÖÀÇ ÀÚ°İÀ» °¡Áö°í ÀÖÁö ¾Ê½À´Ï´Ù"));
+			ch->ChatPacket(CHAT_TYPE_INFO ,LC_TEXT("êµ°ì£¼ì˜ ìê²©ì„ ê°€ì§€ê³  ìˆì§€ ì•ŠìŠµë‹ˆë‹¤"));
 			sys_err("No Monarch pid %d ", pid);
 			return 0;
 		}
@@ -70,14 +70,14 @@ int CMonarch::HealMyEmpire(LPCHARACTER ch ,DWORD price)
 
 	if (!ch->IsMCOK(CHARACTER::MI_HEAL))
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%d ÃÊ ÈÄ¿¡ ±ºÁÖÀÇ Ãàº¹À» »ç¿ëÇÒ ¼ö ÀÖ½À´Ï´Ù"), ch->GetMCLTime(CHARACTER::MI_HEAL));
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%d ì´ˆ í›„ì— êµ°ì£¼ì˜ ì¶•ë³µì„ ì‚¬ìš©í•  ìˆ˜ ìˆìŠµë‹ˆë‹¤"), ch->GetMCLTime(CHARACTER::MI_HEAL));
 
 		return 0;
 	}
 
 	if (!IsMoneyOk(price, Empire)) 
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("±¹°í¿¡ µ·ÀÌ ºÎÁ·ÇÕ´Ï´Ù. ÇöÀç : %u ÇÊ¿ä±İ¾× : %u"), GetMoney(Empire), price);
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("êµ­ê³ ì— ëˆì´ ë¶€ì¡±í•©ë‹ˆë‹¤. í˜„ì¬ : %u í•„ìš”ê¸ˆì•¡ : %u"), GetMoney(Empire), price);
 		return 0;
 	}
 
@@ -87,14 +87,14 @@ int CMonarch::HealMyEmpire(LPCHARACTER ch ,DWORD price)
 	f.m_bEmpire = Empire;
 	SECTREE_MANAGER::instance().for_each(iMapIndex, f);	
 
-	// DB¿¡ µ· »è°¨ º¸³»±â 
+	// DBì— ëˆ ì‚­ê° ë³´ë‚´ê¸° 
 	SendtoDBDecMoney(price, Empire, ch);
 
-	// ÄğÅ¸ÀÓ ¼³Á¤	
+	// ì¿¨íƒ€ì„ ì„¤ì •	
 	ch->SetMC(CHARACTER::MI_HEAL);
 
 	if (test_server)
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("[TEST_ONLY]ÇöÀç ±¹°í : %d "), GetMoney(Empire) - price);
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("[TEST_ONLY]í˜„ì¬ êµ­ê³  : %d "), GetMoney(Empire) - price);
 	return 1;
 }
 
@@ -140,7 +140,7 @@ bool CMonarch::SendtoDBDecMoney(int Money, BYTE bEmpire, LPCHARACTER ch)
 	if (GetMoney(bEmpire) - Money < 0)
 		return false;
 
-	// ½ÇÁ¦ ÁÙÀÌ´Â ºÎºĞÀº ¼­¹ö¿¡ °¬´Ù ¿Â ´ÙÀ½¿¡ Ã³¸®µÈ´Ù
+	// ì‹¤ì œ ì¤„ì´ëŠ” ë¶€ë¶„ì€ ì„œë²„ì— ê°”ë‹¤ ì˜¨ ë‹¤ìŒì— ì²˜ë¦¬ëœë‹¤
 	int nEmpire = bEmpire;	
 
 	db_clientdesc->DBPacketHeader(HEADER_GD_DEC_MONARCH_MONEY, ch->GetDesc()->GetHandle(), sizeof(int) + sizeof(int));
@@ -154,7 +154,7 @@ bool CMonarch::AddMoney(int Money, BYTE bEmpire)
 	if (bEmpire >= _countof(m_MonarchInfo.money))
 		return false;
 
-	// 20¾ï ÀÌ»ó ÀÔ±İ ºÒ°¡´É
+	// 20ì–µ ì´ìƒ ì…ê¸ˆ ë¶ˆê°€ëŠ¥
 	if (GetMoney(bEmpire) + Money > 2000000000)
 		return false;
 
@@ -239,7 +239,7 @@ void CMonarch::PowerUp(BYTE Empire, bool On)
 
 	m_PowerUp[Empire] = On;
 
-	// ±ºÁÖ »çÀÚÈÄ ÄğÅ¸ÀÓ 
+	// êµ°ì£¼ ì‚¬ìí›„ ì¿¨íƒ€ì„ 
 	m_PowerUpCT[Empire] = thecore_pulse() + PASSES_PER_SEC(60 * 10);
 }
 
@@ -250,13 +250,13 @@ void CMonarch::DefenseUp(BYTE Empire, bool On)
 
 	m_DefenseUp[Empire] = On;
 
-	// ±ºÁÖ ±İ°­±Ç ÄğÅ¸ÀÓ 
+	// êµ°ì£¼ ê¸ˆê°•ê¶Œ ì¿¨íƒ€ì„ 
 	m_DefenseUpCT[Empire] = thecore_pulse() + PASSES_PER_SEC(60 * 10);
 }
 
 bool IsMonarchWarpZone (int map_idx)
 {
-	// ¾Æ±Íµ¿±¼, ÃµÀÇµ¿±¼.
+	// ì•„ê·€ë™êµ´, ì²œì˜ë™êµ´.
 	if (map_idx >= 10000)
 		map_idx /= 10000;
 
@@ -266,9 +266,9 @@ bool IsMonarchWarpZone (int map_idx)
 	case 302:
 	case 303:
 	case 304:
-		//´øÀü
-	case 351: // Àû·æ¼º
-	case 352: // ¹é·æÁö¼º
+		//ë˜ì „
+	case 351: // ì ë£¡ì„±
+	case 352: // ë°±ë£¡ì§€ì„±
 		return false;
 	}
 

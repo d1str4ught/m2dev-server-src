@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "desc_client.h"
 #include "desc_manager.h"
 #include "char_manager.h"
@@ -78,8 +78,8 @@ namespace marriage
 
 		m_pEndEvent = event_create(wedding_end_event, info, PASSES_PER_SEC(5));
 
-		Notice(LC_TEXT("°áÈ¥½ÄÀÌ Á¾·áµË´Ï´Ù."));
-		Notice(LC_TEXT("ÀÚµ¿À¸·Î ³ª°¡°ÔµË´Ï´Ù."));
+		Notice(LC_TEXT("ê²°í˜¼ì‹ì´ ì¢…ë£Œë©ë‹ˆë‹¤."));
+		Notice(LC_TEXT("ìžë™ìœ¼ë¡œ ë‚˜ê°€ê²Œë©ë‹ˆë‹¤."));
 
 		for (itertype(m_set_pkChr) it = m_set_pkChr.begin(); it != m_set_pkChr.end(); ++it)
 		{
@@ -87,7 +87,7 @@ namespace marriage
 			if (ch->GetPlayerID() == dwPID1 || ch->GetPlayerID() == dwPID2)
 				continue;
 
-			if (ch->GetLevel() < 10) // 10 ·¹º§ÀÌÇÏ´Â ÁÖÁö¾Ê´Â´Ù.
+			if (ch->GetLevel() < 10) // 10 ë ˆë²¨ì´í•˜ëŠ” ì£¼ì§€ì•ŠëŠ”ë‹¤.
 				continue;
 
 			//ch->AutoGiveItem(27003, 5);
@@ -122,9 +122,9 @@ namespace marriage
 		{
 			if (ch->IsPC())
 			{
-				// ExitToSavedLocationÀº WarpSetÀ» ºÎ¸£´Âµ¥ ÀÌ ÇÔ¼ö¿¡¼­
-				// Sectree°¡ NULLÀÌ µÈ´Ù. Ãß ÈÄ SectreeManager·Î ºÎÅÍ´Â
-				// ÀÌ Ä³¸¯ÅÍ¸¦ Ã£À» ¼ö ¾øÀ¸¹Ç·Î ¾Æ·¡ DestroyAll¿¡¼­ º°µµ Ã³¸®ÇÔ
+				// ExitToSavedLocationì€ WarpSetì„ ë¶€ë¥´ëŠ”ë° ì´ í•¨ìˆ˜ì—ì„œ
+				// Sectreeê°€ NULLì´ ëœë‹¤. ì¶” í›„ SectreeManagerë¡œ ë¶€í„°ëŠ”
+				// ì´ ìºë¦­í„°ë¥¼ ì°¾ì„ ìˆ˜ ì—†ìœ¼ë¯€ë¡œ ì•„ëž˜ DestroyAllì—ì„œ ë³„ë„ ì²˜ë¦¬í•¨
 				ch->ExitToSavedLocation();
 			}
 		}

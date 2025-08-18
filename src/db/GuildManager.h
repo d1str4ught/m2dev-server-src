@@ -1,4 +1,4 @@
-// vim:ts=8 sw=4
+ï»¿// vim:ts=8 sw=4
 #ifndef __INC_GUILD_MANAGER_H
 #define __INC_GUILD_MANAGER_H
 
@@ -150,7 +150,7 @@ class CGuildWarReserve
 	void	SetLastNoticeMin(int iMin) { m_iLastNoticeMin = iMin; }
 
     private:
-	CGuildWarReserve();  // ±âº» »ı¼ºÀÚ¸¦ »ç¿ëÇÏÁö ¸øÇÏµµ·Ï ÀÇµµÀûÀ¸·Î ±¸ÇöÇÏÁö ¾ÊÀ½
+	CGuildWarReserve();  // ê¸°ë³¸ ìƒì„±ìë¥¼ ì‚¬ìš©í•˜ì§€ ëª»í•˜ë„ë¡ ì˜ë„ì ìœ¼ë¡œ êµ¬í˜„í•˜ì§€ ì•ŠìŒ
 
 	TGuildWarReserve				m_data;
 	// <login, <guild, gold>>
@@ -235,7 +235,7 @@ class CGuildManager : public singleton<CGuildManager>
 	std::map<DWORD, TGuild>					m_map_kGuild;
 	std::map<DWORD, std::map<DWORD, time_t> >		m_mapGuildWarEndTime;
 
-	std::set<TGuildDeclareInfo>				m_DeclareMap; // ¼±Àü Æ÷°í »óÅÂ¸¦ ÀúÀå
+	std::set<TGuildDeclareInfo>				m_DeclareMap; // ì„ ì „ í¬ê³  ìƒíƒœë¥¼ ì €ì¥
 	std::map<DWORD, std::map<DWORD, TGuildWarInfo> >	m_WarMap;
 
 	typedef std::pair<time_t, TGuildWarPQElement *>	stPairGuildWar;

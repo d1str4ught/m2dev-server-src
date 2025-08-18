@@ -1,4 +1,4 @@
-#ifndef __CLIENT_H__
+﻿#ifndef __CLIENT_H__
 #define __CLIENT_H__
 
 #include "desc.h"

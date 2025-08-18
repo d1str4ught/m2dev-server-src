@@ -1,4 +1,4 @@
-/*
+﻿/*
 ** $Id: luac.c,v 1.44a 2003/04/07 20:34:20 lhf Exp $
 ** Lua compiler (saves bytecodes to files; also list bytecodes)
 ** See Copyright Notice in lua.h

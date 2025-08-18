@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "HB.h"
 #include "Main.h"
 #include "DBManager.h"
@@ -30,7 +30,7 @@ bool PlayerHB::Initialize()
 }
 
 //
-// @version	05/07/05 Bang2ni - id ¿¡ ÇØ´çÇÏ´Â data °¡ ¾øÀ» ¶§ Äõ¸®ÇÏ°í data ¸¦ insert  ÇÏ´ÂÄÚµå Ãß°¡.
+// @version	05/07/05 Bang2ni - id ì— í•´ë‹¹í•˜ëŠ” data ê°€ ì—†ì„ ë•Œ ì¿¼ë¦¬í•˜ê³  data ë¥¼ insert  í•˜ëŠ”ì½”ë“œ ì¶”ê°€.
 //
 void PlayerHB::Put(DWORD id)
 {
@@ -48,7 +48,7 @@ void PlayerHB::Put(DWORD id)
 }
 
 //
-// @version	05/07/05 Bang2ni - Query string ¹öÆÛ°¡ ÀÛ¾Æ¼­ ´Ã·ÁÁÜ.
+// @version	05/07/05 Bang2ni - Query string ë²„í¼ê°€ ì‘ì•„ì„œ ëŠ˜ë ¤ì¤Œ.
 //
 bool PlayerHB::Query(DWORD id)
 {

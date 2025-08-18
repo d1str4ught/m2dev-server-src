@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "sequence.h"
 
 const BYTE gc_abSequence[SEQUENCE_MAX_NUM] =

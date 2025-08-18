@@ -1,4 +1,4 @@
-#ifndef __INC_METIN_II_ATTRIBUTE_H__
+ï»¿#ifndef __INC_METIN_II_ATTRIBUTE_H__
 #define __INC_METIN_II_ATTRIBUTE_H__
 
 enum EDataType
@@ -9,13 +9,13 @@ enum EDataType
 };
 
 //
-// ¸Ê ¼Ó¼ºµéÀ» Ã³¸®ÇÒ ¶§ »ç¿ë
+// ë§µ ì†ì„±ë“¤ì„ ì²˜ë¦¬í•  ë•Œ ì‚¬ìš©
 //
 class CAttribute
 {
     public:
-	CAttribute(DWORD width, DWORD height); // dword Å¸ÀÙÀ¸·Î ¸ğµÎ 0À» Ã¤¿î´Ù.
-	CAttribute(DWORD * attr, DWORD width, DWORD height); // attrÀ» ÀĞ¾î¼­ smartÇÏ°Ô ¼Ó¼ºÀ» ÀĞ¾î¿Â´Ù.
+	CAttribute(DWORD width, DWORD height); // dword íƒ€ììœ¼ë¡œ ëª¨ë‘ 0ì„ ì±„ìš´ë‹¤.
+	CAttribute(DWORD * attr, DWORD width, DWORD height); // attrì„ ì½ì–´ì„œ smartí•˜ê²Œ ì†ì„±ì„ ì½ì–´ì˜¨ë‹¤.
 	~CAttribute();
 	void Alloc();
 	int GetDataType();

@@ -1,4 +1,4 @@
-#ifndef _MALLOC_ALLOCATOR_H_
+﻿#ifndef _MALLOC_ALLOCATOR_H_
 #define _MALLOC_ALLOCATOR_H_
 
 // Allocator implementation detail based on default CRT malloc/free.

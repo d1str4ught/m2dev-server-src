@@ -1,4 +1,4 @@
-#ifndef __QUEST_EVENT_H
+﻿#ifndef __QUEST_EVENT_H
 #define __QUEST_EVENT_H
 
 namespace quest

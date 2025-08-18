@@ -1,4 +1,4 @@
-
+﻿
 #ifndef HACK_SHIELD_MANAGER_H_
 #define HACK_SHIELD_MANAGER_H_
 

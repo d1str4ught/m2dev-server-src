@@ -1,4 +1,4 @@
-#ifndef __INC_METIN_II_GAME_DESC_MANAGER_H__
+﻿#ifndef __INC_METIN_II_GAME_DESC_MANAGER_H__
 #define __INC_METIN_II_GAME_DESC_MANAGER_H__
 
 #include <unordered_map>

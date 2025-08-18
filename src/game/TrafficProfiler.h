@@ -1,4 +1,4 @@
-/**
+ï»¿/**
  *
  * @file	TrafficProfiler.h
  * @brief	TrafficProfiler class definition file
@@ -12,17 +12,17 @@
 
 /**
  * @class	TrafficProfiler
- * @brief	Network I/O traffic À» ÆĞÅ¶ ´ÜÀ§·Î ÃøÁ¤ÇÏ´Â profiler.
+ * @brief	Network I/O traffic ì„ íŒ¨í‚· ë‹¨ìœ„ë¡œ ì¸¡ì •í•˜ëŠ” profiler.
  * @author	Bang2ni
  * @version	05/07/07 Bang2ni - First release.
  *
- * ½Ã°£´ë º°·Î Network I/O ÀÇ traffic À» ÆĞÅ¶ ´ÜÀ§·Î ÃøÁ¤ÇÏ°í, Text file ÇüÅÂ·Î º¸°í¼­¸¦ ÀÛ¼ºÇÑ´Ù.
+ * ì‹œê°„ëŒ€ ë³„ë¡œ Network I/O ì˜ traffic ì„ íŒ¨í‚· ë‹¨ìœ„ë¡œ ì¸¡ì •í•˜ê³ , Text file í˜•íƒœë¡œ ë³´ê³ ì„œë¥¼ ì‘ì„±í•œë‹¤.
  */
 class TrafficProfiler : public singleton< TrafficProfiler >
 {
 	public:
 
-		/// I/O ¹æÇâ
+		/// I/O ë°©í–¥
 		enum IODirection {
 			IODIR_INPUT	= 0,	///< Input
 			IODIR_OUTPUT,	///< Output
@@ -37,25 +37,25 @@ class TrafficProfiler : public singleton< TrafficProfiler >
 		/// Destructor
 		~TrafficProfiler( void );
 
-		/// Profiling ¿¡ ÇÊ¿äÇÑ ÃÊ±âÈ­¸¦ ÇÑ´Ù.
+		/// Profiling ì— í•„ìš”í•œ ì´ˆê¸°í™”ë¥¼ í•œë‹¤.
 		/**
-		 * @param [in]	dwFlushCycle Flush ÁÖ±â. ÃÊ ´ÜÀ§ÀÌ´Ù.
-		 * @param [in]	pszLogFileName Profiling log file ÀÇ ÀÌ¸§
-		 * @return	false ÀÏ °æ¿ì profiling log file À» open ÇÏÁö ¸øÇß´Ù.
+		 * @param [in]	dwFlushCycle Flush ì£¼ê¸°. ì´ˆ ë‹¨ìœ„ì´ë‹¤.
+		 * @param [in]	pszLogFileName Profiling log file ì˜ ì´ë¦„
+		 * @return	false ì¼ ê²½ìš° profiling log file ì„ open í•˜ì§€ ëª»í–ˆë‹¤.
 		 *
-		 * profiling log file À» open(»ı¼º) ÇÑ´Ù.
+		 * profiling log file ì„ open(ìƒì„±) í•œë‹¤.
 		 */
 		bool	Initialize( DWORD dwFlushCycle, const char* pszLogFileName );
 
-		/// Profiling À» À§ÇØ Àü¼ÛµÆ°Å³ª Àü¼Û ÇÒ Packet À» Report ÇÑ´Ù.
+		/// Profiling ì„ ìœ„í•´ ì „ì†¡ëê±°ë‚˜ ì „ì†¡ í•  Packet ì„ Report í•œë‹¤.
 		/**
-		 * @param [in]	dir Profiling ÇÒ Packet ÀÇ ¹æÇâ
-		 * @param [in]	byHeader Packet Çì´õ
-		 * @param [in]	dwSize Packet ÀÇ ÃÑ size
-		 * @return	Initialize µÇÁö ¾Ê¾Ò´Ù¸é false ¸¦ ¹İÈ¯ÇÑ´Ù.
+		 * @param [in]	dir Profiling í•  Packet ì˜ ë°©í–¥
+		 * @param [in]	byHeader Packet í—¤ë”
+		 * @param [in]	dwSize Packet ì˜ ì´ size
+		 * @return	Initialize ë˜ì§€ ì•Šì•˜ë‹¤ë©´ false ë¥¼ ë°˜í™˜í•œë‹¤.
 		 *
-		 * Packet ¿¡ ÇØ´çÇÏ´Â size ¸¦ ´©Àû½ÃÅ²´Ù.
-		 * Initialize ÀÌÈÄ³ª ÃÖ±Ù Flush µÈ ÀÌÈÄ¿¡ Flush ÁÖ±â ¸¸Å­ ½Ã°£ÀÌ Èå¸¥ ÈÄ È£ÃâµÈ´Ù¸é Report ÀÌÈÄ Flush ÇÑ´Ù.
+		 * Packet ì— í•´ë‹¹í•˜ëŠ” size ë¥¼ ëˆ„ì ì‹œí‚¨ë‹¤.
+		 * Initialize ì´í›„ë‚˜ ìµœê·¼ Flush ëœ ì´í›„ì— Flush ì£¼ê¸° ë§Œí¼ ì‹œê°„ì´ íë¥¸ í›„ í˜¸ì¶œëœë‹¤ë©´ Report ì´í›„ Flush í•œë‹¤.
 		 */
 		bool	Report( IODirection dir, BYTE byHeader, DWORD dwSize )
 		{
@@ -65,22 +65,22 @@ class TrafficProfiler : public singleton< TrafficProfiler >
 			return true;
 		}
 
-		/// ÇöÀç±îÁö Report µÈ ³»¿ëÀ» ÆÄÀÏ¿¡ ¾´´Ù.
+		/// í˜„ì¬ê¹Œì§€ Report ëœ ë‚´ìš©ì„ íŒŒì¼ì— ì“´ë‹¤.
 		/**
-		 * @return	Initialize µÇÁö ¾Ê¾Ò´Ù.
+		 * @return	Initialize ë˜ì§€ ì•Šì•˜ë‹¤.
 		 */
 		bool	Flush( void );
 
 	private:
 
-		/// Profling ¿¡ °ü·ÃµÈ variables ¸¦ ÃÊ±âÈ­ ÇÑ´Ù.
+		/// Profling ì— ê´€ë ¨ëœ variables ë¥¼ ì´ˆê¸°í™” í•œë‹¤.
 		void	InitializeProfiling( void );
 
-		/// Report µÈ Packet ÀÇ traffic ¸¦ °è»êÇÑ´Ù.
+		/// Report ëœ Packet ì˜ traffic ë¥¼ ê³„ì‚°í•œë‹¤.
 		/**
-		 * @param [in]	dir Profiling ÇÒ Packet ÀÇ ¹æÇâ
-		 * @param [in]	byHeader Packet Çì´õ
-		 * @param [in]	dwSize Packet ÀÇ ÃÑ size
+		 * @param [in]	dir Profiling í•  Packet ì˜ ë°©í–¥
+		 * @param [in]	byHeader Packet í—¤ë”
+		 * @param [in]	dwSize Packet ì˜ ì´ size
 		 */
 		void	ComputeTraffic( IODirection dir, BYTE byHeader, DWORD dwSize )
 		{
@@ -96,8 +96,8 @@ class TrafficProfiler : public singleton< TrafficProfiler >
 
 		/// Traffic info type.
 		/**
-		 * first: ´©ÀûµÈ ÃÑ size
-		 * second: ÀÌ packet ÀÌ Àü¼ÛµÈ È½¼ö
+		 * first: ëˆ„ì ëœ ì´ size
+		 * second: ì´ packet ì´ ì „ì†¡ëœ íšŸìˆ˜
 		 */
 		typedef std::pair< DWORD, DWORD >	TrafficInfo;
 
@@ -105,11 +105,11 @@ class TrafficProfiler : public singleton< TrafficProfiler >
 		typedef std::vector< TrafficInfo >	TrafficVec;
 
 		FILE*		m_pfProfileLogFile;	///< Profile log file pointer
-		DWORD		m_dwFlushCycle;		///< Flush ÁÖ±â
-		time_t		m_tmProfileStartTime;	///< ÇÁ·ÎÆÄÀÏÀ» ½ÃÀÛÇÑ ½Ã°£. Flush µÉ ¶§¸¶´Ù Update µÈ´Ù.
-		DWORD		m_dwTotalTraffic;	///< Report µÈ ÃÑ Traffic ¿ë·®
-		DWORD		m_dwTotalPacket;	///< Report µÈ ÃÑ Packet ¼ö
-		TrafficVec	m_aTrafficVec[ IODIR_MAX ];	///< Report µÈ Traffic À» ÀúÀåÇÒ vectorÀÇ ¹è¿­. °¢ ¹æÇâ¸¶´Ù vector ¸¦ °¡Áø´Ù.
+		DWORD		m_dwFlushCycle;		///< Flush ì£¼ê¸°
+		time_t		m_tmProfileStartTime;	///< í”„ë¡œíŒŒì¼ì„ ì‹œì‘í•œ ì‹œê°„. Flush ë  ë•Œë§ˆë‹¤ Update ëœë‹¤.
+		DWORD		m_dwTotalTraffic;	///< Report ëœ ì´ Traffic ìš©ëŸ‰
+		DWORD		m_dwTotalPacket;	///< Report ëœ ì´ Packet ìˆ˜
+		TrafficVec	m_aTrafficVec[ IODIR_MAX ];	///< Report ëœ Traffic ì„ ì €ì¥í•  vectorì˜ ë°°ì—´. ê° ë°©í–¥ë§ˆë‹¤ vector ë¥¼ ê°€ì§„ë‹¤.
 };
 
 #endif // _METIN_II_TRAFFICPROFILER_H_

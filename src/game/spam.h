@@ -1,4 +1,4 @@
-#ifndef __INC_SPAM_MANAGER_H__
+﻿#ifndef __INC_SPAM_MANAGER_H__
 #define __INC_SPAM_MANAGER_H__
 
 #include <string.h>

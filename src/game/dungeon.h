@@ -1,4 +1,4 @@
-#ifndef __INC_METIN_II_GAME_DUNGEON_H
+ï»¿#ifndef __INC_METIN_II_GAME_DUNGEON_H
 #define __INC_METIN_II_GAME_DUNGEON_H
 
 #include "sectree_manager.h"
@@ -38,8 +38,8 @@ class CDungeon
 
 	void	IncMonster() { m_iMonsterCount++; sys_log(0, "MonsterCount %d", m_iMonsterCount); }
 	void	DecMonster() { m_iMonsterCount--; CheckEliminated(); }
-	int	CountMonster() { return m_iMonsterCount; }	// µ¥ÀÌÅÍ·Î ¸®Á¨ÇÑ ¸ó½ºÅÍÀÇ ¼ö
-	int	CountRealMonster();				// ½ÇÁ¦·Î ¸Ê»ó¿¡ ÀÖ´Â ¸ó½ºÅÍ
+	int	CountMonster() { return m_iMonsterCount; }	// ë°ì´í„°ë¡œ ë¦¬ì  í•œ ëª¬ìŠ¤í„°ì˜ ìˆ˜
+	int	CountRealMonster();				// ì‹¤ì œë¡œ ë§µìƒì— ìˆëŠ” ëª¬ìŠ¤í„°
 
 	void	IncPartyMember(LPPARTY pParty, LPCHARACTER ch);
 	void	DecPartyMember(LPPARTY pParty, LPCHARACTER ch);
@@ -103,7 +103,7 @@ class CDungeon
 	void	SetFlag(std::string name, int value);
 	void	SetWarpLocation (long map_index, int x, int y);
 
-	// item groupÀº item_vnum°ú item_count·Î ±¸¼º.
+	// item groupì€ item_vnumê³¼ item_countë¡œ êµ¬ì„±.
 	typedef std::vector <std::pair <DWORD, int> > ItemGroup;
 	void	CreateItemGroup (std::string& group_name, ItemGroup& item_group);
 	const ItemGroup* GetItemGroup (std::string& group_name);
@@ -142,7 +142,7 @@ class CDungeon
 	bool		m_bExitAllAtEliminate;
 	bool		m_bWarpAtEliminate;
 
-	// Àû Àü¸ê½Ã ¿öÇÁÇÏ´Â À§Ä¡
+	// ì  ì „ë©¸ì‹œ ì›Œí”„í•˜ëŠ” ìœ„ì¹˜
 	int		m_iWarpDelay;
 	long		m_lWarpMapIndex;
 	long		m_lWarpX;
@@ -163,9 +163,9 @@ class CDungeon
 	friend EVENTFUNC(dungeon_exit_all_event);
 	friend EVENTFUNC(dungeon_jump_to_event);
 
-	// ÆÄÆ¼ ´ÜÀ§ ´øÀü ÀÔÀåÀ» À§ÇÑ ÀÓ½Ã º¯¼ö.
-	// m_map_pkParty´Â °ü¸®°¡ ºÎ½ÇÇÏ¿© »ç¿ëÇÒ ¼ö ¾ø´Ù°í ÆÇ´ÜÇÏ¿©,
-	// ÀÓ½Ã·Î ÇÑ ÆÄÆ¼¿¡ ´ëÇÑ °ü¸®¸¦ ÇÏ´Â º¯¼ö »ı¼º.
+	// íŒŒí‹° ë‹¨ìœ„ ë˜ì „ ì…ì¥ì„ ìœ„í•œ ì„ì‹œ ë³€ìˆ˜.
+	// m_map_pkPartyëŠ” ê´€ë¦¬ê°€ ë¶€ì‹¤í•˜ì—¬ ì‚¬ìš©í•  ìˆ˜ ì—†ë‹¤ê³  íŒë‹¨í•˜ì—¬,
+	// ì„ì‹œë¡œ í•œ íŒŒí‹°ì— ëŒ€í•œ ê´€ë¦¬ë¥¼ í•˜ëŠ” ë³€ìˆ˜ ìƒì„±.
 	
 	LPPARTY m_pParty;
 	public :

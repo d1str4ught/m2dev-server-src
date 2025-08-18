@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 /*
 
     Declaration of POSIX directory browsing functions and types for Win32.

@@ -1,4 +1,4 @@
-#ifndef __INC_METIN_II_SERVER_TARGA_H__
+ï»¿#ifndef __INC_METIN_II_SERVER_TARGA_H__
 #define __INC_METIN_II_SERVER_TARGA_H__
 
 #pragma pack(1)
@@ -6,11 +6,11 @@
 struct TGA_HEADER
 {
     char idLen;		// 0
-    char palType;	// ÆÄ·¹Æ®ÀÖÀ¸¸é 1, ¾øÀ½ 0
-    char imgType;	// ÆÄ·¹Æ®ÀÖÀ¸¸é 1, ¾øÀ½ 2
+    char palType;	// íŒŒë ˆíŠ¸ìˆìœ¼ë©´ 1, ì—†ìŒ 0
+    char imgType;	// íŒŒë ˆíŠ¸ìˆìœ¼ë©´ 1, ì—†ìŒ 2
     WORD colorBegin;	// 0
-    WORD colorCount;	// ÆÄ·¹Æ® ÀÖÀ¸¸é 256, ¾øÀ½ 0
-    char palEntrySize;	// ÆÄ·¹Æ® ÀÖÀ¸¸é 24, ¾øÀ½ 0
+    WORD colorCount;	// íŒŒë ˆíŠ¸ ìˆìœ¼ë©´ 256, ì—†ìŒ 0
+    char palEntrySize;	// íŒŒë ˆíŠ¸ ìˆìœ¼ë©´ 24, ì—†ìŒ 0
     WORD left;
     WORD top;
     WORD width;

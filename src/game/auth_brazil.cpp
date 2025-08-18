@@ -1,4 +1,4 @@
-/* vi: set sw=4 ts=8 cino=g0,\:0 : */
+ï»¿/* vi: set sw=4 ts=8 cino=g0,\:0 : */
 /*********************************************************************
  * date        : 2010.4.7
  * file        : auth_brazil.c
@@ -133,7 +133,7 @@ int auth_brazil(const char *login, const char *pwd)
 	    return AUTH_BRAZIL_SERVER_ERR;
 	}
 
-	// ÀÀ´ä¹ŞÀº °æ¿ì¿¡¸¸ query count¸¦ ´Ã¸°´Ù.
+	// ì‘ë‹µë°›ì€ ê²½ìš°ì—ë§Œ query countë¥¼ ëŠ˜ë¦°ë‹¤.
 	auth_brazil_inc_query_count();
 
 	return FN_parse_reply(reply);

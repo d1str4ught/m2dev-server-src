@@ -1,4 +1,4 @@
-#ifndef __ITEM_ADDON_H
+﻿#ifndef __ITEM_ADDON_H
 #define __ITEM_ADDON_H
 
 class CItemAddonManager : public singleton<CItemAddonManager>

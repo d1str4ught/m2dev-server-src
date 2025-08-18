@@ -1,4 +1,4 @@
-#ifndef __POLY_SYMTABLE_H__
+﻿#ifndef __POLY_SYMTABLE_H__
 #define __POLY_SYMTABLE_H__
 
 #include <string>

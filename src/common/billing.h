@@ -1,4 +1,4 @@
-#ifndef __INC_METIN_II_COMMON_BILLING_H__
+﻿#ifndef __INC_METIN_II_COMMON_BILLING_H__
 #define __INC_METIN_II_COMMON_BILLING_H__
 
 enum EBillingTypes

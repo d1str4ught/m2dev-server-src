@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 
 #include <stack>
 
@@ -78,7 +78,7 @@ struct FFindStone
 };
 
 
-//±ÍÈ¯ºÎ, ±ÍÈ¯±â¾ïºÎ, °áÈ¥¹İÁö
+//ê·€í™˜ë¶€, ê·€í™˜ê¸°ì–µë¶€, ê²°í˜¼ë°˜ì§€
 static bool IS_SUMMON_ITEM(int vnum)
 {
 	switch (vnum)
@@ -111,38 +111,38 @@ static bool IS_MONKEY_DUNGEON(int map_index)
 
 bool IS_SUMMONABLE_ZONE(int map_index)
 {
-	// ¸ùÅ°´øÀü
+	// ëª½í‚¤ë˜ì „
 	if (IS_MONKEY_DUNGEON(map_index))
 		return false;
-	// ¼º
+	// ì„±
 	if (IS_CASTLE_MAP(map_index))
 		return false;
 
 	switch (map_index)
 	{
-		case 66 : // »ç±ÍÅ¸¿ö
-		case 71 : // °Å¹Ì ´øÀü 2Ãş
-		case 72 : // ÃµÀÇ µ¿±¼
-		case 73 : // ÃµÀÇ µ¿±¼ 2Ãş
-		case 193 : // °Å¹Ì ´øÀü 2-1Ãş
+		case 66 : // ì‚¬ê·€íƒ€ì›Œ
+		case 71 : // ê±°ë¯¸ ë˜ì „ 2ì¸µ
+		case 72 : // ì²œì˜ ë™êµ´
+		case 73 : // ì²œì˜ ë™êµ´ 2ì¸µ
+		case 193 : // ê±°ë¯¸ ë˜ì „ 2-1ì¸µ
 #if 0
-		case 184 : // ÃµÀÇ µ¿±¼(½Å¼ö)
-		case 185 : // ÃµÀÇ µ¿±¼ 2Ãş(½Å¼ö)
-		case 186 : // ÃµÀÇ µ¿±¼(ÃµÁ¶)
-		case 187 : // ÃµÀÇ µ¿±¼ 2Ãş(ÃµÁ¶)
-		case 188 : // ÃµÀÇ µ¿±¼(Áø³ë)
-		case 189 : // ÃµÀÇ µ¿±¼ 2Ãş(Áø³ë)
+		case 184 : // ì²œì˜ ë™êµ´(ì‹ ìˆ˜)
+		case 185 : // ì²œì˜ ë™êµ´ 2ì¸µ(ì‹ ìˆ˜)
+		case 186 : // ì²œì˜ ë™êµ´(ì²œì¡°)
+		case 187 : // ì²œì˜ ë™êµ´ 2ì¸µ(ì²œì¡°)
+		case 188 : // ì²œì˜ ë™êµ´(ì§„ë…¸)
+		case 189 : // ì²œì˜ ë™êµ´ 2ì¸µ(ì§„ë…¸)
 #endif
-//		case 206 : // ¾Æ±Íµ¿±¼
-		case 216 : // ¾Æ±Íµ¿±¼
-		case 217 : // °Å¹Ì ´øÀü 3Ãş
-		case 208 : // ÃµÀÇ µ¿±¼ (¿ë¹æ)
+//		case 206 : // ì•„ê·€ë™êµ´
+		case 216 : // ì•„ê·€ë™êµ´
+		case 217 : // ê±°ë¯¸ ë˜ì „ 3ì¸µ
+		case 208 : // ì²œì˜ ë™êµ´ (ìš©ë°©)
 			return false;
 	}
 
 	if (CBattleArena::IsBattleArenaMap(map_index)) return false;
 
-	// ¸ğµç private ¸ÊÀ¸·Ğ ¿öÇÁ ºÒ°¡´É
+	// ëª¨ë“  private ë§µìœ¼ë¡  ì›Œí”„ ë¶ˆê°€ëŠ¥
 	if (map_index > 10000) return false;
 
 	return true;
@@ -166,7 +166,7 @@ bool IS_BOTARYABLE_ZONE(int nMapIndex)
 	return false;
 }
 
-// item socket ÀÌ ÇÁ·ÎÅäÅ¸ÀÔ°ú °°ÀºÁö Ã¼Å© -- by mhh
+// item socket ì´ í”„ë¡œí† íƒ€ì…ê³¼ ê°™ì€ì§€ ì²´í¬ -- by mhh
 static bool FN_check_item_socket(LPITEM item)
 {
 	for (int i = 0; i < ITEM_SOCKET_MAX_NUM; ++i)
@@ -178,7 +178,7 @@ static bool FN_check_item_socket(LPITEM item)
 	return true;
 }
 
-// item socket º¹»ç -- by mhh
+// item socket ë³µì‚¬ -- by mhh
 static void FN_copy_item_socket(LPITEM dest, LPITEM src)
 {
 	for (int i = 0; i < ITEM_SOCKET_MAX_NUM; ++i)
@@ -188,13 +188,13 @@ static void FN_copy_item_socket(LPITEM dest, LPITEM src)
 }
 static bool FN_check_item_sex(LPCHARACTER ch, LPITEM item)
 {
-	// ³²ÀÚ ±İÁö
+	// ë‚¨ì ê¸ˆì§€
 	if (IS_SET(item->GetAntiFlag(), ITEM_ANTIFLAG_MALE))
 	{
 		if (SEX_MALE==GET_SEX(ch))
 			return false;
 	}
-	// ¿©ÀÚ±İÁö
+	// ì—¬ìê¸ˆì§€
 	if (IS_SET(item->GetAntiFlag(), ITEM_ANTIFLAG_FEMALE)) 
 	{
 		if (SEX_FEMALE==GET_SEX(ch))
@@ -280,7 +280,7 @@ void CHARACTER::SetItem(TItemPos Cell, LPITEM pItem)
 		assert(!"GetOwner exist");
 		return;
 	}
-	// ±âº» ÀÎº¥Åä¸®
+	// ê¸°ë³¸ ì¸ë²¤í† ë¦¬
 	switch(window_type)
 	{
 	case INVENTORY:
@@ -326,8 +326,8 @@ void CHARACTER::SetItem(TItemPos Cell, LPITEM pItem)
 						if (p >= INVENTORY_MAX_NUM)
 							continue;
 
-						// wCell + 1 ·Î ÇÏ´Â °ÍÀº ºó°÷À» Ã¼Å©ÇÒ ¶§ °°Àº
-						// ¾ÆÀÌÅÛÀº ¿¹¿ÜÃ³¸®ÇÏ±â À§ÇÔ
+						// wCell + 1 ë¡œ í•˜ëŠ” ê²ƒì€ ë¹ˆê³³ì„ ì²´í¬í•  ë•Œ ê°™ì€
+						// ì•„ì´í…œì€ ì˜ˆì™¸ì²˜ë¦¬í•˜ê¸° ìœ„í•¨
 						m_pointsInstant.bItemGrid[p] = wCell + 1;
 					}
 				}
@@ -338,7 +338,7 @@ void CHARACTER::SetItem(TItemPos Cell, LPITEM pItem)
 			m_pointsInstant.pItems[wCell] = pItem;
 		}
 		break;
-	// ¿ëÈ¥¼® ÀÎº¥Åä¸®
+	// ìš©í˜¼ì„ ì¸ë²¤í† ë¦¬
 	case DRAGON_SOUL_INVENTORY:
 		{
 			LPITEM pOld = m_pointsInstant.pDSItems[wCell];
@@ -381,8 +381,8 @@ void CHARACTER::SetItem(TItemPos Cell, LPITEM pItem)
 						if (p >= DRAGON_SOUL_INVENTORY_MAX_NUM)
 							continue;
 
-						// wCell + 1 ·Î ÇÏ´Â °ÍÀº ºó°÷À» Ã¼Å©ÇÒ ¶§ °°Àº
-						// ¾ÆÀÌÅÛÀº ¿¹¿ÜÃ³¸®ÇÏ±â À§ÇÔ
+						// wCell + 1 ë¡œ í•˜ëŠ” ê²ƒì€ ë¹ˆê³³ì„ ì²´í¬í•  ë•Œ ê°™ì€
+						// ì•„ì´í…œì€ ì˜ˆì™¸ì²˜ë¦¬í•˜ê¸° ìœ„í•¨
 						m_pointsInstant.wDSItemGrid[p] = wCell + 1;
 					}
 				}
@@ -400,7 +400,7 @@ void CHARACTER::SetItem(TItemPos Cell, LPITEM pItem)
 
 	if (GetDesc())
 	{
-		// È®Àå ¾ÆÀÌÅÛ: ¼­¹ö¿¡¼­ ¾ÆÀÌÅÛ ÇÃ·¡±× Á¤º¸¸¦ º¸³½´Ù
+		// í™•ì¥ ì•„ì´í…œ: ì„œë²„ì—ì„œ ì•„ì´í…œ í”Œë˜ê·¸ ì •ë³´ë¥¼ ë³´ë‚¸ë‹¤
 		if (pItem)
 		{
 			TPacketGCItemSet pack;
@@ -454,7 +454,7 @@ void CHARACTER::SetItem(TItemPos Cell, LPITEM pItem)
 
 LPITEM CHARACTER::GetWear(BYTE bCell) const
 {
-	// > WEAR_MAX_NUM : ¿ëÈ¥¼® ½½·Ôµé.
+	// > WEAR_MAX_NUM : ìš©í˜¼ì„ ìŠ¬ë¡¯ë“¤.
 	if (bCell >= WEAR_MAX_NUM + DRAGON_SOUL_DECK_MAX_NUM * DS_SLOT_MAX)
 	{
 		sys_err("CHARACTER::GetWear: invalid wear cell %d", bCell);
@@ -466,7 +466,7 @@ LPITEM CHARACTER::GetWear(BYTE bCell) const
 
 void CHARACTER::SetWear(BYTE bCell, LPITEM item)
 {
-	// > WEAR_MAX_NUM : ¿ëÈ¥¼® ½½·Ôµé.
+	// > WEAR_MAX_NUM : ìš©í˜¼ì„ ìŠ¬ë¡¯ë“¤.
 	if (bCell >= WEAR_MAX_NUM + DRAGON_SOUL_DECK_MAX_NUM * DS_SLOT_MAX)
 	{
 		sys_err("CHARACTER::SetItem: invalid item cell %d", bCell);
@@ -477,7 +477,7 @@ void CHARACTER::SetWear(BYTE bCell, LPITEM item)
 
 	if (!item && bCell == WEAR_WEAPON)
 	{
-		// ±Í°Ë »ç¿ë ½Ã ¹ş´Â °ÍÀÌ¶ó¸é È¿°ú¸¦ ¾ø¾Ö¾ß ÇÑ´Ù.
+		// ê·€ê²€ ì‚¬ìš© ì‹œ ë²—ëŠ” ê²ƒì´ë¼ë©´ íš¨ê³¼ë¥¼ ì—†ì• ì•¼ í•œë‹¤.
 		if (IsAffectFlag(AFF_GWIGUM))
 			RemoveAffect(SKILL_GWIGEOM);
 
@@ -525,8 +525,8 @@ bool CHARACTER::IsEmptyItemGrid(TItemPos Cell, BYTE bSize, int iExceptionCell) c
 		{
 			BYTE bCell = Cell.cell;
 
-			// bItemCellÀº 0ÀÌ falseÀÓÀ» ³ªÅ¸³»±â À§ÇØ + 1 ÇØ¼­ Ã³¸®ÇÑ´Ù.
-			// µû¶ó¼­ iExceptionCell¿¡ 1À» ´õÇØ ºñ±³ÇÑ´Ù.
+			// bItemCellì€ 0ì´ falseì„ì„ ë‚˜íƒ€ë‚´ê¸° ìœ„í•´ + 1 í•´ì„œ ì²˜ë¦¬í•œë‹¤.
+			// ë”°ë¼ì„œ iExceptionCellì— 1ì„ ë”í•´ ë¹„êµí•œë‹¤.
 			++iExceptionCell;
 
 			if (Cell.IsBeltInventoryPosition())
@@ -586,7 +586,7 @@ bool CHARACTER::IsEmptyItemGrid(TItemPos Cell, BYTE bSize, int iExceptionCell) c
 					return false;
 			}
 
-			// Å©±â°¡ 1ÀÌ¸é ÇÑÄ­À» Â÷ÁöÇÏ´Â °ÍÀÌ¹Ç·Î ±×³É ¸®ÅÏ
+			// í¬ê¸°ê°€ 1ì´ë©´ í•œì¹¸ì„ ì°¨ì§€í•˜ëŠ” ê²ƒì´ë¯€ë¡œ ê·¸ëƒ¥ ë¦¬í„´
 			if (1 == bSize)
 				return true;
 			else
@@ -620,8 +620,8 @@ bool CHARACTER::IsEmptyItemGrid(TItemPos Cell, BYTE bSize, int iExceptionCell) c
 			if (wCell >= DRAGON_SOUL_INVENTORY_MAX_NUM)
 				return false;
 
-			// bItemCellÀº 0ÀÌ falseÀÓÀ» ³ªÅ¸³»±â À§ÇØ + 1 ÇØ¼­ Ã³¸®ÇÑ´Ù.
-			// µû¶ó¼­ iExceptionCell¿¡ 1À» ´õÇØ ºñ±³ÇÑ´Ù.
+			// bItemCellì€ 0ì´ falseì„ì„ ë‚˜íƒ€ë‚´ê¸° ìœ„í•´ + 1 í•´ì„œ ì²˜ë¦¬í•œë‹¤.
+			// ë”°ë¼ì„œ iExceptionCellì— 1ì„ ë”í•´ ë¹„êµí•œë‹¤.
 			iExceptionCell++;
 
 			if (m_pointsInstant.wDSItemGrid[wCell])
@@ -652,7 +652,7 @@ bool CHARACTER::IsEmptyItemGrid(TItemPos Cell, BYTE bSize, int iExceptionCell) c
 					return false;
 			}
 
-			// Å©±â°¡ 1ÀÌ¸é ÇÑÄ­À» Â÷ÁöÇÏ´Â °ÍÀÌ¹Ç·Î ±×³É ¸®ÅÏ
+			// í¬ê¸°ê°€ 1ì´ë©´ í•œì¹¸ì„ ì°¨ì§€í•˜ëŠ” ê²ƒì´ë¯€ë¡œ ê·¸ëƒ¥ ë¦¬í„´
 			if (1 == bSize)
 				return true;
 			else
@@ -680,8 +680,8 @@ bool CHARACTER::IsEmptyItemGrid(TItemPos Cell, BYTE bSize, int iExceptionCell) c
 
 int CHARACTER::GetEmptyInventory(BYTE size) const
 {
-	// NOTE: ÇöÀç ÀÌ ÇÔ¼ö´Â ¾ÆÀÌÅÛ Áö±Ş, È¹µæ µîÀÇ ÇàÀ§¸¦ ÇÒ ¶§ ÀÎº¥Åä¸®ÀÇ ºó Ä­À» Ã£±â À§ÇØ »ç¿ëµÇ°í ÀÖ´Âµ¥,
-	//		º§Æ® ÀÎº¥Åä¸®´Â Æ¯¼ö ÀÎº¥Åä¸®ÀÌ¹Ç·Î °Ë»çÇÏÁö ¾Êµµ·Ï ÇÑ´Ù. (±âº» ÀÎº¥Åä¸®: INVENTORY_MAX_NUM ±îÁö¸¸ °Ë»ç)
+	// NOTE: í˜„ì¬ ì´ í•¨ìˆ˜ëŠ” ì•„ì´í…œ ì§€ê¸‰, íšë“ ë“±ì˜ í–‰ìœ„ë¥¼ í•  ë•Œ ì¸ë²¤í† ë¦¬ì˜ ë¹ˆ ì¹¸ì„ ì°¾ê¸° ìœ„í•´ ì‚¬ìš©ë˜ê³  ìˆëŠ”ë°,
+	//		ë²¨íŠ¸ ì¸ë²¤í† ë¦¬ëŠ” íŠ¹ìˆ˜ ì¸ë²¤í† ë¦¬ì´ë¯€ë¡œ ê²€ì‚¬í•˜ì§€ ì•Šë„ë¡ í•œë‹¤. (ê¸°ë³¸ ì¸ë²¤í† ë¦¬: INVENTORY_MAX_NUM ê¹Œì§€ë§Œ ê²€ì‚¬)
 	for ( int i = 0; i < INVENTORY_MAX_NUM; ++i)
 		if (IsEmptyItemGrid(TItemPos (INVENTORY, i), size))
 			return i;
@@ -741,7 +741,7 @@ void TransformRefineItem(LPITEM pkOldItem, LPITEM pkNewItem)
 	// END_OF_ACCESSORY_REFINE
 	else
 	{
-		// ¿©±â¼­ ±úÁø¼®ÀÌ ÀÚµ¿ÀûÀ¸·Î Ã»¼Ò µÊ
+		// ì—¬ê¸°ì„œ ê¹¨ì§„ì„ì´ ìë™ì ìœ¼ë¡œ ì²­ì†Œ ë¨
 		for (int i = 0; i < ITEM_SOCKET_MAX_NUM; ++i)
 		{
 			if (!pkOldItem->GetSocket(i))
@@ -750,7 +750,7 @@ void TransformRefineItem(LPITEM pkOldItem, LPITEM pkNewItem)
 				pkNewItem->SetSocket(i, 1);
 		}
 
-		// ¼ÒÄÏ ¼³Á¤
+		// ì†Œì¼“ ì„¤ì •
 		int slot = 0;
 
 		for (int i = 0; i < ITEM_SOCKET_MAX_NUM; ++i)
@@ -763,7 +763,7 @@ void TransformRefineItem(LPITEM pkOldItem, LPITEM pkNewItem)
 
 	}
 
-	// ¸ÅÁ÷ ¾ÆÀÌÅÛ ¼³Á¤
+	// ë§¤ì§ ì•„ì´í…œ ì„¤ì •
 	pkOldItem->CopyAttributeTo(pkNewItem);
 }
 
@@ -807,8 +807,8 @@ bool CHARACTER::DoRefine(LPITEM item, bool bMoneyOnly)
 		return false;
 	}
 	
-	//°³·® ½Ã°£Á¦ÇÑ : upgrade_refine_scroll.quest ¿¡¼­ °³·®ÈÄ 5ºĞÀÌ³»¿¡ ÀÏ¹İ °³·®À» 
-	//ÁøÇàÇÒ¼ö ¾øÀ½
+	//ê°œëŸ‰ ì‹œê°„ì œí•œ : upgrade_refine_scroll.quest ì—ì„œ ê°œëŸ‰í›„ 5ë¶„ì´ë‚´ì— ì¼ë°˜ ê°œëŸ‰ì„ 
+	//ì§„í–‰í• ìˆ˜ ì—†ìŒ
 	if (quest::CQuestManager::instance().GetEventFlag("update_refine_time") != 0)
 	{
 		if (get_global_time() < quest::CQuestManager::instance().GetEventFlag("update_refine_time") + (60 * 5))
@@ -834,7 +834,7 @@ bool CHARACTER::DoRefine(LPITEM item, bool bMoneyOnly)
 	{
 		if (!item->CheckItemUseLevel(20) || item->GetType() != ITEM_WEAPON)
 		{
-			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("¹«·á °³·® ±âÈ¸´Â 20 ÀÌÇÏÀÇ ¹«±â¸¸ °¡´ÉÇÕ´Ï´Ù"));
+			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ë¬´ë£Œ ê°œëŸ‰ ê¸°íšŒëŠ” 20 ì´í•˜ì˜ ë¬´ê¸°ë§Œ ê°€ëŠ¥í•©ë‹ˆë‹¤"));
 			return false;
 		}
 
@@ -845,7 +845,7 @@ bool CHARACTER::DoRefine(LPITEM item, bool bMoneyOnly)
 
 	if (result_vnum == 0)
 	{
-		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("´õ ÀÌ»ó °³·®ÇÒ ¼ö ¾ø½À´Ï´Ù."));
+		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ë” ì´ìƒ ê°œëŸ‰í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 		return false;
 	}
 
@@ -857,7 +857,7 @@ bool CHARACTER::DoRefine(LPITEM item, bool bMoneyOnly)
 	if (!pProto)
 	{
 		sys_err("DoRefine NOT GET ITEM PROTO %d", item->GetRefinedVnum());
-		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ÀÌ ¾ÆÀÌÅÛÀº °³·®ÇÒ ¼ö ¾ø½À´Ï´Ù."));
+		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì´ ì•„ì´í…œì€ ê°œëŸ‰í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 		return false;
 	}
 
@@ -873,7 +873,7 @@ bool CHARACTER::DoRefine(LPITEM item, bool bMoneyOnly)
 				case LIMIT_LEVEL:
 					if (GetLevel() < limit)
 					{
-						ChatPacket(CHAT_TYPE_INFO, LC_TEXT("°³·®µÈ ÈÄ ¾ÆÀÌÅÛÀÇ ·¹º§ Á¦ÇÑº¸´Ù ·¹º§ÀÌ ³·½À´Ï´Ù."));
+						ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ê°œëŸ‰ëœ í›„ ì•„ì´í…œì˜ ë ˆë²¨ ì œí•œë³´ë‹¤ ë ˆë²¨ì´ ë‚®ìŠµë‹ˆë‹¤."));
 						return false;
 					}
 					break;
@@ -884,7 +884,7 @@ bool CHARACTER::DoRefine(LPITEM item, bool bMoneyOnly)
 	// REFINE_COST
 	if (GetGold() < cost)
 	{
-		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("°³·®À» ÇÏ±â À§ÇÑ µ·ÀÌ ºÎÁ·ÇÕ´Ï´Ù."));
+		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ê°œëŸ‰ì„ í•˜ê¸° ìœ„í•œ ëˆì´ ë¶€ì¡±í•©ë‹ˆë‹¤."));
 		return false;
 	}
 
@@ -898,7 +898,7 @@ bool CHARACTER::DoRefine(LPITEM item, bool bMoneyOnly)
 				{
 					ChatPacket(CHAT_TYPE_INFO, "Find %d, count %d, require %d", prt->materials[i].vnum, CountSpecifyItem(prt->materials[i].vnum), prt->materials[i].count);
 				}
-				ChatPacket(CHAT_TYPE_INFO, LC_TEXT("°³·®À» ÇÏ±â À§ÇÑ Àç·á°¡ ºÎÁ·ÇÕ´Ï´Ù."));
+				ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ê°œëŸ‰ì„ í•˜ê¸° ìœ„í•œ ì¬ë£Œê°€ ë¶€ì¡±í•©ë‹ˆë‹¤."));
 				return false;
 			}
 		}
@@ -916,7 +916,7 @@ bool CHARACTER::DoRefine(LPITEM item, bool bMoneyOnly)
 
 	if (prob <= prt->prob)
 	{
-		// ¼º°ø! ¸ğµç ¾ÆÀÌÅÛÀÌ »ç¶óÁö°í, °°Àº ¼Ó¼ºÀÇ ´Ù¸¥ ¾ÆÀÌÅÛ È¹µæ
+		// ì„±ê³µ! ëª¨ë“  ì•„ì´í…œì´ ì‚¬ë¼ì§€ê³ , ê°™ì€ ì†ì„±ì˜ ë‹¤ë¥¸ ì•„ì´í…œ íšë“
 		LPITEM pkNewItem = ITEM_MANAGER::instance().CreateItem(result_vnum, 1, 0, false);
 
 		if (pkNewItem)
@@ -945,7 +945,7 @@ bool CHARACTER::DoRefine(LPITEM item, bool bMoneyOnly)
 		else
 		{
 			// DETAIL_REFINE_LOG
-			// ¾ÆÀÌÅÛ »ı¼º¿¡ ½ÇÆĞ -> °³·® ½ÇÆĞ·Î °£ÁÖ
+			// ì•„ì´í…œ ìƒì„±ì— ì‹¤íŒ¨ -> ê°œëŸ‰ ì‹¤íŒ¨ë¡œ ê°„ì£¼
 			sys_err("cannot create item %u", result_vnum);
 			NotifyRefineFail(this, item, IsRefineThroughGuild() ? "GUILD" : "POWER");
 			// END_OF_DETAIL_REFINE_LOG
@@ -953,7 +953,7 @@ bool CHARACTER::DoRefine(LPITEM item, bool bMoneyOnly)
 	}
 	else
 	{
-		// ½ÇÆĞ! ¸ğµç ¾ÆÀÌÅÛÀÌ »ç¶óÁü.
+		// ì‹¤íŒ¨! ëª¨ë“  ì•„ì´í…œì´ ì‚¬ë¼ì§.
 		DBManager::instance().SendMoneyLog(MONEY_LOG_REFINE, item->GetVnum(), -cost);
 		NotifyRefineFail(this, item, IsRefineThroughGuild() ? "GUILD" : "POWER");
 		item->AttrLog();
@@ -969,7 +969,7 @@ bool CHARACTER::DoRefine(LPITEM item, bool bMoneyOnly)
 enum enum_RefineScrolls
 {
 	CHUKBOK_SCROLL = 0,
-	HYUNIRON_CHN   = 1, // Áß±¹¿¡¼­¸¸ »ç¿ë
+	HYUNIRON_CHN   = 1, // ì¤‘êµ­ì—ì„œë§Œ ì‚¬ìš©
 	YONGSIN_SCROLL = 2,
 	MUSIN_SCROLL   = 3,
 	YAGONG_SCROLL  = 4,
@@ -987,8 +987,8 @@ bool CHARACTER::DoRefineWithScroll(LPITEM item)
 
 	ClearRefineMode();
 
-	//°³·® ½Ã°£Á¦ÇÑ : upgrade_refine_scroll.quest ¿¡¼­ °³·®ÈÄ 5ºĞÀÌ³»¿¡ ÀÏ¹İ °³·®À» 
-	//ÁøÇàÇÒ¼ö ¾øÀ½
+	//ê°œëŸ‰ ì‹œê°„ì œí•œ : upgrade_refine_scroll.quest ì—ì„œ ê°œëŸ‰í›„ 5ë¶„ì´ë‚´ì— ì¼ë°˜ ê°œëŸ‰ì„ 
+	//ì§„í–‰í• ìˆ˜ ì—†ìŒ
 	if (quest::CQuestManager::instance().GetEventFlag("update_refine_time") != 0)
 	{
 		if (get_global_time() < quest::CQuestManager::instance().GetEventFlag("update_refine_time") + (60 * 5))
@@ -1005,7 +1005,7 @@ bool CHARACTER::DoRefineWithScroll(LPITEM item)
 
 	LPITEM pkItemScroll;
 
-	// °³·®¼­ Ã¼Å©
+	// ê°œëŸ‰ì„œ ì²´í¬
 	if (m_iRefineAdditionalCell < 0)
 		return false;
 
@@ -1025,7 +1025,7 @@ bool CHARACTER::DoRefineWithScroll(LPITEM item)
 
 	if (result_vnum == 0)
 	{
-		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("´õ ÀÌ»ó °³·®ÇÒ ¼ö ¾ø½À´Ï´Ù."));
+		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ë” ì´ìƒ ê°œëŸ‰í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 		return false;
 	}
 
@@ -1034,7 +1034,7 @@ bool CHARACTER::DoRefineWithScroll(LPITEM item)
 	{
 		if (item->GetRefineLevel() >= 4)
 		{
-			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ÀÌ °³·®¼­·Î ´õ ÀÌ»ó °³·®ÇÒ ¼ö ¾ø½À´Ï´Ù."));
+			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì´ ê°œëŸ‰ì„œë¡œ ë” ì´ìƒ ê°œëŸ‰í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 			return false;
 		}
 	}
@@ -1044,7 +1044,7 @@ bool CHARACTER::DoRefineWithScroll(LPITEM item)
 	{
 		if (item->GetRefineLevel() != pkItemScroll->GetValue(1))
 		{
-			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ÀÌ °³·®¼­·Î °³·®ÇÒ ¼ö ¾ø½À´Ï´Ù."));
+			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì´ ê°œëŸ‰ì„œë¡œ ê°œëŸ‰í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 			return false;
 		}
 	}
@@ -1052,7 +1052,7 @@ bool CHARACTER::DoRefineWithScroll(LPITEM item)
 	{
 		if (item->GetType() != ITEM_METIN || item->GetRefineLevel() != 4)
 		{
-			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ÀÌ ¾ÆÀÌÅÛÀ¸·Î °³·®ÇÒ ¼ö ¾ø½À´Ï´Ù."));
+			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì´ ì•„ì´í…œìœ¼ë¡œ ê°œëŸ‰í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 			return false;
 		}
 	}
@@ -1062,7 +1062,7 @@ bool CHARACTER::DoRefineWithScroll(LPITEM item)
 	if (!pProto)
 	{
 		sys_err("DoRefineWithScroll NOT GET ITEM PROTO %d", item->GetRefinedVnum());
-		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ÀÌ ¾ÆÀÌÅÛÀº °³·®ÇÒ ¼ö ¾ø½À´Ï´Ù."));
+		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì´ ì•„ì´í…œì€ ê°œëŸ‰í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 		return false;
 	}
 
@@ -1078,7 +1078,7 @@ bool CHARACTER::DoRefineWithScroll(LPITEM item)
 				case LIMIT_LEVEL:
 					if (GetLevel() < limit)
 					{
-						ChatPacket(CHAT_TYPE_INFO, LC_TEXT("°³·®µÈ ÈÄ ¾ÆÀÌÅÛÀÇ ·¹º§ Á¦ÇÑº¸´Ù ·¹º§ÀÌ ³·½À´Ï´Ù."));
+						ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ê°œëŸ‰ëœ í›„ ì•„ì´í…œì˜ ë ˆë²¨ ì œí•œë³´ë‹¤ ë ˆë²¨ì´ ë‚®ìŠµë‹ˆë‹¤."));
 						return false;
 					}
 					break;
@@ -1088,7 +1088,7 @@ bool CHARACTER::DoRefineWithScroll(LPITEM item)
 
 	if (GetGold() < prt->cost)
 	{
-		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("°³·®À» ÇÏ±â À§ÇÑ µ·ÀÌ ºÎÁ·ÇÕ´Ï´Ù."));
+		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ê°œëŸ‰ì„ í•˜ê¸° ìœ„í•œ ëˆì´ ë¶€ì¡±í•©ë‹ˆë‹¤."));
 		return false;
 	}
 
@@ -1100,7 +1100,7 @@ bool CHARACTER::DoRefineWithScroll(LPITEM item)
 			{
 				ChatPacket(CHAT_TYPE_INFO, "Find %d, count %d, require %d", prt->materials[i].vnum, CountSpecifyItem(prt->materials[i].vnum), prt->materials[i].count);
 			}
-			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("°³·®À» ÇÏ±â À§ÇÑ Àç·á°¡ ºÎÁ·ÇÕ´Ï´Ù."));
+			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ê°œëŸ‰ì„ í•˜ê¸° ìœ„í•œ ì¬ë£Œê°€ ë¶€ì¡±í•©ë‹ˆë‹¤."));
 			return false;
 		}
 	}
@@ -1116,7 +1116,7 @@ bool CHARACTER::DoRefineWithScroll(LPITEM item)
 
 	if (pkItemScroll->GetValue(0) == HYUNIRON_CHN || 
 		pkItemScroll->GetValue(0) == YONGSIN_SCROLL || 
-		pkItemScroll->GetValue(0) == YAGONG_SCROLL) // ÇöÃ¶, ¿ë½ÅÀÇ Ãàº¹¼­, ¾ß°øÀÇ ºñÀü¼­  Ã³¸®
+		pkItemScroll->GetValue(0) == YAGONG_SCROLL) // í˜„ì² , ìš©ì‹ ì˜ ì¶•ë³µì„œ, ì•¼ê³µì˜ ë¹„ì „ì„œ  ì²˜ë¦¬
 	{
 		const char hyuniron_prob[9] = { 100, 75, 65, 55, 45, 40, 35, 25, 20 };
 		const char hyuniron_prob_euckr[9] = { 100, 75, 65, 55, 45, 40, 35, 30, 25 };
@@ -1147,7 +1147,7 @@ bool CHARACTER::DoRefineWithScroll(LPITEM item)
 		{
 			ChatPacket(CHAT_TYPE_INFO, "[Only Test] Success_Prob %d, RefineLevel %d ", success_prob, item->GetRefineLevel());
 		}
-		if (pkItemScroll->GetValue(0) == HYUNIRON_CHN) // ÇöÃ¶Àº ¾ÆÀÌÅÛÀÌ ºÎ¼­Á®¾ß ÇÑ´Ù.
+		if (pkItemScroll->GetValue(0) == HYUNIRON_CHN) // í˜„ì² ì€ ì•„ì´í…œì´ ë¶€ì„œì ¸ì•¼ í•œë‹¤.
 			bDestroyWhenFail = true;
 
 		// DETAIL_REFINE_LOG
@@ -1167,7 +1167,7 @@ bool CHARACTER::DoRefineWithScroll(LPITEM item)
 	}
 
 	// DETAIL_REFINE_LOG
-	if (pkItemScroll->GetValue(0) == MUSIN_SCROLL) // ¹«½ÅÀÇ Ãàº¹¼­´Â 100% ¼º°ø (+4±îÁö¸¸)
+	if (pkItemScroll->GetValue(0) == MUSIN_SCROLL) // ë¬´ì‹ ì˜ ì¶•ë³µì„œëŠ” 100% ì„±ê³µ (+4ê¹Œì§€ë§Œ)
 	{
 		success_prob = 100;
 
@@ -1189,7 +1189,7 @@ bool CHARACTER::DoRefineWithScroll(LPITEM item)
 
 	if (prob <= success_prob)
 	{
-		// ¼º°ø! ¸ğµç ¾ÆÀÌÅÛÀÌ »ç¶óÁö°í, °°Àº ¼Ó¼ºÀÇ ´Ù¸¥ ¾ÆÀÌÅÛ È¹µæ
+		// ì„±ê³µ! ëª¨ë“  ì•„ì´í…œì´ ì‚¬ë¼ì§€ê³ , ê°™ì€ ì†ì„±ì˜ ë‹¤ë¥¸ ì•„ì´í…œ íšë“
 		LPITEM pkNewItem = ITEM_MANAGER::instance().CreateItem(result_vnum, 1, 0, false);
 
 		if (pkNewItem)
@@ -1211,14 +1211,14 @@ bool CHARACTER::DoRefineWithScroll(LPITEM item)
 		}
 		else
 		{
-			// ¾ÆÀÌÅÛ »ı¼º¿¡ ½ÇÆĞ -> °³·® ½ÇÆĞ·Î °£ÁÖ
+			// ì•„ì´í…œ ìƒì„±ì— ì‹¤íŒ¨ -> ê°œëŸ‰ ì‹¤íŒ¨ë¡œ ê°„ì£¼
 			sys_err("cannot create item %u", result_vnum);
 			NotifyRefineFail(this, item, szRefineType);
 		}
 	}
 	else if (!bDestroyWhenFail && result_fail_vnum)
 	{
-		// ½ÇÆĞ! ¸ğµç ¾ÆÀÌÅÛÀÌ »ç¶óÁö°í, °°Àº ¼Ó¼ºÀÇ ³·Àº µî±ŞÀÇ ¾ÆÀÌÅÛ È¹µæ
+		// ì‹¤íŒ¨! ëª¨ë“  ì•„ì´í…œì´ ì‚¬ë¼ì§€ê³ , ê°™ì€ ì†ì„±ì˜ ë‚®ì€ ë“±ê¸‰ì˜ ì•„ì´í…œ íšë“
 		LPITEM pkNewItem = ITEM_MANAGER::instance().CreateItem(result_fail_vnum, 1, 0, false);
 
 		if (pkNewItem)
@@ -1242,14 +1242,14 @@ bool CHARACTER::DoRefineWithScroll(LPITEM item)
 		}
 		else
 		{
-			// ¾ÆÀÌÅÛ »ı¼º¿¡ ½ÇÆĞ -> °³·® ½ÇÆĞ·Î °£ÁÖ
+			// ì•„ì´í…œ ìƒì„±ì— ì‹¤íŒ¨ -> ê°œëŸ‰ ì‹¤íŒ¨ë¡œ ê°„ì£¼
 			sys_err("cannot create item %u", result_fail_vnum);
 			NotifyRefineFail(this, item, szRefineType);
 		}
 	}
 	else
 	{
-		NotifyRefineFail(this, item, szRefineType); // °³·®½Ã ¾ÆÀÌÅÛ »ç¶óÁöÁö ¾ÊÀ½
+		NotifyRefineFail(this, item, szRefineType); // ê°œëŸ‰ì‹œ ì•„ì´í…œ ì‚¬ë¼ì§€ì§€ ì•ŠìŒ
 		
 		PayRefineFee(prt->cost);
 	}
@@ -1270,7 +1270,7 @@ bool CHARACTER::RefineInformation(BYTE bCell, BYTE bType, int iAdditionalCell)
 	// REFINE_COST
 	if (bType == REFINE_TYPE_MONEY_ONLY && !GetQuestFlag("deviltower_zone.can_refine"))
 	{
-		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("»ç±Í Å¸¿ö ¿Ï·á º¸»óÀº ÇÑ¹ø±îÁö »ç¿ë°¡´ÉÇÕ´Ï´Ù."));
+		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì‚¬ê·€ íƒ€ì›Œ ì™„ë£Œ ë³´ìƒì€ í•œë²ˆê¹Œì§€ ì‚¬ìš©ê°€ëŠ¥í•©ë‹ˆë‹¤."));
 		return false;
 	}
 	// END_OF_REFINE_COST
@@ -1286,7 +1286,7 @@ bool CHARACTER::RefineInformation(BYTE bCell, BYTE bType, int iAdditionalCell)
 	if (p.result_vnum == 0)
 	{
 		sys_err("RefineInformation p.result_vnum == 0");
-		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ÀÌ ¾ÆÀÌÅÛÀº °³·®ÇÒ ¼ö ¾ø½À´Ï´Ù."));
+		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì´ ì•„ì´í…œì€ ê°œëŸ‰í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 		return false;
 	}
 
@@ -1294,7 +1294,7 @@ bool CHARACTER::RefineInformation(BYTE bCell, BYTE bType, int iAdditionalCell)
 	{
 		if (bType == 0)
 		{
-			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ÀÌ ¾ÆÀÌÅÛÀº ÀÌ ¹æ½ÄÀ¸·Î´Â °³·®ÇÒ ¼ö ¾ø½À´Ï´Ù."));
+			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì´ ì•„ì´í…œì€ ì´ ë°©ì‹ìœ¼ë¡œëŠ” ê°œëŸ‰í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 			return false;
 		}
 		else
@@ -1302,8 +1302,8 @@ bool CHARACTER::RefineInformation(BYTE bCell, BYTE bType, int iAdditionalCell)
 			LPITEM itemScroll = GetInventoryItem(iAdditionalCell);
 			if (!itemScroll || item->GetVnum() == itemScroll->GetVnum())
 			{
-				ChatPacket(CHAT_TYPE_INFO, LC_TEXT("°°Àº °³·®¼­¸¦ ÇÕÄ¥ ¼ö´Â ¾ø½À´Ï´Ù."));
-				ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Ãàº¹ÀÇ ¼­¿Í ÇöÃ¶À» ÇÕÄ¥ ¼ö ÀÖ½À´Ï´Ù."));
+				ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ê°™ì€ ê°œëŸ‰ì„œë¥¼ í•©ì¹  ìˆ˜ëŠ” ì—†ìŠµë‹ˆë‹¤."));
+				ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì¶•ë³µì˜ ì„œì™€ í˜„ì² ì„ í•©ì¹  ìˆ˜ ìˆìŠµë‹ˆë‹¤."));
 				return false;
 			}
 		}
@@ -1316,7 +1316,7 @@ bool CHARACTER::RefineInformation(BYTE bCell, BYTE bType, int iAdditionalCell)
 	if (!prt)
 	{
 		sys_err("RefineInformation NOT GET REFINE SET %d", item->GetRefineSet());
-		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ÀÌ ¾ÆÀÌÅÛÀº °³·®ÇÒ ¼ö ¾ø½À´Ï´Ù."));
+		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì´ ì•„ì´í…œì€ ê°œëŸ‰í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 		return false;
 	}
 
@@ -1325,10 +1325,10 @@ bool CHARACTER::RefineInformation(BYTE bCell, BYTE bType, int iAdditionalCell)
 	//MAIN_QUEST_LV7
 	if (GetQuestFlag("main_quest_lv7.refine_chance") > 0)
 	{
-		// ÀÏº»Àº Á¦¿Ü
+		// ì¼ë³¸ì€ ì œì™¸
 		if (!item->CheckItemUseLevel(20) || item->GetType() != ITEM_WEAPON)
 		{
-			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("¹«·á °³·® ±âÈ¸´Â 20 ÀÌÇÏÀÇ ¹«±â¸¸ °¡´ÉÇÕ´Ï´Ù"));
+			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ë¬´ë£Œ ê°œëŸ‰ ê¸°íšŒëŠ” 20 ì´í•˜ì˜ ë¬´ê¸°ë§Œ ê°€ëŠ¥í•©ë‹ˆë‹¤"));
 			return false;
 		}
 		p.cost = 0;
@@ -1363,8 +1363,8 @@ bool CHARACTER::RefineItem(LPITEM pkItem, LPITEM pkTarget)
 
 	if (pkItem->GetSubType() == USE_TUNING)
 	{
-		// XXX ¼º´É, ¼ÒÄÏ °³·®¼­´Â »ç¶óÁ³½À´Ï´Ù...
-		// XXX ¼º´É°³·®¼­´Â Ãàº¹ÀÇ ¼­°¡ µÇ¾ú´Ù!
+		// XXX ì„±ëŠ¥, ì†Œì¼“ ê°œëŸ‰ì„œëŠ” ì‚¬ë¼ì¡ŒìŠµë‹ˆë‹¤...
+		// XXX ì„±ëŠ¥ê°œëŸ‰ì„œëŠ” ì¶•ë³µì˜ ì„œê°€ ë˜ì—ˆë‹¤!
 		// MUSIN_SCROLL
 		if (pkItem->GetValue(0) == MUSIN_SCROLL)
 			RefineInformation(pkTarget->GetCell(), REFINE_TYPE_MUSIN, pkItem->GetCell());
@@ -1408,7 +1408,7 @@ bool CHARACTER::RefineItem(LPITEM pkItem, LPITEM pkTarget)
 					AutoGiveItem(socket);
 					//TItemTable* pTable = ITEM_MANAGER::instance().GetTable(pkTarget->GetSocket(i));
 					//pkTarget->SetSocket(i, pTable->alValues[2]);
-					// ±úÁøµ¹·Î ´ëÃ¼ÇØÁØ´Ù
+					// ê¹¨ì§„ëŒë¡œ ëŒ€ì²´í•´ì¤€ë‹¤
 					pkTarget->SetSocket(i, ITEM_BROKEN_METIN_VNUM);
 				}
 			}
@@ -1417,7 +1417,7 @@ bool CHARACTER::RefineItem(LPITEM pkItem, LPITEM pkTarget)
 		}
 		else
 		{
-			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("»©³¾ ¼ö ÀÖ´Â ¸ŞÆ¾¼®ÀÌ ¾ø½À´Ï´Ù."));
+			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ë¹¼ë‚¼ ìˆ˜ ìˆëŠ” ë©”í‹´ì„ì´ ì—†ìŠµë‹ˆë‹¤."));
 			return false;
 		}
 	}
@@ -1469,18 +1469,18 @@ bool CHARACTER::GiveRecallItem(LPITEM item)
 
 	if (iEmpireByMapIndex && GetEmpire() != iEmpireByMapIndex)
 	{
-		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("±â¾ïÇØ µÑ ¼ö ¾ø´Â À§Ä¡ ÀÔ´Ï´Ù."));
+		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ê¸°ì–µí•´ ë‘˜ ìˆ˜ ì—†ëŠ” ìœ„ì¹˜ ì…ë‹ˆë‹¤."));
 		return false;
 	}
 
 	int pos;
 
-	if (item->GetCount() == 1)	// ¾ÆÀÌÅÛÀÌ ÇÏ³ª¶ó¸é ±×³É ¼ÂÆÃ.
+	if (item->GetCount() == 1)	// ì•„ì´í…œì´ í•˜ë‚˜ë¼ë©´ ê·¸ëƒ¥ ì…‹íŒ….
 	{
 		item->SetSocket(0, GetX());
 		item->SetSocket(1, GetY());
 	}
-	else if ((pos = GetEmptyInventory(item->GetSize())) != -1) // ±×·¸Áö ¾Ê´Ù¸é ´Ù¸¥ ÀÎº¥Åä¸® ½½·ÔÀ» Ã£´Â´Ù.
+	else if ((pos = GetEmptyInventory(item->GetSize())) != -1) // ê·¸ë ‡ì§€ ì•Šë‹¤ë©´ ë‹¤ë¥¸ ì¸ë²¤í† ë¦¬ ìŠ¬ë¡¯ì„ ì°¾ëŠ”ë‹¤.
 	{
 		LPITEM item2 = ITEM_MANAGER::instance().CreateItem(item->GetVnum(), 1);
 
@@ -1495,7 +1495,7 @@ bool CHARACTER::GiveRecallItem(LPITEM item)
 	}
 	else
 	{
-		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("¼ÒÁöÇ°¿¡ ºó °ø°£ÀÌ ¾ø½À´Ï´Ù."));
+		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì†Œì§€í’ˆì— ë¹ˆ ê³µê°„ì´ ì—†ìŠµë‹ˆë‹¤."));
 		return false;
 	}
 
@@ -1526,14 +1526,14 @@ void CHARACTER::ProcessRecallItem(LPITEM item)
 		case 216:
 			iEmpireByMapIndex = -1;
 			break;
-		// ¾Ç·æ±ºµµ ÀÏ¶§
+		// ì•…ë£¡êµ°ë„ ì¼ë•Œ
 		case 301:
 		case 302:
 		case 303:
 		case 304:
 			if( GetLevel() < 90 )
 			{
-				ChatPacket(CHAT_TYPE_INFO, LC_TEXT("¾ÆÀÌÅÛÀÇ ·¹º§ Á¦ÇÑº¸´Ù ·¹º§ÀÌ ³·½À´Ï´Ù."));
+				ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì•„ì´í…œì˜ ë ˆë²¨ ì œí•œë³´ë‹¤ ë ˆë²¨ì´ ë‚®ìŠµë‹ˆë‹¤."));
 				return;
 			}
 			else
@@ -1542,7 +1542,7 @@ void CHARACTER::ProcessRecallItem(LPITEM item)
 
 	if (iEmpireByMapIndex && GetEmpire() != iEmpireByMapIndex)
 	{
-		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("±â¾ïµÈ À§Ä¡°¡ Å¸Á¦±¹¿¡ ¼ÓÇØ ÀÖ¾î¼­ ±ÍÈ¯ÇÒ ¼ö ¾ø½À´Ï´Ù."));
+		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ê¸°ì–µëœ ìœ„ì¹˜ê°€ íƒ€ì œêµ­ì— ì†í•´ ìˆì–´ì„œ ê·€í™˜í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 		item->SetSocket(0, 0);
 		item->SetSocket(1, 0);
 	}
@@ -1565,7 +1565,7 @@ void CHARACTER::__OpenPrivateShop()
 			ChatPacket(CHAT_TYPE_COMMAND, "OpenPrivateShop");
 			break;
 		default:
-			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("°©¿ÊÀ» ¹ş¾î¾ß °³ÀÎ »óÁ¡À» ¿­ ¼ö ÀÖ½À´Ï´Ù."));
+			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ê°‘ì˜·ì„ ë²—ì–´ì•¼ ê°œì¸ ìƒì ì„ ì—´ ìˆ˜ ìˆìŠµë‹ˆë‹¤."));
 			break;
 	}
 }
@@ -1580,14 +1580,14 @@ void CHARACTER::SendMyShopPriceListCmd(DWORD dwItemVnum, DWORD dwItemPrice)
 }
 
 //
-// DB Ä³½Ã·Î ºÎÅÍ ¹ŞÀº ¸®½ºÆ®¸¦ User ¿¡°Ô Àü¼ÛÇÏ°í »óÁ¡À» ¿­¶ó´Â Ä¿¸Çµå¸¦ º¸³½´Ù.
+// DB ìºì‹œë¡œ ë¶€í„° ë°›ì€ ë¦¬ìŠ¤íŠ¸ë¥¼ User ì—ê²Œ ì „ì†¡í•˜ê³  ìƒì ì„ ì—´ë¼ëŠ” ì»¤ë§¨ë“œë¥¼ ë³´ë‚¸ë‹¤.
 //
 void CHARACTER::UseSilkBotaryReal(const TPacketMyshopPricelistHeader* p)
 {
 	const TItemPriceInfo* pInfo = (const TItemPriceInfo*)(p + 1);
 
 	if (!p->byCount)
-		// °¡°İ ¸®½ºÆ®°¡ ¾ø´Ù. dummy µ¥ÀÌÅÍ¸¦ ³ÖÀº Ä¿¸Çµå¸¦ º¸³»ÁØ´Ù.
+		// ê°€ê²© ë¦¬ìŠ¤íŠ¸ê°€ ì—†ë‹¤. dummy ë°ì´í„°ë¥¼ ë„£ì€ ì»¤ë§¨ë“œë¥¼ ë³´ë‚´ì¤€ë‹¤.
 		SendMyShopPriceListCmd(1, 0);
 	else {
 		for (int idx = 0; idx < p->byCount; idx++)
@@ -1598,8 +1598,8 @@ void CHARACTER::UseSilkBotaryReal(const TPacketMyshopPricelistHeader* p)
 }
 
 //
-// ÀÌ¹ø Á¢¼Ó ÈÄ Ã³À½ »óÁ¡À» Open ÇÏ´Â °æ¿ì ¸®½ºÆ®¸¦ Load ÇÏ±â À§ÇØ DB Ä³½Ã¿¡ °¡°İÁ¤º¸ ¸®½ºÆ® ¿äÃ» ÆĞÅ¶À» º¸³½´Ù.
-// ÀÌÈÄºÎÅÍ´Â ¹Ù·Î »óÁ¡À» ¿­¶ó´Â ÀÀ´äÀ» º¸³½´Ù.
+// ì´ë²ˆ ì ‘ì† í›„ ì²˜ìŒ ìƒì ì„ Open í•˜ëŠ” ê²½ìš° ë¦¬ìŠ¤íŠ¸ë¥¼ Load í•˜ê¸° ìœ„í•´ DB ìºì‹œì— ê°€ê²©ì •ë³´ ë¦¬ìŠ¤íŠ¸ ìš”ì²­ íŒ¨í‚·ì„ ë³´ë‚¸ë‹¤.
+// ì´í›„ë¶€í„°ëŠ” ë°”ë¡œ ìƒì ì„ ì—´ë¼ëŠ” ì‘ë‹µì„ ë³´ë‚¸ë‹¤.
 //
 void CHARACTER::UseSilkBotary(void)
 {
@@ -1627,14 +1627,14 @@ int CalculateConsume(LPCHARACTER ch)
 		const int needLife = ch->GetMaxHP() * needPercent / 100;
 		if (curLife < needLife)
 		{
-			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("³²Àº »ı¸í·Â ¾çÀÌ ¸ğÀÚ¶ó »ç¿ëÇÒ ¼ö ¾ø½À´Ï´Ù."));
+			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ë‚¨ì€ ìƒëª…ë ¥ ì–‘ì´ ëª¨ìë¼ ì‚¬ìš©í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 			return -1;
 		}
 
 		consumeLife = needLife;
 
 
-		// CheckMinLifeForWarp: µ¶¿¡ ÀÇÇØ¼­ Á×À¸¸é ¾ÈµÇ¹Ç·Î »ı¸í·Â ÃÖ¼Ò·®´Â ³²°ÜÁØ´Ù
+		// CheckMinLifeForWarp: ë…ì— ì˜í•´ì„œ ì£½ìœ¼ë©´ ì•ˆë˜ë¯€ë¡œ ìƒëª…ë ¥ ìµœì†ŒëŸ‰ëŠ” ë‚¨ê²¨ì¤€ë‹¤
 		const int minPercent	= WARP_MIN_LIFE_PERCENT;
 		const int minLife	= ch->GetMaxHP() * minPercent / 100;
 		if (curLife - needLife < minLife)
@@ -1656,7 +1656,7 @@ int CalculateConsumeSP(LPCHARACTER lpChar)
 
 	if (curSP < needSP)
 	{
-		lpChar->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("³²Àº Á¤½Å·Â ¾çÀÌ ¸ğÀÚ¶ó »ç¿ëÇÒ ¼ö ¾ø½À´Ï´Ù."));
+		lpChar->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ë‚¨ì€ ì •ì‹ ë ¥ ì–‘ì´ ëª¨ìë¼ ì‚¬ìš©í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 		return -1;
 	}
 
@@ -1679,7 +1679,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 			case LIMIT_LEVEL:
 				if (GetLevel() < limitValue)
 				{
-					ChatPacket(CHAT_TYPE_INFO, LC_TEXT("¾ÆÀÌÅÛÀÇ ·¹º§ Á¦ÇÑº¸´Ù ·¹º§ÀÌ ³·½À´Ï´Ù."));
+					ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì•„ì´í…œì˜ ë ˆë²¨ ì œí•œë³´ë‹¤ ë ˆë²¨ì´ ë‚®ìŠµë‹ˆë‹¤."));
 					return false;
 				}
 				break;
@@ -1701,17 +1701,17 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 
 	if ( CArenaManager::instance().IsLimitedItem( GetMapIndex(), item->GetVnum() ) == true )
 	{
-		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("´ë·Ã Áß¿¡´Â ÀÌ¿ëÇÒ ¼ö ¾ø´Â ¹°Ç°ÀÔ´Ï´Ù."));
+		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ëŒ€ë ¨ ì¤‘ì—ëŠ” ì´ìš©í•  ìˆ˜ ì—†ëŠ” ë¬¼í’ˆì…ë‹ˆë‹¤."));
 		return false;
 	}
 
-	// ¾ÆÀÌÅÛ ÃÖÃÊ »ç¿ë ÀÌÈÄºÎÅÍ´Â »ç¿ëÇÏÁö ¾Ê¾Æµµ ½Ã°£ÀÌ Â÷°¨µÇ´Â ¹æ½Ä Ã³¸®. 
+	// ì•„ì´í…œ ìµœì´ˆ ì‚¬ìš© ì´í›„ë¶€í„°ëŠ” ì‚¬ìš©í•˜ì§€ ì•Šì•„ë„ ì‹œê°„ì´ ì°¨ê°ë˜ëŠ” ë°©ì‹ ì²˜ë¦¬. 
 	if (-1 != iLimitRealtimeStartFirstUseFlagIndex)
 	{
-		// ÇÑ ¹øÀÌ¶óµµ »ç¿ëÇÑ ¾ÆÀÌÅÛÀÎÁö ¿©ºÎ´Â Socket1À» º¸°í ÆÇ´ÜÇÑ´Ù. (Socket1¿¡ »ç¿ëÈ½¼ö ±â·Ï)
+		// í•œ ë²ˆì´ë¼ë„ ì‚¬ìš©í•œ ì•„ì´í…œì¸ì§€ ì—¬ë¶€ëŠ” Socket1ì„ ë³´ê³  íŒë‹¨í•œë‹¤. (Socket1ì— ì‚¬ìš©íšŸìˆ˜ ê¸°ë¡)
 		if (0 == item->GetSocket(1))
 		{
-			// »ç¿ë°¡´É½Ã°£Àº Default °ªÀ¸·Î Limit Value °ªÀ» »ç¿ëÇÏµÇ, Socket0¿¡ °ªÀÌ ÀÖÀ¸¸é ±× °ªÀ» »ç¿ëÇÏµµ·Ï ÇÑ´Ù. (´ÜÀ§´Â ÃÊ)
+			// ì‚¬ìš©ê°€ëŠ¥ì‹œê°„ì€ Default ê°’ìœ¼ë¡œ Limit Value ê°’ì„ ì‚¬ìš©í•˜ë˜, Socket0ì— ê°’ì´ ìˆìœ¼ë©´ ê·¸ ê°’ì„ ì‚¬ìš©í•˜ë„ë¡ í•œë‹¤. (ë‹¨ìœ„ëŠ” ì´ˆ)
 			long duration = (0 != item->GetSocket(0)) ? item->GetSocket(0) : item->GetProto()->aLimits[iLimitRealtimeStartFirstUseFlagIndex].lValue;
 
 			if (0 == duration)
@@ -1738,7 +1738,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 			{
 				if (item->GetVnum() == 50051 || item->GetVnum() == 50052 || item->GetVnum() == 50053)
 				{
-					ChatPacket(CHAT_TYPE_INFO, LC_TEXT("´ë·Ã Áß¿¡´Â ÀÌ¿ëÇÒ ¼ö ¾ø´Â ¹°Ç°ÀÔ´Ï´Ù."));
+					ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ëŒ€ë ¨ ì¤‘ì—ëŠ” ì´ìš©í•  ìˆ˜ ì—†ëŠ” ë¬¼í’ˆì…ë‹ˆë‹¤."));
 					return false;
 				}
 			}
@@ -1765,13 +1765,13 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 
 				if (!tree)
 				{
-					ChatPacket(CHAT_TYPE_INFO, LC_TEXT("¸ğ´ÚºÒÀ» ÇÇ¿ï ¼ö ¾ø´Â ÁöÁ¡ÀÔ´Ï´Ù."));
+					ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ëª¨ë‹¥ë¶ˆì„ í”¼ìš¸ ìˆ˜ ì—†ëŠ” ì§€ì ì…ë‹ˆë‹¤."));
 					return false;
 				}
 
 				if (tree->IsAttr((long)(GetX()+fx), (long)(GetY()+fy), ATTR_WATER))
 				{
-					ChatPacket(CHAT_TYPE_INFO, LC_TEXT("¹° ¼Ó¿¡ ¸ğ´ÚºÒÀ» ÇÇ¿ï ¼ö ¾ø½À´Ï´Ù."));
+					ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ë¬¼ ì†ì— ëª¨ë‹¥ë¶ˆì„ í”¼ìš¸ ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 					return false;
 				}
 
@@ -1856,7 +1856,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 
 								switch (item->GetVnum())
 								{
-									case 71049: // ºñ´Üº¸µû¸®
+									case 71049: // ë¹„ë‹¨ë³´ë”°ë¦¬
 										if (LC_IsYMIR() == true || LC_IsKorea() == true)
 										{
 											if (IS_BOTARYABLE_ZONE(GetMapIndex()) == true)
@@ -1865,7 +1865,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 											}
 											else
 											{
-												ChatPacket(CHAT_TYPE_INFO, LC_TEXT("°³ÀÎ »óÁ¡À» ¿­ ¼ö ¾ø´Â Áö¿ªÀÔ´Ï´Ù"));
+												ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ê°œì¸ ìƒì ì„ ì—´ ìˆ˜ ì—†ëŠ” ì§€ì—­ì…ë‹ˆë‹¤"));
 											}
 										}
 										else
@@ -1892,8 +1892,8 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 		case ITEM_WEAPON:
 		case ITEM_ARMOR:
 		case ITEM_ROD:
-		case ITEM_RING:		// ½Å±Ô ¹İÁö ¾ÆÀÌÅÛ
-		case ITEM_BELT:		// ½Å±Ô º§Æ® ¾ÆÀÌÅÛ
+		case ITEM_RING:		// ì‹ ê·œ ë°˜ì§€ ì•„ì´í…œ
+		case ITEM_BELT:		// ì‹ ê·œ ë²¨íŠ¸ ì•„ì´í…œ
 			// MINING
 		case ITEM_PICK:
 			// END_OF_MINING
@@ -1902,10 +1902,10 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 			else
 				UnequipItem(item);
 			break;
-			// Âø¿ëÇÏÁö ¾ÊÀº ¿ëÈ¥¼®Àº »ç¿ëÇÒ ¼ö ¾ø´Ù.
-			// Á¤»óÀûÀÎ Å¬¶ó¶ó¸é, ¿ëÈ¥¼®¿¡ °üÇÏ¿© item use ÆĞÅ¶À» º¸³¾ ¼ö ¾ø´Ù.
-			// ¿ëÈ¥¼® Âø¿ëÀº item move ÆĞÅ¶À¸·Î ÇÑ´Ù.
-			// Âø¿ëÇÑ ¿ëÈ¥¼®Àº ÃßÃâÇÑ´Ù.
+			// ì°©ìš©í•˜ì§€ ì•Šì€ ìš©í˜¼ì„ì€ ì‚¬ìš©í•  ìˆ˜ ì—†ë‹¤.
+			// ì •ìƒì ì¸ í´ë¼ë¼ë©´, ìš©í˜¼ì„ì— ê´€í•˜ì—¬ item use íŒ¨í‚·ì„ ë³´ë‚¼ ìˆ˜ ì—†ë‹¤.
+			// ìš©í˜¼ì„ ì°©ìš©ì€ item move íŒ¨í‚·ìœ¼ë¡œ í•œë‹¤.
+			// ì°©ìš©í•œ ìš©í˜¼ì„ì€ ì¶”ì¶œí•œë‹¤.
 		case ITEM_DS:
 			{
 				if (!item->IsEquipped())
@@ -1924,7 +1924,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 			{
 				if (CArenaManager::instance().IsArenaMap(GetMapIndex()) == true)
 				{
-					ChatPacket(CHAT_TYPE_INFO, LC_TEXT("´ë·Ã Áß¿¡´Â ÀÌ¿ëÇÒ ¼ö ¾ø´Â ¹°Ç°ÀÔ´Ï´Ù."));
+					ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ëŒ€ë ¨ ì¤‘ì—ëŠ” ì´ìš©í•  ìˆ˜ ì—†ëŠ” ë¬¼í’ˆì…ë‹ˆë‹¤."));
 					return false;
 				}
 
@@ -1936,7 +1936,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 		case ITEM_TREASURE_BOX:
 			{
 				return false;
-				//ChatPacket(CHAT_TYPE_TALKING, LC_TEXT("¿­¼è·Î Àá°Ü ÀÖ¾î¼­ ¿­¸®Áö ¾Ê´Â°Í °°´Ù. ¿­¼è¸¦ ±¸ÇØº¸ÀÚ."));
+				//ChatPacket(CHAT_TYPE_TALKING, LC_TEXT("ì—´ì‡ ë¡œ ì ê²¨ ìˆì–´ì„œ ì—´ë¦¬ì§€ ì•ŠëŠ”ê²ƒ ê°™ë‹¤. ì—´ì‡ ë¥¼ êµ¬í•´ë³´ì."));
 			}
 			break;
 
@@ -1952,13 +1952,13 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 
 				if (item2->GetType() != ITEM_TREASURE_BOX)
 				{
-					ChatPacket(CHAT_TYPE_TALKING, LC_TEXT("¿­¼è·Î ¿©´Â ¹°°ÇÀÌ ¾Æ´Ñ°Í °°´Ù."));
+					ChatPacket(CHAT_TYPE_TALKING, LC_TEXT("ì—´ì‡ ë¡œ ì—¬ëŠ” ë¬¼ê±´ì´ ì•„ë‹Œê²ƒ ê°™ë‹¤."));
 					return false;
 				}
 
 				if (item->GetValue(0) == item2->GetValue(0))
 				{
-					//ChatPacket(CHAT_TYPE_TALKING, LC_TEXT("¿­¼è´Â ¸ÂÀ¸³ª ¾ÆÀÌÅÛ ÁÖ´Â ºÎºĞ ±¸ÇöÀÌ ¾ÈµÇ¾ú½À´Ï´Ù."));
+					//ChatPacket(CHAT_TYPE_TALKING, LC_TEXT("ì—´ì‡ ëŠ” ë§ìœ¼ë‚˜ ì•„ì´í…œ ì£¼ëŠ” ë¶€ë¶„ êµ¬í˜„ì´ ì•ˆë˜ì—ˆìŠµë‹ˆë‹¤."));
 					DWORD dwBoxVnum = item2->GetVnum();
 					std::vector <DWORD> dwVnums;
 					std::vector <DWORD> dwCounts;
@@ -1974,34 +1974,34 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 							switch (dwVnums[i])
 							{
 								case CSpecialItemGroup::GOLD:
-									ChatPacket(CHAT_TYPE_INFO, LC_TEXT("µ· %d ³ÉÀ» È¹µæÇß½À´Ï´Ù."), dwCounts[i]);
+									ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ëˆ %d ëƒ¥ì„ íšë“í–ˆìŠµë‹ˆë‹¤."), dwCounts[i]);
 									break;
 								case CSpecialItemGroup::EXP:
-									ChatPacket(CHAT_TYPE_INFO, LC_TEXT("»óÀÚ¿¡¼­ ºÎÅÍ ½ÅºñÇÑ ºûÀÌ ³ª¿É´Ï´Ù."));
-									ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%dÀÇ °æÇèÄ¡¸¦ È¹µæÇß½À´Ï´Ù."), dwCounts[i]);
+									ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ìƒìì—ì„œ ë¶€í„° ì‹ ë¹„í•œ ë¹›ì´ ë‚˜ì˜µë‹ˆë‹¤."));
+									ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%dì˜ ê²½í—˜ì¹˜ë¥¼ íšë“í–ˆìŠµë‹ˆë‹¤."), dwCounts[i]);
 									break;
 								case CSpecialItemGroup::MOB:
-									ChatPacket(CHAT_TYPE_INFO, LC_TEXT("»óÀÚ¿¡¼­ ¸ó½ºÅÍ°¡ ³ªÅ¸³µ½À´Ï´Ù!"));
+									ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ìƒìì—ì„œ ëª¬ìŠ¤í„°ê°€ ë‚˜íƒ€ë‚¬ìŠµë‹ˆë‹¤!"));
 									break;
 								case CSpecialItemGroup::SLOW:
-									ChatPacket(CHAT_TYPE_INFO, LC_TEXT("»óÀÚ¿¡¼­ ³ª¿Â »¡°£ ¿¬±â¸¦ µéÀÌ¸¶½ÃÀÚ ¿òÁ÷ÀÌ´Â ¼Óµµ°¡ ´À·ÁÁ³½À´Ï´Ù!"));
+									ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ìƒìì—ì„œ ë‚˜ì˜¨ ë¹¨ê°„ ì—°ê¸°ë¥¼ ë“¤ì´ë§ˆì‹œì ì›€ì§ì´ëŠ” ì†ë„ê°€ ëŠë ¤ì¡ŒìŠµë‹ˆë‹¤!"));
 									break;
 								case CSpecialItemGroup::DRAIN_HP:
-									ChatPacket(CHAT_TYPE_INFO, LC_TEXT("»óÀÚ°¡ °©ÀÚ±â Æø¹ßÇÏ¿´½À´Ï´Ù! »ı¸í·ÂÀÌ °¨¼ÒÇß½À´Ï´Ù."));
+									ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ìƒìê°€ ê°‘ìê¸° í­ë°œí•˜ì˜€ìŠµë‹ˆë‹¤! ìƒëª…ë ¥ì´ ê°ì†Œí–ˆìŠµë‹ˆë‹¤."));
 									break;
 								case CSpecialItemGroup::POISON:
-									ChatPacket(CHAT_TYPE_INFO, LC_TEXT("»óÀÚ¿¡¼­ ³ª¿Â ³ì»ö ¿¬±â¸¦ µéÀÌ¸¶½ÃÀÚ µ¶ÀÌ ¿Â¸öÀ¸·Î ÆÛÁı´Ï´Ù!"));
+									ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ìƒìì—ì„œ ë‚˜ì˜¨ ë…¹ìƒ‰ ì—°ê¸°ë¥¼ ë“¤ì´ë§ˆì‹œì ë…ì´ ì˜¨ëª¸ìœ¼ë¡œ í¼ì§‘ë‹ˆë‹¤!"));
 									break;
 								case CSpecialItemGroup::MOB_GROUP:
-									ChatPacket(CHAT_TYPE_INFO, LC_TEXT("»óÀÚ¿¡¼­ ¸ó½ºÅÍ°¡ ³ªÅ¸³µ½À´Ï´Ù!"));
+									ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ìƒìì—ì„œ ëª¬ìŠ¤í„°ê°€ ë‚˜íƒ€ë‚¬ìŠµë‹ˆë‹¤!"));
 									break;
 								default:
 									if (item_gets[i])
 									{
 										if (dwCounts[i] > 1)
-											ChatPacket(CHAT_TYPE_INFO, LC_TEXT("»óÀÚ¿¡¼­ %s °¡ %d °³ ³ª¿Ô½À´Ï´Ù."), item_gets[i]->GetName(), dwCounts[i]);
+											ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ìƒìì—ì„œ %s ê°€ %d ê°œ ë‚˜ì™”ìŠµë‹ˆë‹¤."), item_gets[i]->GetName(), dwCounts[i]);
 										else
-											ChatPacket(CHAT_TYPE_INFO, LC_TEXT("»óÀÚ¿¡¼­ %s °¡ ³ª¿Ô½À´Ï´Ù."), item_gets[i]->GetName());
+											ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ìƒìì—ì„œ %s ê°€ ë‚˜ì™”ìŠµë‹ˆë‹¤."), item_gets[i]->GetName());
 
 									}
 							}
@@ -2009,13 +2009,13 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 					}
 					else
 					{
-						ChatPacket(CHAT_TYPE_TALKING, LC_TEXT("¿­¼è°¡ ¸ÂÁö ¾Ê´Â °Í °°´Ù."));
+						ChatPacket(CHAT_TYPE_TALKING, LC_TEXT("ì—´ì‡ ê°€ ë§ì§€ ì•ŠëŠ” ê²ƒ ê°™ë‹¤."));
 						return false;
 					}
 				}
 				else
 				{
-					ChatPacket(CHAT_TYPE_TALKING, LC_TEXT("¿­¼è°¡ ¸ÂÁö ¾Ê´Â °Í °°´Ù."));
+					ChatPacket(CHAT_TYPE_TALKING, LC_TEXT("ì—´ì‡ ê°€ ë§ì§€ ì•ŠëŠ” ê²ƒ ê°™ë‹¤."));
 					return false;
 				}
 			}
@@ -2029,20 +2029,20 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 				std::vector <LPITEM> item_gets;
 				int count = 0;
 
-				if (dwBoxVnum == 50033 && LC_IsYMIR()) // ¾Ë¼ö¾ø´Â »óÀÚ
+				if (dwBoxVnum == 50033 && LC_IsYMIR()) // ì•Œìˆ˜ì—†ëŠ” ìƒì
 				{
 					if (GetLevel() < 15)
 					{
-						ChatPacket(CHAT_TYPE_INFO, "15·¹º§ ÀÌÇÏ¿¡¼­´Â »ç¿ëÇÒ ¼ö ¾ø½À´Ï´Ù.");
+						ChatPacket(CHAT_TYPE_INFO, "15ë ˆë²¨ ì´í•˜ì—ì„œëŠ” ì‚¬ìš©í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤.");
 						return false;
 					}
 				}
 
-				if( (dwBoxVnum > 51500 && dwBoxVnum < 52000) || (dwBoxVnum >= 50255 && dwBoxVnum <= 50260) )	// ¿ëÈ¥¿ø¼®µé
+				if( (dwBoxVnum > 51500 && dwBoxVnum < 52000) || (dwBoxVnum >= 50255 && dwBoxVnum <= 50260) )	// ìš©í˜¼ì›ì„ë“¤
 				{
 					if( !(this->DragonSoul_IsQualified()) )
 					{
-						ChatPacket(CHAT_TYPE_INFO,LC_TEXT("¸ÕÀú ¿ëÈ¥¼® Äù½ºÆ®¸¦ ¿Ï·áÇÏ¼Å¾ß ÇÕ´Ï´Ù."));
+						ChatPacket(CHAT_TYPE_INFO,LC_TEXT("ë¨¼ì € ìš©í˜¼ì„ í€˜ìŠ¤íŠ¸ë¥¼ ì™„ë£Œí•˜ì…”ì•¼ í•©ë‹ˆë‹¤."));
 						return false;
 					}
 				}
@@ -2055,41 +2055,41 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 						switch (dwVnums[i])
 						{
 						case CSpecialItemGroup::GOLD:
-							ChatPacket(CHAT_TYPE_INFO, LC_TEXT("µ· %d ³ÉÀ» È¹µæÇß½À´Ï´Ù."), dwCounts[i]);
+							ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ëˆ %d ëƒ¥ì„ íšë“í–ˆìŠµë‹ˆë‹¤."), dwCounts[i]);
 							break;
 						case CSpecialItemGroup::EXP:
-							ChatPacket(CHAT_TYPE_INFO, LC_TEXT("»óÀÚ¿¡¼­ ºÎÅÍ ½ÅºñÇÑ ºûÀÌ ³ª¿É´Ï´Ù."));
-							ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%dÀÇ °æÇèÄ¡¸¦ È¹µæÇß½À´Ï´Ù."), dwCounts[i]);
+							ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ìƒìì—ì„œ ë¶€í„° ì‹ ë¹„í•œ ë¹›ì´ ë‚˜ì˜µë‹ˆë‹¤."));
+							ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%dì˜ ê²½í—˜ì¹˜ë¥¼ íšë“í–ˆìŠµë‹ˆë‹¤."), dwCounts[i]);
 							break;
 						case CSpecialItemGroup::MOB:
-							ChatPacket(CHAT_TYPE_INFO, LC_TEXT("»óÀÚ¿¡¼­ ¸ó½ºÅÍ°¡ ³ªÅ¸³µ½À´Ï´Ù!"));
+							ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ìƒìì—ì„œ ëª¬ìŠ¤í„°ê°€ ë‚˜íƒ€ë‚¬ìŠµë‹ˆë‹¤!"));
 							break;
 						case CSpecialItemGroup::SLOW:
-							ChatPacket(CHAT_TYPE_INFO, LC_TEXT("»óÀÚ¿¡¼­ ³ª¿Â »¡°£ ¿¬±â¸¦ µéÀÌ¸¶½ÃÀÚ ¿òÁ÷ÀÌ´Â ¼Óµµ°¡ ´À·ÁÁ³½À´Ï´Ù!"));
+							ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ìƒìì—ì„œ ë‚˜ì˜¨ ë¹¨ê°„ ì—°ê¸°ë¥¼ ë“¤ì´ë§ˆì‹œì ì›€ì§ì´ëŠ” ì†ë„ê°€ ëŠë ¤ì¡ŒìŠµë‹ˆë‹¤!"));
 							break;
 						case CSpecialItemGroup::DRAIN_HP:
-							ChatPacket(CHAT_TYPE_INFO, LC_TEXT("»óÀÚ°¡ °©ÀÚ±â Æø¹ßÇÏ¿´½À´Ï´Ù! »ı¸í·ÂÀÌ °¨¼ÒÇß½À´Ï´Ù."));
+							ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ìƒìê°€ ê°‘ìê¸° í­ë°œí•˜ì˜€ìŠµë‹ˆë‹¤! ìƒëª…ë ¥ì´ ê°ì†Œí–ˆìŠµë‹ˆë‹¤."));
 							break;
 						case CSpecialItemGroup::POISON:
-							ChatPacket(CHAT_TYPE_INFO, LC_TEXT("»óÀÚ¿¡¼­ ³ª¿Â ³ì»ö ¿¬±â¸¦ µéÀÌ¸¶½ÃÀÚ µ¶ÀÌ ¿Â¸öÀ¸·Î ÆÛÁı´Ï´Ù!"));
+							ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ìƒìì—ì„œ ë‚˜ì˜¨ ë…¹ìƒ‰ ì—°ê¸°ë¥¼ ë“¤ì´ë§ˆì‹œì ë…ì´ ì˜¨ëª¸ìœ¼ë¡œ í¼ì§‘ë‹ˆë‹¤!"));
 							break;
 						case CSpecialItemGroup::MOB_GROUP:
-							ChatPacket(CHAT_TYPE_INFO, LC_TEXT("»óÀÚ¿¡¼­ ¸ó½ºÅÍ°¡ ³ªÅ¸³µ½À´Ï´Ù!"));
+							ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ìƒìì—ì„œ ëª¬ìŠ¤í„°ê°€ ë‚˜íƒ€ë‚¬ìŠµë‹ˆë‹¤!"));
 							break;
 						default:
 							if (item_gets[i])
 							{
 								if (dwCounts[i] > 1)
-									ChatPacket(CHAT_TYPE_INFO, LC_TEXT("»óÀÚ¿¡¼­ %s °¡ %d °³ ³ª¿Ô½À´Ï´Ù."), item_gets[i]->GetName(), dwCounts[i]);
+									ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ìƒìì—ì„œ %s ê°€ %d ê°œ ë‚˜ì™”ìŠµë‹ˆë‹¤."), item_gets[i]->GetName(), dwCounts[i]);
 								else
-									ChatPacket(CHAT_TYPE_INFO, LC_TEXT("»óÀÚ¿¡¼­ %s °¡ ³ª¿Ô½À´Ï´Ù."), item_gets[i]->GetName());
+									ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ìƒìì—ì„œ %s ê°€ ë‚˜ì™”ìŠµë‹ˆë‹¤."), item_gets[i]->GetName());
 							}
 						}
 					}
 				}
 				else
 				{
-					ChatPacket(CHAT_TYPE_TALKING, LC_TEXT("¾Æ¹«°Íµµ ¾òÀ» ¼ö ¾ø¾ú½À´Ï´Ù."));
+					ChatPacket(CHAT_TYPE_TALKING, LC_TEXT("ì•„ë¬´ê²ƒë„ ì–»ì„ ìˆ˜ ì—†ì—ˆìŠµë‹ˆë‹¤."));
 					return false;
 				}
 			}
@@ -2108,10 +2108,10 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 				if (SkillLevelDown(dwVnum))
 				{
 					ITEM_MANAGER::instance().RemoveItem(item);
-					ChatPacket(CHAT_TYPE_INFO, LC_TEXT("½ºÅ³ ·¹º§À» ³»¸®´Âµ¥ ¼º°øÇÏ¿´½À´Ï´Ù."));
+					ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ìŠ¤í‚¬ ë ˆë²¨ì„ ë‚´ë¦¬ëŠ”ë° ì„±ê³µí•˜ì˜€ìŠµë‹ˆë‹¤."));
 				}
 				else
-					ChatPacket(CHAT_TYPE_INFO, LC_TEXT("½ºÅ³ ·¹º§À» ³»¸± ¼ö ¾ø½À´Ï´Ù."));
+					ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ìŠ¤í‚¬ ë ˆë²¨ì„ ë‚´ë¦´ ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 			}
 			break;
 
@@ -2119,7 +2119,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 			{
 				if (IsPolymorphed())
 				{
-					ChatPacket(CHAT_TYPE_INFO, LC_TEXT("º¯½ÅÁß¿¡´Â Ã¥À» ÀĞÀ»¼ö ¾ø½À´Ï´Ù."));
+					ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ë³€ì‹ ì¤‘ì—ëŠ” ì±…ì„ ì½ì„ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 					return false;
 				}
 
@@ -2131,7 +2131,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 				}
 				else
 				{
-					// »õ·Î¿î ¼ö·Ã¼­´Â value 0 ¿¡ ½ºÅ³ ¹øÈ£°¡ ÀÖÀ¸¹Ç·Î ±×°ÍÀ» »ç¿ë.
+					// ìƒˆë¡œìš´ ìˆ˜ë ¨ì„œëŠ” value 0 ì— ìŠ¤í‚¬ ë²ˆí˜¸ê°€ ìˆìœ¼ë¯€ë¡œ ê·¸ê²ƒì„ ì‚¬ìš©.
 					dwVnum = item->GetValue(0);
 				}
 
@@ -2151,7 +2151,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 					if (distribution_test_server)
 						iReadDelay /= 3;
 
-					//ÇÑ±¹ º»¼·ÀÇ °æ¿ì¿¡´Â ½Ã°£À» 24½Ã°£ °íÁ¤
+					//í•œêµ­ ë³¸ì„­ì˜ ê²½ìš°ì—ëŠ” ì‹œê°„ì„ 24ì‹œê°„ ê³ ì •
 					if (LC_IsKorea())
 						iReadDelay = 86400;
 
@@ -2177,7 +2177,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 						case USE_ABILITY_UP:
 							if (FindAffect(affect_type, apply_type))
 							{
-								ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ÀÌ¹Ì È¿°ú°¡ °É·Á ÀÖ½À´Ï´Ù."));
+								ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì´ë¯¸ íš¨ê³¼ê°€ ê±¸ë ¤ ìˆìŠµë‹ˆë‹¤."));
 								return false;
 							}
 
@@ -2218,18 +2218,18 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 						{
 							if (FindAffect(AFFECT_EXP_BONUS_EURO_FREE, aApplyInfo[item->GetValue(1)].bPointType))
 							{
-								ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ÀÌ¹Ì È¿°ú°¡ °É·Á ÀÖ½À´Ï´Ù."));
+								ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì´ë¯¸ íš¨ê³¼ê°€ ê±¸ë ¤ ìˆìŠµë‹ˆë‹¤."));
 							}
 							else
 							{
 								// PC_BANG_ITEM_ADD
 								if (item->IsPCBangItem() == true)
 								{
-									// PC¹æÀÎÁö Ã¼Å©ÇØ¼­ Ã³¸®
+									// PCë°©ì¸ì§€ ì²´í¬í•´ì„œ ì²˜ë¦¬
 									if (CPCBangManager::instance().IsPCBangIP(GetDesc()->GetHostName()) == false)
 									{
-										// PC¹æÀÌ ¾Æ´Ô!
-										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ÀÌ ¾ÆÀÌÅÛÀº PC¹æ¿¡¼­¸¸ »ç¿ëÇÒ ¼ö ÀÖ½À´Ï´Ù."));
+										// PCë°©ì´ ì•„ë‹˜!
+										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì´ ì•„ì´í…œì€ PCë°©ì—ì„œë§Œ ì‚¬ìš©í•  ìˆ˜ ìˆìŠµë‹ˆë‹¤."));
 										return false;
 									}
 								}
@@ -2247,7 +2247,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 							{
 								if (quest::CQuestManager::instance().GetEventFlag("arena_potion_limit") > 0)
 								{
-									ChatPacket(CHAT_TYPE_INFO, LC_TEXT("´ë·ÃÀå¿¡¼­ »ç¿ëÇÏ½Ç ¼ö ¾ø½À´Ï´Ù."));
+									ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ëŒ€ë ¨ì¥ì—ì„œ ì‚¬ìš©í•˜ì‹¤ ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 									return false;
 								}
 
@@ -2261,14 +2261,14 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 										{
 											if (m_nPotionLimit <= 0)
 											{
-												ChatPacket(CHAT_TYPE_INFO, LC_TEXT("»ç¿ë Á¦ÇÑ·®À» ÃÊ°úÇÏ¿´½À´Ï´Ù."));
+												ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì‚¬ìš© ì œí•œëŸ‰ì„ ì´ˆê³¼í•˜ì˜€ìŠµë‹ˆë‹¤."));
 												return false;
 											}
 										}
 										break;
 
 									default :
-										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("´ë·ÃÀå¿¡¼­ »ç¿ëÇÏ½Ç ¼ö ¾ø½À´Ï´Ù."));
+										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ëŒ€ë ¨ì¥ì—ì„œ ì‚¬ìš©í•˜ì‹¤ ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 										return false;
 										break;
 								}
@@ -2276,7 +2276,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 
 							bool used = false;
 
-							if (item->GetValue(0) != 0) // HP Àı´ë°ª È¸º¹
+							if (item->GetValue(0) != 0) // HP ì ˆëŒ€ê°’ íšŒë³µ
 							{
 								if (GetHP() < GetMaxHP())
 								{
@@ -2286,7 +2286,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 								}
 							}
 
-							if (item->GetValue(1) != 0)	// SP Àı´ë°ª È¸º¹
+							if (item->GetValue(1) != 0)	// SP ì ˆëŒ€ê°’ íšŒë³µ
 							{
 								if (GetSP() < GetMaxSP())
 								{
@@ -2296,7 +2296,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 								}
 							}
 
-							if (item->GetValue(3) != 0) // HP % È¸º¹
+							if (item->GetValue(3) != 0) // HP % íšŒë³µ
 							{
 								if (GetHP() < GetMaxHP())
 								{
@@ -2306,7 +2306,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 								}
 							}
 
-							if (item->GetValue(4) != 0) // SP % È¸º¹
+							if (item->GetValue(4) != 0) // SP % íšŒë³µ
 							{
 								if (GetSP() < GetMaxSP())
 								{
@@ -2321,7 +2321,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 								if (item->GetVnum() == 50085 || item->GetVnum() == 50086)
 								{
 									if (test_server)
-										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("¿ùº´ ¶Ç´Â Á¾ÀÚ ¸¦ »ç¿ëÇÏ¿´½À´Ï´Ù"));
+										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì›”ë³‘ ë˜ëŠ” ì¢…ì ë¥¼ ì‚¬ìš©í•˜ì˜€ìŠµë‹ˆë‹¤"));
 									SetUseSeedOrMoonBottleTime();
 								}
 								if (GetDungeon())
@@ -2348,7 +2348,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 				{
 					if (CArenaManager::instance().IsArenaMap(GetMapIndex()) == true)
 					{
-						ChatPacket(CHAT_TYPE_INFO, LC_TEXT("´ë·Ã Áß¿¡´Â ÀÌ¿ëÇÒ ¼ö ¾ø´Â ¹°Ç°ÀÔ´Ï´Ù."));
+						ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ëŒ€ë ¨ ì¤‘ì—ëŠ” ì´ìš©í•  ìˆ˜ ì—†ëŠ” ë¬¼í’ˆì…ë‹ˆë‹¤."));
 						return false;
 					}
 				}
@@ -2367,7 +2367,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 							{
 								return false;
 							}
-							// ¿ì¼± ¿ëÈ¥¼®¿¡ °üÇØ¼­¸¸ ÇÏµµ·Ï ÇÑ´Ù.
+							// ìš°ì„  ìš©í˜¼ì„ì— ê´€í•´ì„œë§Œ í•˜ë„ë¡ í•œë‹¤.
 							if (pDestItem->IsDragonSoul())
 							{
 								int ret;
@@ -2391,7 +2391,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 										sprintf(buf, "Inc %ds by item{VN:%d VAL%d:%d}", ret, item->GetVnum(), ITEM_VALUE_CHARGING_AMOUNT_IDX, item->GetValue(ITEM_VALUE_CHARGING_AMOUNT_IDX));
 									}
 
-									ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%dÃÊ ¸¸Å­ ÃæÀüµÇ¾ú½À´Ï´Ù."), ret);
+									ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%dì´ˆ ë§Œí¼ ì¶©ì „ë˜ì—ˆìŠµë‹ˆë‹¤."), ret);
 									item->SetCount(item->GetCount() - 1);
 									LogManager::instance().ItemLog(this, item, "DS_CHARGING_SUCCESS", buf);
 									return true;
@@ -2407,7 +2407,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 										sprintf(buf, "No change by item{VN:%d VAL%d:%d}", item->GetVnum(), ITEM_VALUE_CHARGING_AMOUNT_IDX, item->GetValue(ITEM_VALUE_CHARGING_AMOUNT_IDX));
 									}
 
-									ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ÃæÀüÇÒ ¼ö ¾ø½À´Ï´Ù."));
+									ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì¶©ì „í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 									LogManager::instance().ItemLog(this, item, "DS_CHARGING_FAILED", buf);
 									return false;
 								}
@@ -2423,14 +2423,14 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 							{
 								return false;
 							}
-							// ¿ì¼± ¿ëÈ¥¼®¿¡ °üÇØ¼­¸¸ ÇÏµµ·Ï ÇÑ´Ù.
+							// ìš°ì„  ìš©í˜¼ì„ì— ê´€í•´ì„œë§Œ í•˜ë„ë¡ í•œë‹¤.
 							if (pDestItem->IsDragonSoul())
 							{
 								int ret = pDestItem->GiveMoreTime_Fix(item->GetValue(ITEM_VALUE_CHARGING_AMOUNT_IDX));
 								char buf[128];
 								if (ret)
 								{
-									ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%dÃÊ ¸¸Å­ ÃæÀüµÇ¾ú½À´Ï´Ù."), ret);
+									ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%dì´ˆ ë§Œí¼ ì¶©ì „ë˜ì—ˆìŠµë‹ˆë‹¤."), ret);
 									sprintf(buf, "Increase %ds by item{VN:%d VAL%d:%d}", ret, item->GetVnum(), ITEM_VALUE_CHARGING_AMOUNT_IDX, item->GetValue(ITEM_VALUE_CHARGING_AMOUNT_IDX));
 									LogManager::instance().ItemLog(this, item, "DS_CHARGING_SUCCESS", buf);
 									item->SetCount(item->GetCount() - 1);
@@ -2438,7 +2438,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 								}
 								else
 								{
-									ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ÃæÀüÇÒ ¼ö ¾ø½À´Ï´Ù."));
+									ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì¶©ì „í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 									sprintf(buf, "No change by item{VN:%d VAL%d:%d}", item->GetVnum(), ITEM_VALUE_CHARGING_AMOUNT_IDX, item->GetValue(ITEM_VALUE_CHARGING_AMOUNT_IDX));
 									LogManager::instance().ItemLog(this, item, "DS_CHARGING_FAILED", buf);
 									return false;
@@ -2452,20 +2452,20 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 						
 						switch (item->GetVnum())
 						{
-							//Å©¸®½º¸¶½º ¶õÁÖ
+							//í¬ë¦¬ìŠ¤ë§ˆìŠ¤ ë€ì£¼
 							case ITEM_NOG_POCKET:
 								{
 									/*
-									¶õÁÖ´É·ÂÄ¡ : item_proto value ÀÇ¹Ì
-										ÀÌµ¿¼Óµµ  value 1
-										°ø°İ·Â	  value 2
-										°æÇèÄ¡    value 3
-										Áö¼Ó½Ã°£  value 0 (´ÜÀ§ ÃÊ)
+									ë€ì£¼ëŠ¥ë ¥ì¹˜ : item_proto value ì˜ë¯¸
+										ì´ë™ì†ë„  value 1
+										ê³µê²©ë ¥	  value 2
+										ê²½í—˜ì¹˜    value 3
+										ì§€ì†ì‹œê°„  value 0 (ë‹¨ìœ„ ì´ˆ)
 
 									*/
 									if (FindAffect(AFFECT_NOG_ABILITY))
 									{
-										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ÀÌ¹Ì È¿°ú°¡ °É·Á ÀÖ½À´Ï´Ù."));
+										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì´ë¯¸ íš¨ê³¼ê°€ ê±¸ë ¤ ìˆìŠµë‹ˆë‹¤."));
 										return false;
 									}
 									long time = item->GetValue(0);
@@ -2479,15 +2479,15 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 								}
 								break;
 								
-							//¶ó¸¶´Ü¿ë »çÅÁ
+							//ë¼ë§ˆë‹¨ìš© ì‚¬íƒ•
 							case ITEM_RAMADAN_CANDY:
 								{
 									/*
-									»çÅÁ´É·ÂÄ¡ : item_proto value ÀÇ¹Ì
-										ÀÌµ¿¼Óµµ  value 1
-										°ø°İ·Â	  value 2
-										°æÇèÄ¡    value 3
-										Áö¼Ó½Ã°£  value 0 (´ÜÀ§ ÃÊ)
+									ì‚¬íƒ•ëŠ¥ë ¥ì¹˜ : item_proto value ì˜ë¯¸
+										ì´ë™ì†ë„  value 1
+										ê³µê²©ë ¥	  value 2
+										ê²½í—˜ì¹˜    value 3
+										ì§€ì†ì‹œê°„  value 0 (ë‹¨ìœ„ ì´ˆ)
 
 									*/
 									long time = item->GetValue(0);
@@ -2509,7 +2509,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 										{
 											if (CArenaManager::instance().IsArenaMap(pMarriage->ch1->GetMapIndex()) == true)
 											{
-												ChatPacket(CHAT_TYPE_INFO, LC_TEXT("´ë·Ã Áß¿¡´Â ÀÌ¿ëÇÒ ¼ö ¾ø´Â ¹°Ç°ÀÔ´Ï´Ù."));
+												ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ëŒ€ë ¨ ì¤‘ì—ëŠ” ì´ìš©í•  ìˆ˜ ì—†ëŠ” ë¬¼í’ˆì…ë‹ˆë‹¤."));
 												break;
 											}
 										}
@@ -2518,7 +2518,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 										{
 											if (CArenaManager::instance().IsArenaMap(pMarriage->ch2->GetMapIndex()) == true)
 											{
-												ChatPacket(CHAT_TYPE_INFO, LC_TEXT("´ë·Ã Áß¿¡´Â ÀÌ¿ëÇÒ ¼ö ¾ø´Â ¹°Ç°ÀÔ´Ï´Ù."));
+												ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ëŒ€ë ¨ ì¤‘ì—ëŠ” ì´ìš©í•  ìˆ˜ ì—†ëŠ” ë¬¼í’ˆì…ë‹ˆë‹¤."));
 												break;
 											}
 										}
@@ -2533,13 +2533,13 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 										WarpToPID(pMarriage->GetOther(GetPlayerID()));
 									}
 									else
-										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("°áÈ¥ »óÅÂ°¡ ¾Æ´Ï¸é °áÈ¥¹İÁö¸¦ »ç¿ëÇÒ ¼ö ¾ø½À´Ï´Ù."));
+										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ê²°í˜¼ ìƒíƒœê°€ ì•„ë‹ˆë©´ ê²°í˜¼ë°˜ì§€ë¥¼ ì‚¬ìš©í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 								}
 								break;
 
-								//±âÁ¸ ¿ë±âÀÇ ¸ÁÅä
+								//ê¸°ì¡´ ìš©ê¸°ì˜ ë§í† 
 							case UNIQUE_ITEM_CAPE_OF_COURAGE:
-								//¶ó¸¶´Ü º¸»ó¿ë ¿ë±âÀÇ ¸ÁÅä
+								//ë¼ë§ˆë‹¨ ë³´ìƒìš© ìš©ê¸°ì˜ ë§í† 
 							case 70057:
 							case REWARD_BOX_UNIQUE_ITEM_CAPE_OF_COURAGE:
 								AggregateMonster();
@@ -2558,7 +2558,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 							case 30094:
 							case 30095:
 							case 30096:
-								// º¹ÁÖ¸Ó´Ï
+								// ë³µì£¼ë¨¸ë‹ˆ
 								{
 									const int MAX_BAG_INFO = 26;
 									static struct LuckyBagInfo
@@ -2646,7 +2646,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 
 									if (bi[i].vnum == 50300)
 									{
-										// ½ºÅ³¼ö·Ã¼­´Â Æ¯¼öÇÏ°Ô ÁØ´Ù.
+										// ìŠ¤í‚¬ìˆ˜ë ¨ì„œëŠ” íŠ¹ìˆ˜í•˜ê²Œ ì¤€ë‹¤.
 										GiveRandomSkillBook();
 									}
 									else if (bi[i].vnum == 1)
@@ -2661,7 +2661,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 								}
 								break;
 
-							case 50004: // ÀÌº¥Æ®¿ë °¨Áö±â
+							case 50004: // ì´ë²¤íŠ¸ìš© ê°ì§€ê¸°
 								{
 									if (item->GetSocket(0))
 									{
@@ -2669,7 +2669,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 									}
 									else
 									{
-										// Ã³À½ »ç¿ë½Ã
+										// ì²˜ìŒ ì‚¬ìš©ì‹œ
 										int iMapIndex = GetMapIndex();
 
 										PIXEL_POSITION pos;
@@ -2682,7 +2682,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 										}
 										else
 										{
-											ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ÀÌ °÷¿¡¼± ÀÌº¥Æ®¿ë °¨Áö±â°¡ µ¿ÀÛÇÏÁö ¾Ê´Â°Í °°½À´Ï´Ù."));
+											ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì´ ê³³ì—ì„  ì´ë²¤íŠ¸ìš© ê°ì§€ê¸°ê°€ ë™ì‘í•˜ì§€ ì•ŠëŠ”ê²ƒ ê°™ìŠµë‹ˆë‹¤."));
 											return false;
 										}
 									}
@@ -2692,10 +2692,10 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 
 									if (distance < 1000.0f)
 									{
-										// ¹ß°ß!
-										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ÀÌº¥Æ®¿ë °¨Áö±â°¡ ½Åºñ·Î¿î ºûÀ» ³»¸ç »ç¶óÁı´Ï´Ù."));
+										// ë°œê²¬!
+										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì´ë²¤íŠ¸ìš© ê°ì§€ê¸°ê°€ ì‹ ë¹„ë¡œìš´ ë¹›ì„ ë‚´ë©° ì‚¬ë¼ì§‘ë‹ˆë‹¤."));
 
-										// »ç¿ëÈ½¼ö¿¡ µû¶ó ÁÖ´Â ¾ÆÀÌÅÛÀ» ´Ù¸£°Ô ÇÑ´Ù.
+										// ì‚¬ìš©íšŸìˆ˜ì— ë”°ë¼ ì£¼ëŠ” ì•„ì´í…œì„ ë‹¤ë¥´ê²Œ í•œë‹¤.
 										struct TEventStoneInfo
 										{
 											DWORD dwVnum;
@@ -2794,7 +2794,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 														pdw[0] = info[i].dwVnum;
 														pdw[1] = info[i].count;
 
-														// ÃßÃ·¼­´Â ¼ÒÄÏÀ» ¼³Á¤ÇÑ´Ù
+														// ì¶”ì²¨ì„œëŠ” ì†Œì¼“ì„ ì„¤ì •í•œë‹¤
 														DBManager::instance().ReturnQuery(QID_LOTTO, GetPlayerID(), pdw,
 																"INSERT INTO lotto_list VALUES(0, 'server%s', %u, NOW())", 
 																get_table_postfix(), GetPlayerID());
@@ -2814,7 +2814,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 										if (len < 0 || len >= (int) sizeof(chatbuf))
 											len = sizeof(chatbuf) - 1;
 
-										++len;  // \0 ¹®ÀÚ±îÁö º¸³»±â
+										++len;  // \0 ë¬¸ìê¹Œì§€ ë³´ë‚´ê¸°
 
 										TPacketGCChat pack_chat;
 										pack_chat.header	= HEADER_GC_CHAT;
@@ -2840,11 +2840,11 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 									else
 										dist = 3;
 
-									// ¸¹ÀÌ »ç¿ëÇßÀ¸¸é »ç¶óÁø´Ù.
+									// ë§ì´ ì‚¬ìš©í–ˆìœ¼ë©´ ì‚¬ë¼ì§„ë‹¤.
 									const int STONE_DETECT_MAX_TRY = 10;
 									if (item->GetSocket(0) >= STONE_DETECT_MAX_TRY)
 									{
-										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ÀÌº¥Æ®¿ë °¨Áö±â°¡ ÈçÀûµµ ¾øÀÌ »ç¶óÁı´Ï´Ù."));
+										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì´ë²¤íŠ¸ìš© ê°ì§€ê¸°ê°€ í”ì ë„ ì—†ì´ ì‚¬ë¼ì§‘ë‹ˆë‹¤."));
 										ITEM_MANAGER::instance().RemoveItem(item, "REMOVE (DETECT_EVENT_STONE) 0");
 										AutoGiveItem(27002);
 										return true;
@@ -2860,7 +2860,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 										if (len < 0 || len >= (int) sizeof(chatbuf))
 											len = sizeof(chatbuf) - 1;
 
-										++len;  // \0 ¹®ÀÚ±îÁö º¸³»±â
+										++len;  // \0 ë¬¸ìê¹Œì§€ ë³´ë‚´ê¸°
 
 										TPacketGCChat pack_chat;
 										pack_chat.header	= HEADER_GC_CHAT;
@@ -2880,8 +2880,8 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 								}
 								break;
 
-							case 27989: // ¿µ¼®°¨Áö±â
-							case 76006: // ¼±¹°¿ë ¿µ¼®°¨Áö±â
+							case 27989: // ì˜ì„ê°ì§€ê¸°
+							case 76006: // ì„ ë¬¼ìš© ì˜ì„ê°ì§€ê¸°
 								{
 									LPSECTREE_MAP pMap = SECTREE_MANAGER::instance().GetMap(GetMapIndex());
 
@@ -2925,12 +2925,12 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 											}
 											else
 											{
-												ChatPacket(CHAT_TYPE_INFO, LC_TEXT("°¨Áö±â¸¦ ÀÛ¿ëÇÏ¿´À¸³ª °¨ÁöµÇ´Â ¿µ¼®ÀÌ ¾ø½À´Ï´Ù."));
+												ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ê°ì§€ê¸°ë¥¼ ì‘ìš©í•˜ì˜€ìœ¼ë‚˜ ê°ì§€ë˜ëŠ” ì˜ì„ì´ ì—†ìŠµë‹ˆë‹¤."));
 											}
 										}
 										else
 										{
-											ChatPacket(CHAT_TYPE_INFO, LC_TEXT("°¨Áö±â¸¦ ÀÛ¿ëÇÏ¿´À¸³ª °¨ÁöµÇ´Â ¿µ¼®ÀÌ ¾ø½À´Ï´Ù."));
+											ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ê°ì§€ê¸°ë¥¼ ì‘ìš©í•˜ì˜€ìœ¼ë‚˜ ê°ì§€ë˜ëŠ” ì˜ì„ì´ ì—†ìŠµë‹ˆë‹¤."));
 										}
 
 										if (item->GetSocket(0) >= 6)
@@ -2943,13 +2943,13 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 								}
 								break;
 
-							case 27996: // µ¶º´
+							case 27996: // ë…ë³‘
 								item->SetCount(item->GetCount() - 1);
 								/*if (GetSkillLevel(SKILL_CREATE_POISON))
 								  AddAffect(AFFECT_ATT_GRADE, POINT_ATT_GRADE, 3, AFF_DRINK_POISON, 15*60, 0, true);
 								  else
 								  {
-								// µ¶´Ù·ç±â°¡ ¾øÀ¸¸é 50% Áï»ç 50% °ø°İ·Â +2
+								// ë…ë‹¤ë£¨ê¸°ê°€ ì—†ìœ¼ë©´ 50% ì¦‰ì‚¬ 50% ê³µê²©ë ¥ +2
 								if (number(0, 1))
 								{
 								if (GetHP() > 100)
@@ -2962,12 +2962,12 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 								}*/
 								break;
 
-							case 27987: // Á¶°³
-								// 50  µ¹Á¶°¢ 47990
-								// 30  ²Î
-								// 10  ¹éÁøÁÖ 47992
-								// 7   Ã»ÁøÁÖ 47993
-								// 3   ÇÇÁøÁÖ 47994
+							case 27987: // ì¡°ê°œ
+								// 50  ëŒì¡°ê° 47990
+								// 30  ê½
+								// 10  ë°±ì§„ì£¼ 47992
+								// 7   ì²­ì§„ì£¼ 47993
+								// 3   í”¼ì§„ì£¼ 47994
 								{
 									item->SetCount(item->GetCount() - 1);
 
@@ -2975,7 +2975,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 
 									if (r <= 50)
 									{
-										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Á¶°³¿¡¼­ µ¹Á¶°¢ÀÌ ³ª¿Ô½À´Ï´Ù."));
+										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì¡°ê°œì—ì„œ ëŒì¡°ê°ì´ ë‚˜ì™”ìŠµë‹ˆë‹¤."));
 										AutoGiveItem(27990);
 									}
 									else
@@ -2994,33 +2994,33 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 
 										if (r <= prob_table[0])
 										{
-											ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Á¶°³°¡ ÈçÀûµµ ¾øÀÌ »ç¶óÁı´Ï´Ù."));
+											ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì¡°ê°œê°€ í”ì ë„ ì—†ì´ ì‚¬ë¼ì§‘ë‹ˆë‹¤."));
 										}
 										else if (r <= prob_table[1])
 										{
-											ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Á¶°³¿¡¼­ ¹éÁøÁÖ°¡ ³ª¿Ô½À´Ï´Ù."));
+											ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì¡°ê°œì—ì„œ ë°±ì§„ì£¼ê°€ ë‚˜ì™”ìŠµë‹ˆë‹¤."));
 											AutoGiveItem(27992);
 										}
 										else if (r <= prob_table[2])
 										{
-											ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Á¶°³¿¡¼­ Ã»ÁøÁÖ°¡ ³ª¿Ô½À´Ï´Ù."));
+											ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì¡°ê°œì—ì„œ ì²­ì§„ì£¼ê°€ ë‚˜ì™”ìŠµë‹ˆë‹¤."));
 											AutoGiveItem(27993);
 										}
 										else
 										{
-											ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Á¶°³¿¡¼­ ÇÇÁøÁÖ°¡ ³ª¿Ô½À´Ï´Ù."));
+											ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì¡°ê°œì—ì„œ í”¼ì§„ì£¼ê°€ ë‚˜ì™”ìŠµë‹ˆë‹¤."));
 											AutoGiveItem(27994);
 										}
 									}
 								}
 								break;
 
-							case 71013: // ÃàÁ¦¿ëÆøÁ×
+							case 71013: // ì¶•ì œìš©í­ì£½
 								CreateFly(number(FLY_FIREWORK1, FLY_FIREWORK6), this);
 								item->SetCount(item->GetCount() - 1);
 								break;
 
-							case 50100: // ÆøÁ×
+							case 50100: // í­ì£½
 							case 50101:
 							case 50102:
 							case 50103:
@@ -3031,7 +3031,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 								item->SetCount(item->GetCount() - 1);
 								break;
 
-							case 50200: // º¸µû¸®
+							case 50200: // ë³´ë”°ë¦¬
 								if (LC_IsYMIR() == true || LC_IsKorea() == true)
 								{
 									if (IS_BOTARYABLE_ZONE(GetMapIndex()) == true)
@@ -3040,7 +3040,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 									}
 									else
 									{
-										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("°³ÀÎ »óÁ¡À» ¿­ ¼ö ¾ø´Â Áö¿ªÀÔ´Ï´Ù"));
+										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ê°œì¸ ìƒì ì„ ì—´ ìˆ˜ ì—†ëŠ” ì§€ì—­ì…ë‹ˆë‹¤"));
 									}
 								}
 								else
@@ -3054,13 +3054,13 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 								item->SetCount(item->GetCount() - 1);
 								break;
 
-							case 50301: // Åë¼Ö·Â ¼ö·Ã¼­
+							case 50301: // í†µì†”ë ¥ ìˆ˜ë ¨ì„œ
 							case 50302:
 							case 50303:
 								{
 									if (IsPolymorphed() == true)
 									{
-										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("µĞ°© Áß¿¡´Â ´É·ÂÀ» ¿Ã¸± ¼ö ¾ø½À´Ï´Ù."));
+										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ë‘”ê°‘ ì¤‘ì—ëŠ” ëŠ¥ë ¥ì„ ì˜¬ë¦´ ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 										return false;
 									}
 
@@ -3068,13 +3068,13 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 
 									if (lv < item->GetValue(0))
 									{
-										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ÀÌ Ã¥Àº ³Ê¹« ¾î·Á¿ö ÀÌÇØÇÏ±â°¡ Èûµì´Ï´Ù."));
+										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì´ ì±…ì€ ë„ˆë¬´ ì–´ë ¤ì›Œ ì´í•´í•˜ê¸°ê°€ í˜ë“­ë‹ˆë‹¤."));
 										return false;
 									}
 
 									if (lv >= item->GetValue(1))
 									{
-										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ÀÌ Ã¥Àº ¾Æ¹«¸® ºÁµµ µµ¿òÀÌ µÉ °Í °°Áö ¾Ê½À´Ï´Ù."));
+										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì´ ì±…ì€ ì•„ë¬´ë¦¬ ë´ë„ ë„ì›€ì´ ë  ê²ƒ ê°™ì§€ ì•ŠìŠµë‹ˆë‹¤."));
 										return false;
 									}
 
@@ -3090,31 +3090,31 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 								}
 								break;
 
-							case 50304: // ¿¬°è±â ¼ö·Ã¼­
+							case 50304: // ì—°ê³„ê¸° ìˆ˜ë ¨ì„œ
 							case 50305:
 							case 50306:
 								{
 									if (IsPolymorphed())
 									{
-										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("º¯½ÅÁß¿¡´Â Ã¥À» ÀĞÀ»¼ö ¾ø½À´Ï´Ù."));
+										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ë³€ì‹ ì¤‘ì—ëŠ” ì±…ì„ ì½ì„ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 										return false;
 										
 									}
 									if (GetSkillLevel(SKILL_COMBO) == 0 && GetLevel() < 30)
 									{
-										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("·¹º§ 30ÀÌ µÇ±â Àü¿¡´Â ½ÀµæÇÒ ¼ö ÀÖÀ» °Í °°Áö ¾Ê½À´Ï´Ù."));
+										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ë ˆë²¨ 30ì´ ë˜ê¸° ì „ì—ëŠ” ìŠµë“í•  ìˆ˜ ìˆì„ ê²ƒ ê°™ì§€ ì•ŠìŠµë‹ˆë‹¤."));
 										return false;
 									}
 
 									if (GetSkillLevel(SKILL_COMBO) == 1 && GetLevel() < 50)
 									{
-										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("·¹º§ 50ÀÌ µÇ±â Àü¿¡´Â ½ÀµæÇÒ ¼ö ÀÖÀ» °Í °°Áö ¾Ê½À´Ï´Ù."));
+										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ë ˆë²¨ 50ì´ ë˜ê¸° ì „ì—ëŠ” ìŠµë“í•  ìˆ˜ ìˆì„ ê²ƒ ê°™ì§€ ì•ŠìŠµë‹ˆë‹¤."));
 										return false;
 									}
 
 									if (GetSkillLevel(SKILL_COMBO) >= 2)
 									{
-										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("¿¬°è±â´Â ´õÀÌ»ó ¼ö·ÃÇÒ ¼ö ¾ø½À´Ï´Ù."));
+										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì—°ê³„ê¸°ëŠ” ë”ì´ìƒ ìˆ˜ë ¨í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 										return false;
 									}
 
@@ -3131,13 +3131,13 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 									}
 								}
 								break;
-							case 50311: // ¾ğ¾î ¼ö·Ã¼­
+							case 50311: // ì–¸ì–´ ìˆ˜ë ¨ì„œ
 							case 50312:
 							case 50313:
 								{
 									if (IsPolymorphed())
 									{
-										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("º¯½ÅÁß¿¡´Â Ã¥À» ÀĞÀ»¼ö ¾ø½À´Ï´Ù."));
+										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ë³€ì‹ ì¤‘ì—ëŠ” ì±…ì„ ì½ì„ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 										return false;
 										
 									}
@@ -3145,7 +3145,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 									int iPct = MINMAX(0, item->GetValue(1), 100);
 									if (GetSkillLevel(dwSkillVnum)>=20 || dwSkillVnum-SKILL_LANGUAGE1+1 == GetEmpire())
 									{
-										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ÀÌ¹Ì ¿Ïº®ÇÏ°Ô ¾Ë¾ÆµéÀ» ¼ö ÀÖ´Â ¾ğ¾îÀÌ´Ù."));
+										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì´ë¯¸ ì™„ë²½í•˜ê²Œ ì•Œì•„ë“¤ì„ ìˆ˜ ìˆëŠ” ì–¸ì–´ì´ë‹¤."));
 										return false;
 									}
 
@@ -3161,11 +3161,11 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 								}
 								break;
 
-							case 50061 : // ÀÏº» ¸» ¼ÒÈ¯ ½ºÅ³ ¼ö·Ã¼­
+							case 50061 : // ì¼ë³¸ ë§ ì†Œí™˜ ìŠ¤í‚¬ ìˆ˜ë ¨ì„œ
 								{
 									if (IsPolymorphed())
 									{
-										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("º¯½ÅÁß¿¡´Â Ã¥À» ÀĞÀ»¼ö ¾ø½À´Ï´Ù."));
+										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ë³€ì‹ ì¤‘ì—ëŠ” ì±…ì„ ì½ì„ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 										return false;
 										
 									}
@@ -3174,7 +3174,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 
 									if (GetSkillLevel(dwSkillVnum) >= 10)
 									{
-										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("´õ ÀÌ»ó ¼ö·ÃÇÒ ¼ö ¾ø½À´Ï´Ù."));
+										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ë” ì´ìƒ ìˆ˜ë ¨í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 										return false;
 									}
 
@@ -3190,13 +3190,13 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 								}
 								break;
 
-							case 50314: case 50315: case 50316: // º¯½Å ¼ö·Ã¼­
-							case 50323: case 50324: // ÁõÇ÷ ¼ö·Ã¼­
-							case 50325: case 50326: // Ã¶Åë ¼ö·Ã¼­
+							case 50314: case 50315: case 50316: // ë³€ì‹  ìˆ˜ë ¨ì„œ
+							case 50323: case 50324: // ì¦í˜ˆ ìˆ˜ë ¨ì„œ
+							case 50325: case 50326: // ì² í†µ ìˆ˜ë ¨ì„œ
 								{
 									if (IsPolymorphed() == true)
 									{
-										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("µĞ°© Áß¿¡´Â ´É·ÂÀ» ¿Ã¸± ¼ö ¾ø½À´Ï´Ù."));
+										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ë‘”ê°‘ ì¤‘ì—ëŠ” ëŠ¥ë ¥ì„ ì˜¬ë¦´ ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 										return false;
 									}
 									
@@ -3229,25 +3229,25 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 
 									if (GetLevel() < iLevelLimit)
 									{
-										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ÀÌ Ã¥À» ÀĞÀ¸·Á¸é ·¹º§À» ´õ ¿Ã·Á¾ß ÇÕ´Ï´Ù."));
+										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì´ ì±…ì„ ì½ìœ¼ë ¤ë©´ ë ˆë²¨ì„ ë” ì˜¬ë ¤ì•¼ í•©ë‹ˆë‹¤."));
 										return false;
 									}
 
 									if (GetSkillLevel(dwSkillVnum) >= 40)
 									{
-										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("´õ ÀÌ»ó ¼ö·ÃÇÒ ¼ö ¾ø½À´Ï´Ù."));
+										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ë” ì´ìƒ ìˆ˜ë ¨í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 										return false;
 									}
 
 									if (GetSkillLevel(dwSkillVnum) < iSkillLevelLowLimit)
 									{
-										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ÀÌ Ã¥Àº ³Ê¹« ¾î·Á¿ö ÀÌÇØÇÏ±â°¡ Èûµì´Ï´Ù."));
+										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì´ ì±…ì€ ë„ˆë¬´ ì–´ë ¤ì›Œ ì´í•´í•˜ê¸°ê°€ í˜ë“­ë‹ˆë‹¤."));
 										return false;
 									}
 
 									if (GetSkillLevel(dwSkillVnum) >= iSkillLevelHighLimit)
 									{
-										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ÀÌ Ã¥À¸·Î´Â ´õ ÀÌ»ó ¼ö·ÃÇÒ ¼ö ¾ø½À´Ï´Ù."));
+										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì´ ì±…ìœ¼ë¡œëŠ” ë” ì´ìƒ ìˆ˜ë ¨í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 										return false;
 									}
 
@@ -3269,7 +3269,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 								{
 									if (IsPolymorphed())
 									{
-										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("º¯½ÅÁß¿¡´Â Ã¥À» ÀĞÀ»¼ö ¾ø½À´Ï´Ù."));
+										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ë³€ì‹ ì¤‘ì—ëŠ” ì±…ì„ ì½ì„ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 										return false;
 										
 									}
@@ -3278,7 +3278,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 
 									if (GetSkillLevel(dwSkillVnum)>=40)
 									{
-										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("´õ ÀÌ»ó ¼ö·ÃÇÒ ¼ö ¾ø½À´Ï´Ù."));
+										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ë” ì´ìƒ ìˆ˜ë ¨í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 										return false;
 									}
 
@@ -3311,7 +3311,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 								{
 									if (IsPolymorphed())
 									{
-										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("º¯½ÅÁß¿¡´Â Ã¥À» ÀĞÀ»¼ö ¾ø½À´Ï´Ù."));
+										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ë³€ì‹ ì¤‘ì—ëŠ” ì±…ì„ ì½ì„ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 										return false;
 										
 									}
@@ -3320,7 +3320,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 
 									if (GetSkillLevel(dwSkillVnum)>=40)
 									{
-										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("´õ ÀÌ»ó ¼ö·ÃÇÒ ¼ö ¾ø½À´Ï´Ù."));
+										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ë” ì´ìƒ ìˆ˜ë ¨í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 										return false;
 									}
 
@@ -3341,7 +3341,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 								{
 									if (IsPolymorphed())
 									{
-										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("º¯½ÅÁß¿¡´Â Ã¥À» ÀĞÀ»¼ö ¾ø½À´Ï´Ù."));
+										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ë³€ì‹ ì¤‘ì—ëŠ” ì±…ì„ ì½ì„ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 										return false;
 										
 									}
@@ -3350,7 +3350,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 
 									if (GetLevel() < 50)
 									{
-										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("¾ÆÁ÷ ½Â¸¶ ½ºÅ³À» ¼ö·ÃÇÒ ¼ö ÀÖ´Â ·¹º§ÀÌ ¾Æ´Õ´Ï´Ù."));
+										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì•„ì§ ìŠ¹ë§ˆ ìŠ¤í‚¬ì„ ìˆ˜ë ¨í•  ìˆ˜ ìˆëŠ” ë ˆë²¨ì´ ì•„ë‹™ë‹ˆë‹¤."));
 										return false;
 									}
 
@@ -3358,9 +3358,9 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 									{
 										if (FindAffect(AFFECT_SKILL_NO_BOOK_DELAY))
 										{
-											// ÁÖ¾È¼ú¼­ »ç¿ëÁß¿¡´Â ½Ã°£ Á¦ÇÑ ¹«½Ã
+											// ì£¼ì•ˆìˆ ì„œ ì‚¬ìš©ì¤‘ì—ëŠ” ì‹œê°„ ì œí•œ ë¬´ì‹œ
 											RemoveAffect(AFFECT_SKILL_NO_BOOK_DELAY);
-											ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ÁÖ¾È¼ú¼­¸¦ ÅëÇØ ÁÖÈ­ÀÔ¸¶¿¡¼­ ºüÁ®³ª¿Ô½À´Ï´Ù."));
+											ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì£¼ì•ˆìˆ ì„œë¥¼ í†µí•´ ì£¼í™”ì…ë§ˆì—ì„œ ë¹ ì ¸ë‚˜ì™”ìŠµë‹ˆë‹¤."));
 										}
 										else
 										{
@@ -3373,14 +3373,14 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 											GetSkillLevel(SKILL_HORSE_WILDATTACK) + GetSkillLevel(SKILL_HORSE_CHARGE) + GetSkillLevel(SKILL_HORSE_ESCAPE) >= 60 ||
 											GetSkillLevel(SKILL_HORSE_WILDATTACK_RANGE) + GetSkillLevel(SKILL_HORSE_CHARGE) + GetSkillLevel(SKILL_HORSE_ESCAPE) >= 60)
 									{
-										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("´õ ÀÌ»ó ½Â¸¶ ¼ö·Ã¼­¸¦ ÀĞÀ» ¼ö ¾ø½À´Ï´Ù."));
+										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ë” ì´ìƒ ìŠ¹ë§ˆ ìˆ˜ë ¨ì„œë¥¼ ì½ì„ ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 										return false;
 									}
 
 									if (number(1, 100) <= iPct)
 									{
-										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("½Â¸¶ ¼ö·Ã¼­¸¦ ÀĞ¾î ½Â¸¶ ½ºÅ³ Æ÷ÀÎÆ®¸¦ ¾ò¾ú½À´Ï´Ù."));
-										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("¾òÀº Æ÷ÀÎÆ®·Î´Â ½Â¸¶ ½ºÅ³ÀÇ ·¹º§À» ¿Ã¸± ¼ö ÀÖ½À´Ï´Ù."));
+										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ìŠ¹ë§ˆ ìˆ˜ë ¨ì„œë¥¼ ì½ì–´ ìŠ¹ë§ˆ ìŠ¤í‚¬ í¬ì¸íŠ¸ë¥¼ ì–»ì—ˆìŠµë‹ˆë‹¤."));
+										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì–»ì€ í¬ì¸íŠ¸ë¡œëŠ” ìŠ¹ë§ˆ ìŠ¤í‚¬ì˜ ë ˆë²¨ì„ ì˜¬ë¦´ ìˆ˜ ìˆìŠµë‹ˆë‹¤."));
 										PointChange(POINT_HORSE_SKILL, 1);
 
 										int iReadDelay = number(SKILLBOOK_DELAY_MIN, SKILLBOOK_DELAY_MAX);
@@ -3391,15 +3391,15 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 									}
 									else
 									{
-										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("½Â¸¶ ¼ö·Ã¼­ ÀÌÇØ¿¡ ½ÇÆĞÇÏ¿´½À´Ï´Ù."));
+										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ìŠ¹ë§ˆ ìˆ˜ë ¨ì„œ ì´í•´ì— ì‹¤íŒ¨í•˜ì˜€ìŠµë‹ˆë‹¤."));
 									}
 
 									ITEM_MANAGER::instance().RemoveItem(item);
 								}
 								break;
 
-							case 70102: // ¼±µÎ
-							case 70103: // ¼±µÎ
+							case 70102: // ì„ ë‘
+							case 70103: // ì„ ë‘
 								{
 									if (GetAlignment() >= 0)
 										return false;
@@ -3413,13 +3413,13 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 
 									if (delta / 10 > 0)
 									{
-										ChatPacket(CHAT_TYPE_TALKING, LC_TEXT("¸¶À½ÀÌ ¸¼¾ÆÁö´Â±º. °¡½¿À» Áş´©¸£´ø ¹«¾ğ°¡°¡ Á» °¡º­¿öÁø ´À³¦ÀÌ¾ß."));
-										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("¼±¾ÇÄ¡°¡ %d Áõ°¡ÇÏ¿´½À´Ï´Ù."), delta/10);
+										ChatPacket(CHAT_TYPE_TALKING, LC_TEXT("ë§ˆìŒì´ ë§‘ì•„ì§€ëŠ”êµ°. ê°€ìŠ´ì„ ì§“ëˆ„ë¥´ë˜ ë¬´ì–¸ê°€ê°€ ì¢€ ê°€ë²¼ì›Œì§„ ëŠë‚Œì´ì•¼."));
+										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì„ ì•…ì¹˜ê°€ %d ì¦ê°€í•˜ì˜€ìŠµë‹ˆë‹¤."), delta/10);
 									}
 								}
 								break;
 
-							case 71107: // Ãµµµº¹¼ş¾Æ
+							case 71107: // ì²œë„ë³µìˆ­ì•„
 								{
 									int val = item->GetValue(0);
 									int interval = item->GetValue(1);
@@ -3430,18 +3430,18 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 									{
 										if (test_server == false)
 										{
-											ChatPacket(CHAT_TYPE_INFO, LC_TEXT("¾ÆÁ÷ »ç¿ëÇÒ ¼ö ¾ø½À´Ï´Ù."));
+											ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì•„ì§ ì‚¬ìš©í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 											return false;
 										}
 										else
 										{
-											ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Å×½ºÆ® ¼­¹ö ½Ã°£Á¦ÇÑ Åë°ú"));
+											ChatPacket(CHAT_TYPE_INFO, LC_TEXT("í…ŒìŠ¤íŠ¸ ì„œë²„ ì‹œê°„ì œí•œ í†µê³¼"));
 										}
 									}
 									
 									if (GetAlignment() == 200000)
 									{
-										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("¼±¾ÇÄ¡¸¦ ´õ ÀÌ»ó ¿Ã¸± ¼ö ¾ø½À´Ï´Ù."));
+										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì„ ì•…ì¹˜ë¥¼ ë” ì´ìƒ ì˜¬ë¦´ ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 										return false;
 									}
 									
@@ -3457,8 +3457,8 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 									item->SetCount(item->GetCount()-1);
 									pPC->SetFlag("mythical_peach.last_use_time", get_global_time());
 
-									ChatPacket(CHAT_TYPE_TALKING, LC_TEXT("¸¶À½ÀÌ ¸¼¾ÆÁö´Â±º. °¡½¿À» Áş´©¸£´ø ¹«¾ğ°¡°¡ Á» °¡º­¿öÁø ´À³¦ÀÌ¾ß."));
-									ChatPacket(CHAT_TYPE_INFO, LC_TEXT("¼±¾ÇÄ¡°¡ %d Áõ°¡ÇÏ¿´½À´Ï´Ù."), val);
+									ChatPacket(CHAT_TYPE_TALKING, LC_TEXT("ë§ˆìŒì´ ë§‘ì•„ì§€ëŠ”êµ°. ê°€ìŠ´ì„ ì§“ëˆ„ë¥´ë˜ ë¬´ì–¸ê°€ê°€ ì¢€ ê°€ë²¼ì›Œì§„ ëŠë‚Œì´ì•¼."));
+									ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì„ ì•…ì¹˜ê°€ %d ì¦ê°€í•˜ì˜€ìŠµë‹ˆë‹¤."), val);
 
 									char buf[256 + 1];
 									snprintf(buf, sizeof(buf), "%d %d", old_alignment, GetAlignment() / 10);
@@ -3466,7 +3466,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 								}
 								break;
 
-							case 71109: // Å»¼®¼­
+							case 71109: // íƒˆì„ì„œ
 							case 72719:
 								{
 									LPITEM item2;
@@ -3490,7 +3490,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 											case ARMOR_EAR:
 											case ARMOR_WRIST:
 											case ARMOR_NECK:
-												ChatPacket(CHAT_TYPE_INFO, LC_TEXT("»©³¾ ¿µ¼®ÀÌ ¾ø½À´Ï´Ù"));
+												ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ë¹¼ë‚¼ ì˜ì„ì´ ì—†ìŠµë‹ˆë‹¤"));
 												return false;
 											}
 											break;
@@ -3517,7 +3517,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 
 									if (socket.size() == 0)
 									{
-										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("»©³¾ ¿µ¼®ÀÌ ¾ø½À´Ï´Ù"));
+										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ë¹¼ë‚¼ ì˜ì„ì´ ì—†ìŠµë‹ˆë‹¤"));
 										return false;
 									}
 
@@ -3537,17 +3537,17 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 								}
 								break;
 
-							case 70201:   // Å»»öÁ¦
-							case 70202:   // ¿°»ö¾à(Èò»ö)
-							case 70203:   // ¿°»ö¾à(±İ»ö)
-							case 70204:   // ¿°»ö¾à(»¡°£»ö)
-							case 70205:   // ¿°»ö¾à(°¥»ö)
-							case 70206:   // ¿°»ö¾à(°ËÀº»ö)
+							case 70201:   // íƒˆìƒ‰ì œ
+							case 70202:   // ì—¼ìƒ‰ì•½(í°ìƒ‰)
+							case 70203:   // ì—¼ìƒ‰ì•½(ê¸ˆìƒ‰)
+							case 70204:   // ì—¼ìƒ‰ì•½(ë¹¨ê°„ìƒ‰)
+							case 70205:   // ì—¼ìƒ‰ì•½(ê°ˆìƒ‰)
+							case 70206:   // ì—¼ìƒ‰ì•½(ê²€ì€ìƒ‰)
 								{
 									// NEW_HAIR_STYLE_ADD
 									if (GetPart(PART_HAIR) >= 1001)
 									{
-										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ÇöÀç Çì¾î½ºÅ¸ÀÏ¿¡¼­´Â ¿°»ö°ú Å»»öÀÌ ºÒ°¡´ÉÇÕ´Ï´Ù."));
+										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("í˜„ì¬ í—¤ì–´ìŠ¤íƒ€ì¼ì—ì„œëŠ” ì—¼ìƒ‰ê³¼ íƒˆìƒ‰ì´ ë¶ˆê°€ëŠ¥í•©ë‹ˆë‹¤."));
 									}
 									// END_NEW_HAIR_STYLE_ADD
 									else
@@ -3575,7 +3575,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 											}
 											else
 											{
-												ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%d ·¹º§ÀÌ µÇ¾î¾ß ´Ù½Ã ¿°»öÇÏ½Ç ¼ö ÀÖ½À´Ï´Ù."), last_dye_level+3);
+												ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%d ë ˆë²¨ì´ ë˜ì–´ì•¼ ë‹¤ì‹œ ì—¼ìƒ‰í•˜ì‹¤ ìˆ˜ ìˆìŠµë‹ˆë‹¤."), last_dye_level+3);
 											}
 										}
 									}
@@ -3595,7 +3595,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 										for (int i = 0; i < count; i++)
 										{
 											if (dwVnums[i] == CSpecialItemGroup::GOLD)
-												ChatPacket(CHAT_TYPE_INFO, LC_TEXT("µ· %d ³ÉÀ» È¹µæÇß½À´Ï´Ù."), dwCounts[i]);
+												ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ëˆ %d ëƒ¥ì„ íšë“í–ˆìŠµë‹ˆë‹¤."), dwCounts[i]);
 										}
 
 										item->SetCount(item->GetCount() - 1);
@@ -3616,8 +3616,8 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 									if (item->GetVnum() == ITEM_VALENTINE_ROSE && SEX_MALE==GET_SEX(this) ||
 										item->GetVnum() == ITEM_VALENTINE_CHOCOLATE && SEX_FEMALE==GET_SEX(this))
 									{
-										// ¼ºº°ÀÌ ¸ÂÁö¾Ê¾Æ ¾µ ¼ö ¾ø´Ù.
-										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("¼ºº°ÀÌ ¸ÂÁö¾Ê¾Æ ÀÌ ¾ÆÀÌÅÛÀ» ¿­ ¼ö ¾ø½À´Ï´Ù."));
+										// ì„±ë³„ì´ ë§ì§€ì•Šì•„ ì“¸ ìˆ˜ ì—†ë‹¤.
+										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì„±ë³„ì´ ë§ì§€ì•Šì•„ ì´ ì•„ì´í…œì„ ì—´ ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 										return false;
 									}
 
@@ -3640,8 +3640,8 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 									if (item->GetVnum() == ITEM_WHITEDAY_CANDY && SEX_MALE==GET_SEX(this) ||
 										item->GetVnum() == ITEM_WHITEDAY_ROSE && SEX_FEMALE==GET_SEX(this))
 									{
-										// ¼ºº°ÀÌ ¸ÂÁö¾Ê¾Æ ¾µ ¼ö ¾ø´Ù.
-										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("¼ºº°ÀÌ ¸ÂÁö¾Ê¾Æ ÀÌ ¾ÆÀÌÅÛÀ» ¿­ ¼ö ¾ø½À´Ï´Ù."));
+										// ì„±ë³„ì´ ë§ì§€ì•Šì•„ ì“¸ ìˆ˜ ì—†ë‹¤.
+										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì„±ë³„ì´ ë§ì§€ì•Šì•„ ì´ ì•„ì´í…œì„ ì—´ ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 										return false;
 									}
 
@@ -3651,7 +3651,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 								}
 								break;
 
-							case 50011: // ¿ù±¤º¸ÇÕ
+							case 50011: // ì›”ê´‘ë³´í•©
 								{
 									DWORD dwBoxVnum = 50011;
 									std::vector <DWORD> dwVnums;
@@ -3673,41 +3673,41 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 											switch (dwVnums[i])
 											{
 											case CSpecialItemGroup::GOLD:
-												ChatPacket(CHAT_TYPE_INFO, LC_TEXT("µ· %d ³ÉÀ» È¹µæÇß½À´Ï´Ù."), dwCounts[i]);
+												ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ëˆ %d ëƒ¥ì„ íšë“í–ˆìŠµë‹ˆë‹¤."), dwCounts[i]);
 												break;
 
 											case CSpecialItemGroup::EXP:
-												ChatPacket(CHAT_TYPE_INFO, LC_TEXT("»óÀÚ¿¡¼­ ºÎÅÍ ½ÅºñÇÑ ºûÀÌ ³ª¿É´Ï´Ù."));
-												ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%dÀÇ °æÇèÄ¡¸¦ È¹µæÇß½À´Ï´Ù."), dwCounts[i]);
+												ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ìƒìì—ì„œ ë¶€í„° ì‹ ë¹„í•œ ë¹›ì´ ë‚˜ì˜µë‹ˆë‹¤."));
+												ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%dì˜ ê²½í—˜ì¹˜ë¥¼ íšë“í–ˆìŠµë‹ˆë‹¤."), dwCounts[i]);
 												break;
 
 											case CSpecialItemGroup::MOB:
-												ChatPacket(CHAT_TYPE_INFO, LC_TEXT("»óÀÚ¿¡¼­ ¸ó½ºÅÍ°¡ ³ªÅ¸³µ½À´Ï´Ù!"));
+												ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ìƒìì—ì„œ ëª¬ìŠ¤í„°ê°€ ë‚˜íƒ€ë‚¬ìŠµë‹ˆë‹¤!"));
 												break;
 
 											case CSpecialItemGroup::SLOW:
-												ChatPacket(CHAT_TYPE_INFO, LC_TEXT("»óÀÚ¿¡¼­ ³ª¿Â »¡°£ ¿¬±â¸¦ µéÀÌ¸¶½ÃÀÚ ¿òÁ÷ÀÌ´Â ¼Óµµ°¡ ´À·ÁÁ³½À´Ï´Ù!"));
+												ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ìƒìì—ì„œ ë‚˜ì˜¨ ë¹¨ê°„ ì—°ê¸°ë¥¼ ë“¤ì´ë§ˆì‹œì ì›€ì§ì´ëŠ” ì†ë„ê°€ ëŠë ¤ì¡ŒìŠµë‹ˆë‹¤!"));
 												break;
 
 											case CSpecialItemGroup::DRAIN_HP:
-												ChatPacket(CHAT_TYPE_INFO, LC_TEXT("»óÀÚ°¡ °©ÀÚ±â Æø¹ßÇÏ¿´½À´Ï´Ù! »ı¸í·ÂÀÌ °¨¼ÒÇß½À´Ï´Ù."));
+												ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ìƒìê°€ ê°‘ìê¸° í­ë°œí•˜ì˜€ìŠµë‹ˆë‹¤! ìƒëª…ë ¥ì´ ê°ì†Œí–ˆìŠµë‹ˆë‹¤."));
 												break;
 
 											case CSpecialItemGroup::POISON:
-												ChatPacket(CHAT_TYPE_INFO, LC_TEXT("»óÀÚ¿¡¼­ ³ª¿Â ³ì»ö ¿¬±â¸¦ µéÀÌ¸¶½ÃÀÚ µ¶ÀÌ ¿Â¸öÀ¸·Î ÆÛÁı´Ï´Ù!"));
+												ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ìƒìì—ì„œ ë‚˜ì˜¨ ë…¹ìƒ‰ ì—°ê¸°ë¥¼ ë“¤ì´ë§ˆì‹œì ë…ì´ ì˜¨ëª¸ìœ¼ë¡œ í¼ì§‘ë‹ˆë‹¤!"));
 												break;
 
 											case CSpecialItemGroup::MOB_GROUP:
-												ChatPacket(CHAT_TYPE_INFO, LC_TEXT("»óÀÚ¿¡¼­ ¸ó½ºÅÍ°¡ ³ªÅ¸³µ½À´Ï´Ù!"));
+												ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ìƒìì—ì„œ ëª¬ìŠ¤í„°ê°€ ë‚˜íƒ€ë‚¬ìŠµë‹ˆë‹¤!"));
 												break;
 
 											default:
 												if (item_gets[i])
 												{
 													if (dwCounts[i] > 1)
-														ChatPacket(CHAT_TYPE_INFO, LC_TEXT("»óÀÚ¿¡¼­ %s °¡ %d °³ ³ª¿Ô½À´Ï´Ù."), item_gets[i]->GetName(), dwCounts[i]);
+														ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ìƒìì—ì„œ %s ê°€ %d ê°œ ë‚˜ì™”ìŠµë‹ˆë‹¤."), item_gets[i]->GetName(), dwCounts[i]);
 													else
-														ChatPacket(CHAT_TYPE_INFO, LC_TEXT("»óÀÚ¿¡¼­ %s °¡ ³ª¿Ô½À´Ï´Ù."), item_gets[i]->GetName());
+														ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ìƒìì—ì„œ %s ê°€ ë‚˜ì™”ìŠµë‹ˆë‹¤."), item_gets[i]->GetName());
 												}
 												break;
 											}
@@ -3715,7 +3715,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 									}
 									else
 									{
-										ChatPacket(CHAT_TYPE_TALKING, LC_TEXT("¾Æ¹«°Íµµ ¾òÀ» ¼ö ¾ø¾ú½À´Ï´Ù."));
+										ChatPacket(CHAT_TYPE_TALKING, LC_TEXT("ì•„ë¬´ê²ƒë„ ì–»ì„ ìˆ˜ ì—†ì—ˆìŠµë‹ˆë‹¤."));
 										return false;
 									}
 								}
@@ -3732,7 +3732,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 							case 50107:
 								{
 									EffectPacket(SE_CHINA_FIREWORK);
-									// ½ºÅÏ °ø°İÀ» ¿Ã·ÁÁØ´Ù
+									// ìŠ¤í„´ ê³µê²©ì„ ì˜¬ë ¤ì¤€ë‹¤
 									AddAffect(AFFECT_CHINA_FIREWORK, POINT_STUN_PCT, 30, AFF_CHINA_FIREWORK, 5*60, 0, true);
 									item->SetCount(item->GetCount()-1);
 								}
@@ -3742,12 +3742,12 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 								{
 									if (CArenaManager::instance().IsArenaMap(GetMapIndex()) == true)
 									{
-										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("´ë·Ã Áß¿¡´Â ÀÌ¿ëÇÒ ¼ö ¾ø´Â ¹°Ç°ÀÔ´Ï´Ù."));
+										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ëŒ€ë ¨ ì¤‘ì—ëŠ” ì´ìš©í•  ìˆ˜ ì—†ëŠ” ë¬¼í’ˆì…ë‹ˆë‹¤."));
 										return false;
 									}
 
 									EffectPacket(SE_SPIN_TOP);
-									// ½ºÅÏ °ø°İÀ» ¿Ã·ÁÁØ´Ù
+									// ìŠ¤í„´ ê³µê²©ì„ ì˜¬ë ¤ì¤€ë‹¤
 									AddAffect(AFFECT_CHINA_FIREWORK, POINT_STUN_PCT, 30, AFF_CHINA_FIREWORK, 5*60, 0, true);
 									item->SetCount(item->GetCount()-1);
 								}
@@ -3773,16 +3773,16 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 								VCardUse(this, this, item);
 								break;
 
-							case ITEM_ELK_VNUM: // µ·²Ù·¯¹Ì
+							case ITEM_ELK_VNUM: // ëˆê¾¸ëŸ¬ë¯¸
 								{
 									int iGold = item->GetSocket(0);
 									ITEM_MANAGER::instance().RemoveItem(item);
-									ChatPacket(CHAT_TYPE_INFO, LC_TEXT("µ· %d ³ÉÀ» È¹µæÇß½À´Ï´Ù."), iGold);
+									ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ëˆ %d ëƒ¥ì„ íšë“í–ˆìŠµë‹ˆë‹¤."), iGold);
 									PointChange(POINT_GOLD, iGold);
 								}
 								break;
 
-								//±ºÁÖÀÇ ÁõÇ¥ 
+								//êµ°ì£¼ì˜ ì¦í‘œ 
 							case 70021:
 								{
 									int HealPrice = quest::CQuestManager::instance().GetEventFlag("MonarchHealGold");
@@ -3792,10 +3792,10 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 									if (CMonarch::instance().HealMyEmpire(this, HealPrice))
 									{
 										char szNotice[256];
-										snprintf(szNotice, sizeof(szNotice), LC_TEXT("±ºÁÖÀÇ Ãàº¹À¸·Î ÀÌÁö¿ª %s À¯Àú´Â HP,SP°¡ ¸ğµÎ Ã¤¿öÁı´Ï´Ù."), EMPIRE_NAME(GetEmpire()));
+										snprintf(szNotice, sizeof(szNotice), LC_TEXT("êµ°ì£¼ì˜ ì¶•ë³µìœ¼ë¡œ ì´ì§€ì—­ %s ìœ ì €ëŠ” HP,SPê°€ ëª¨ë‘ ì±„ì›Œì§‘ë‹ˆë‹¤."), EMPIRE_NAME(GetEmpire()));
 										SendNoticeMap(szNotice, GetMapIndex(), false);
 										
-										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("±ºÁÖÀÇ Ãàº¹À» »ç¿ëÇÏ¿´½À´Ï´Ù."));
+										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("êµ°ì£¼ì˜ ì¶•ë³µì„ ì‚¬ìš©í•˜ì˜€ìŠµë‹ˆë‹¤."));
 									}
 								}
 								break;
@@ -3805,7 +3805,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 								}
 								break;
 
-							case 71092 : // º¯½Å ÇØÃ¼ºÎ ÀÓ½Ã
+							case 71092 : // ë³€ì‹  í•´ì²´ë¶€ ì„ì‹œ
 								{
 									if (m_pkChrTarget != NULL)
 									{
@@ -3826,9 +3826,9 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 								}
 								break;
 
-							case 71051 : // ÁøÀç°¡
+							case 71051 : // ì§„ì¬ê°€
 								{
-									// À¯·´, ½Ì°¡Æú, º£Æ®³² ÁøÀç°¡ »ç¿ë±İÁö
+									// ìœ ëŸ½, ì‹±ê°€í´, ë² íŠ¸ë‚¨ ì§„ì¬ê°€ ì‚¬ìš©ê¸ˆì§€
 									// if (LC_IsEurope() || LC_IsSingapore() || LC_IsVietnam())
 										// return false;
 
@@ -3848,13 +3848,13 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 
 									if (item2->GetAttributeSetIndex() == -1)
 									{
-										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("¼Ó¼ºÀ» º¯°æÇÒ ¼ö ¾ø´Â ¾ÆÀÌÅÛÀÔ´Ï´Ù."));
+										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì†ì„±ì„ ë³€ê²½í•  ìˆ˜ ì—†ëŠ” ì•„ì´í…œì…ë‹ˆë‹¤."));
 										return false;
 									}
 
 									if (item2->AddRareAttribute() == true)
 									{
-										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("¼º°øÀûÀ¸·Î ¼Ó¼ºÀÌ Ãß°¡ µÇ¾ú½À´Ï´Ù"));
+										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì„±ê³µì ìœ¼ë¡œ ì†ì„±ì´ ì¶”ê°€ ë˜ì—ˆìŠµë‹ˆë‹¤"));
 
 										int iAddedIdx = item2->GetRareAttrCount() + 4;
 										char buf[21];
@@ -3874,14 +3874,14 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 									}
 									else
 									{
-										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("´õ ÀÌ»ó ÀÌ ¾ÆÀÌÅÛÀ¸·Î ¼Ó¼ºÀ» Ãß°¡ÇÒ ¼ö ¾ø½À´Ï´Ù"));
+										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ë” ì´ìƒ ì´ ì•„ì´í…œìœ¼ë¡œ ì†ì„±ì„ ì¶”ê°€í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤"));
 									}
 								}
 								break;
 
-							case 71052 : // ÁøÀç°æ
+							case 71052 : // ì§„ì¬ê²½
 								{
-									// À¯·´, ½Ì°¡Æú, º£Æ®³² ÁøÀç°¡ »ç¿ë±İÁö
+									// ìœ ëŸ½, ì‹±ê°€í´, ë² íŠ¸ë‚¨ ì§„ì¬ê°€ ì‚¬ìš©ê¸ˆì§€
 									// if (LC_IsEurope() || LC_IsSingapore() || LC_IsVietnam())
 										// return false;
 
@@ -3901,7 +3901,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 
 									if (item2->GetAttributeSetIndex() == -1)
 									{
-										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("¼Ó¼ºÀ» º¯°æÇÒ ¼ö ¾ø´Â ¾ÆÀÌÅÛÀÔ´Ï´Ù."));
+										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì†ì„±ì„ ë³€ê²½í•  ìˆ˜ ì—†ëŠ” ì•„ì´í…œì…ë‹ˆë‹¤."));
 										return false;
 									}
 
@@ -3915,7 +3915,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 									}
 									else
 									{
-										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("º¯°æ ½ÃÅ³ ¼Ó¼ºÀÌ ¾ø½À´Ï´Ù"));
+										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ë³€ê²½ ì‹œí‚¬ ì†ì„±ì´ ì—†ìŠµë‹ˆë‹¤"));
 									}
 								}
 								break;
@@ -3928,8 +3928,8 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 							case ITEM_AUTO_SP_RECOVERY_M:
 							case ITEM_AUTO_SP_RECOVERY_L:
 							case ITEM_AUTO_SP_RECOVERY_X:
-							// ¹«½Ã¹«½ÃÇÏÁö¸¸ ÀÌÀü¿¡ ÇÏ´ø °É °íÄ¡±â´Â ¹«¼·°í...
-							// ±×·¡¼­ ±×³É ÇÏµå ÄÚµù. ¼±¹° »óÀÚ¿ë ÀÚµ¿¹°¾à ¾ÆÀÌÅÛµé.
+							// ë¬´ì‹œë¬´ì‹œí•˜ì§€ë§Œ ì´ì „ì— í•˜ë˜ ê±¸ ê³ ì¹˜ê¸°ëŠ” ë¬´ì„­ê³ ...
+							// ê·¸ë˜ì„œ ê·¸ëƒ¥ í•˜ë“œ ì½”ë”©. ì„ ë¬¼ ìƒììš© ìë™ë¬¼ì•½ ì•„ì´í…œë“¤.
 							case REWARD_BOX_ITEM_AUTO_SP_RECOVERY_XS: 
 							case REWARD_BOX_ITEM_AUTO_SP_RECOVERY_S: 
 							case REWARD_BOX_ITEM_AUTO_HP_RECOVERY_XS: 
@@ -3939,7 +3939,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 								{
 									if (CArenaManager::instance().IsArenaMap(GetMapIndex()) == true)
 									{
-										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("´ë·ÃÀå¿¡¼­ »ç¿ëÇÏ½Ç ¼ö ¾ø½À´Ï´Ù."));
+										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ëŒ€ë ¨ì¥ì—ì„œ ì‚¬ìš©í•˜ì‹¤ ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 										return false;
 									}
 
@@ -3982,7 +3982,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 
 										if (-1 == pos)
 										{
-											ChatPacket(CHAT_TYPE_INFO, LC_TEXT("¼ÒÁöÇ°¿¡ ºó °ø°£ÀÌ ¾ø½À´Ï´Ù."));
+											ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì†Œì§€í’ˆì— ë¹ˆ ê³µê°„ì´ ì—†ìŠµë‹ˆë‹¤."));
 											break;
 										}
 
@@ -4092,7 +4092,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 
 									if (get_global_time() - last_use_time < 10*60)
 									{
-										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("¾ÆÁ÷ »ç¿ëÇÒ ¼ö ¾ø½À´Ï´Ù."));
+										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì•„ì§ ì‚¬ìš©í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 										return false;
 									}
 
@@ -4111,7 +4111,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 							{
 								if (quest::CQuestManager::instance().GetEventFlag("arena_potion_limit") > 0)
 								{
-									ChatPacket(CHAT_TYPE_INFO, LC_TEXT("´ë·ÃÀå¿¡¼­ »ç¿ëÇÏ½Ç ¼ö ¾ø½À´Ï´Ù."));
+									ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ëŒ€ë ¨ì¥ì—ì„œ ì‚¬ìš©í•˜ì‹¤ ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 									return false;
 								}
 
@@ -4125,21 +4125,21 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 										{
 											if (m_nPotionLimit <= 0)
 											{
-												ChatPacket(CHAT_TYPE_INFO, LC_TEXT("»ç¿ë Á¦ÇÑ·®À» ÃÊ°úÇÏ¿´½À´Ï´Ù."));
+												ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì‚¬ìš© ì œí•œëŸ‰ì„ ì´ˆê³¼í•˜ì˜€ìŠµë‹ˆë‹¤."));
 												return false;
 											}
 										}
 										break;
 
 									default :
-										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("´ë·ÃÀå¿¡¼­ »ç¿ëÇÏ½Ç ¼ö ¾ø½À´Ï´Ù."));
+										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ëŒ€ë ¨ì¥ì—ì„œ ì‚¬ìš©í•˜ì‹¤ ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 										return false;
 								}
 							}
 
 							bool used = false;
 
-							if (item->GetValue(0) != 0) // HP Àı´ë°ª È¸º¹
+							if (item->GetValue(0) != 0) // HP ì ˆëŒ€ê°’ íšŒë³µ
 							{
 								if (GetHP() < GetMaxHP())
 								{
@@ -4149,7 +4149,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 								}
 							}
 
-							if (item->GetValue(1) != 0)	// SP Àı´ë°ª È¸º¹
+							if (item->GetValue(1) != 0)	// SP ì ˆëŒ€ê°’ íšŒë³µ
 							{
 								if (GetSP() < GetMaxSP())
 								{
@@ -4159,7 +4159,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 								}
 							}
 
-							if (item->GetValue(3) != 0) // HP % È¸º¹
+							if (item->GetValue(3) != 0) // HP % íšŒë³µ
 							{
 								if (GetHP() < GetMaxHP())
 								{
@@ -4169,7 +4169,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 								}
 							}
 
-							if (item->GetValue(4) != 0) // SP % È¸º¹
+							if (item->GetValue(4) != 0) // SP % íšŒë³µ
 							{
 								if (GetSP() < GetMaxSP())
 								{
@@ -4184,7 +4184,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 								if (item->GetVnum() == 50085 || item->GetVnum() == 50086)
 								{
 									if (test_server)
-										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("¿ùº´ ¶Ç´Â Á¾ÀÚ ¸¦ »ç¿ëÇÏ¿´½À´Ï´Ù"));
+										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì›”ë³‘ ë˜ëŠ” ì¢…ì ë¥¼ ì‚¬ìš©í•˜ì˜€ìŠµë‹ˆë‹¤"));
 									SetUseSeedOrMoonBottleTime();
 								}
 								if (GetDungeon())
@@ -4207,7 +4207,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 						{
 							if (quest::CQuestManager::instance().GetEventFlag("arena_potion_limit") > 0)
 							{
-								ChatPacket(CHAT_TYPE_INFO, LC_TEXT("´ë·ÃÀå¿¡¼­ »ç¿ëÇÏ½Ç ¼ö ¾ø½À´Ï´Ù."));
+								ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ëŒ€ë ¨ì¥ì—ì„œ ì‚¬ìš©í•˜ì‹¤ ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 								return false;
 							}
 						
@@ -4223,14 +4223,14 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 									{
 										if (m_nPotionLimit <= 0)
 										{
-											ChatPacket(CHAT_TYPE_INFO, LC_TEXT("»ç¿ë Á¦ÇÑ·®À» ÃÊ°úÇÏ¿´½À´Ï´Ù."));
+											ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì‚¬ìš© ì œí•œëŸ‰ì„ ì´ˆê³¼í•˜ì˜€ìŠµë‹ˆë‹¤."));
 											return false;
 										}
 									}
 									break;
 
 								default :
-									ChatPacket(CHAT_TYPE_INFO, LC_TEXT("´ë·ÃÀå¿¡¼­ »ç¿ëÇÏ½Ç ¼ö ¾ø½À´Ï´Ù."));
+									ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ëŒ€ë ¨ì¥ì—ì„œ ì‚¬ìš©í•˜ì‹¤ ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 									return false;
 							}
 						}
@@ -4351,22 +4351,22 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 							const int MEMORY_PORTAL = 2;
 
 
-							// gm_guild_build, oxevent ¸Ê¿¡¼­ ±ÍÈ¯ºÎ ±ÍÈ¯±â¾ïºÎ ¸¦ »ç¿ë¸øÇÏ°Ô ¸·À½
+							// gm_guild_build, oxevent ë§µì—ì„œ ê·€í™˜ë¶€ ê·€í™˜ê¸°ì–µë¶€ ë¥¼ ì‚¬ìš©ëª»í•˜ê²Œ ë§‰ìŒ
 							if (GetMapIndex() == 200 || GetMapIndex() == 113)
 							{
-								ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ÇöÀç À§Ä¡¿¡¼­ »ç¿ëÇÒ ¼ö ¾ø½À´Ï´Ù."));
+								ChatPacket(CHAT_TYPE_INFO, LC_TEXT("í˜„ì¬ ìœ„ì¹˜ì—ì„œ ì‚¬ìš©í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 								return false;
 							}
 
 							if (CArenaManager::instance().IsArenaMap(GetMapIndex()) == true)
 							{
-								ChatPacket(CHAT_TYPE_INFO, LC_TEXT("´ë·Ã Áß¿¡´Â ÀÌ¿ëÇÒ ¼ö ¾ø´Â ¹°Ç°ÀÔ´Ï´Ù."));
+								ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ëŒ€ë ¨ ì¤‘ì—ëŠ” ì´ìš©í•  ìˆ˜ ì—†ëŠ” ë¬¼í’ˆì…ë‹ˆë‹¤."));
 								return false;
 							}
 
 							if (m_pkWarpEvent)
 							{
-								ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ÀÌµ¿ÇÒ ÁØºñ°¡ µÇ¾îÀÖÀ½À¸·Î ±ÍÈ¯ºÎ¸¦ »ç¿ëÇÒ¼ö ¾ø½À´Ï´Ù"));
+								ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì´ë™í•  ì¤€ë¹„ê°€ ë˜ì–´ìˆìŒìœ¼ë¡œ ê·€í™˜ë¶€ë¥¼ ì‚¬ìš©í• ìˆ˜ ì—†ìŠµë‹ˆë‹¤"));
 								return false;
 							}
 
@@ -4377,7 +4377,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 								return false;
 							// END_OF_CONSUME_LIFE_WHEN_USE_WARP_ITEM
 
-							if (item->GetValue(0) == TOWN_PORTAL) // ±ÍÈ¯ºÎ
+							if (item->GetValue(0) == TOWN_PORTAL) // ê·€í™˜ë¶€
 							{
 								if (item->GetSocket(0) == 0)
 								{
@@ -4403,20 +4403,20 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 								else
 								{
 									if (test_server)
-										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("¿ø·¡ À§Ä¡·Î º¹±Í"));	
+										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì›ë˜ ìœ„ì¹˜ë¡œ ë³µê·€"));	
 
 									ProcessRecallItem(item);
 								}
 							}
-							else if (item->GetValue(0) == MEMORY_PORTAL) // ±ÍÈ¯±â¾ïºÎ
+							else if (item->GetValue(0) == MEMORY_PORTAL) // ê·€í™˜ê¸°ì–µë¶€
 							{
 								if (item->GetSocket(0) == 0)
 								{
 									if (GetDungeon())
 									{
-										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("´øÀü ¾È¿¡¼­´Â %s%s »ç¿ëÇÒ ¼ö ¾ø½À´Ï´Ù."),
+										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ë˜ì „ ì•ˆì—ì„œëŠ” %s%s ì‚¬ìš©í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤."),
 												item->GetName(),
-												g_iUseLocale ? "" : (under_han(item->GetName()) ? LC_TEXT("À»") : LC_TEXT("¸¦")));
+												g_iUseLocale ? "" : (under_han(item->GetName()) ? LC_TEXT("ì„") : LC_TEXT("ë¥¼")));
 										return false;
 									}
 
@@ -4449,21 +4449,21 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 							if (item2->IsEquipped()) // Fix
 								return false;
 	
-							if (item2->GetVnum() >= 28330 && item2->GetVnum() <= 28343) // ¿µ¼®+3
+							if (item2->GetVnum() >= 28330 && item2->GetVnum() <= 28343) // ì˜ì„+3
 							{
-								ChatPacket(CHAT_TYPE_INFO, LC_TEXT("+3 ¿µ¼®Àº ÀÌ ¾ÆÀÌÅÛÀ¸·Î °³·®ÇÒ ¼ö ¾ø½À´Ï´Ù"));
+								ChatPacket(CHAT_TYPE_INFO, LC_TEXT("+3 ì˜ì„ì€ ì´ ì•„ì´í…œìœ¼ë¡œ ê°œëŸ‰í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤"));
 								return false;
 							}
 							
-							if (item2->GetVnum() >= 28430 && item2->GetVnum() <= 28443)  // ¿µ¼®+4
+							if (item2->GetVnum() >= 28430 && item2->GetVnum() <= 28443)  // ì˜ì„+4
 							{
-								if (item->GetVnum() == 71056) // Ã»·æÀÇ¼û°á
+								if (item->GetVnum() == 71056) // ì²­ë£¡ì˜ìˆ¨ê²°
 								{
 									RefineItem(item, item2);
 								}
 								else
 								{
-									ChatPacket(CHAT_TYPE_INFO, LC_TEXT("¿µ¼®Àº ÀÌ ¾ÆÀÌÅÛÀ¸·Î °³·®ÇÒ ¼ö ¾ø½À´Ï´Ù"));
+									ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì˜ì„ì€ ì´ ì•„ì´í…œìœ¼ë¡œ ê°œëŸ‰í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤"));
 								}
 							}
 							else
@@ -4493,12 +4493,12 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 								BuffOnAttr_RemoveBuffsFromItem(item2);
 							}
 
-							// [NOTE] ÄÚ½ºÆ¬ ¾ÆÀÌÅÛ¿¡´Â ¾ÆÀÌÅÛ ÃÖÃÊ »ı¼º½Ã ·£´ı ¼Ó¼ºÀ» ºÎ¿©ÇÏµÇ, Àç°æÀç°¡ µîµîÀº ¸·¾Æ´Ş¶ó´Â ¿äÃ»ÀÌ ÀÖ¾úÀ½.
-							// ¿ø·¡ ANTI_CHANGE_ATTRIBUTE °°Àº ¾ÆÀÌÅÛ Flag¸¦ Ãß°¡ÇÏ¿© ±âÈ¹ ·¹º§¿¡¼­ À¯¿¬ÇÏ°Ô ÄÁÆ®·Ñ ÇÒ ¼ö ÀÖµµ·Ï ÇÒ ¿¹Á¤ÀÌ¾úÀ¸³ª
-							// ±×µı°Å ÇÊ¿ä¾øÀ¸´Ï ´ÚÄ¡°í »¡¸® ÇØ´Ş·¡¼­ ±×³É ¿©±â¼­ ¸·À½... -_-
+							// [NOTE] ì½”ìŠ¤íŠ¬ ì•„ì´í…œì—ëŠ” ì•„ì´í…œ ìµœì´ˆ ìƒì„±ì‹œ ëœë¤ ì†ì„±ì„ ë¶€ì—¬í•˜ë˜, ì¬ê²½ì¬ê°€ ë“±ë“±ì€ ë§‰ì•„ë‹¬ë¼ëŠ” ìš”ì²­ì´ ìˆì—ˆìŒ.
+							// ì›ë˜ ANTI_CHANGE_ATTRIBUTE ê°™ì€ ì•„ì´í…œ Flagë¥¼ ì¶”ê°€í•˜ì—¬ ê¸°íš ë ˆë²¨ì—ì„œ ìœ ì—°í•˜ê²Œ ì»¨íŠ¸ë¡¤ í•  ìˆ˜ ìˆë„ë¡ í•  ì˜ˆì •ì´ì—ˆìœ¼ë‚˜
+							// ê·¸ë”´ê±° í•„ìš”ì—†ìœ¼ë‹ˆ ë‹¥ì¹˜ê³  ë¹¨ë¦¬ í•´ë‹¬ë˜ì„œ ê·¸ëƒ¥ ì—¬ê¸°ì„œ ë§‰ìŒ... -_-
 							if (ITEM_COSTUME == item2->GetType())
 							{
-								ChatPacket(CHAT_TYPE_INFO, LC_TEXT("¼Ó¼ºÀ» º¯°æÇÒ ¼ö ¾ø´Â ¾ÆÀÌÅÛÀÔ´Ï´Ù."));
+								ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì†ì„±ì„ ë³€ê²½í•  ìˆ˜ ì—†ëŠ” ì•„ì´í…œì…ë‹ˆë‹¤."));
 								return false;
 							}
 
@@ -4521,7 +4521,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 
 										if (i == ITEM_SOCKET_MAX_NUM)
 										{
-											ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Ã»¼ÒÇÒ ¼®ÀÌ ¹ÚÇôÀÖÁö ¾Ê½À´Ï´Ù."));
+											ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì²­ì†Œí•  ì„ì´ ë°•í˜€ìˆì§€ ì•ŠìŠµë‹ˆë‹¤."));
 											return false;
 										}
 
@@ -4553,21 +4553,21 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 								case USE_CHANGE_ATTRIBUTE :
 									if (item2->GetAttributeSetIndex() == -1)
 									{
-										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("¼Ó¼ºÀ» º¯°æÇÒ ¼ö ¾ø´Â ¾ÆÀÌÅÛÀÔ´Ï´Ù."));
+										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì†ì„±ì„ ë³€ê²½í•  ìˆ˜ ì—†ëŠ” ì•„ì´í…œì…ë‹ˆë‹¤."));
 										return false;
 									}
 
 									if (item2->GetAttributeCount() == 0)
 									{
-										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("º¯°æÇÒ ¼Ó¼ºÀÌ ¾ø½À´Ï´Ù."));
+										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ë³€ê²½í•  ì†ì„±ì´ ì—†ìŠµë‹ˆë‹¤."));
 										return false;
 									}
 
 									if (GM_PLAYER == GetGMLevel() && false == test_server)
 									{
 										//
-										// Event Flag ¸¦ ÅëÇØ ÀÌÀü¿¡ ¾ÆÀÌÅÛ ¼Ó¼º º¯°æÀ» ÇÑ ½Ã°£À¸·Î ºÎÅÍ ÃæºĞÇÑ ½Ã°£ÀÌ Èê·¶´ÂÁö °Ë»çÇÏ°í
-										// ½Ã°£ÀÌ ÃæºĞÈ÷ Èê·¶´Ù¸é ÇöÀç ¼Ó¼ºº¯°æ¿¡ ´ëÇÑ ½Ã°£À» ¼³Á¤ÇØ ÁØ´Ù.
+										// Event Flag ë¥¼ í†µí•´ ì´ì „ì— ì•„ì´í…œ ì†ì„± ë³€ê²½ì„ í•œ ì‹œê°„ìœ¼ë¡œ ë¶€í„° ì¶©ë¶„í•œ ì‹œê°„ì´ í˜ë €ëŠ”ì§€ ê²€ì‚¬í•˜ê³ 
+										// ì‹œê°„ì´ ì¶©ë¶„íˆ í˜ë €ë‹¤ë©´ í˜„ì¬ ì†ì„±ë³€ê²½ì— ëŒ€í•œ ì‹œê°„ì„ ì„¤ì •í•´ ì¤€ë‹¤.
 										//
 
 										DWORD dwChangeItemAttrCycle = quest::CQuestManager::instance().GetEventFlag(msc_szChangeItemAttrCycleFlag);
@@ -4584,7 +4584,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 
 											// if (dwLastChangeItemAttrMin + dwChangeItemAttrCycle > dwNowMin)
 											// {
-												// ChatPacket(CHAT_TYPE_INFO, LC_TEXT("¼Ó¼ºÀ» ¹Ù²ÛÁö %dºĞ ÀÌ³»¿¡´Â ´Ù½Ã º¯°æÇÒ ¼ö ¾ø½À´Ï´Ù.(%d ºĞ ³²À½)"),
+												// ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì†ì„±ì„ ë°”ê¾¼ì§€ %dë¶„ ì´ë‚´ì—ëŠ” ë‹¤ì‹œ ë³€ê²½í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤.(%d ë¶„ ë‚¨ìŒ)"),
 														// dwChangeItemAttrCycle, dwChangeItemAttrCycle - (dwNowMin - dwLastChangeItemAttrMin));
 												// return false;
 											// }
@@ -4614,8 +4614,8 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 
 									else
 									{
-										// ¿¬Àç°æ Æ¯¼öÃ³¸®
-										// Àı´ë·Î ¿¬Àç°¡ Ãß°¡ ¾ÈµÉ°Å¶ó ÇÏ¿© ÇÏµå ÄÚµùÇÔ.
+										// ì—°ì¬ê²½ íŠ¹ìˆ˜ì²˜ë¦¬
+										// ì ˆëŒ€ë¡œ ì—°ì¬ê°€ ì¶”ê°€ ì•ˆë ê±°ë¼ í•˜ì—¬ í•˜ë“œ ì½”ë”©í•¨.
 										if (item->GetVnum() == 71151 || item->GetVnum() == 76023)
 										{
 											if ((item2->GetType() == ITEM_WEAPON)
@@ -4632,20 +4632,20 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 												}
 												if (false == bCanUse)
 												{
-													ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Àû¿ë ·¹º§º¸´Ù ³ô¾Æ »ç¿ëÀÌ ºÒ°¡´ÉÇÕ´Ï´Ù."));
+													ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì ìš© ë ˆë²¨ë³´ë‹¤ ë†’ì•„ ì‚¬ìš©ì´ ë¶ˆê°€ëŠ¥í•©ë‹ˆë‹¤."));
 													break;
 												}
 											}
 											else
 											{
-												ChatPacket(CHAT_TYPE_INFO, LC_TEXT("¹«±â¿Í °©¿Ê¿¡¸¸ »ç¿ë °¡´ÉÇÕ´Ï´Ù."));
+												ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ë¬´ê¸°ì™€ ê°‘ì˜·ì—ë§Œ ì‚¬ìš© ê°€ëŠ¥í•©ë‹ˆë‹¤."));
 												break;
 											}
 										}
 										item2->ChangeAttribute();
 									}
 
-									ChatPacket(CHAT_TYPE_INFO, LC_TEXT("¼Ó¼ºÀ» º¯°æÇÏ¿´½À´Ï´Ù."));
+									ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì†ì„±ì„ ë³€ê²½í•˜ì˜€ìŠµë‹ˆë‹¤."));
 									{
 										char buf[21];
 										snprintf(buf, sizeof(buf), "%u", item2->GetID());
@@ -4658,14 +4658,14 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 								case USE_ADD_ATTRIBUTE :
 									if (item2->GetAttributeSetIndex() == -1)
 									{
-										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("¼Ó¼ºÀ» º¯°æÇÒ ¼ö ¾ø´Â ¾ÆÀÌÅÛÀÔ´Ï´Ù."));
+										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì†ì„±ì„ ë³€ê²½í•  ìˆ˜ ì—†ëŠ” ì•„ì´í…œì…ë‹ˆë‹¤."));
 										return false;
 									}
 
 									if (item2->GetAttributeCount() < 4)
 									{
-										// ¿¬Àç°¡ Æ¯¼öÃ³¸®
-										// Àı´ë·Î ¿¬Àç°¡ Ãß°¡ ¾ÈµÉ°Å¶ó ÇÏ¿© ÇÏµå ÄÚµùÇÔ.
+										// ì—°ì¬ê°€ íŠ¹ìˆ˜ì²˜ë¦¬
+										// ì ˆëŒ€ë¡œ ì—°ì¬ê°€ ì¶”ê°€ ì•ˆë ê±°ë¼ í•˜ì—¬ í•˜ë“œ ì½”ë”©í•¨.
 										if (item->GetVnum() == 71152 || item->GetVnum() == 76024)
 										{
 											if ((item2->GetType() == ITEM_WEAPON)
@@ -4682,13 +4682,13 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 												}
 												if (false == bCanUse)
 												{
-													ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Àû¿ë ·¹º§º¸´Ù ³ô¾Æ »ç¿ëÀÌ ºÒ°¡´ÉÇÕ´Ï´Ù."));
+													ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì ìš© ë ˆë²¨ë³´ë‹¤ ë†’ì•„ ì‚¬ìš©ì´ ë¶ˆê°€ëŠ¥í•©ë‹ˆë‹¤."));
 													break;
 												}
 											}
 											else
 											{
-												ChatPacket(CHAT_TYPE_INFO, LC_TEXT("¹«±â¿Í °©¿Ê¿¡¸¸ »ç¿ë °¡´ÉÇÕ´Ï´Ù."));
+												ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ë¬´ê¸°ì™€ ê°‘ì˜·ì—ë§Œ ì‚¬ìš© ê°€ëŠ¥í•©ë‹ˆë‹¤."));
 												break;
 											}
 										}
@@ -4698,7 +4698,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 										if (number(1, 100) <= aiItemAttributeAddPercent[item2->GetAttributeCount()])
 										{
 											item2->AddAttribute();
-											ChatPacket(CHAT_TYPE_INFO, LC_TEXT("¼Ó¼º Ãß°¡¿¡ ¼º°øÇÏ¿´½À´Ï´Ù."));
+											ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì†ì„± ì¶”ê°€ì— ì„±ê³µí•˜ì˜€ìŠµë‹ˆë‹¤."));
 
 											int iAddedIdx = item2->GetAttributeCount() - 1;
 											LogManager::instance().ItemLog(
@@ -4713,7 +4713,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 										}
 										else
 										{
-											ChatPacket(CHAT_TYPE_INFO, LC_TEXT("¼Ó¼º Ãß°¡¿¡ ½ÇÆĞÇÏ¿´½À´Ï´Ù."));
+											ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì†ì„± ì¶”ê°€ì— ì‹¤íŒ¨í•˜ì˜€ìŠµë‹ˆë‹¤."));
 											LogManager::instance().ItemLog(this, item, "ADD_ATTRIBUTE_FAIL", buf);
 										}
 
@@ -4721,20 +4721,20 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 									}
 									else
 									{
-										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("´õÀÌ»ó ÀÌ ¾ÆÀÌÅÛÀ» ÀÌ¿ëÇÏ¿© ¼Ó¼ºÀ» Ãß°¡ÇÒ ¼ö ¾ø½À´Ï´Ù."));
+										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ë”ì´ìƒ ì´ ì•„ì´í…œì„ ì´ìš©í•˜ì—¬ ì†ì„±ì„ ì¶”ê°€í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 									}
 									break;
 
 								case USE_ADD_ATTRIBUTE2 :
-									// Ãàº¹ÀÇ ±¸½½ 
-									// Àç°¡ºñ¼­¸¦ ÅëÇØ ¼Ó¼ºÀ» 4°³ Ãß°¡ ½ÃÅ² ¾ÆÀÌÅÛ¿¡ ´ëÇØ¼­ ÇÏ³ªÀÇ ¼Ó¼ºÀ» ´õ ºÙ¿©ÁØ´Ù.
+									// ì¶•ë³µì˜ êµ¬ìŠ¬ 
+									// ì¬ê°€ë¹„ì„œë¥¼ í†µí•´ ì†ì„±ì„ 4ê°œ ì¶”ê°€ ì‹œí‚¨ ì•„ì´í…œì— ëŒ€í•´ì„œ í•˜ë‚˜ì˜ ì†ì„±ì„ ë” ë¶™ì—¬ì¤€ë‹¤.
 									if (item2->GetAttributeSetIndex() == -1)
 									{
-										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("¼Ó¼ºÀ» º¯°æÇÒ ¼ö ¾ø´Â ¾ÆÀÌÅÛÀÔ´Ï´Ù."));
+										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì†ì„±ì„ ë³€ê²½í•  ìˆ˜ ì—†ëŠ” ì•„ì´í…œì…ë‹ˆë‹¤."));
 										return false;
 									}
 
-									// ¼Ó¼ºÀÌ ÀÌ¹Ì 4°³ Ãß°¡ µÇ¾úÀ» ¶§¸¸ ¼Ó¼ºÀ» Ãß°¡ °¡´ÉÇÏ´Ù.
+									// ì†ì„±ì´ ì´ë¯¸ 4ê°œ ì¶”ê°€ ë˜ì—ˆì„ ë•Œë§Œ ì†ì„±ì„ ì¶”ê°€ ê°€ëŠ¥í•˜ë‹¤.
 									if (item2->GetAttributeCount() == 4)
 									{
 										char buf[21];
@@ -4743,7 +4743,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 										if (number(1, 100) <= aiItemAttributeAddPercent[item2->GetAttributeCount()])
 										{
 											item2->AddAttribute();
-											ChatPacket(CHAT_TYPE_INFO, LC_TEXT("¼Ó¼º Ãß°¡¿¡ ¼º°øÇÏ¿´½À´Ï´Ù."));
+											ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì†ì„± ì¶”ê°€ì— ì„±ê³µí•˜ì˜€ìŠµë‹ˆë‹¤."));
 
 											int iAddedIdx = item2->GetAttributeCount() - 1;
 											LogManager::instance().ItemLog(
@@ -4758,7 +4758,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 										}
 										else
 										{
-											ChatPacket(CHAT_TYPE_INFO, LC_TEXT("¼Ó¼º Ãß°¡¿¡ ½ÇÆĞÇÏ¿´½À´Ï´Ù."));
+											ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì†ì„± ì¶”ê°€ì— ì‹¤íŒ¨í•˜ì˜€ìŠµë‹ˆë‹¤."));
 											LogManager::instance().ItemLog(this, item, "ADD_ATTRIBUTE2_FAIL", buf);
 										}
 
@@ -4766,11 +4766,11 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 									}
 									else if (item2->GetAttributeCount() == 5)
 									{
-										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("´õ ÀÌ»ó ÀÌ ¾ÆÀÌÅÛÀ» ÀÌ¿ëÇÏ¿© ¼Ó¼ºÀ» Ãß°¡ÇÒ ¼ö ¾ø½À´Ï´Ù."));
+										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ë” ì´ìƒ ì´ ì•„ì´í…œì„ ì´ìš©í•˜ì—¬ ì†ì„±ì„ ì¶”ê°€í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 									}
 									else if (item2->GetAttributeCount() < 4)
 									{
-										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("¸ÕÀú Àç°¡ºñ¼­¸¦ ÀÌ¿ëÇÏ¿© ¼Ó¼ºÀ» Ãß°¡½ÃÄÑ ÁÖ¼¼¿ä."));
+										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ë¨¼ì € ì¬ê°€ë¹„ì„œë¥¼ ì´ìš©í•˜ì—¬ ì†ì„±ì„ ì¶”ê°€ì‹œì¼œ ì£¼ì„¸ìš”."));
 									}
 									else
 									{
@@ -4791,12 +4791,12 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 												if (number(1, 100) <= 50)
 												{
 													item2->SetAccessorySocketMaxGrade(item2->GetAccessorySocketMaxGrade() + 1);
-													ChatPacket(CHAT_TYPE_INFO, LC_TEXT("¼ÒÄÏÀÌ ¼º°øÀûÀ¸·Î Ãß°¡µÇ¾ú½À´Ï´Ù."));
+													ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì†Œì¼“ì´ ì„±ê³µì ìœ¼ë¡œ ì¶”ê°€ë˜ì—ˆìŠµë‹ˆë‹¤."));
 													LogManager::instance().ItemLog(this, item, "ADD_SOCKET_SUCCESS", buf);
 												}
 												else
 												{
-													ChatPacket(CHAT_TYPE_INFO, LC_TEXT("¼ÒÄÏ Ãß°¡¿¡ ½ÇÆĞÇÏ¿´½À´Ï´Ù."));
+													ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì†Œì¼“ ì¶”ê°€ì— ì‹¤íŒ¨í•˜ì˜€ìŠµë‹ˆë‹¤."));
 													LogManager::instance().ItemLog(this, item, "ADD_SOCKET_FAIL", buf);
 												}
 
@@ -4804,12 +4804,12 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 											}
 											else
 											{
-												ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ÀÌ ¾×¼¼¼­¸®¿¡´Â ´õÀÌ»ó ¼ÒÄÏÀ» Ãß°¡ÇÒ °ø°£ÀÌ ¾ø½À´Ï´Ù."));
+												ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì´ ì•¡ì„¸ì„œë¦¬ì—ëŠ” ë”ì´ìƒ ì†Œì¼“ì„ ì¶”ê°€í•  ê³µê°„ì´ ì—†ìŠµë‹ˆë‹¤."));
 											}
 										}
 										else
 										{
-											ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ÀÌ ¾ÆÀÌÅÛÀ¸·Î ¼ÒÄÏÀ» Ãß°¡ÇÒ ¼ö ¾ø´Â ¾ÆÀÌÅÛÀÔ´Ï´Ù."));
+											ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì´ ì•„ì´í…œìœ¼ë¡œ ì†Œì¼“ì„ ì¶”ê°€í•  ìˆ˜ ì—†ëŠ” ì•„ì´í…œì…ë‹ˆë‹¤."));
 										}
 									}
 									break;
@@ -4826,12 +4826,12 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 											if (number(1, 100) <= aiAccessorySocketPutPct[item2->GetAccessorySocketGrade()])
 											{
 												item2->SetAccessorySocketGrade(item2->GetAccessorySocketGrade() + 1);
-												ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ÀåÂø¿¡ ¼º°øÇÏ¿´½À´Ï´Ù."));
+												ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì¥ì°©ì— ì„±ê³µí•˜ì˜€ìŠµë‹ˆë‹¤."));
 												LogManager::instance().ItemLog(this, item, "PUT_SOCKET_SUCCESS", buf);
 											}
 											else
 											{
-												ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ÀåÂø¿¡ ½ÇÆĞÇÏ¿´½À´Ï´Ù."));
+												ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì¥ì°©ì— ì‹¤íŒ¨í•˜ì˜€ìŠµë‹ˆë‹¤."));
 												LogManager::instance().ItemLog(this, item, "PUT_SOCKET_FAIL", buf);
 											}
 
@@ -4840,19 +4840,19 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 										else
 										{
 											if (item2->GetAccessorySocketMaxGrade() == 0)
-												ChatPacket(CHAT_TYPE_INFO, LC_TEXT("¸ÕÀú ´ÙÀÌ¾Æ¸óµå·Î ¾Ç¼¼¼­¸®¿¡ ¼ÒÄÏÀ» Ãß°¡ÇØ¾ßÇÕ´Ï´Ù."));
+												ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ë¨¼ì € ë‹¤ì´ì•„ëª¬ë“œë¡œ ì•…ì„¸ì„œë¦¬ì— ì†Œì¼“ì„ ì¶”ê°€í•´ì•¼í•©ë‹ˆë‹¤."));
 											else if (item2->GetAccessorySocketMaxGrade() < ITEM_ACCESSORY_SOCKET_MAX_NUM)
 											{
-												ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ÀÌ ¾×¼¼¼­¸®¿¡´Â ´õÀÌ»ó ÀåÂøÇÒ ¼ÒÄÏÀÌ ¾ø½À´Ï´Ù."));
-												ChatPacket(CHAT_TYPE_INFO, LC_TEXT("´ÙÀÌ¾Æ¸óµå·Î ¼ÒÄÏÀ» Ãß°¡ÇØ¾ßÇÕ´Ï´Ù."));
+												ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì´ ì•¡ì„¸ì„œë¦¬ì—ëŠ” ë”ì´ìƒ ì¥ì°©í•  ì†Œì¼“ì´ ì—†ìŠµë‹ˆë‹¤."));
+												ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ë‹¤ì´ì•„ëª¬ë“œë¡œ ì†Œì¼“ì„ ì¶”ê°€í•´ì•¼í•©ë‹ˆë‹¤."));
 											}
 											else
-												ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ÀÌ ¾×¼¼¼­¸®¿¡´Â ´õÀÌ»ó º¸¼®À» ÀåÂøÇÒ ¼ö ¾ø½À´Ï´Ù."));
+												ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì´ ì•¡ì„¸ì„œë¦¬ì—ëŠ” ë”ì´ìƒ ë³´ì„ì„ ì¥ì°©í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 										}
 									}
 									else
 									{
-										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ÀÌ ¾ÆÀÌÅÛÀ» ÀåÂøÇÒ ¼ö ¾ø½À´Ï´Ù."));
+										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì´ ì•„ì´í…œì„ ì¥ì°©í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 									}
 									break;
 							}
@@ -4869,7 +4869,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 
 							if (m_pkFishingEvent)
 							{
-								ChatPacket(CHAT_TYPE_INFO, LC_TEXT("³¬½Ã Áß¿¡ ¹Ì³¢¸¦ °¥¾Æ³¢¿ï ¼ö ¾ø½À´Ï´Ù."));
+								ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ë‚šì‹œ ì¤‘ì— ë¯¸ë¼ë¥¼ ê°ˆì•„ë¼ìš¸ ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 								return false;
 							}
 
@@ -4880,11 +4880,11 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 
 							if (weapon->GetSocket(2))
 							{
-								ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ÀÌ¹Ì ²ÈÇôÀÖ´ø ¹Ì³¢¸¦ »©°í %s¸¦ ³¢¿ó´Ï´Ù."), item->GetName());
+								ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì´ë¯¸ ê½‚í˜€ìˆë˜ ë¯¸ë¼ë¥¼ ë¹¼ê³  %së¥¼ ë¼ì›ë‹ˆë‹¤."), item->GetName());
 							}
 							else
 							{
-								ChatPacket(CHAT_TYPE_INFO, LC_TEXT("³¬½Ã´ë¿¡ %s¸¦ ¹Ì³¢·Î ³¢¿ó´Ï´Ù."), item->GetName());
+								ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ë‚šì‹œëŒ€ì— %së¥¼ ë¯¸ë¼ë¡œ ë¼ì›ë‹ˆë‹¤."), item->GetName());
 							}
 
 							weapon->SetSocket(2, item->GetValue(0));
@@ -4901,18 +4901,18 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 						{
 							if (FindAffect(item->GetValue(0), aApplyInfo[item->GetValue(1)].bPointType))
 							{
-								ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ÀÌ¹Ì È¿°ú°¡ °É·Á ÀÖ½À´Ï´Ù."));
+								ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì´ë¯¸ íš¨ê³¼ê°€ ê±¸ë ¤ ìˆìŠµë‹ˆë‹¤."));
 							}
 							else
 							{
 								// PC_BANG_ITEM_ADD
 								if (item->IsPCBangItem() == true)
 								{
-									// PC¹æÀÎÁö Ã¼Å©ÇØ¼­ Ã³¸®
+									// PCë°©ì¸ì§€ ì²´í¬í•´ì„œ ì²˜ë¦¬
 									if (CPCBangManager::instance().IsPCBangIP(GetDesc()->GetHostName()) == false)
 									{
-										// PC¹æÀÌ ¾Æ´Ô!
-										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ÀÌ ¾ÆÀÌÅÛÀº PC¹æ¿¡¼­¸¸ »ç¿ëÇÒ ¼ö ÀÖ½À´Ï´Ù."));
+										// PCë°©ì´ ì•„ë‹˜!
+										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì´ ì•„ì´í…œì€ PCë°©ì—ì„œë§Œ ì‚¬ìš©í•  ìˆ˜ ìˆìŠµë‹ˆë‹¤."));
 										return false;
 									}
 								}
@@ -4929,7 +4929,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 						item->SetCount(item->GetCount() - 1);
 						break;
 
-					// ¹°¾à Á¦Á¶ ½ºÅ³¿ë ·¹½ÃÇÇ Ã³¸®	
+					// ë¬¼ì•½ ì œì¡° ìŠ¤í‚¬ìš© ë ˆì‹œí”¼ ì²˜ë¦¬	
 					case USE_RECIPE :
 						{
 							LPITEM pSource1 = FindSpecifyItem(item->GetValue(1));
@@ -4942,7 +4942,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 							{
 								if (pSource1 == NULL)
 								{
-									ChatPacket(CHAT_TYPE_INFO, LC_TEXT("¹°¾à Á¶ÇÕÀ» À§ÇÑ Àç·á°¡ ºÎÁ·ÇÕ´Ï´Ù."));
+									ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ë¬¼ì•½ ì¡°í•©ì„ ìœ„í•œ ì¬ë£Œê°€ ë¶€ì¡±í•©ë‹ˆë‹¤."));
 									return false;
 								}
 							}
@@ -4951,7 +4951,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 							{
 								if (pSource2 == NULL)
 								{
-									ChatPacket(CHAT_TYPE_INFO, LC_TEXT("¹°¾à Á¶ÇÕÀ» À§ÇÑ Àç·á°¡ ºÎÁ·ÇÕ´Ï´Ù."));
+									ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ë¬¼ì•½ ì¡°í•©ì„ ìœ„í•œ ì¬ë£Œê°€ ë¶€ì¡±í•©ë‹ˆë‹¤."));
 									return false;
 								}
 							}
@@ -4960,7 +4960,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 							{
 								if (pSource1->GetCount() < dwSourceCount1)
 								{
-									ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Àç·á(%s)°¡ ºÎÁ·ÇÕ´Ï´Ù."), pSource1->GetName());
+									ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì¬ë£Œ(%s)ê°€ ë¶€ì¡±í•©ë‹ˆë‹¤."), pSource1->GetName());
 									return false;
 								}
 
@@ -4971,7 +4971,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 							{
 								if (pSource2->GetCount() < dwSourceCount2)
 								{
-									ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Àç·á(%s)°¡ ºÎÁ·ÇÕ´Ï´Ù."), pSource2->GetName());
+									ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì¬ë£Œ(%s)ê°€ ë¶€ì¡±í•©ë‹ˆë‹¤."), pSource2->GetName());
 									return false;
 								}
 
@@ -4982,7 +4982,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 
 							if (!pBottle || pBottle->GetCount() < 1)
 							{
-								ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ºó º´ÀÌ ¸ğÀÚ¸¨´Ï´Ù."));
+								ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ë¹ˆ ë³‘ì´ ëª¨ìë¦…ë‹ˆë‹¤."));
 								return false;
 							}
 
@@ -4990,7 +4990,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 
 							if (number(1, 100) > item->GetValue(5))
 							{
-								ChatPacket(CHAT_TYPE_INFO, LC_TEXT("¹°¾à Á¦Á¶¿¡ ½ÇÆĞÇß½À´Ï´Ù."));
+								ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ë¬¼ì•½ ì œì¡°ì— ì‹¤íŒ¨í–ˆìŠµë‹ˆë‹¤."));
 								return false;
 							}
 
@@ -5033,7 +5033,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 
 					if (item->GetValue(5) == p->alValues[5])
 					{
-						ChatPacket(CHAT_TYPE_INFO, LC_TEXT("°°Àº Á¾·ùÀÇ ¸ŞÆ¾¼®Àº ¿©·¯°³ ºÎÂøÇÒ ¼ö ¾ø½À´Ï´Ù."));
+						ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ê°™ì€ ì¢…ë¥˜ì˜ ë©”í‹´ì„ì€ ì—¬ëŸ¬ê°œ ë¶€ì°©í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 						return false;
 					}
 				}
@@ -5042,7 +5042,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 				{
 					if (!IS_SET(item->GetWearFlag(), WEARABLE_BODY) || !IS_SET(item2->GetWearFlag(), WEARABLE_BODY))
 					{
-						ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ÀÌ ¸ŞÆ¾¼®Àº Àåºñ¿¡ ºÎÂøÇÒ ¼ö ¾ø½À´Ï´Ù."));
+						ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì´ ë©”í‹´ì„ì€ ì¥ë¹„ì— ë¶€ì°©í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 						return false;
 					}
 				}
@@ -5050,28 +5050,28 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 				{
 					if (!IS_SET(item->GetWearFlag(), WEARABLE_WEAPON))
 					{
-						ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ÀÌ ¸ŞÆ¾¼®Àº ¹«±â¿¡ ºÎÂøÇÒ ¼ö ¾ø½À´Ï´Ù."));
+						ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì´ ë©”í‹´ì„ì€ ë¬´ê¸°ì— ë¶€ì°©í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 						return false;
 					}
 				}
 				else
 				{
-					ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ºÎÂøÇÒ ¼ö ÀÖ´Â ½½·ÔÀÌ ¾ø½À´Ï´Ù."));
+					ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ë¶€ì°©í•  ìˆ˜ ìˆëŠ” ìŠ¬ë¡¯ì´ ì—†ìŠµë‹ˆë‹¤."));
 					return false;
 				}
 
 				for (i = 0; i < ITEM_SOCKET_MAX_NUM; ++i)
 					if (item2->GetSocket(i) >= 1 && item2->GetSocket(i) <= 2 && item2->GetSocket(i) >= item->GetValue(2))
 					{
-						// ¼® È®·ü
+						// ì„ í™•ë¥ 
 						if (number(1, 100) <= 30)
 						{
-							ChatPacket(CHAT_TYPE_INFO, LC_TEXT("¸ŞÆ¾¼® ºÎÂø¿¡ ¼º°øÇÏ¿´½À´Ï´Ù."));
+							ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ë©”í‹´ì„ ë¶€ì°©ì— ì„±ê³µí•˜ì˜€ìŠµë‹ˆë‹¤."));
 							item2->SetSocket(i, item->GetVnum());
 						}
 						else
 						{
-							ChatPacket(CHAT_TYPE_INFO, LC_TEXT("¸ŞÆ¾¼® ºÎÂø¿¡ ½ÇÆĞÇÏ¿´½À´Ï´Ù."));
+							ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ë©”í‹´ì„ ë¶€ì°©ì— ì‹¤íŒ¨í•˜ì˜€ìŠµë‹ˆë‹¤."));
 							item2->SetSocket(i, ITEM_BROKEN_METIN_VNUM);
 						}
 
@@ -5081,7 +5081,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 					}
 
 				if (i == ITEM_SOCKET_MAX_NUM)
-					ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ºÎÂøÇÒ ¼ö ÀÖ´Â ½½·ÔÀÌ ¾ø½À´Ï´Ù."));
+					ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ë¶€ì°©í•  ìˆ˜ ìˆëŠ” ìŠ¬ë¡¯ì´ ì—†ìŠµë‹ˆë‹¤."));
 			}
 			break;
 
@@ -5100,7 +5100,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 			break;
 
 		case ITEM_BLEND:
-			// »õ·Î¿î ¾àÃÊµé
+			// ìƒˆë¡œìš´ ì•½ì´ˆë“¤
 			sys_log(0,"ITEM_BLEND!!");
 			if (Blend_Item_find(item->GetVnum()))
 			{
@@ -5116,13 +5116,13 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 				
 				if (FindAffect(affect_type, apply_type))
 				{
-					ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ÀÌ¹Ì È¿°ú°¡ °É·Á ÀÖ½À´Ï´Ù."));
+					ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì´ë¯¸ íš¨ê³¼ê°€ ê±¸ë ¤ ìˆìŠµë‹ˆë‹¤."));
 				}
 				else
 				{
 					if (FindAffect(AFFECT_EXP_BONUS_EURO_FREE, POINT_RESIST_MAGIC))
 					{
-						ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ÀÌ¹Ì È¿°ú°¡ °É·Á ÀÖ½À´Ï´Ù."));
+						ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì´ë¯¸ íš¨ê³¼ê°€ ê±¸ë ¤ ìˆìŠµë‹ˆë‹¤."));
 					}
 					else
 					{
@@ -5194,7 +5194,7 @@ bool CHARACTER::UseItem(TItemPos Cell, TItemPos DestCell)
 
 	if (!item->CanUsedBy(this))
 	{
-		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("±ºÁ÷ÀÌ ¸ÂÁö¾Ê¾Æ ÀÌ ¾ÆÀÌÅÛÀ» »ç¿ëÇÒ ¼ö ¾ø½À´Ï´Ù."));
+		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("êµ°ì§ì´ ë§ì§€ì•Šì•„ ì´ ì•„ì´í…œì„ ì‚¬ìš©í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 		return false;
 	}
 
@@ -5203,7 +5203,7 @@ bool CHARACTER::UseItem(TItemPos Cell, TItemPos DestCell)
 
 	if (false == FN_check_item_sex(this, item))
 	{
-		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("¼ºº°ÀÌ ¸ÂÁö¾Ê¾Æ ÀÌ ¾ÆÀÌÅÛÀ» »ç¿ëÇÒ ¼ö ¾ø½À´Ï´Ù."));
+		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì„±ë³„ì´ ë§ì§€ì•Šì•„ ì´ ì•„ì´í…œì„ ì‚¬ìš©í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 		return false;
 	}
 
@@ -5212,43 +5212,43 @@ bool CHARACTER::UseItem(TItemPos Cell, TItemPos DestCell)
 	{
 		if (false == IS_SUMMONABLE_ZONE(GetMapIndex()))
 		{
-			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("»ç¿ëÇÒ¼ö ¾ø½À´Ï´Ù."));
+			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì‚¬ìš©í• ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 			return false;
 		}
 
-		// °æÈ¥¹İÁö »ç¿ëÁö »ó´ë¹æÀÌ SUMMONABLE_ZONE¿¡ ÀÖ´Â°¡´Â WarpToPC()¿¡¼­ Ã¼Å©
+		// ê²½í˜¼ë°˜ì§€ ì‚¬ìš©ì§€ ìƒëŒ€ë°©ì´ SUMMONABLE_ZONEì— ìˆëŠ”ê°€ëŠ” WarpToPC()ì—ì„œ ì²´í¬
 		
-		//»ï°Å¸® °ü·Á ¸Ê¿¡¼­´Â ±ÍÈ¯ºÎ¸¦ ¸·¾Æ¹ö¸°´Ù.
+		//ì‚¼ê±°ë¦¬ ê´€ë ¤ ë§µì—ì„œëŠ” ê·€í™˜ë¶€ë¥¼ ë§‰ì•„ë²„ë¦°ë‹¤.
 		if (CThreeWayWar::instance().IsThreeWayWarMapIndex(GetMapIndex()))
 		{
-			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("»ï°Å¸® ÀüÅõ Âü°¡Áß¿¡´Â ±ÍÈ¯ºÎ,±ÍÈ¯±â¾ïºÎ¸¦ »ç¿ëÇÒ¼ö ¾ø½À´Ï´Ù."));
+			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì‚¼ê±°ë¦¬ ì „íˆ¬ ì°¸ê°€ì¤‘ì—ëŠ” ê·€í™˜ë¶€,ê·€í™˜ê¸°ì–µë¶€ë¥¼ ì‚¬ìš©í• ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 			return false;
 		}
 		int iPulse = thecore_pulse();
 
-		//Ã¢°í ¿¬ÈÄ Ã¼Å©
+		//ì°½ê³  ì—°í›„ ì²´í¬
 		if (iPulse - GetSafeboxLoadTime() < PASSES_PER_SEC(g_nPortalLimitTime))
 		{
-			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Ã¢°í¸¦ ¿¬ÈÄ %dÃÊ ÀÌ³»¿¡´Â ±ÍÈ¯ºÎ,±ÍÈ¯±â¾ïºÎ¸¦ »ç¿ëÇÒ ¼ö ¾ø½À´Ï´Ù."), g_nPortalLimitTime);
+			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì°½ê³ ë¥¼ ì—°í›„ %dì´ˆ ì´ë‚´ì—ëŠ” ê·€í™˜ë¶€,ê·€í™˜ê¸°ì–µë¶€ë¥¼ ì‚¬ìš©í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤."), g_nPortalLimitTime);
 
 			if (test_server)
 				ChatPacket(CHAT_TYPE_INFO, "[TestOnly]Pulse %d LoadTime %d PASS %d", iPulse, GetSafeboxLoadTime(), PASSES_PER_SEC(g_nPortalLimitTime));
 			return false; 
 		}
 
-		//°Å·¡°ü·Ã Ã¢ Ã¼Å©
+		//ê±°ë˜ê´€ë ¨ ì°½ ì²´í¬
 		if (GetExchange() || GetMyShop() || GetShopOwner() || IsOpenSafebox() || IsCubeOpen())
 		{
-			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("°Å·¡Ã¢,Ã¢°í µîÀ» ¿¬ »óÅÂ¿¡¼­´Â ±ÍÈ¯ºÎ,±ÍÈ¯±â¾ïºÎ ¸¦ »ç¿ëÇÒ¼ö ¾ø½À´Ï´Ù."));
+			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ê±°ë˜ì°½,ì°½ê³  ë“±ì„ ì—° ìƒíƒœì—ì„œëŠ” ê·€í™˜ë¶€,ê·€í™˜ê¸°ì–µë¶€ ë¥¼ ì‚¬ìš©í• ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 			return false;
 		}
 
 		//PREVENT_REFINE_HACK
-		//°³·®ÈÄ ½Ã°£Ã¼Å© 
+		//ê°œëŸ‰í›„ ì‹œê°„ì²´í¬ 
 		{
 			if (iPulse - GetRefineTime() < PASSES_PER_SEC(g_nPortalLimitTime))
 			{
-				ChatPacket(CHAT_TYPE_INFO, LC_TEXT("¾ÆÀÌÅÛ °³·®ÈÄ %dÃÊ ÀÌ³»¿¡´Â ±ÍÈ¯ºÎ,±ÍÈ¯±â¾ïºÎ¸¦ »ç¿ëÇÒ ¼ö ¾ø½À´Ï´Ù."), g_nPortalLimitTime);
+				ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì•„ì´í…œ ê°œëŸ‰í›„ %dì´ˆ ì´ë‚´ì—ëŠ” ê·€í™˜ë¶€,ê·€í™˜ê¸°ì–µë¶€ë¥¼ ì‚¬ìš©í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤."), g_nPortalLimitTime);
 				return false;
 			}
 		}
@@ -5259,7 +5259,7 @@ bool CHARACTER::UseItem(TItemPos Cell, TItemPos DestCell)
 		{
 			if (iPulse - GetMyShopTime() < PASSES_PER_SEC(g_nPortalLimitTime))
 			{
-				ChatPacket(CHAT_TYPE_INFO, LC_TEXT("°³ÀÎ»óÁ¡ »ç¿ëÈÄ %dÃÊ ÀÌ³»¿¡´Â ±ÍÈ¯ºÎ,±ÍÈ¯±â¾ïºÎ¸¦ »ç¿ëÇÒ ¼ö ¾ø½À´Ï´Ù."), g_nPortalLimitTime);
+				ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ê°œì¸ìƒì  ì‚¬ìš©í›„ %dì´ˆ ì´ë‚´ì—ëŠ” ê·€í™˜ë¶€,ê·€í™˜ê¸°ì–µë¶€ë¥¼ ì‚¬ìš©í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤."), g_nPortalLimitTime);
 				return false;
 			}
 			
@@ -5267,7 +5267,7 @@ bool CHARACTER::UseItem(TItemPos Cell, TItemPos DestCell)
 		//END_PREVENT_ITEM_COPY
 		
 
-		//±ÍÈ¯ºÎ °Å¸®Ã¼Å©
+		//ê·€í™˜ë¶€ ê±°ë¦¬ì²´í¬
 		if (item->GetVnum() != 70302)
 		{
 			PIXEL_POSITION posWarp;
@@ -5277,13 +5277,13 @@ bool CHARACTER::UseItem(TItemPos Cell, TItemPos DestCell)
 
 			double nDist = 0;
 			const double nDistant = 5000.0;
-			//±ÍÈ¯±â¾ïºÎ 
+			//ê·€í™˜ê¸°ì–µë¶€ 
 			if (item->GetVnum() == 22010)
 			{
 				x = item->GetSocket(0) - GetX();
 				y = item->GetSocket(1) - GetY();
 			}
-			//±ÍÈ¯ºÎ
+			//ê·€í™˜ë¶€
 			else if (item->GetVnum() == 22000) 
 			{
 				SECTREE_MANAGER::instance().GetRecallPositionByEmpire(GetMapIndex(), GetEmpire(), posWarp);
@@ -5304,7 +5304,7 @@ bool CHARACTER::UseItem(TItemPos Cell, TItemPos DestCell)
 
 			if (nDistant > nDist)
 			{
-				ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ÀÌµ¿ µÇ¾îÁú À§Ä¡¿Í ³Ê¹« °¡±î¿ö ±ÍÈ¯ºÎ¸¦ »ç¿ëÇÒ¼ö ¾ø½À´Ï´Ù."));				
+				ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì´ë™ ë˜ì–´ì§ˆ ìœ„ì¹˜ì™€ ë„ˆë¬´ ê°€ê¹Œì›Œ ê·€í™˜ë¶€ë¥¼ ì‚¬ìš©í• ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));				
 				if (test_server)
 					ChatPacket(CHAT_TYPE_INFO, "PossibleDistant %f nNowDist %f", nDistant,nDist); 
 				return false;
@@ -5312,29 +5312,29 @@ bool CHARACTER::UseItem(TItemPos Cell, TItemPos DestCell)
 		}
 
 		//PREVENT_PORTAL_AFTER_EXCHANGE
-		//±³È¯ ÈÄ ½Ã°£Ã¼Å©
+		//êµí™˜ í›„ ì‹œê°„ì²´í¬
 		if (iPulse - GetExchangeTime()  < PASSES_PER_SEC(g_nPortalLimitTime))
 		{
-			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("°Å·¡ ÈÄ %dÃÊ ÀÌ³»¿¡´Â ±ÍÈ¯ºÎ,±ÍÈ¯±â¾ïºÎµîÀ» »ç¿ëÇÒ ¼ö ¾ø½À´Ï´Ù."), g_nPortalLimitTime);
+			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ê±°ë˜ í›„ %dì´ˆ ì´ë‚´ì—ëŠ” ê·€í™˜ë¶€,ê·€í™˜ê¸°ì–µë¶€ë“±ì„ ì‚¬ìš©í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤."), g_nPortalLimitTime);
 			return false;
 		}
 		//END_PREVENT_PORTAL_AFTER_EXCHANGE
 
 	}
 
-	//º¸µû¸® ºñ´Ü »ç¿ë½Ã °Å·¡Ã¢ Á¦ÇÑ Ã¼Å© 
+	//ë³´ë”°ë¦¬ ë¹„ë‹¨ ì‚¬ìš©ì‹œ ê±°ë˜ì°½ ì œí•œ ì²´í¬ 
 	if (item->GetVnum() == 50200 | item->GetVnum() == 71049)
 	{
 		if (GetExchange() || GetMyShop() || GetShopOwner() || IsOpenSafebox() || IsCubeOpen())
 		{
-			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("°Å·¡Ã¢,Ã¢°í µîÀ» ¿¬ »óÅÂ¿¡¼­´Â º¸µû¸®,ºñ´Üº¸µû¸®¸¦ »ç¿ëÇÒ¼ö ¾ø½À´Ï´Ù."));
+			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ê±°ë˜ì°½,ì°½ê³  ë“±ì„ ì—° ìƒíƒœì—ì„œëŠ” ë³´ë”°ë¦¬,ë¹„ë‹¨ë³´ë”°ë¦¬ë¥¼ ì‚¬ìš©í• ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 			return false;
 		}
 
 	}
 	//END_PREVENT_TRADE_WINDOW
 
-	if (IS_SET(item->GetFlag(), ITEM_FLAG_LOG)) // »ç¿ë ·Î±×¸¦ ³²±â´Â ¾ÆÀÌÅÛ Ã³¸®
+	if (IS_SET(item->GetFlag(), ITEM_FLAG_LOG)) // ì‚¬ìš© ë¡œê·¸ë¥¼ ë‚¨ê¸°ëŠ” ì•„ì´í…œ ì²˜ë¦¬
 	{
 		DWORD vid = item->GetVID();
 		DWORD oldCount = item->GetCount();
@@ -5348,7 +5348,7 @@ bool CHARACTER::UseItem(TItemPos Cell, TItemPos DestCell)
 
 		bool ret = UseItemEx(item, DestCell);
 
-		if (NULL == ITEM_MANAGER::instance().FindByVID(vid)) // UseItemEx¿¡¼­ ¾ÆÀÌÅÛÀÌ »èÁ¦ µÇ¾ú´Ù. »èÁ¦ ·Î±×¸¦ ³²±è
+		if (NULL == ITEM_MANAGER::instance().FindByVID(vid)) // UseItemExì—ì„œ ì•„ì´í…œì´ ì‚­ì œ ë˜ì—ˆë‹¤. ì‚­ì œ ë¡œê·¸ë¥¼ ë‚¨ê¹€
 		{
 			LogManager::instance().ItemLog(this, vid, vnum, "REMOVE", hint);
 		}
@@ -5370,7 +5370,7 @@ bool CHARACTER::DropItem(TItemPos Cell, BYTE bCount)
 	if (!CanHandleItem())
 	{
 		if (NULL != DragonSoul_RefineWindow_GetOpener())
-			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("°­È­Ã¢À» ¿¬ »óÅÂ¿¡¼­´Â ¾ÆÀÌÅÛÀ» ¿Å±æ ¼ö ¾ø½À´Ï´Ù."));
+			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ê°•í™”ì°½ì„ ì—° ìƒíƒœì—ì„œëŠ” ì•„ì´í…œì„ ì˜®ê¸¸ ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 		return false;
 	}
 
@@ -5391,14 +5391,14 @@ bool CHARACTER::DropItem(TItemPos Cell, BYTE bCount)
 
 	if (IS_SET(item->GetAntiFlag(), ITEM_ANTIFLAG_DROP | ITEM_ANTIFLAG_GIVE))
 	{
-		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("¹ö¸± ¼ö ¾ø´Â ¾ÆÀÌÅÛÀÔ´Ï´Ù."));
+		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ë²„ë¦´ ìˆ˜ ì—†ëŠ” ì•„ì´í…œì…ë‹ˆë‹¤."));
 		return false;
 	}
 
 	if (bCount == 0 || bCount > item->GetCount())
 		bCount = item->GetCount();
 
-	SyncQuickslot(QUICKSLOT_TYPE_ITEM, Cell.cell, 255);	// Quickslot ¿¡¼­ Áö¿ò
+	SyncQuickslot(QUICKSLOT_TYPE_ITEM, Cell.cell, 255);	// Quickslot ì—ì„œ ì§€ì›€
 
 	LPITEM pkItemToDrop;
 
@@ -5453,12 +5453,12 @@ bool CHARACTER::DropItem(TItemPos Cell, BYTE bCount)
 
 	if (pkItemToDrop->AddToGround(GetMapIndex(), pxPos))
 	{
-		// ÇÑ±¹¿¡´Â ¾ÆÀÌÅÛÀ» ¹ö¸®°í º¹±¸ÇØ´Ş¶ó´Â Áø»óÀ¯ÀúµéÀÌ ¸¹¾Æ¼­
-		// ¾ÆÀÌÅÛÀ» ¹Ù´Ú¿¡ ¹ö¸± ½Ã ¼Ó¼º·Î±×¸¦ ³²±ä´Ù.
+		// í•œêµ­ì—ëŠ” ì•„ì´í…œì„ ë²„ë¦¬ê³  ë³µêµ¬í•´ë‹¬ë¼ëŠ” ì§„ìƒìœ ì €ë“¤ì´ ë§ì•„ì„œ
+		// ì•„ì´í…œì„ ë°”ë‹¥ì— ë²„ë¦´ ì‹œ ì†ì„±ë¡œê·¸ë¥¼ ë‚¨ê¸´ë‹¤.
 		if (LC_IsYMIR())
 			item->AttrLog();
 
-		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("¶³¾îÁø ¾ÆÀÌÅÛÀº 3ºĞ ÈÄ »ç¶óÁı´Ï´Ù."));
+		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ë–¨ì–´ì§„ ì•„ì´í…œì€ 3ë¶„ í›„ ì‚¬ë¼ì§‘ë‹ˆë‹¤."));
 		pkItemToDrop->StartDestroyEvent();
 
 		ITEM_MANAGER::instance().FlushDelayedSave(pkItemToDrop);
@@ -5488,7 +5488,7 @@ bool CHARACTER::DropGold(int gold)
 	{
 		if (get_dword_time() < m_dwLastGoldDropTime+g_GoldDropTimeLimitValue)
 		{
-			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("¾ÆÁ÷ °ñµå¸¦ ¹ö¸± ¼ö ¾ø½À´Ï´Ù."));
+			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì•„ì§ ê³¨ë“œë¥¼ ë²„ë¦´ ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 			return false;
 		}
 	}
@@ -5506,11 +5506,11 @@ bool CHARACTER::DropGold(int gold)
 			//Motion(MOTION_PICKUP);
 			PointChange(POINT_GOLD, -gold, true);
 
-			// ºê¶óÁú¿¡ µ·ÀÌ ¾ø¾îÁø´Ù´Â ¹ö±×°¡ ÀÖ´Âµ¥,
-			// °¡´ÉÇÑ ½Ã³ª¸®¿À Áß¿¡ ÇÏ³ª´Â,
-			// ¸ŞÅ©·Î³ª, ÇÙÀ» ½á¼­ 1000¿ø ÀÌÇÏÀÇ µ·À» °è¼Ó ¹ö·Á °ñµå¸¦ 0À¸·Î ¸¸µé°í, 
-			// µ·ÀÌ ¾ø¾îÁ³´Ù°í º¹±¸ ½ÅÃ»ÇÏ´Â °ÍÀÏ ¼öµµ ÀÖ´Ù.
-			// µû¶ó¼­ ±×·± °æ¿ì¸¦ Àâ±â À§ÇØ ³·Àº ¼öÄ¡ÀÇ °ñµå¿¡ ´ëÇØ¼­µµ ·Î±×¸¦ ³²±è.
+			// ë¸Œë¼ì§ˆì— ëˆì´ ì—†ì–´ì§„ë‹¤ëŠ” ë²„ê·¸ê°€ ìˆëŠ”ë°,
+			// ê°€ëŠ¥í•œ ì‹œë‚˜ë¦¬ì˜¤ ì¤‘ì— í•˜ë‚˜ëŠ”,
+			// ë©”í¬ë¡œë‚˜, í•µì„ ì¨ì„œ 1000ì› ì´í•˜ì˜ ëˆì„ ê³„ì† ë²„ë ¤ ê³¨ë“œë¥¼ 0ìœ¼ë¡œ ë§Œë“¤ê³ , 
+			// ëˆì´ ì—†ì–´ì¡Œë‹¤ê³  ë³µêµ¬ ì‹ ì²­í•˜ëŠ” ê²ƒì¼ ìˆ˜ë„ ìˆë‹¤.
+			// ë”°ë¼ì„œ ê·¸ëŸ° ê²½ìš°ë¥¼ ì¡ê¸° ìœ„í•´ ë‚®ì€ ìˆ˜ì¹˜ì˜ ê³¨ë“œì— ëŒ€í•´ì„œë„ ë¡œê·¸ë¥¼ ë‚¨ê¹€.
 			if (LC_IsBrazil() == true)
 			{
 				if (gold >= 213)
@@ -5518,19 +5518,19 @@ bool CHARACTER::DropGold(int gold)
 			}
 			else
 			{
-				if (gold > 1000) // Ãµ¿ø ÀÌ»ó¸¸ ±â·ÏÇÑ´Ù.
+				if (gold > 1000) // ì²œì› ì´ìƒë§Œ ê¸°ë¡í•œë‹¤.
 					LogManager::instance().CharLog(this, gold, "DROP_GOLD", "");
 			}
 
 			if (false == LC_IsBrazil())
 			{
 				item->StartDestroyEvent(150);
-				ChatPacket(CHAT_TYPE_INFO, LC_TEXT("¶³¾îÁø ¾ÆÀÌÅÛÀº %dºĞ ÈÄ »ç¶óÁı´Ï´Ù."), 150/60);
+				ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ë–¨ì–´ì§„ ì•„ì´í…œì€ %dë¶„ í›„ ì‚¬ë¼ì§‘ë‹ˆë‹¤."), 150/60);
 			}
 			else
 			{
 				item->StartDestroyEvent(60);
-				ChatPacket(CHAT_TYPE_INFO, LC_TEXT("¶³¾îÁø ¾ÆÀÌÅÛÀº %dºĞ ÈÄ »ç¶óÁı´Ï´Ù."), 1);
+				ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ë–¨ì–´ì§„ ì•„ì´í…œì€ %dë¶„ í›„ ì‚¬ë¼ì§‘ë‹ˆë‹¤."), 1);
 			}
 		}
 
@@ -5574,26 +5574,26 @@ bool CHARACTER::MoveItem(TItemPos Cell, TItemPos DestCell, BYTE count)
 	if (!CanHandleItem())
 	{
 		if (NULL != DragonSoul_RefineWindow_GetOpener())
-			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("°­È­Ã¢À» ¿¬ »óÅÂ¿¡¼­´Â ¾ÆÀÌÅÛÀ» ¿Å±æ ¼ö ¾ø½À´Ï´Ù."));
+			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ê°•í™”ì°½ì„ ì—° ìƒíƒœì—ì„œëŠ” ì•„ì´í…œì„ ì˜®ê¸¸ ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 		return false;
 	}
 
-	// ±âÈ¹ÀÚÀÇ ¿äÃ»À¸·Î º§Æ® ÀÎº¥Åä¸®¿¡´Â Æ¯Á¤ Å¸ÀÔÀÇ ¾ÆÀÌÅÛ¸¸ ³ÖÀ» ¼ö ÀÖ´Ù.
+	// ê¸°íšìì˜ ìš”ì²­ìœ¼ë¡œ ë²¨íŠ¸ ì¸ë²¤í† ë¦¬ì—ëŠ” íŠ¹ì • íƒ€ì…ì˜ ì•„ì´í…œë§Œ ë„£ì„ ìˆ˜ ìˆë‹¤.
 	if (DestCell.IsBeltInventoryPosition() && false == CBeltInventoryHelper::CanMoveIntoBeltInventory(item))
 	{
-		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ÀÌ ¾ÆÀÌÅÛÀº º§Æ® ÀÎº¥Åä¸®·Î ¿Å±æ ¼ö ¾ø½À´Ï´Ù."));			
+		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì´ ì•„ì´í…œì€ ë²¨íŠ¸ ì¸ë²¤í† ë¦¬ë¡œ ì˜®ê¸¸ ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));			
 		return false;
 	}
 
-	// ÀÌ¹Ì Âø¿ëÁßÀÎ ¾ÆÀÌÅÛÀ» ´Ù¸¥ °÷À¸·Î ¿Å±â´Â °æ¿ì, 'ÀåÃ¥ ÇØÁ¦' °¡´ÉÇÑ Áö È®ÀÎÇÏ°í ¿Å±è
+	// ì´ë¯¸ ì°©ìš©ì¤‘ì¸ ì•„ì´í…œì„ ë‹¤ë¥¸ ê³³ìœ¼ë¡œ ì˜®ê¸°ëŠ” ê²½ìš°, 'ì¥ì±… í•´ì œ' ê°€ëŠ¥í•œ ì§€ í™•ì¸í•˜ê³  ì˜®ê¹€
 	if (Cell.IsEquipPosition() && !CanUnequipNow(item))
 		return false;
 
 	if (DestCell.IsEquipPosition())
 	{
-		if (GetItem(DestCell))	// ÀåºñÀÏ °æ¿ì ÇÑ °÷¸¸ °Ë»çÇØµµ µÈ´Ù.
+		if (GetItem(DestCell))	// ì¥ë¹„ì¼ ê²½ìš° í•œ ê³³ë§Œ ê²€ì‚¬í•´ë„ ëœë‹¤.
 		{
-			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ÀÌ¹Ì Àåºñ¸¦ Âø¿ëÇÏ°í ÀÖ½À´Ï´Ù."));
+			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì´ë¯¸ ì¥ë¹„ë¥¼ ì°©ìš©í•˜ê³  ìˆìŠµë‹ˆë‹¤."));
 			
 			return false;
 		}
@@ -5619,7 +5619,7 @@ bool CHARACTER::MoveItem(TItemPos Cell, TItemPos DestCell, BYTE count)
 					return false;
 			}
 		}
-		// ¿ëÈ¥¼®ÀÌ ¾Æ´Ñ ¾ÆÀÌÅÛÀº ¿ëÈ¥¼® ÀÎº¥¿¡ µé¾î°¥ ¼ö ¾ø´Ù.
+		// ìš©í˜¼ì„ì´ ì•„ë‹Œ ì•„ì´í…œì€ ìš©í˜¼ì„ ì¸ë²¤ì— ë“¤ì–´ê°ˆ ìˆ˜ ì—†ë‹¤.
 		else if (DRAGON_SOUL_INVENTORY == DestCell.window_type)
 			return false;
 
@@ -5627,7 +5627,7 @@ bool CHARACTER::MoveItem(TItemPos Cell, TItemPos DestCell, BYTE count)
 
 		if ((item2 = GetItem(DestCell)) && item != item2 && item2->IsStackable() &&
 				!IS_SET(item2->GetAntiFlag(), ITEM_ANTIFLAG_STACK) &&
-				item2->GetVnum() == item->GetVnum()) // ÇÕÄ¥ ¼ö ÀÖ´Â ¾ÆÀÌÅÛÀÇ °æ¿ì
+				item2->GetVnum() == item->GetVnum()) // í•©ì¹  ìˆ˜ ìˆëŠ” ì•„ì´í…œì˜ ê²½ìš°
 		{
 			for (int i = 0; i < ITEM_SOCKET_MAX_NUM; ++i)
 				if (item2->GetSocket(i) != item->GetSocket(i))
@@ -5746,7 +5746,7 @@ namespace NPartyPickupDistribute
 				{
 					ch->PointChange(POINT_GOLD, iMoney, true);
 
-					if (iMoney > 1000) // Ãµ¿ø ÀÌ»ó¸¸ ±â·ÏÇÑ´Ù.
+					if (iMoney > 1000) // ì²œì› ì´ìƒë§Œ ê¸°ë¡í•œë‹¤.
 						LogManager::instance().CharLog(ch, iMoney, "GET_GOLD", "");
 				}
 		}
@@ -5764,7 +5764,7 @@ void CHARACTER::GiveGold(int iAmount)
 	{
 		LPPARTY pParty = GetParty();
 
-		// ÆÄÆ¼°¡ ÀÖ´Â °æ¿ì ³ª´©¾î °¡Áø´Ù.
+		// íŒŒí‹°ê°€ ìˆëŠ” ê²½ìš° ë‚˜ëˆ„ì–´ ê°€ì§„ë‹¤.
 		DWORD dwTotal = iAmount;
 		DWORD dwMyAmount = dwTotal;
 
@@ -5783,18 +5783,18 @@ void CHARACTER::GiveGold(int iAmount)
 
 		PointChange(POINT_GOLD, dwMyAmount, true);
 
-		if (dwMyAmount > 1000) // Ãµ¿ø ÀÌ»ó¸¸ ±â·ÏÇÑ´Ù.
+		if (dwMyAmount > 1000) // ì²œì› ì´ìƒë§Œ ê¸°ë¡í•œë‹¤.
 			LogManager::instance().CharLog(this, dwMyAmount, "GET_GOLD", "");
 	}
 	else
 	{
 		PointChange(POINT_GOLD, iAmount, true);
 
-		// ºê¶óÁú¿¡ µ·ÀÌ ¾ø¾îÁø´Ù´Â ¹ö±×°¡ ÀÖ´Âµ¥,
-		// °¡´ÉÇÑ ½Ã³ª¸®¿À Áß¿¡ ÇÏ³ª´Â,
-		// ¸ŞÅ©·Î³ª, ÇÙÀ» ½á¼­ 1000¿ø ÀÌÇÏÀÇ µ·À» °è¼Ó ¹ö·Á °ñµå¸¦ 0À¸·Î ¸¸µé°í, 
-		// µ·ÀÌ ¾ø¾îÁ³´Ù°í º¹±¸ ½ÅÃ»ÇÏ´Â °ÍÀÏ ¼öµµ ÀÖ´Ù.
-		// µû¶ó¼­ ±×·± °æ¿ì¸¦ Àâ±â À§ÇØ ³·Àº ¼öÄ¡ÀÇ °ñµå¿¡ ´ëÇØ¼­µµ ·Î±×¸¦ ³²±è.
+		// ë¸Œë¼ì§ˆì— ëˆì´ ì—†ì–´ì§„ë‹¤ëŠ” ë²„ê·¸ê°€ ìˆëŠ”ë°,
+		// ê°€ëŠ¥í•œ ì‹œë‚˜ë¦¬ì˜¤ ì¤‘ì— í•˜ë‚˜ëŠ”,
+		// ë©”í¬ë¡œë‚˜, í•µì„ ì¨ì„œ 1000ì› ì´í•˜ì˜ ëˆì„ ê³„ì† ë²„ë ¤ ê³¨ë“œë¥¼ 0ìœ¼ë¡œ ë§Œë“¤ê³ , 
+		// ëˆì´ ì—†ì–´ì¡Œë‹¤ê³  ë³µêµ¬ ì‹ ì²­í•˜ëŠ” ê²ƒì¼ ìˆ˜ë„ ìˆë‹¤.
+		// ë”°ë¼ì„œ ê·¸ëŸ° ê²½ìš°ë¥¼ ì¡ê¸° ìœ„í•´ ë‚®ì€ ìˆ˜ì¹˜ì˜ ê³¨ë“œì— ëŒ€í•´ì„œë„ ë¡œê·¸ë¥¼ ë‚¨ê¹€.
 		if (LC_IsBrazil() == true)
 		{
 			if (iAmount >= 213)
@@ -5802,7 +5802,7 @@ void CHARACTER::GiveGold(int iAmount)
 		}
 		else
 		{
-			if (iAmount > 1000) // Ãµ¿ø ÀÌ»ó¸¸ ±â·ÏÇÑ´Ù.
+			if (iAmount > 1000) // ì²œì› ì´ìƒë§Œ ê¸°ë¡í•œë‹¤.
 				LogManager::instance().CharLog(this, iAmount, "GET_GOLD", "");
 		}
 	}
@@ -5822,7 +5822,7 @@ bool CHARACTER::PickupItem(DWORD dwVID)
 	{
 		if (item->IsOwnership(this))
 		{
-			// ¸¸¾à ÁÖÀ¸·Á ÇÏ´Â ¾ÆÀÌÅÛÀÌ ¿¤Å©¶ó¸é
+			// ë§Œì•½ ì£¼ìœ¼ë ¤ í•˜ëŠ” ì•„ì´í…œì´ ì—˜í¬ë¼ë©´
 			if (item->GetType() == ITEM_ELK)
 			{
 				GiveGold(item->GetCount());
@@ -5832,7 +5832,7 @@ bool CHARACTER::PickupItem(DWORD dwVID)
 
 				Save();
 			}
-			// Æò¹üÇÑ ¾ÆÀÌÅÛÀÌ¶ó¸é
+			// í‰ë²”í•œ ì•„ì´í…œì´ë¼ë©´
 			else
 			{
 				if (item->IsStackable() && !IS_SET(item->GetAntiFlag(), ITEM_ANTIFLAG_STACK))
@@ -5864,7 +5864,7 @@ bool CHARACTER::PickupItem(DWORD dwVID)
 
 							if (bCount == 0)
 							{
-								ChatPacket(CHAT_TYPE_INFO, LC_TEXT("¾ÆÀÌÅÛ È¹µæ: %s"), item2->GetName());
+								ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì•„ì´í…œ íšë“: %s"), item2->GetName());
 								M2_DESTROY_ITEM(item);
 								if (item2->GetType() == ITEM_QUEST)
 									quest::CQuestManager::instance().PickupItem (GetPlayerID(), item2);
@@ -5882,7 +5882,7 @@ bool CHARACTER::PickupItem(DWORD dwVID)
 					if ((iEmptyCell = GetEmptyDragonSoulInventory(item)) == -1)
 					{
 						sys_log(0, "No empty ds inventory pid %u size %ud itemid %u", GetPlayerID(), item->GetSize(), item->GetID());
-						ChatPacket(CHAT_TYPE_INFO, LC_TEXT("¼ÒÁöÇÏ°í ÀÖ´Â ¾ÆÀÌÅÛÀÌ ³Ê¹« ¸¹½À´Ï´Ù."));
+						ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì†Œì§€í•˜ê³  ìˆëŠ” ì•„ì´í…œì´ ë„ˆë¬´ ë§ìŠµë‹ˆë‹¤."));
 						return false;
 					}
 				}
@@ -5891,7 +5891,7 @@ bool CHARACTER::PickupItem(DWORD dwVID)
 					if ((iEmptyCell = GetEmptyInventory(item->GetSize())) == -1)
 					{
 						sys_log(0, "No empty inventory pid %u size %ud itemid %u", GetPlayerID(), item->GetSize(), item->GetID());
-						ChatPacket(CHAT_TYPE_INFO, LC_TEXT("¼ÒÁöÇÏ°í ÀÖ´Â ¾ÆÀÌÅÛÀÌ ³Ê¹« ¸¹½À´Ï´Ù."));
+						ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì†Œì§€í•˜ê³  ìˆëŠ” ì•„ì´í…œì´ ë„ˆë¬´ ë§ìŠµë‹ˆë‹¤."));
 						return false;
 					}
 				}
@@ -5906,7 +5906,7 @@ bool CHARACTER::PickupItem(DWORD dwVID)
 				char szHint[32+1];
 				snprintf(szHint, sizeof(szHint), "%s %u %u", item->GetName(), item->GetCount(), item->GetOriginalVnum());
 				LogManager::instance().ItemLog(this, item, "GET", szHint);
-				ChatPacket(CHAT_TYPE_INFO, LC_TEXT("¾ÆÀÌÅÛ È¹µæ: %s"), item->GetName());
+				ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì•„ì´í…œ íšë“: %s"), item->GetName());
 
 				if (item->GetType() == ITEM_QUEST)
 					quest::CQuestManager::instance().PickupItem (GetPlayerID(), item);
@@ -5917,7 +5917,7 @@ bool CHARACTER::PickupItem(DWORD dwVID)
 		}
 		else if (!IS_SET(item->GetAntiFlag(), ITEM_ANTIFLAG_GIVE | ITEM_ANTIFLAG_DROP) && GetParty())
 		{
-			// ´Ù¸¥ ÆÄÆ¼¿ø ¼ÒÀ¯±Ç ¾ÆÀÌÅÛÀ» ÁÖÀ¸·Á°í ÇÑ´Ù¸é
+			// ë‹¤ë¥¸ íŒŒí‹°ì› ì†Œìœ ê¶Œ ì•„ì´í…œì„ ì£¼ìœ¼ë ¤ê³  í•œë‹¤ë©´
 			NPartyPickupDistribute::FFindOwnership funcFindOwnership(item);
 
 			GetParty()->ForEachOnlineMember(funcFindOwnership);
@@ -5934,7 +5934,7 @@ bool CHARACTER::PickupItem(DWORD dwVID)
 
 					if ((iEmptyCell = GetEmptyDragonSoulInventory(item)) == -1)
 					{
-						owner->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("¼ÒÁöÇÏ°í ÀÖ´Â ¾ÆÀÌÅÛÀÌ ³Ê¹« ¸¹½À´Ï´Ù."));
+						owner->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì†Œì§€í•˜ê³  ìˆëŠ” ì•„ì´í…œì´ ë„ˆë¬´ ë§ìŠµë‹ˆë‹¤."));
 						return false;
 					}
 				}
@@ -5947,7 +5947,7 @@ bool CHARACTER::PickupItem(DWORD dwVID)
 
 					if ((iEmptyCell = GetEmptyInventory(item->GetSize())) == -1)
 					{
-						owner->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("¼ÒÁöÇÏ°í ÀÖ´Â ¾ÆÀÌÅÛÀÌ ³Ê¹« ¸¹½À´Ï´Ù."));
+						owner->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì†Œì§€í•˜ê³  ìˆëŠ” ì•„ì´í…œì´ ë„ˆë¬´ ë§ìŠµë‹ˆë‹¤."));
 						return false;
 					}
 				}
@@ -5965,11 +5965,11 @@ bool CHARACTER::PickupItem(DWORD dwVID)
 			LogManager::instance().ItemLog(owner, item, "GET", szHint);
 
 			if (owner == this)
-				ChatPacket(CHAT_TYPE_INFO, LC_TEXT("¾ÆÀÌÅÛ È¹µæ: %s"), item->GetName());
+				ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì•„ì´í…œ íšë“: %s"), item->GetName());
 			else
 			{
-				owner->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("¾ÆÀÌÅÛ È¹µæ: %s ´ÔÀ¸·ÎºÎÅÍ %s"), GetName(), item->GetName());
-				ChatPacket(CHAT_TYPE_INFO, LC_TEXT("¾ÆÀÌÅÛ Àü´Ş: %s ´Ô¿¡°Ô %s"), owner->GetName(), item->GetName());
+				owner->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì•„ì´í…œ íšë“: %s ë‹˜ìœ¼ë¡œë¶€í„° %s"), GetName(), item->GetName());
+				ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì•„ì´í…œ ì „ë‹¬: %s ë‹˜ì—ê²Œ %s"), owner->GetName(), item->GetName());
 			}
 
 			if (item->GetType() == ITEM_QUEST)
@@ -5989,23 +5989,23 @@ bool CHARACTER::SwapItem(BYTE bCell, BYTE bDestCell)
 
 	TItemPos srcCell(INVENTORY, bCell), destCell(INVENTORY, bDestCell);
 
-	// ¿Ã¹Ù¸¥ Cell ÀÎÁö °Ë»ç
-	// ¿ëÈ¥¼®Àº SwapÇÒ ¼ö ¾øÀ¸¹Ç·Î, ¿©±â¼­ °É¸².
+	// ì˜¬ë°”ë¥¸ Cell ì¸ì§€ ê²€ì‚¬
+	// ìš©í˜¼ì„ì€ Swapí•  ìˆ˜ ì—†ìœ¼ë¯€ë¡œ, ì—¬ê¸°ì„œ ê±¸ë¦¼.
 	//if (bCell >= INVENTORY_MAX_NUM + WEAR_MAX_NUM || bDestCell >= INVENTORY_MAX_NUM + WEAR_MAX_NUM)
 	if (srcCell.IsDragonSoulEquipPosition() || destCell.IsDragonSoulEquipPosition())
 		return false;
 
-	// °°Àº CELL ÀÎÁö °Ë»ç
+	// ê°™ì€ CELL ì¸ì§€ ê²€ì‚¬
 	if (bCell == bDestCell)
 		return false;
 
-	// µÑ ´Ù ÀåºñÃ¢ À§Ä¡¸é Swap ÇÒ ¼ö ¾ø´Ù.
+	// ë‘˜ ë‹¤ ì¥ë¹„ì°½ ìœ„ì¹˜ë©´ Swap í•  ìˆ˜ ì—†ë‹¤.
 	if (srcCell.IsEquipPosition() && destCell.IsEquipPosition())
 		return false;
 
 	LPITEM item1, item2;
 
-	// item2°¡ ÀåºñÃ¢¿¡ ÀÖ´Â °ÍÀÌ µÇµµ·Ï.
+	// item2ê°€ ì¥ë¹„ì°½ì— ìˆëŠ” ê²ƒì´ ë˜ë„ë¡.
 	if (srcCell.IsEquipPosition())
 	{
 		item1 = GetInventoryItem(bDestCell);
@@ -6026,21 +6026,21 @@ bool CHARACTER::SwapItem(BYTE bCell, BYTE bDestCell)
 	    return false;
 	}
 
-	// item2°¡ bCellÀ§Ä¡¿¡ µé¾î°¥ ¼ö ÀÖ´ÂÁö È®ÀÎÇÑ´Ù.
+	// item2ê°€ bCellìœ„ì¹˜ì— ë“¤ì–´ê°ˆ ìˆ˜ ìˆëŠ”ì§€ í™•ì¸í•œë‹¤.
 	if (!IsEmptyItemGrid(TItemPos (INVENTORY, item1->GetCell()), item2->GetSize(), item1->GetCell()))
 		return false;
 
-	// ¹Ù²Ü ¾ÆÀÌÅÛÀÌ ÀåºñÃ¢¿¡ ÀÖÀ¸¸é
+	// ë°”ê¿€ ì•„ì´í…œì´ ì¥ë¹„ì°½ì— ìˆìœ¼ë©´
 	if (TItemPos(EQUIPMENT, item2->GetCell()).IsEquipPosition())
 	{
 		BYTE bEquipCell = item2->GetCell() - INVENTORY_MAX_NUM;
 		BYTE bInvenCell = item1->GetCell();
 
-		// Âø¿ëÁßÀÎ ¾ÆÀÌÅÛÀ» ¹şÀ» ¼ö ÀÖ°í, Âø¿ë ¿¹Á¤ ¾ÆÀÌÅÛÀÌ Âø¿ë °¡´ÉÇÑ »óÅÂ¿©¾ß¸¸ ÁøÇà
+		// ì°©ìš©ì¤‘ì¸ ì•„ì´í…œì„ ë²—ì„ ìˆ˜ ìˆê³ , ì°©ìš© ì˜ˆì • ì•„ì´í…œì´ ì°©ìš© ê°€ëŠ¥í•œ ìƒíƒœì—¬ì•¼ë§Œ ì§„í–‰
 		if (false == CanUnequipNow(item2) || false == CanEquipNow(item1))
 			return false;
 
-		if (bEquipCell != item1->FindEquipCell(this)) // °°Àº À§Ä¡ÀÏ¶§¸¸ Çã¿ë
+		if (bEquipCell != item1->FindEquipCell(this)) // ê°™ì€ ìœ„ì¹˜ì¼ë•Œë§Œ í—ˆìš©
 			return false;
 
 		item2->RemoveFromCharacter();
@@ -6095,7 +6095,7 @@ bool CHARACTER::UnequipItem(LPITEM item)
 }
 
 //
-// @version	05/07/05 Bang2ni - Skill »ç¿ëÈÄ 1.5 ÃÊ ÀÌ³»¿¡ Àåºñ Âø¿ë ±İÁö
+// @version	05/07/05 Bang2ni - Skill ì‚¬ìš©í›„ 1.5 ì´ˆ ì´ë‚´ì— ì¥ë¹„ ì°©ìš© ê¸ˆì§€
 //
 bool CHARACTER::EquipItem(LPITEM item, int iCandidateCell)
 {
@@ -6113,50 +6113,50 @@ bool CHARACTER::EquipItem(LPITEM item, int iCandidateCell)
 	if (iWearCell < 0)
 		return false;
 
-	// ¹«¾ğ°¡¸¦ Åº »óÅÂ¿¡¼­ ÅÎ½Ãµµ ÀÔ±â ±İÁö
+	// ë¬´ì–¸ê°€ë¥¼ íƒ„ ìƒíƒœì—ì„œ í„±ì‹œë„ ì…ê¸° ê¸ˆì§€
 	if (iWearCell == WEAR_BODY && IsRiding() && (item->GetVnum() >= 11901 && item->GetVnum() <= 11904))
 	{
-		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("¸»À» Åº »óÅÂ¿¡¼­ ¿¹º¹À» ÀÔÀ» ¼ö ¾ø½À´Ï´Ù."));
+		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ë§ì„ íƒ„ ìƒíƒœì—ì„œ ì˜ˆë³µì„ ì…ì„ ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 		return false;
 	}
 
 	if (iWearCell != WEAR_ARROW && IsPolymorphed())
 	{
-		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("µĞ°© Áß¿¡´Â Âø¿ëÁßÀÎ Àåºñ¸¦ º¯°æÇÒ ¼ö ¾ø½À´Ï´Ù."));
+		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ë‘”ê°‘ ì¤‘ì—ëŠ” ì°©ìš©ì¤‘ì¸ ì¥ë¹„ë¥¼ ë³€ê²½í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 		return false;
 	}
 
 	if (FN_check_item_sex(this, item) == false)
 	{
-		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("¼ºº°ÀÌ ¸ÂÁö¾Ê¾Æ ÀÌ ¾ÆÀÌÅÛÀ» »ç¿ëÇÒ ¼ö ¾ø½À´Ï´Ù."));
+		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì„±ë³„ì´ ë§ì§€ì•Šì•„ ì´ ì•„ì´í…œì„ ì‚¬ìš©í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 		return false;
 	}
 
-	//½Å±Ô Å»°Í »ç¿ë½Ã ±âÁ¸ ¸» »ç¿ë¿©ºÎ Ã¼Å©
+	//ì‹ ê·œ íƒˆê²ƒ ì‚¬ìš©ì‹œ ê¸°ì¡´ ë§ ì‚¬ìš©ì—¬ë¶€ ì²´í¬
 	if(item->IsRideItem() && IsRiding())
 	{
-		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ÀÌ¹Ì Å»°ÍÀ» ÀÌ¿ëÁßÀÔ´Ï´Ù."));
+		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì´ë¯¸ íƒˆê²ƒì„ ì´ìš©ì¤‘ì…ë‹ˆë‹¤."));
 		return false;
 	}
 
-	// È­»ì ÀÌ¿Ü¿¡´Â ¸¶Áö¸· °ø°İ ½Ã°£ ¶Ç´Â ½ºÅ³ »ç¿ë 1.5 ÈÄ¿¡ Àåºñ ±³Ã¼°¡ °¡´É
+	// í™”ì‚´ ì´ì™¸ì—ëŠ” ë§ˆì§€ë§‰ ê³µê²© ì‹œê°„ ë˜ëŠ” ìŠ¤í‚¬ ì‚¬ìš© 1.5 í›„ì— ì¥ë¹„ êµì²´ê°€ ê°€ëŠ¥
 	DWORD dwCurTime = get_dword_time();
 
 	if (iWearCell != WEAR_ARROW 
 		&& (dwCurTime - GetLastAttackTime() <= 1500 || dwCurTime - m_dwLastSkillTime <= 1500))
 	{
-		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("°¡¸¸È÷ ÀÖÀ» ¶§¸¸ Âø¿ëÇÒ ¼ö ÀÖ½À´Ï´Ù."));
+		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ê°€ë§Œíˆ ìˆì„ ë•Œë§Œ ì°©ìš©í•  ìˆ˜ ìˆìŠµë‹ˆë‹¤."));
 		return false;
 	}
 
-	// ¿ëÈ¥¼® Æ¯¼ö Ã³¸®
+	// ìš©í˜¼ì„ íŠ¹ìˆ˜ ì²˜ë¦¬
 	if (item->IsDragonSoul())
 	{
-		// °°Àº Å¸ÀÔÀÇ ¿ëÈ¥¼®ÀÌ ÀÌ¹Ì µé¾î°¡ ÀÖ´Ù¸é Âø¿ëÇÒ ¼ö ¾ø´Ù.
-		// ¿ëÈ¥¼®Àº swapÀ» Áö¿øÇÏ¸é ¾ÈµÊ.
+		// ê°™ì€ íƒ€ì…ì˜ ìš©í˜¼ì„ì´ ì´ë¯¸ ë“¤ì–´ê°€ ìˆë‹¤ë©´ ì°©ìš©í•  ìˆ˜ ì—†ë‹¤.
+		// ìš©í˜¼ì„ì€ swapì„ ì§€ì›í•˜ë©´ ì•ˆë¨.
 		if(GetInventoryItem(INVENTORY_MAX_NUM + iWearCell))
 		{
-			ChatPacket(CHAT_TYPE_INFO, "ÀÌ¹Ì °°Àº Á¾·ùÀÇ ¿ëÈ¥¼®À» Âø¿ëÇÏ°í ÀÖ½À´Ï´Ù.");
+			ChatPacket(CHAT_TYPE_INFO, "ì´ë¯¸ ê°™ì€ ì¢…ë¥˜ì˜ ìš©í˜¼ì„ì„ ì°©ìš©í•˜ê³  ìˆìŠµë‹ˆë‹¤.");
 			return false;
 		}
 		
@@ -6165,13 +6165,13 @@ bool CHARACTER::EquipItem(LPITEM item, int iCandidateCell)
 			return false;
 		}
 	}
-	// ¿ëÈ¥¼®ÀÌ ¾Æ´Ô.
+	// ìš©í˜¼ì„ì´ ì•„ë‹˜.
 	else
 	{
-		// Âø¿ëÇÒ °÷¿¡ ¾ÆÀÌÅÛÀÌ ÀÖ´Ù¸é,
+		// ì°©ìš©í•  ê³³ì— ì•„ì´í…œì´ ìˆë‹¤ë©´,
 		if (GetWear(iWearCell) && !IS_SET(GetWear(iWearCell)->GetFlag(), ITEM_FLAG_IRREMOVABLE))
 		{
-			// ÀÌ ¾ÆÀÌÅÛÀº ÇÑ¹ø ¹ÚÈ÷¸é º¯°æ ºÒ°¡. swap ¿ª½Ã ¿ÏÀü ºÒ°¡
+			// ì´ ì•„ì´í…œì€ í•œë²ˆ ë°•íˆë©´ ë³€ê²½ ë¶ˆê°€. swap ì—­ì‹œ ì™„ì „ ë¶ˆê°€
 			if (item->GetWearFlag() == WEARABLE_ABILITY) 
 				return false;
 
@@ -6193,13 +6193,13 @@ bool CHARACTER::EquipItem(LPITEM item, int iCandidateCell)
 
 	if (true == item->IsEquipped())
 	{
-		// ¾ÆÀÌÅÛ ÃÖÃÊ »ç¿ë ÀÌÈÄºÎÅÍ´Â »ç¿ëÇÏÁö ¾Ê¾Æµµ ½Ã°£ÀÌ Â÷°¨µÇ´Â ¹æ½Ä Ã³¸®. 
+		// ì•„ì´í…œ ìµœì´ˆ ì‚¬ìš© ì´í›„ë¶€í„°ëŠ” ì‚¬ìš©í•˜ì§€ ì•Šì•„ë„ ì‹œê°„ì´ ì°¨ê°ë˜ëŠ” ë°©ì‹ ì²˜ë¦¬. 
 		if (-1 != item->GetProto()->cLimitRealTimeFirstUseIndex)
 		{
-			// ÇÑ ¹øÀÌ¶óµµ »ç¿ëÇÑ ¾ÆÀÌÅÛÀÎÁö ¿©ºÎ´Â Socket1À» º¸°í ÆÇ´ÜÇÑ´Ù. (Socket1¿¡ »ç¿ëÈ½¼ö ±â·Ï)
+			// í•œ ë²ˆì´ë¼ë„ ì‚¬ìš©í•œ ì•„ì´í…œì¸ì§€ ì—¬ë¶€ëŠ” Socket1ì„ ë³´ê³  íŒë‹¨í•œë‹¤. (Socket1ì— ì‚¬ìš©íšŸìˆ˜ ê¸°ë¡)
 			if (0 == item->GetSocket(1))
 			{
-				// »ç¿ë°¡´É½Ã°£Àº Default °ªÀ¸·Î Limit Value °ªÀ» »ç¿ëÇÏµÇ, Socket0¿¡ °ªÀÌ ÀÖÀ¸¸é ±× °ªÀ» »ç¿ëÇÏµµ·Ï ÇÑ´Ù. (´ÜÀ§´Â ÃÊ)
+				// ì‚¬ìš©ê°€ëŠ¥ì‹œê°„ì€ Default ê°’ìœ¼ë¡œ Limit Value ê°’ì„ ì‚¬ìš©í•˜ë˜, Socket0ì— ê°’ì´ ìˆìœ¼ë©´ ê·¸ ê°’ì„ ì‚¬ìš©í•˜ë„ë¡ í•œë‹¤. (ë‹¨ìœ„ëŠ” ì´ˆ)
 				long duration = (0 != item->GetSocket(0)) ? item->GetSocket(0) : item->GetProto()->aLimits[item->GetProto()->cLimitRealTimeFirstUseIndex].lValue;
 
 				if (0 == duration)
@@ -6217,27 +6217,27 @@ bool CHARACTER::EquipItem(LPITEM item, int iCandidateCell)
 
 		const DWORD& dwVnum = item->GetVnum();
 
-		// ¶ó¸¶´Ü ÀÌº¥Æ® ÃÊ½Â´ŞÀÇ ¹İÁö(71135) Âø¿ë½Ã ÀÌÆåÆ® ¹ßµ¿
+		// ë¼ë§ˆë‹¨ ì´ë²¤íŠ¸ ì´ˆìŠ¹ë‹¬ì˜ ë°˜ì§€(71135) ì°©ìš©ì‹œ ì´í™íŠ¸ ë°œë™
 		if (true == CItemVnumHelper::IsRamadanMoonRing(dwVnum))
 		{
 			this->EffectPacket(SE_EQUIP_RAMADAN_RING);
 		}
-		// ÇÒ·ÎÀ© »çÅÁ(71136) Âø¿ë½Ã ÀÌÆåÆ® ¹ßµ¿
+		// í• ë¡œìœˆ ì‚¬íƒ•(71136) ì°©ìš©ì‹œ ì´í™íŠ¸ ë°œë™
 		else if (true == CItemVnumHelper::IsHalloweenCandy(dwVnum))
 		{
 			this->EffectPacket(SE_EQUIP_HALLOWEEN_CANDY);
 		}
-		// Çàº¹ÀÇ ¹İÁö(71143) Âø¿ë½Ã ÀÌÆåÆ® ¹ßµ¿
+		// í–‰ë³µì˜ ë°˜ì§€(71143) ì°©ìš©ì‹œ ì´í™íŠ¸ ë°œë™
 		else if (true == CItemVnumHelper::IsHappinessRing(dwVnum))
 		{
 			this->EffectPacket(SE_EQUIP_HAPPINESS_RING);
 		}
-		// »ç¶ûÀÇ ÆÒ´øÆ®(71145) Âø¿ë½Ã ÀÌÆåÆ® ¹ßµ¿
+		// ì‚¬ë‘ì˜ íŒ¬ë˜íŠ¸(71145) ì°©ìš©ì‹œ ì´í™íŠ¸ ë°œë™
 		else if (true == CItemVnumHelper::IsLovePendant(dwVnum))
 		{
 			this->EffectPacket(SE_EQUIP_LOVE_PENDANT);
 		}
-		// ITEM_UNIQUEÀÇ °æ¿ì, SpecialItemGroup¿¡ Á¤ÀÇµÇ¾î ÀÖ°í, (item->GetSIGVnum() != NULL)
+		// ITEM_UNIQUEì˜ ê²½ìš°, SpecialItemGroupì— ì •ì˜ë˜ì–´ ìˆê³ , (item->GetSIGVnum() != NULL)
 		// 
 		else if (ITEM_UNIQUE == item->GetType() && 0 != item->GetSIGVnum())
 		{
@@ -6387,7 +6387,7 @@ int CHARACTER::CountSpecifyItem(DWORD vnum) const
 		item = GetInventoryItem(i);
 		if (NULL != item && item->GetVnum() == vnum)
 		{
-			// °³ÀÎ »óÁ¡¿¡ µî·ÏµÈ ¹°°ÇÀÌ¸é ³Ñ¾î°£´Ù.
+			// ê°œì¸ ìƒì ì— ë“±ë¡ëœ ë¬¼ê±´ì´ë©´ ë„˜ì–´ê°„ë‹¤.
 			if (m_pkMyShop && m_pkMyShop->IsSellingItem(item->GetID()))
 			{
 				continue;
@@ -6415,7 +6415,7 @@ void CHARACTER::RemoveSpecifyItem(DWORD vnum, DWORD count)
 		if (GetInventoryItem(i)->GetVnum() != vnum)
 			continue;
 
-		//°³ÀÎ »óÁ¡¿¡ µî·ÏµÈ ¹°°ÇÀÌ¸é ³Ñ¾î°£´Ù. (°³ÀÎ »óÁ¡¿¡¼­ ÆÇ¸ÅµÉ¶§ ÀÌ ºÎºĞÀ¸·Î µé¾î¿Ã °æ¿ì ¹®Á¦!)
+		//ê°œì¸ ìƒì ì— ë“±ë¡ëœ ë¬¼ê±´ì´ë©´ ë„˜ì–´ê°„ë‹¤. (ê°œì¸ ìƒì ì—ì„œ íŒë§¤ë ë•Œ ì´ ë¶€ë¶„ìœ¼ë¡œ ë“¤ì–´ì˜¬ ê²½ìš° ë¬¸ì œ!)
 		if(m_pkMyShop)
 		{
 			bool isItemSelling = m_pkMyShop->IsSellingItem(GetInventoryItem(i)->GetID());
@@ -6441,7 +6441,7 @@ void CHARACTER::RemoveSpecifyItem(DWORD vnum, DWORD count)
 		}
 	}
 
-	// ¿¹¿ÜÃ³¸®°¡ ¾àÇÏ´Ù.
+	// ì˜ˆì™¸ì²˜ë¦¬ê°€ ì•½í•˜ë‹¤.
 	if (count)
 		sys_log(0, "CHARACTER::RemoveSpecifyItem cannot remove enough item vnum %u, still remain %d", vnum, count);
 }
@@ -6475,7 +6475,7 @@ void CHARACTER::RemoveSpecifyTypeItem(BYTE type, DWORD count)
 		if (GetInventoryItem(i)->GetType() != type)
 			continue;
 
-		//°³ÀÎ »óÁ¡¿¡ µî·ÏµÈ ¹°°ÇÀÌ¸é ³Ñ¾î°£´Ù. (°³ÀÎ »óÁ¡¿¡¼­ ÆÇ¸ÅµÉ¶§ ÀÌ ºÎºĞÀ¸·Î µé¾î¿Ã °æ¿ì ¹®Á¦!)
+		//ê°œì¸ ìƒì ì— ë“±ë¡ëœ ë¬¼ê±´ì´ë©´ ë„˜ì–´ê°„ë‹¤. (ê°œì¸ ìƒì ì—ì„œ íŒë§¤ë ë•Œ ì´ ë¶€ë¶„ìœ¼ë¡œ ë“¤ì–´ì˜¬ ê²½ìš° ë¬¸ì œ!)
 		if(m_pkMyShop)
 		{
 			bool isItemSelling = m_pkMyShop->IsSellingItem(GetInventoryItem(i)->GetID());
@@ -6591,7 +6591,7 @@ LPITEM CHARACTER::AutoGiveItem(DWORD dwItemVnum, BYTE bCount, int iRarePct, bool
 				if (bCount == 0)
 				{
 					if (bMsg)
-						ChatPacket(CHAT_TYPE_INFO, LC_TEXT("¾ÆÀÌÅÛ È¹µæ: %s"), item->GetName());
+						ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì•„ì´í…œ íšë“: %s"), item->GetName());
 
 					return item;
 				}
@@ -6643,7 +6643,7 @@ LPITEM CHARACTER::AutoGiveItem(DWORD dwItemVnum, BYTE bCount, int iRarePct, bool
 	if (iEmptyCell != -1)
 	{
 		if (bMsg)
-			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("¾ÆÀÌÅÛ È¹µæ: %s"), item->GetName());
+			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì•„ì´í…œ íšë“: %s"), item->GetName());
 
 		if (item->IsDragonSoul())
 			item->AddToCharacter(this, TItemPos(DRAGON_SOUL_INVENTORY, iEmptyCell));
@@ -6668,9 +6668,9 @@ LPITEM CHARACTER::AutoGiveItem(DWORD dwItemVnum, BYTE bCount, int iRarePct, bool
 	{
 		item->AddToGround(GetMapIndex(), GetXYZ());
 		item->StartDestroyEvent();
-		// ¾ÈÆ¼ µå¶ø flag°¡ °É·ÁÀÖ´Â ¾ÆÀÌÅÛÀÇ °æ¿ì, 
-		// ÀÎº¥¿¡ ºó °ø°£ÀÌ ¾ø¾î¼­ ¾îÂ¿ ¼ö ¾øÀÌ ¶³¾îÆ®¸®°Ô µÇ¸é,
-		// ownershipÀ» ¾ÆÀÌÅÛÀÌ »ç¶óÁú ¶§±îÁö(300ÃÊ) À¯ÁöÇÑ´Ù.
+		// ì•ˆí‹° ë“œë flagê°€ ê±¸ë ¤ìˆëŠ” ì•„ì´í…œì˜ ê²½ìš°, 
+		// ì¸ë²¤ì— ë¹ˆ ê³µê°„ì´ ì—†ì–´ì„œ ì–´ì©” ìˆ˜ ì—†ì´ ë–¨ì–´íŠ¸ë¦¬ê²Œ ë˜ë©´,
+		// ownershipì„ ì•„ì´í…œì´ ì‚¬ë¼ì§ˆ ë•Œê¹Œì§€(300ì´ˆ) ìœ ì§€í•œë‹¤.
 		if (IS_SET(item->GetAntiFlag(), ITEM_ANTIFLAG_DROP))
 			item->SetOwnership(this, 300);
 		else
@@ -6784,12 +6784,12 @@ bool CHARACTER::CanReceiveItem(LPCHARACTER from, LPITEM item) const
 		case 20101:
 		case 20102:
 		case 20103:
-			// ÃÊ±Ş ¸»
+			// ì´ˆê¸‰ ë§
 			if (item->GetVnum() == ITEM_REVIVE_HORSE_1)
 			{
 				if (!IsDead())
 				{
-					from->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Á×Áö ¾ÊÀº ¸»¿¡°Ô ¼±ÃÊ¸¦ ¸ÔÀÏ ¼ö ¾ø½À´Ï´Ù."));
+					from->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì£½ì§€ ì•Šì€ ë§ì—ê²Œ ì„ ì´ˆë¥¼ ë¨¹ì¼ ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 					return false;
 				}
 				return true;
@@ -6798,7 +6798,7 @@ bool CHARACTER::CanReceiveItem(LPCHARACTER from, LPITEM item) const
 			{
 				if (IsDead())
 				{
-					from->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Á×Àº ¸»¿¡°Ô »ç·á¸¦ ¸ÔÀÏ ¼ö ¾ø½À´Ï´Ù."));
+					from->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì£½ì€ ë§ì—ê²Œ ì‚¬ë£Œë¥¼ ë¨¹ì¼ ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 					return false;
 				}
 				return true;
@@ -6811,12 +6811,12 @@ bool CHARACTER::CanReceiveItem(LPCHARACTER from, LPITEM item) const
 		case 20104:
 		case 20105:
 		case 20106:
-			// Áß±Ş ¸»
+			// ì¤‘ê¸‰ ë§
 			if (item->GetVnum() == ITEM_REVIVE_HORSE_2)
 			{
 				if (!IsDead())
 				{
-					from->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Á×Áö ¾ÊÀº ¸»¿¡°Ô ¼±ÃÊ¸¦ ¸ÔÀÏ ¼ö ¾ø½À´Ï´Ù."));
+					from->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì£½ì§€ ì•Šì€ ë§ì—ê²Œ ì„ ì´ˆë¥¼ ë¨¹ì¼ ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 					return false;
 				}
 				return true;
@@ -6825,7 +6825,7 @@ bool CHARACTER::CanReceiveItem(LPCHARACTER from, LPITEM item) const
 			{
 				if (IsDead())
 				{
-					from->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Á×Àº ¸»¿¡°Ô »ç·á¸¦ ¸ÔÀÏ ¼ö ¾ø½À´Ï´Ù."));
+					from->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì£½ì€ ë§ì—ê²Œ ì‚¬ë£Œë¥¼ ë¨¹ì¼ ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 					return false;
 				}
 				return true;
@@ -6838,12 +6838,12 @@ bool CHARACTER::CanReceiveItem(LPCHARACTER from, LPITEM item) const
 		case 20107:
 		case 20108:
 		case 20109:
-			// °í±Ş ¸»
+			// ê³ ê¸‰ ë§
 			if (item->GetVnum() == ITEM_REVIVE_HORSE_3)
 			{
 				if (!IsDead())
 				{
-					from->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Á×Áö ¾ÊÀº ¸»¿¡°Ô ¼±ÃÊ¸¦ ¸ÔÀÏ ¼ö ¾ø½À´Ï´Ù."));
+					from->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì£½ì§€ ì•Šì€ ë§ì—ê²Œ ì„ ì´ˆë¥¼ ë¨¹ì¼ ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 					return false;
 				}
 				return true;
@@ -6852,7 +6852,7 @@ bool CHARACTER::CanReceiveItem(LPCHARACTER from, LPITEM item) const
 			{
 				if (IsDead())
 				{
-					from->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Á×Àº ¸»¿¡°Ô »ç·á¸¦ ¸ÔÀÏ ¼ö ¾ø½À´Ï´Ù."));
+					from->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì£½ì€ ë§ì—ê²Œ ì‚¬ë£Œë¥¼ ë¨¹ì¼ ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 					return false;
 				}
 				return true;
@@ -6902,7 +6902,7 @@ void CHARACTER::ReceiveItem(LPCHARACTER from, LPITEM item)
 			}
 			else
 			{
-				from->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ÀÌ ¾ÆÀÌÅÛÀº °³·®ÇÒ ¼ö ¾ø½À´Ï´Ù."));
+				from->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì´ ì•„ì´í…œì€ ê°œëŸ‰í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 			}
 			break;
 			// END_OF_DEVILTOWER_NPC
@@ -6919,7 +6919,7 @@ void CHARACTER::ReceiveItem(LPCHARACTER from, LPITEM item)
 			}
 			else
 			{
-				from->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ÀÌ ¾ÆÀÌÅÛÀº °³·®ÇÒ ¼ö ¾ø½À´Ï´Ù."));
+				from->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì´ ì•„ì´í…œì€ ê°œëŸ‰í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 			}
 			break;
 
@@ -6938,14 +6938,14 @@ void CHARACTER::ReceiveItem(LPCHARACTER from, LPITEM item)
 			{
 				from->ReviveHorse();
 				item->SetCount(item->GetCount()-1);
-				from->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("¸»¿¡°Ô ¼±ÃÊ¸¦ ÁÖ¾ú½À´Ï´Ù."));
+				from->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ë§ì—ê²Œ ì„ ì´ˆë¥¼ ì£¼ì—ˆìŠµë‹ˆë‹¤."));
 			}
 			else if (item->GetVnum() == ITEM_HORSE_FOOD_1 ||
 					item->GetVnum() == ITEM_HORSE_FOOD_2 ||
 					item->GetVnum() == ITEM_HORSE_FOOD_3)
 			{
 				from->FeedHorse();
-				from->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("¸»¿¡°Ô »ç·á¸¦ ÁÖ¾ú½À´Ï´Ù."));
+				from->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ë§ì—ê²Œ ì‚¬ë£Œë¥¼ ì£¼ì—ˆìŠµë‹ˆë‹¤."));
 				item->SetCount(item->GetCount()-1);
 				EffectPacket(SE_HPUP_RED);
 			}
@@ -6975,7 +6975,7 @@ bool CHARACTER::IsEquipUniqueItem(DWORD dwItemVnum) const
 			return true;
 	}
 
-	// ¾ğ¾î¹İÁöÀÎ °æ¿ì ¾ğ¾î¹İÁö(°ßº») ÀÎÁöµµ Ã¼Å©ÇÑ´Ù.
+	// ì–¸ì–´ë°˜ì§€ì¸ ê²½ìš° ì–¸ì–´ë°˜ì§€(ê²¬ë³¸) ì¸ì§€ë„ ì²´í¬í•œë‹¤.
 	if (dwItemVnum == UNIQUE_ITEM_RING_OF_LANGUAGE)
 		return IsEquipUniqueItem(UNIQUE_ITEM_RING_OF_LANGUAGE_SAMPLE);
 
@@ -7136,8 +7136,8 @@ bool CHARACTER::ItemProcess_Hair(LPITEM item, int iDestCell)
 {
 	if (item->CheckItemUseLevel(GetLevel()) == false)
 	{
-		// ·¹º§ Á¦ÇÑ¿¡ °É¸²
-		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("¾ÆÁ÷ ÀÌ ¸Ó¸®¸¦ »ç¿ëÇÒ ¼ö ¾ø´Â ·¹º§ÀÔ´Ï´Ù."));
+		// ë ˆë²¨ ì œí•œì— ê±¸ë¦¼
+		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì•„ì§ ì´ ë¨¸ë¦¬ë¥¼ ì‚¬ìš©í•  ìˆ˜ ì—†ëŠ” ë ˆë²¨ì…ë‹ˆë‹¤."));
 		return false;
 	}
 
@@ -7146,7 +7146,7 @@ bool CHARACTER::ItemProcess_Hair(LPITEM item, int iDestCell)
 	switch (GetJob())
 	{
 		case JOB_WARRIOR :
-			hair -= 72000; // 73001 - 72000 = 1001 ºÎÅÍ Çì¾î ¹øÈ£ ½ÃÀÛ
+			hair -= 72000; // 73001 - 72000 = 1001 ë¶€í„° í—¤ì–´ ë²ˆí˜¸ ì‹œì‘
 			break;
 
 		case JOB_ASSASSIN :
@@ -7168,7 +7168,7 @@ bool CHARACTER::ItemProcess_Hair(LPITEM item, int iDestCell)
 
 	if (hair == GetPart(PART_HAIR))
 	{
-		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("µ¿ÀÏÇÑ ¸Ó¸® ½ºÅ¸ÀÏ·Î´Â ±³Ã¼ÇÒ ¼ö ¾ø½À´Ï´Ù."));
+		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ë™ì¼í•œ ë¨¸ë¦¬ ìŠ¤íƒ€ì¼ë¡œëŠ” êµì²´í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 		return true;
 	}
 
@@ -7185,13 +7185,13 @@ bool CHARACTER::ItemProcess_Polymorph(LPITEM item)
 {
 	if (IsPolymorphed())
 	{
-		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ÀÌ¹Ì µĞ°©ÁßÀÎ »óÅÂÀÔ´Ï´Ù."));
+		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì´ë¯¸ ë‘”ê°‘ì¤‘ì¸ ìƒíƒœì…ë‹ˆë‹¤."));
 		return false;
 	}
 
 	if (true == IsRiding())
 	{
-		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("µĞ°©ÇÒ ¼ö ¾ø´Â »óÅÂÀÔ´Ï´Ù."));
+		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ë‘”ê°‘í•  ìˆ˜ ì—†ëŠ” ìƒíƒœì…ë‹ˆë‹¤."));
 		return false;
 	}
 
@@ -7199,7 +7199,7 @@ bool CHARACTER::ItemProcess_Polymorph(LPITEM item)
 
 	if (dwVnum == 0)
 	{
-		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Àß¸øµÈ µĞ°© ¾ÆÀÌÅÛÀÔ´Ï´Ù."));
+		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì˜ëª»ëœ ë‘”ê°‘ ì•„ì´í…œì…ë‹ˆë‹¤."));
 		item->SetCount(item->GetCount()-1);
 		return false;
 	}
@@ -7208,7 +7208,7 @@ bool CHARACTER::ItemProcess_Polymorph(LPITEM item)
 
 	if (pMob == NULL)
 	{
-		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Àß¸øµÈ µĞ°© ¾ÆÀÌÅÛÀÔ´Ï´Ù."));
+		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì˜ëª»ëœ ë‘”ê°‘ ì•„ì´í…œì…ë‹ˆë‹¤."));
 		item->SetCount(item->GetCount()-1);
 		return false;
 	}
@@ -7221,14 +7221,14 @@ bool CHARACTER::ItemProcess_Polymorph(LPITEM item)
 		case 70107 :
 		case 71093 :
 			{
-				// µĞ°©±¸ Ã³¸®
+				// ë‘”ê°‘êµ¬ ì²˜ë¦¬
 				sys_log(0, "USE_POLYMORPH_BALL PID(%d) vnum(%d)", GetPlayerID(), dwVnum);
 
-				// ·¹º§ Á¦ÇÑ Ã¼Å©
+				// ë ˆë²¨ ì œí•œ ì²´í¬
 				int iPolymorphLevelLimit = MAX(0, 20 - GetLevel() * 3 / 10);
 				if (pMob->m_table.bLevel >= GetLevel() + iPolymorphLevelLimit)
 				{
-					ChatPacket(CHAT_TYPE_INFO, LC_TEXT("³ªº¸´Ù ³Ê¹« ³ôÀº ·¹º§ÀÇ ¸ó½ºÅÍ·Î´Â º¯½Å ÇÒ ¼ö ¾ø½À´Ï´Ù."));
+					ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ë‚˜ë³´ë‹¤ ë„ˆë¬´ ë†’ì€ ë ˆë²¨ì˜ ëª¬ìŠ¤í„°ë¡œëŠ” ë³€ì‹  í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 					return false;
 				}
 
@@ -7255,11 +7255,11 @@ bool CHARACTER::ItemProcess_Polymorph(LPITEM item)
 
 		case 50322:
 			{
-				// º¸·ù
+				// ë³´ë¥˜
 
-				// µĞ°©¼­ Ã³¸®
-				// ¼ÒÄÏ0                ¼ÒÄÏ1           ¼ÒÄÏ2   
-				// µĞ°©ÇÒ ¸ó½ºÅÍ ¹øÈ£   ¼ö·ÃÁ¤µµ        µĞ°©¼­ ·¹º§
+				// ë‘”ê°‘ì„œ ì²˜ë¦¬
+				// ì†Œì¼“0                ì†Œì¼“1           ì†Œì¼“2   
+				// ë‘”ê°‘í•  ëª¬ìŠ¤í„° ë²ˆí˜¸   ìˆ˜ë ¨ì •ë„        ë‘”ê°‘ì„œ ë ˆë²¨
 				sys_log(0, "USE_POLYMORPH_BOOK: %s(%u) vnum(%u)", GetName(), GetPlayerID(), dwVnum);
 
 				if (CPolymorphUtils::instance().PolymorphCharacter(this, item, pMob) == true)
@@ -7377,8 +7377,8 @@ void CHARACTER::AutoRecoveryItemProcess(const EAffectTypes type)
 						const int pct_of_will_used = (amount_of_used + amount) * 100 / amount_of_full;
 
 						bool bLog = false;
-						// »ç¿ë·®ÀÇ 10% ´ÜÀ§·Î ·Î±×¸¦ ³²±è
-						// (»ç¿ë·®ÀÇ %¿¡¼­, ½ÊÀÇ ÀÚ¸®°¡ ¹Ù²ğ ¶§¸¶´Ù ·Î±×¸¦ ³²±è.)
+						// ì‚¬ìš©ëŸ‰ì˜ 10% ë‹¨ìœ„ë¡œ ë¡œê·¸ë¥¼ ë‚¨ê¹€
+						// (ì‚¬ìš©ëŸ‰ì˜ %ì—ì„œ, ì‹­ì˜ ìë¦¬ê°€ ë°”ë€” ë•Œë§ˆë‹¤ ë¡œê·¸ë¥¼ ë‚¨ê¹€.)
 						if ((pct_of_will_used / 10) - (pct_of_used / 10) >= 1)
 							bLog = true;
 						pItem->SetSocket(idx_of_amount_of_used, amount_of_used + amount, bLog);
@@ -7450,7 +7450,7 @@ bool CHARACTER::IsValidItemPosition(TItemPos Pos) const
 }
 
 
-// ±ÍÂú¾Æ¼­ ¸¸µç ¸ÅÅ©·Î.. exp°¡ true¸é msg¸¦ Ãâ·ÂÇÏ°í return false ÇÏ´Â ¸ÅÅ©·Î (ÀÏ¹İÀûÀÎ verify ¿ëµµ¶ûÀº return ¶§¹®¿¡ ¾à°£ ¹İ´ë¶ó ÀÌ¸§¶§¹®¿¡ Çò°¥¸± ¼öµµ ÀÖ°Ú´Ù..)
+// ê·€ì°®ì•„ì„œ ë§Œë“  ë§¤í¬ë¡œ.. expê°€ trueë©´ msgë¥¼ ì¶œë ¥í•˜ê³  return false í•˜ëŠ” ë§¤í¬ë¡œ (ì¼ë°˜ì ì¸ verify ìš©ë„ë‘ì€ return ë•Œë¬¸ì— ì•½ê°„ ë°˜ëŒ€ë¼ ì´ë¦„ë•Œë¬¸ì— í—·ê°ˆë¦´ ìˆ˜ë„ ìˆê² ë‹¤..)
 #define VERIFY_MSG(exp, msg)  \
 	if (true == (exp)) { \
 			ChatPacket(CHAT_TYPE_INFO, LC_TEXT(msg)); \
@@ -7458,7 +7458,7 @@ bool CHARACTER::IsValidItemPosition(TItemPos Pos) const
 	}
 
 		
-/// ÇöÀç Ä³¸¯ÅÍÀÇ »óÅÂ¸¦ ¹ÙÅÁÀ¸·Î ÁÖ¾îÁø itemÀ» Âø¿ëÇÒ ¼ö ÀÖ´Â Áö È®ÀÎÇÏ°í, ºÒ°¡´É ÇÏ´Ù¸é Ä³¸¯ÅÍ¿¡°Ô ÀÌÀ¯¸¦ ¾Ë·ÁÁÖ´Â ÇÔ¼ö
+/// í˜„ì¬ ìºë¦­í„°ì˜ ìƒíƒœë¥¼ ë°”íƒ•ìœ¼ë¡œ ì£¼ì–´ì§„ itemì„ ì°©ìš©í•  ìˆ˜ ìˆëŠ” ì§€ í™•ì¸í•˜ê³ , ë¶ˆê°€ëŠ¥ í•˜ë‹¤ë©´ ìºë¦­í„°ì—ê²Œ ì´ìœ ë¥¼ ì•Œë ¤ì£¼ëŠ” í•¨ìˆ˜
 bool CHARACTER::CanEquipNow(const LPITEM item, const TItemPos& srcCell, const TItemPos& destCell) /*const*/
 {
 	const TItemTable* itemTable = item->GetProto();
@@ -7496,7 +7496,7 @@ bool CHARACTER::CanEquipNow(const LPITEM item, const TItemPos& srcCell, const TI
 			case LIMIT_LEVEL:
 				if (GetLevel() < limit)
 				{
-					ChatPacket(CHAT_TYPE_INFO, LC_TEXT("·¹º§ÀÌ ³·¾Æ Âø¿ëÇÒ ¼ö ¾ø½À´Ï´Ù."));
+					ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ë ˆë²¨ì´ ë‚®ì•„ ì°©ìš©í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 					return false;
 				}
 				break;
@@ -7504,7 +7504,7 @@ bool CHARACTER::CanEquipNow(const LPITEM item, const TItemPos& srcCell, const TI
 			case LIMIT_STR:
 				if (GetPoint(POINT_ST) < limit)
 				{
-					ChatPacket(CHAT_TYPE_INFO, LC_TEXT("±Ù·ÂÀÌ ³·¾Æ Âø¿ëÇÒ ¼ö ¾ø½À´Ï´Ù."));
+					ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ê·¼ë ¥ì´ ë‚®ì•„ ì°©ìš©í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 					return false;
 				}
 				break;
@@ -7512,7 +7512,7 @@ bool CHARACTER::CanEquipNow(const LPITEM item, const TItemPos& srcCell, const TI
 			case LIMIT_INT:
 				if (GetPoint(POINT_IQ) < limit)
 				{
-					ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Áö´ÉÀÌ ³·¾Æ Âø¿ëÇÒ ¼ö ¾ø½À´Ï´Ù."));
+					ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì§€ëŠ¥ì´ ë‚®ì•„ ì°©ìš©í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 					return false;
 				}
 				break;
@@ -7520,7 +7520,7 @@ bool CHARACTER::CanEquipNow(const LPITEM item, const TItemPos& srcCell, const TI
 			case LIMIT_DEX:
 				if (GetPoint(POINT_DX) < limit)
 				{
-					ChatPacket(CHAT_TYPE_INFO, LC_TEXT("¹ÎÃ¸ÀÌ ³·¾Æ Âø¿ëÇÒ ¼ö ¾ø½À´Ï´Ù."));
+					ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ë¯¼ì²©ì´ ë‚®ì•„ ì°©ìš©í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 					return false;
 				}
 				break;
@@ -7528,7 +7528,7 @@ bool CHARACTER::CanEquipNow(const LPITEM item, const TItemPos& srcCell, const TI
 			case LIMIT_CON:
 				if (GetPoint(POINT_HT) < limit)
 				{
-					ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Ã¼·ÂÀÌ ³·¾Æ Âø¿ëÇÒ ¼ö ¾ø½À´Ï´Ù."));
+					ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì²´ë ¥ì´ ë‚®ì•„ ì°©ìš©í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 					return false;
 				}
 				break;
@@ -7540,14 +7540,14 @@ bool CHARACTER::CanEquipNow(const LPITEM item, const TItemPos& srcCell, const TI
 		if ((GetWear(WEAR_UNIQUE1) && GetWear(WEAR_UNIQUE1)->IsSameSpecialGroup(item)) ||
 			(GetWear(WEAR_UNIQUE2) && GetWear(WEAR_UNIQUE2)->IsSameSpecialGroup(item)))
 		{
-			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("°°Àº Á¾·ùÀÇ À¯´ÏÅ© ¾ÆÀÌÅÛ µÎ °³¸¦ µ¿½Ã¿¡ ÀåÂøÇÒ ¼ö ¾ø½À´Ï´Ù."));
+			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ê°™ì€ ì¢…ë¥˜ì˜ ìœ ë‹ˆí¬ ì•„ì´í…œ ë‘ ê°œë¥¼ ë™ì‹œì— ì¥ì°©í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 			return false;
 		}
 
 		if (marriage::CManager::instance().IsMarriageUniqueItem(item->GetVnum()) && 
 			!marriage::CManager::instance().IsMarried(GetPlayerID()))
 		{
-			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("°áÈ¥ÇÏÁö ¾ÊÀº »óÅÂ¿¡¼­ ¿¹¹°À» Âø¿ëÇÒ ¼ö ¾ø½À´Ï´Ù."));
+			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ê²°í˜¼í•˜ì§€ ì•Šì€ ìƒíƒœì—ì„œ ì˜ˆë¬¼ì„ ì°©ìš©í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 			return false;
 		}
 
@@ -7556,18 +7556,18 @@ bool CHARACTER::CanEquipNow(const LPITEM item, const TItemPos& srcCell, const TI
 	return true;
 }
 
-/// ÇöÀç Ä³¸¯ÅÍÀÇ »óÅÂ¸¦ ¹ÙÅÁÀ¸·Î Âø¿ë ÁßÀÎ itemÀ» ¹şÀ» ¼ö ÀÖ´Â Áö È®ÀÎÇÏ°í, ºÒ°¡´É ÇÏ´Ù¸é Ä³¸¯ÅÍ¿¡°Ô ÀÌÀ¯¸¦ ¾Ë·ÁÁÖ´Â ÇÔ¼ö
+/// í˜„ì¬ ìºë¦­í„°ì˜ ìƒíƒœë¥¼ ë°”íƒ•ìœ¼ë¡œ ì°©ìš© ì¤‘ì¸ itemì„ ë²—ì„ ìˆ˜ ìˆëŠ” ì§€ í™•ì¸í•˜ê³ , ë¶ˆê°€ëŠ¥ í•˜ë‹¤ë©´ ìºë¦­í„°ì—ê²Œ ì´ìœ ë¥¼ ì•Œë ¤ì£¼ëŠ” í•¨ìˆ˜
 bool CHARACTER::CanUnequipNow(const LPITEM item, const TItemPos& srcCell, const TItemPos& destCell) /*const*/
 {	
 
 	if (ITEM_BELT == item->GetType())
-		VERIFY_MSG(CBeltInventoryHelper::IsExistItemInBeltInventory(this), "º§Æ® ÀÎº¥Åä¸®¿¡ ¾ÆÀÌÅÛÀÌ Á¸ÀçÇÏ¸é ÇØÁ¦ÇÒ ¼ö ¾ø½À´Ï´Ù.");
+		VERIFY_MSG(CBeltInventoryHelper::IsExistItemInBeltInventory(this), "ë²¨íŠ¸ ì¸ë²¤í† ë¦¬ì— ì•„ì´í…œì´ ì¡´ì¬í•˜ë©´ í•´ì œí•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤.");
 
-	// ¿µ¿øÈ÷ ÇØÁ¦ÇÒ ¼ö ¾ø´Â ¾ÆÀÌÅÛ
+	// ì˜ì›íˆ í•´ì œí•  ìˆ˜ ì—†ëŠ” ì•„ì´í…œ
 	if (IS_SET(item->GetFlag(), ITEM_FLAG_IRREMOVABLE))
 		return false;
 
-	// ¾ÆÀÌÅÛ unequip½Ã ÀÎº¥Åä¸®·Î ¿Å±æ ¶§ ºó ÀÚ¸®°¡ ÀÖ´Â Áö È®ÀÎ
+	// ì•„ì´í…œ unequipì‹œ ì¸ë²¤í† ë¦¬ë¡œ ì˜®ê¸¸ ë•Œ ë¹ˆ ìë¦¬ê°€ ìˆëŠ” ì§€ í™•ì¸
 	{
 		int pos = -1;
 
@@ -7576,7 +7576,7 @@ bool CHARACTER::CanUnequipNow(const LPITEM item, const TItemPos& srcCell, const 
 		else
 			pos = GetEmptyInventory(item->GetSize());
 
-		VERIFY_MSG( -1 == pos, "¼ÒÁöÇ°¿¡ ºó °ø°£ÀÌ ¾ø½À´Ï´Ù." );
+		VERIFY_MSG( -1 == pos, "ì†Œì§€í’ˆì— ë¹ˆ ê³µê°„ì´ ì—†ìŠµë‹ˆë‹¤." );
 	}
 
 

@@ -1,4 +1,4 @@
-/*********************************************************************
+ï»¿/*********************************************************************
  * date        : 2007.05.31
  * file        : block_country.cpp
  * author      : mhh
@@ -120,7 +120,7 @@ bool is_blocked_country_ip(const char *user_ip)
 #endif
 	{
 		dev_log(LOG_INFO, "BLOCKED_COUNTRY_IP (%s) : YES", user_ip);
-		return true;	// ¾ÆÀÌÇÇ°¡ ±«»óÇÏ´Ï ÀÏ´Ü ºí·°Ã³¸®
+		return true;	// ì•„ì´í”¼ê°€ ê´´ìƒí•˜ë‹ˆ ì¼ë‹¨ ë¸”ëŸ­ì²˜ë¦¬
 	}
 	ip_number = htonl(st_addr.s_addr);
 

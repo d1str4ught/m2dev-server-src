@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "../../libgame/include/grid.h"
 #include "utils.h"
 #include "desc.h"
@@ -16,7 +16,7 @@
 
 void exchange_packet(LPCHARACTER ch, BYTE sub_header, bool is_me, DWORD arg1, TItemPos arg2, DWORD arg3, void * pvData = NULL);
 
-// ±³È¯ ÆÐÅ¶
+// êµí™˜ íŒ¨í‚·
 void exchange_packet(LPCHARACTER ch, BYTE sub_header, bool is_me, DWORD arg1, TItemPos arg2, DWORD arg3, void * pvData)
 {
 	if (!ch->GetDesc())
@@ -45,15 +45,15 @@ void exchange_packet(LPCHARACTER ch, BYTE sub_header, bool is_me, DWORD arg1, TI
 	ch->GetDesc()->Packet(&pack_exchg, sizeof(pack_exchg));
 }
 
-// ±³È¯À» ½ÃÀÛ
+// êµí™˜ì„ ì‹œìž‘
 bool CHARACTER::ExchangeStart(LPCHARACTER victim)
 {
-	if (this == victim)	// ÀÚ±â ÀÚ½Å°ú´Â ±³È¯À» ¸øÇÑ´Ù.
+	if (this == victim)	// ìžê¸° ìžì‹ ê³¼ëŠ” êµí™˜ì„ ëª»í•œë‹¤.
 		return false;
 
 	if (IsObserverMode())
 	{
-		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("°üÀü »óÅÂ¿¡¼­´Â ±³È¯À» ÇÒ ¼ö ¾ø½À´Ï´Ù."));
+		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ê´€ì „ ìƒíƒœì—ì„œëŠ” êµí™˜ì„ í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 		return false;
 	}
 
@@ -63,19 +63,19 @@ bool CHARACTER::ExchangeStart(LPCHARACTER victim)
 	//PREVENT_TRADE_WINDOW
 	if ( IsOpenSafebox() || GetShopOwner() || GetMyShop() || IsCubeOpen())
 	{
-		ChatPacket( CHAT_TYPE_INFO, LC_TEXT("´Ù¸¥ °Å·¡Ã¢ÀÌ ¿­·ÁÀÖÀ»°æ¿ì °Å·¡¸¦ ÇÒ¼ö ¾ø½À´Ï´Ù." ) );
+		ChatPacket( CHAT_TYPE_INFO, LC_TEXT("ë‹¤ë¥¸ ê±°ëž˜ì°½ì´ ì—´ë ¤ìžˆì„ê²½ìš° ê±°ëž˜ë¥¼ í• ìˆ˜ ì—†ìŠµë‹ˆë‹¤." ) );
 		return false;
 	}
 
 	if ( victim->IsOpenSafebox() || victim->GetShopOwner() || victim->GetMyShop() || victim->IsCubeOpen() )
 	{
-		ChatPacket( CHAT_TYPE_INFO, LC_TEXT("»ó´ë¹æÀÌ ´Ù¸¥ °Å·¡ÁßÀÌ¶ó °Å·¡¸¦ ÇÒ¼ö ¾ø½À´Ï´Ù." ) );
+		ChatPacket( CHAT_TYPE_INFO, LC_TEXT("ìƒëŒ€ë°©ì´ ë‹¤ë¥¸ ê±°ëž˜ì¤‘ì´ë¼ ê±°ëž˜ë¥¼ í• ìˆ˜ ì—†ìŠµë‹ˆë‹¤." ) );
 		return false;
 	}
 	//END_PREVENT_TRADE_WINDOW
 	int iDist = DISTANCE_APPROX(GetX() - victim->GetX(), GetY() - victim->GetY());
 
-	// °Å¸® Ã¼Å©
+	// ê±°ë¦¬ ì²´í¬
 	if (iDist >= EXCHANGE_MAX_DISTANCE)
 		return false;
 
@@ -90,7 +90,7 @@ bool CHARACTER::ExchangeStart(LPCHARACTER victim)
 
 	if (victim->IsBlockMode(BLOCK_EXCHANGE))
 	{
-		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("»ó´ë¹æÀÌ ±³È¯ °ÅºÎ »óÅÂÀÔ´Ï´Ù."));
+		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ìƒëŒ€ë°©ì´ êµí™˜ ê±°ë¶€ ìƒíƒœìž…ë‹ˆë‹¤."));
 		return false;
 	}
 
@@ -143,7 +143,7 @@ bool CExchange::AddItem(TItemPos item_pos, BYTE display_pos)
 	if (!item_pos.IsValidItemPosition())
 		return false;
 
-	// Àåºñ´Â ±³È¯ÇÒ ¼ö ¾øÀ½
+	// ìž¥ë¹„ëŠ” êµí™˜í•  ìˆ˜ ì—†ìŒ
 	if (item_pos.IsEquipPosition())
 		return false;
 
@@ -154,7 +154,7 @@ bool CExchange::AddItem(TItemPos item_pos, BYTE display_pos)
 
 	if (IS_SET(item->GetAntiFlag(), ITEM_ANTIFLAG_GIVE))
 	{
-		m_pOwner->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("¾ÆÀÌÅÛÀ» °Ç³×ÁÙ ¼ö ¾ø½À´Ï´Ù."));
+		m_pOwner->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì•„ì´í…œì„ ê±´ë„¤ì¤„ ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 		return false;
 	}
 
@@ -163,7 +163,7 @@ bool CExchange::AddItem(TItemPos item_pos, BYTE display_pos)
 		return false;
 	}
 
-	// ÀÌ¹Ì ±³È¯Ã¢¿¡ Ãß°¡µÈ ¾ÆÀÌÅÛÀÎ°¡?
+	// ì´ë¯¸ êµí™˜ì°½ì— ì¶”ê°€ëœ ì•„ì´í…œì¸ê°€?
 	if (item->IsExchanging())
 	{
 		sys_log(0, "EXCHANGE under exchanging");
@@ -212,7 +212,7 @@ bool CExchange::AddItem(TItemPos item_pos, BYTE display_pos)
 		return true;
 	}
 
-	// Ãß°¡ÇÒ °ø°£ÀÌ ¾øÀ½
+	// ì¶”ê°€í•  ê³µê°„ì´ ì—†ìŒ
 	return false;
 }
 
@@ -248,7 +248,7 @@ bool CExchange::AddGold(long gold)
 
 	if (GetOwner()->GetGold() < gold)
 	{
-		// °¡Áö°í ÀÖ´Â µ·ÀÌ ºÎÁ·.
+		// ê°€ì§€ê³  ìžˆëŠ” ëˆì´ ë¶€ì¡±.
 		exchange_packet(GetOwner(), EXCHANGE_SUBHEADER_GC_LESS_GOLD, 0, 0, NPOS, 0);
 		return false;
 	}
@@ -271,7 +271,7 @@ bool CExchange::AddGold(long gold)
 	return true;
 }
 
-// µ·ÀÌ ÃæºÐÈ÷ ÀÖ´ÂÁö, ±³È¯ÇÏ·Á´Â ¾ÆÀÌÅÛÀÌ ½ÇÁ¦·Î ÀÖ´ÂÁö È®ÀÎ ÇÑ´Ù.
+// ëˆì´ ì¶©ë¶„ížˆ ìžˆëŠ”ì§€, êµí™˜í•˜ë ¤ëŠ” ì•„ì´í…œì´ ì‹¤ì œë¡œ ìžˆëŠ”ì§€ í™•ì¸ í•œë‹¤.
 bool CExchange::Check(int * piItemCount)
 {
 	if (GetOwner()->GetGold() < m_lGold)
@@ -325,10 +325,10 @@ bool CExchange::CheckSpace()
 		s_grid2.Put(i - INVENTORY_MAX_NUM / 2, 1, item->GetSize());
 	}
 
-	// ¾Æ... ¹º°¡ °³º´½Å °°Áö¸¸... ¿ëÈ¥¼® ÀÎº¥À» ³ë¸Ö ÀÎº¥ º¸°í µû¶ó ¸¸µç ³» Àß¸øÀÌ´Ù ¤Ð¤Ð
+	// ì•„... ë­”ê°€ ê°œë³‘ì‹  ê°™ì§€ë§Œ... ìš©í˜¼ì„ ì¸ë²¤ì„ ë…¸ë©€ ì¸ë²¤ ë³´ê³  ë”°ë¼ ë§Œë“  ë‚´ ìž˜ëª»ì´ë‹¤ ã… ã… 
 	static std::vector <WORD> s_vDSGrid(DRAGON_SOUL_INVENTORY_MAX_NUM);
 	
-	// ÀÏ´Ü ¿ëÈ¥¼®À» ±³È¯ÇÏÁö ¾ÊÀ» °¡´É¼ºÀÌ Å©¹Ç·Î, ¿ëÈ¥¼® ÀÎº¥ º¹»ç´Â ¿ëÈ¥¼®ÀÌ ÀÖÀ» ¶§ ÇÏµµ·Ï ÇÑ´Ù.
+	// ì¼ë‹¨ ìš©í˜¼ì„ì„ êµí™˜í•˜ì§€ ì•Šì„ ê°€ëŠ¥ì„±ì´ í¬ë¯€ë¡œ, ìš©í˜¼ì„ ì¸ë²¤ ë³µì‚¬ëŠ” ìš©í˜¼ì„ì´ ìžˆì„ ë•Œ í•˜ë„ë¡ í•œë‹¤.
 	bool bDSInitialized = false;
 	
 	for (i = 0; i < EXCHANGE_ITEM_MAX_NUM; ++i)
@@ -412,7 +412,7 @@ bool CExchange::CheckSpace()
 	return true;
 }
 
-// ±³È¯ ³¡ (¾ÆÀÌÅÛ°ú µ· µîÀ» ½ÇÁ¦·Î ¿Å±ä´Ù)
+// êµí™˜ ë (ì•„ì´í…œê³¼ ëˆ ë“±ì„ ì‹¤ì œë¡œ ì˜®ê¸´ë‹¤)
 bool CExchange::Done()
 {
 	int		empty_pos, i;
@@ -494,7 +494,7 @@ bool CExchange::Done()
 	return true;
 }
 
-// ±³È¯À» µ¿ÀÇ
+// êµí™˜ì„ ë™ì˜
 bool CExchange::Accept(bool bAccept)
 {
 	if (m_bAccept == bAccept)
@@ -502,7 +502,7 @@ bool CExchange::Accept(bool bAccept)
 
 	m_bAccept = bAccept;
 
-	// µÑ ´Ù µ¿ÀÇ ÇßÀ¸¹Ç·Î ±³È¯ ¼º¸³
+	// ë‘˜ ë‹¤ ë™ì˜ í–ˆìœ¼ë¯€ë¡œ êµí™˜ ì„±ë¦½
 	if (m_bAccept && GetCompany()->m_bAccept)
 	{
 		int	iItemCount;
@@ -514,36 +514,36 @@ bool CExchange::Accept(bool bAccept)
 		victim->SetExchangeTime();		
 		//END_PREVENT_PORTAL_AFTER_EXCHANGE
 
-		// exchange_check ¿¡¼­´Â ±³È¯ÇÒ ¾ÆÀÌÅÛµéÀÌ Á¦ÀÚ¸®¿¡ ÀÖ³ª È®ÀÎÇÏ°í,
-		// ¿¤Å©µµ ÃæºÐÈ÷ ÀÖ³ª È®ÀÎÇÑ´Ù, µÎ¹øÂ° ÀÎÀÚ·Î ±³È¯ÇÒ ¾ÆÀÌÅÛ °³¼ö
-		// ¸¦ ¸®ÅÏÇÑ´Ù.
+		// exchange_check ì—ì„œëŠ” êµí™˜í•  ì•„ì´í…œë“¤ì´ ì œìžë¦¬ì— ìžˆë‚˜ í™•ì¸í•˜ê³ ,
+		// ì—˜í¬ë„ ì¶©ë¶„ížˆ ìžˆë‚˜ í™•ì¸í•œë‹¤, ë‘ë²ˆì§¸ ì¸ìžë¡œ êµí™˜í•  ì•„ì´í…œ ê°œìˆ˜
+		// ë¥¼ ë¦¬í„´í•œë‹¤.
 		if (!Check(&iItemCount))
 		{
-			GetOwner()->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("µ·ÀÌ ºÎÁ·ÇÏ°Å³ª ¾ÆÀÌÅÛÀÌ Á¦ÀÚ¸®¿¡ ¾ø½À´Ï´Ù."));
-			victim->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("»ó´ë¹æÀÇ µ·ÀÌ ºÎÁ·ÇÏ°Å³ª ¾ÆÀÌÅÛÀÌ Á¦ÀÚ¸®¿¡ ¾ø½À´Ï´Ù."));
+			GetOwner()->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ëˆì´ ë¶€ì¡±í•˜ê±°ë‚˜ ì•„ì´í…œì´ ì œìžë¦¬ì— ì—†ìŠµë‹ˆë‹¤."));
+			victim->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ìƒëŒ€ë°©ì˜ ëˆì´ ë¶€ì¡±í•˜ê±°ë‚˜ ì•„ì´í…œì´ ì œìžë¦¬ì— ì—†ìŠµë‹ˆë‹¤."));
 			goto EXCHANGE_END;
 		}
 
-		// ¸®ÅÏ ¹ÞÀº ¾ÆÀÌÅÛ °³¼ö·Î »ó´ë¹æÀÇ ¼ÒÁöÇ°¿¡ ³²Àº ÀÚ¸®°¡ ÀÖ³ª È®ÀÎÇÑ´Ù.
+		// ë¦¬í„´ ë°›ì€ ì•„ì´í…œ ê°œìˆ˜ë¡œ ìƒëŒ€ë°©ì˜ ì†Œì§€í’ˆì— ë‚¨ì€ ìžë¦¬ê°€ ìžˆë‚˜ í™•ì¸í•œë‹¤.
 		if (!CheckSpace())
 		{
-			GetOwner()->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("»ó´ë¹æÀÇ ¼ÒÁöÇ°¿¡ ºó °ø°£ÀÌ ¾ø½À´Ï´Ù."));
-			victim->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("¼ÒÁöÇ°¿¡ ºó °ø°£ÀÌ ¾ø½À´Ï´Ù."));
+			GetOwner()->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ìƒëŒ€ë°©ì˜ ì†Œì§€í’ˆì— ë¹ˆ ê³µê°„ì´ ì—†ìŠµë‹ˆë‹¤."));
+			victim->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì†Œì§€í’ˆì— ë¹ˆ ê³µê°„ì´ ì—†ìŠµë‹ˆë‹¤."));
 			goto EXCHANGE_END;
 		}
 
-		// »ó´ë¹æµµ ¸¶Âù°¡Áö·Î..
+		// ìƒëŒ€ë°©ë„ ë§ˆì°¬ê°€ì§€ë¡œ..
 		if (!GetCompany()->Check(&iItemCount))
 		{
-			victim->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("µ·ÀÌ ºÎÁ·ÇÏ°Å³ª ¾ÆÀÌÅÛÀÌ Á¦ÀÚ¸®¿¡ ¾ø½À´Ï´Ù."));
-			GetOwner()->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("»ó´ë¹æÀÇ µ·ÀÌ ºÎÁ·ÇÏ°Å³ª ¾ÆÀÌÅÛÀÌ Á¦ÀÚ¸®¿¡ ¾ø½À´Ï´Ù."));
+			victim->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ëˆì´ ë¶€ì¡±í•˜ê±°ë‚˜ ì•„ì´í…œì´ ì œìžë¦¬ì— ì—†ìŠµë‹ˆë‹¤."));
+			GetOwner()->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ìƒëŒ€ë°©ì˜ ëˆì´ ë¶€ì¡±í•˜ê±°ë‚˜ ì•„ì´í…œì´ ì œìžë¦¬ì— ì—†ìŠµë‹ˆë‹¤."));
 			goto EXCHANGE_END;
 		}
 
 		if (!GetCompany()->CheckSpace())
 		{
-			victim->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("»ó´ë¹æÀÇ ¼ÒÁöÇ°¿¡ ºó °ø°£ÀÌ ¾ø½À´Ï´Ù."));
-			GetOwner()->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("¼ÒÁöÇ°¿¡ ºó °ø°£ÀÌ ¾ø½À´Ï´Ù."));
+			victim->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ìƒëŒ€ë°©ì˜ ì†Œì§€í’ˆì— ë¹ˆ ê³µê°„ì´ ì—†ìŠµë‹ˆë‹¤."));
+			GetOwner()->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì†Œì§€í’ˆì— ë¹ˆ ê³µê°„ì´ ì—†ìŠµë‹ˆë‹¤."));
 			goto EXCHANGE_END;
 		}
 
@@ -557,17 +557,17 @@ bool CExchange::Accept(bool bAccept)
 
 		if (Done())
 		{
-			if (m_lGold) // µ·ÀÌ ÀÖÀ» ‹š¸¸ ÀúÀå
+			if (m_lGold) // ëˆì´ ìžˆì„ ë–„ë§Œ ì €ìž¥
 				GetOwner()->Save();
 
 			if (GetCompany()->Done())
 			{
-				if (GetCompany()->m_lGold) // µ·ÀÌ ÀÖÀ» ¶§¸¸ ÀúÀå
+				if (GetCompany()->m_lGold) // ëˆì´ ìžˆì„ ë•Œë§Œ ì €ìž¥
 					victim->Save();
 
 				// INTERNATIONAL_VERSION
-				GetOwner()->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%s ´Ô°úÀÇ ±³È¯ÀÌ ¼º»ç µÇ¾ú½À´Ï´Ù."), victim->GetName());
-				victim->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%s ´Ô°úÀÇ ±³È¯ÀÌ ¼º»ç µÇ¾ú½À´Ï´Ù."), GetOwner()->GetName());
+				GetOwner()->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%s ë‹˜ê³¼ì˜ êµí™˜ì´ ì„±ì‚¬ ë˜ì—ˆìŠµë‹ˆë‹¤."), victim->GetName());
+				victim->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%s ë‹˜ê³¼ì˜ êµí™˜ì´ ì„±ì‚¬ ë˜ì—ˆìŠµë‹ˆë‹¤."), GetOwner()->GetName());
 				// END_OF_INTERNATIONAL_VERSION
 			}
 		}
@@ -578,14 +578,14 @@ EXCHANGE_END:
 	}
 	else
 	{
-		// ¾Æ´Ï¸é accept¿¡ ´ëÇÑ ÆÐÅ¶À» º¸³»ÀÚ.
+		// ì•„ë‹ˆë©´ acceptì— ëŒ€í•œ íŒ¨í‚·ì„ ë³´ë‚´ìž.
 		exchange_packet(GetOwner(), EXCHANGE_SUBHEADER_GC_ACCEPT, true, m_bAccept, NPOS, 0);
 		exchange_packet(GetCompany()->GetOwner(), EXCHANGE_SUBHEADER_GC_ACCEPT, false, m_bAccept, NPOS, 0);
 		return true;
 	}
 }
 
-// ±³È¯ Ãë¼Ò
+// êµí™˜ ì·¨ì†Œ
 void CExchange::Cancel()
 {
 	exchange_packet(GetOwner(), EXCHANGE_SUBHEADER_GC_END, 0, 0, NPOS, 0);

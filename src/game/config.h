@@ -1,4 +1,4 @@
-
+ï»¿
 #ifndef __INC_METIN_II_GAME_CONFIG_H__
 #define __INC_METIN_II_GAME_CONFIG_H__
 
@@ -35,7 +35,7 @@ extern bool	china_event_server;
 extern bool	g_bNoMoreClient;
 extern bool	g_bNoRegen;
 
-extern bool	g_bTrafficProfileOn;		///< true ÀÌ¸é TrafficProfiler ¸¦ ÄÒ´Ù.
+extern bool	g_bTrafficProfileOn;		///< true ì´ë©´ TrafficProfiler ë¥¼ ì¼ ë‹¤.
 
 extern BYTE	g_bChannel;
 
@@ -106,8 +106,8 @@ extern int VIEW_RANGE;
 extern int VIEW_BONUS_RANGE;
 
 extern bool g_bCheckMultiHack;
-extern bool g_protectNormalPlayer;      // ¹ü¹ýÀÚ°¡ "ÆòÈ­¸ðµå" ÀÎ ÀÏ¹ÝÀ¯Àú¸¦ °ø°ÝÇÏÁö ¸øÇÔ
-extern bool g_noticeBattleZone;         // Áß¸³Áö´ë¿¡ ÀÔÀåÇÏ¸é ¾È³»¸Þ¼¼Áö¸¦ ¾Ë·ÁÁÜ
+extern bool g_protectNormalPlayer;      // ë²”ë²•ìžê°€ "í‰í™”ëª¨ë“œ" ì¸ ì¼ë°˜ìœ ì €ë¥¼ ê³µê²©í•˜ì§€ ëª»í•¨
+extern bool g_noticeBattleZone;         // ì¤‘ë¦½ì§€ëŒ€ì— ìž…ìž¥í•˜ë©´ ì•ˆë‚´ë©”ì„¸ì§€ë¥¼ ì•Œë ¤ì¤Œ
 
 extern DWORD g_GoldDropTimeLimitValue;
 

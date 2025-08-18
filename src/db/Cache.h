@@ -1,4 +1,4 @@
-// vim:ts=8 sw=4
+ï»¿// vim:ts=8 sw=4
 #ifndef __INC_DB_CACHE_H__
 #define __INC_DB_CACHE_H__
 
@@ -29,7 +29,7 @@ class CPlayerTableCache : public cache<TPlayerTable>
 // MYSHOP_PRICE_LIST
 /**
  * @class	CItemPriceListTableCache
- * @brief	°³ÀÎ»óÁ¡ÀÇ ¾ÆÀÌÅÛ °¡°İÁ¤º¸ ¸®½ºÆ®¿¡ ´ëÇÑ Ä³½Ã class
+ * @brief	ê°œì¸ìƒì ì˜ ì•„ì´í…œ ê°€ê²©ì •ë³´ ë¦¬ìŠ¤íŠ¸ì— ëŒ€í•œ ìºì‹œ class
  * @version	05/06/10 Bang2ni - First release.
  */
 class CItemPriceListTableCache : public cache< TItemPriceListTable >
@@ -38,20 +38,20 @@ class CItemPriceListTableCache : public cache< TItemPriceListTable >
 
 	/// Constructor
 	/**
-	 * Ä³½Ã ¸¸·á ½Ã°£À» ¼³Á¤ÇÑ´Ù.
+	 * ìºì‹œ ë§Œë£Œ ì‹œê°„ì„ ì„¤ì •í•œë‹¤.
 	 */
 	CItemPriceListTableCache(void);
 
-	/// ¸®½ºÆ® °»½Å
+	/// ë¦¬ìŠ¤íŠ¸ ê°±ì‹ 
 	/**
-	 * @param [in]	pUpdateList °»½ÅÇÒ ¸®½ºÆ®
+	 * @param [in]	pUpdateList ê°±ì‹ í•  ë¦¬ìŠ¤íŠ¸
 	 *
-	 * Ä³½ÃµÈ °¡°İÁ¤º¸¸¦ °»½ÅÇÑ´Ù.
-	 * °¡°İÁ¤º¸ ¸®½ºÆ®°¡ °¡µæ Ã¡À» °æ¿ì ±âÁ¸¿¡ Ä³½ÌµÈ Á¤º¸µéÀ» µÚ¿¡¼­ ºÎÅÍ »èÁ¦ÇÑ´Ù.
+	 * ìºì‹œëœ ê°€ê²©ì •ë³´ë¥¼ ê°±ì‹ í•œë‹¤.
+	 * ê°€ê²©ì •ë³´ ë¦¬ìŠ¤íŠ¸ê°€ ê°€ë“ ì°¼ì„ ê²½ìš° ê¸°ì¡´ì— ìºì‹±ëœ ì •ë³´ë“¤ì„ ë’¤ì—ì„œ ë¶€í„° ì‚­ì œí•œë‹¤.
 	 */
 	void	UpdateList(const TItemPriceListTable* pUpdateList);
 
-	/// °¡°İÁ¤º¸¸¦ DB ¿¡ ±â·ÏÇÑ´Ù.
+	/// ê°€ê²©ì •ë³´ë¥¼ DB ì— ê¸°ë¡í•œë‹¤.
 	virtual void	OnFlush(void);
 
     private:

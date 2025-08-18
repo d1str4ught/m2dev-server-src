@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #ifdef OS_WINDOWS
 typedef int socklen_t;

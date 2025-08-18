@@ -1,14 +1,14 @@
-#ifndef __INC_METIN_II_GAME_SPEEDSERVER_H__
+ï»¿#ifndef __INC_METIN_II_GAME_SPEEDSERVER_H__
 #define __INC_METIN_II_GAME_SPEEDSERVER_H__
 
 #include "../../common/length.h"
 #include <list>
 
-// castle.cpp ¿¡ ÀÖ´Â °ÍÀ» º¹ºÙ ÇÏ¿´´Ù
-#define EMPIRE_NONE		0	// ¾Æ¹«±¹°¡ ¾Æ´Ô
-#define EMPIRE_RED		1	// ½Å¼ö
-#define EMPIRE_YELLOW	2	// ÃµÁ¶
-#define EMPIRE_BLUE		3	// Áø³ë
+// castle.cpp ì— ìˆëŠ” ê²ƒì„ ë³µë¶™ í•˜ì˜€ë‹¤
+#define EMPIRE_NONE		0	// ì•„ë¬´êµ­ê°€ ì•„ë‹˜
+#define EMPIRE_RED		1	// ì‹ ìˆ˜
+#define EMPIRE_YELLOW	2	// ì²œì¡°
+#define EMPIRE_BLUE		3	// ì§„ë…¸
 
 class HME
 {

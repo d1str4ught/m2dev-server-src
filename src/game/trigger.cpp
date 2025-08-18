@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "utils.h"
 #include "config.h"
 #include "char.h"
@@ -46,7 +46,7 @@ int OnClickShop(TRIGGERPARAM)
 }
 
 /*
- * ¸ó½ºÅÍ AI ÇÔ¼öµéÀ» BattleAI Å¬·¡½º·Î ¼öÁ¤
+ * ëª¬ìŠ¤í„° AI í•¨ìˆ˜ë“¤ì„ BattleAI í´ëž˜ìŠ¤ë¡œ ìˆ˜ì •
  */
 int OnIdleDefault(TRIGGERPARAM)
 {
@@ -100,7 +100,7 @@ class FuncFindMobVictim
 					pkChr->IsAffectFlag(AFF_REVIVE_INVISIBLE))
 				return false;
 
-			if (pkChr->IsAffectFlag(AFF_TERROR) && m_pkChr->IsImmune(IMMUNE_TERROR) == false )	// °øÆ÷ Ã³¸®
+			if (pkChr->IsAffectFlag(AFF_TERROR) && m_pkChr->IsImmune(IMMUNE_TERROR) == false )	// ê³µí¬ ì²˜ë¦¬
 			{
 				if ( pkChr->GetLevel() >= m_pkChr->GetLevel() )
 					return false;
@@ -137,7 +137,7 @@ class FuncFindMobVictim
 
 		LPCHARACTER GetVictim()
 		{
-			// ±ÙÃ³¿¡ °Ç¹°ÀÌ ÀÖ°í ÇÇ°¡ ¸¹ÀÌ ÀÖ´Ù¸é °Ç¹°À» °ø°ÝÇÑ´Ù. °Ç¹°¸¸ ÀÖ¾îµµ °Ç¹°À» °ø°Ý
+			// ê·¼ì²˜ì— ê±´ë¬¼ì´ ìžˆê³  í”¼ê°€ ë§Žì´ ìžˆë‹¤ë©´ ê±´ë¬¼ì„ ê³µê²©í•œë‹¤. ê±´ë¬¼ë§Œ ìžˆì–´ë„ ê±´ë¬¼ì„ ê³µê²©
 			if (m_pkChrBuilding && m_pkChr->GetHP() * 2 > m_pkChr->GetMaxHP() || !m_pkChrVictim)
 			{
 				return m_pkChrBuilding;

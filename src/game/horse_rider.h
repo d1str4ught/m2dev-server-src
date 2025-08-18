@@ -1,4 +1,4 @@
-#ifndef __HORSE_H
+ï»¿#ifndef __HORSE_H
 #define __HORSE_H
 
 #include "constants.h"
@@ -8,10 +8,10 @@ const int HORSE_MAX_LEVEL = 30;
 
 struct THorseStat
 {
-	int iMinLevel;      // Å¾½ÂÇÒ ¼ö ÀÖ´Â ÃÖ¼Ò ·¹º§
+	int iMinLevel;      // íƒ‘ìŠ¹í•  ìˆ˜ ìˆëŠ” ìµœì†Œ ë ˆë²¨
 	int iNPCRace;
-	int iMaxHealth;     // ¸»ÀÇ ÃÖ´ë Ã¼·Â
-	int iMaxStamina;    // ¸»ÀÇ ÃÖ´ë ½ºÅ×¹Ì³Ê
+	int iMaxHealth;     // ë§ì˜ ìµœëŒ€ ì²´ë ¥
+	int iMaxStamina;    // ë§ì˜ ìµœëŒ€ ìŠ¤í…Œë¯¸ë„ˆ
 	int iST;
 	int iDX;
 	int iHT;

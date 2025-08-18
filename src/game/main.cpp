@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "constants.h"
 #include "config.h"
 #include "event.h"
@@ -86,7 +86,7 @@
 #include <execinfo.h>
 #endif
 
-// À©µµ¿ì¿¡¼­ Å×½ºÆ®ÇÒ ¶§´Â Ç×»ó ¼­¹öÅ° Ã¼Å©
+// ìœˆë„ìš°ì—ì„œ í…ŒìŠ¤íŠ¸í•  ë•ŒëŠ” í•­ìƒ ì„œë²„í‚¤ ì²´í¬
 #ifdef _WIN32
 	//#define _USE_SERVER_KEY_
 #endif
@@ -108,10 +108,10 @@ void WriteMallocMessage(const char* p1, const char* p2, const char* p3, const ch
 #endif
 
 // TRAFFIC_PROFILER
-static const DWORD	TRAFFIC_PROFILE_FLUSH_CYCLE = 3600;	///< TrafficProfiler ÀÇ Flush cycle. 1½Ã°£ °£°İ
+static const DWORD	TRAFFIC_PROFILE_FLUSH_CYCLE = 3600;	///< TrafficProfiler ì˜ Flush cycle. 1ì‹œê°„ ê°„ê²©
 // END_OF_TRAFFIC_PROFILER
 
-// °ÔÀÓ°ú ¿¬°áµÇ´Â ¼ÒÄÏ
+// ê²Œì„ê³¼ ì—°ê²°ë˜ëŠ” ì†Œì¼“
 volatile int	num_events_called = 0;
 int             max_bytes_written = 0;
 int             current_bytes_written = 0;
@@ -186,11 +186,11 @@ void ShutdownOnFatalError()
 		{
 			char buf[256];
 
-			strlcpy(buf, LC_TEXT("¼­¹ö¿¡ Ä¡¸íÀûÀÎ ¿À·ù°¡ ¹ß»ıÇÏ¿© ÀÚµ¿À¸·Î ÀçºÎÆÃµË´Ï´Ù."), sizeof(buf));
+			strlcpy(buf, LC_TEXT("ì„œë²„ì— ì¹˜ëª…ì ì¸ ì˜¤ë¥˜ê°€ ë°œìƒí•˜ì—¬ ìë™ìœ¼ë¡œ ì¬ë¶€íŒ…ë©ë‹ˆë‹¤."), sizeof(buf));
 			SendNotice(buf);
-			strlcpy(buf, LC_TEXT("10ÃÊÈÄ ÀÚµ¿À¸·Î Á¢¼ÓÀÌ Á¾·áµÇ¸ç,"), sizeof(buf));
+			strlcpy(buf, LC_TEXT("10ì´ˆí›„ ìë™ìœ¼ë¡œ ì ‘ì†ì´ ì¢…ë£Œë˜ë©°,"), sizeof(buf));
 			SendNotice(buf);
-			strlcpy(buf, LC_TEXT("5ºĞ ÈÄ¿¡ Á¤»óÀûÀ¸·Î Á¢¼ÓÇÏ½Ç¼ö ÀÖ½À´Ï´Ù."), sizeof(buf));
+			strlcpy(buf, LC_TEXT("5ë¶„ í›„ì— ì •ìƒì ìœ¼ë¡œ ì ‘ì†í•˜ì‹¤ìˆ˜ ìˆìŠµë‹ˆë‹¤."), sizeof(buf));
 			SendNotice(buf);
 		}
 
@@ -247,7 +247,7 @@ void heartbeat(LPHEART ht, int pulse)
 
 	t = get_dword_time();
 
-	// 1ÃÊ¸¶´Ù
+	// 1ì´ˆë§ˆë‹¤
 	if (!(pulse % ht->passes_per_sec))
 	{
 #ifdef ENABLE_LIMIT_TIME
@@ -309,14 +309,14 @@ void heartbeat(LPHEART ht, int pulse)
 	}
 
 	//
-	// 25 PPS(Pulse per second) ¶ó°í °¡Á¤ÇÒ ¶§
+	// 25 PPS(Pulse per second) ë¼ê³  ê°€ì •í•  ë•Œ
 	//
 
-	// ¾à 1.16ÃÊ¸¶´Ù
+	// ì•½ 1.16ì´ˆë§ˆë‹¤
 	if (!(pulse % (passes_per_sec + 4)))
 		CHARACTER_MANAGER::instance().ProcessDelayedSave();
 
-	//4ÃÊ ¸¶´Ù
+	//4ì´ˆ ë§ˆë‹¤
 #if defined (OS_FREEBSD) && defined(__FILEMONITOR__)
 	if (!(pulse % (passes_per_sec * 5)))
 	{
@@ -324,7 +324,7 @@ void heartbeat(LPHEART ht, int pulse)
 	}
 #endif
 
-	// ¾à 5.08ÃÊ¸¶´Ù
+	// ì•½ 5.08ì´ˆë§ˆë‹¤
 	if (!(pulse % (passes_per_sec * 5 + 2)))
 	{
 		ITEM_MANAGER::instance().Update();
@@ -383,13 +383,13 @@ void Metin2Server_Check()
 		return;
 
 
-	// ºê¶óÁú ip
+	// ë¸Œë¼ì§ˆ ip
 	if (strncmp (g_szPublicIP, "189.112.1", 9) == 0)
 	{
 		return;
 	}
 
-	// Ä³³ª´Ù ip
+	// ìºë‚˜ë‹¤ ip
 	if (strncmp (g_szPublicIP, "74.200.6", 8) == 0)
 	{
 		return;
@@ -413,7 +413,7 @@ void Metin2Server_Check()
 
 	if (0 > sockConnector)
 	{
-		if (true != LC_IsEurope()) // À¯·´Àº Á¢¼ÓÀ» ÇÏÁö ¸øÇÏ¸é ÀÎÁõµÈ °ÍÀ¸·Î °£ÁÖ
+		if (true != LC_IsEurope()) // ìœ ëŸ½ì€ ì ‘ì†ì„ í•˜ì§€ ëª»í•˜ë©´ ì¸ì¦ëœ ê²ƒìœ¼ë¡œ ê°„ì£¼
 			g_isInvalidServer = true;
 
 		return;
@@ -1004,7 +1004,7 @@ int io_loop(LPFDWATCH fdw)
 	LPDESC	d;
 	int		num_events, event_idx;
 
-	DESC_MANAGER::instance().DestroyClosed(); // PHASE_CLOSEÀÎ Á¢¼ÓµéÀ» ²÷¾îÁØ´Ù.
+	DESC_MANAGER::instance().DestroyClosed(); // PHASE_CLOSEì¸ ì ‘ì†ë“¤ì„ ëŠì–´ì¤€ë‹¤.
 	DESC_MANAGER::instance().TryConnect();
 
 	if ((num_events = fdwatch(fdw, 0)) < 0)

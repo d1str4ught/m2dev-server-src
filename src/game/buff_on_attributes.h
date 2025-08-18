@@ -1,4 +1,4 @@
-#ifndef __METIN2_BUFF_ON_ATTRIBUTES_H
+ï»¿#ifndef __METIN2_BUFF_ON_ATTRIBUTES_H
 #define __METIN2_BUFF_ON_ATTRIBUTES_H
 
 class CHARACTER;
@@ -9,20 +9,20 @@ public:
 	CBuffOnAttributes(LPCHARACTER pOwner, BYTE m_point_type, std::vector <BYTE>* vec_buff_targets);
 	~CBuffOnAttributes();
 
-	// ÀåÂø Áß ÀÌ¸é¼­, m_p_vec_buff_wear_targets¿¡ ÇØ´çÇÏ´Â ¾ÆÀÌÅÛÀÎ °æ¿ì, ÇØ´ç ¾ÆÀÌÅÛÀ¸·Î ÀÎÇØ ºÙÀº È¿°ú¸¦ Á¦°Å.
+	// ì¥ì°© ì¤‘ ì´ë©´ì„œ, m_p_vec_buff_wear_targetsì— í•´ë‹¹í•˜ëŠ” ì•„ì´í…œì¸ ê²½ìš°, í•´ë‹¹ ì•„ì´í…œìœ¼ë¡œ ì¸í•´ ë¶™ì€ íš¨ê³¼ë¥¼ ì œê±°.
 	void RemoveBuffFromItem(LPITEM pItem);
-	// m_p_vec_buff_wear_targets¿¡ ÇØ´çÇÏ´Â ¾ÆÀÌÅÛÀÎ °æ¿ì, ÇØ´ç ¾ÆÀÌÅÛÀÇ attribute¿¡ ´ëÇÑ È¿°ú Ãß°¡.
+	// m_p_vec_buff_wear_targetsì— í•´ë‹¹í•˜ëŠ” ì•„ì´í…œì¸ ê²½ìš°, í•´ë‹¹ ì•„ì´í…œì˜ attributeì— ëŒ€í•œ íš¨ê³¼ ì¶”ê°€.
 	void AddBuffFromItem(LPITEM pItem);
-	// m_bBuffValue¸¦ ¹Ù²Ù°í, ¹öÇÁÀÇ °ªµµ ¹Ù²Ş.
+	// m_bBuffValueë¥¼ ë°”ê¾¸ê³ , ë²„í”„ì˜ ê°’ë„ ë°”ê¿ˆ.
 	void ChangeBuffValue(BYTE bNewValue);
-	// CHRACTRE::ComputePoints¿¡¼­ ¼Ó¼ºÄ¡¸¦ ÃÊ±âÈ­ÇÏ°í ´Ù½Ã °è»êÇÏ¹Ç·Î, 
-	// ¹öÇÁ ¼Ó¼ºÄ¡µéÀ» °­Á¦ÀûÀ¸·Î owner¿¡°Ô ÁÜ.
+	// CHRACTRE::ComputePointsì—ì„œ ì†ì„±ì¹˜ë¥¼ ì´ˆê¸°í™”í•˜ê³  ë‹¤ì‹œ ê³„ì‚°í•˜ë¯€ë¡œ, 
+	// ë²„í”„ ì†ì„±ì¹˜ë“¤ì„ ê°•ì œì ìœ¼ë¡œ ownerì—ê²Œ ì¤Œ.
 	void GiveAllAttributes();
 
-	// m_p_vec_buff_wear_targets¿¡ ÇØ´çÇÏ´Â ¸ğµç ¾ÆÀÌÅÛÀÇ attribute¸¦ typeº°·Î ÇÕ»êÇÏ°í,
-	// ±× attributeµéÀÇ (m_bBuffValue)% ¸¸Å­À» ¹öÇÁ·Î ÁÜ.
+	// m_p_vec_buff_wear_targetsì— í•´ë‹¹í•˜ëŠ” ëª¨ë“  ì•„ì´í…œì˜ attributeë¥¼ typeë³„ë¡œ í•©ì‚°í•˜ê³ ,
+	// ê·¸ attributeë“¤ì˜ (m_bBuffValue)% ë§Œí¼ì„ ë²„í”„ë¡œ ì¤Œ.
 	bool On(BYTE bValue);
-	// ¹öÇÁ Á¦°Å ÈÄ, ÃÊ±âÈ­
+	// ë²„í”„ ì œê±° í›„, ì´ˆê¸°í™”
 	void Off();
 
 	void Initialize();
@@ -32,9 +32,9 @@ private:
 	BYTE m_bBuffValue;
 	std::vector <BYTE>* m_p_vec_buff_wear_targets;
 	
-	// apply_type, apply_value Æä¾îÀÇ ¸Ê
+	// apply_type, apply_value í˜ì–´ì˜ ë§µ
 	typedef std::map <BYTE, int> TMapAttr;
-	// m_p_vec_buff_wear_targets¿¡ ÇØ´çÇÏ´Â ¸ğµç ¾ÆÀÌÅÛÀÇ attribute¸¦ typeº°·Î ÇÕ»êÇÏ¿© °¡Áö°í ÀÖÀ½.
+	// m_p_vec_buff_wear_targetsì— í•´ë‹¹í•˜ëŠ” ëª¨ë“  ì•„ì´í…œì˜ attributeë¥¼ typeë³„ë¡œ í•©ì‚°í•˜ì—¬ ê°€ì§€ê³  ìˆìŒ.
 	TMapAttr m_map_additional_attrs;
 
 };

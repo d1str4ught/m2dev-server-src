@@ -1,4 +1,4 @@
-#ifndef __METIN_II_COMMON_BUILDING_H__
+ï»¿#ifndef __METIN_II_COMMON_BUILDING_H__
 #define __METIN_II_COMMON_BUILDING_H__
 
 namespace building 
@@ -41,8 +41,8 @@ namespace building
 		long	lNPCX;
 		long	lNPCY;
 
-		DWORD	dwGroupVnum; // °°Àº ±×·ìÀº ÇÏ³ª¸¸ °Ç¼³°¡´É
-		DWORD	dwDependOnGroupVnum; // Áö¾îÁ® ÀÖ¾î¾ßÇÏ´Â ±×·ì
+		DWORD	dwGroupVnum; // ê°™ì€ ê·¸ë£¹ì€ í•˜ë‚˜ë§Œ ê±´ì„¤ê°€ëŠ¥
+		DWORD	dwDependOnGroupVnum; // ì§€ì–´ì ¸ ìˆì–´ì•¼í•˜ëŠ” ê·¸ë£¹
 	} TObjectProto;
 
 	typedef struct SObject

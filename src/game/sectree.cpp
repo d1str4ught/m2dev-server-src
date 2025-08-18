@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "../../libgame/include/attribute.h"
 #include "sectree_manager.h"
 #include "char.h"
@@ -149,7 +149,7 @@ bool SECTREE::InsertEntity(LPENTITY pkEnt)
 			if (pkCurTree)
 				pkCurTree->DecreasePC();
 		}
-		else if (m_iPCCount > 0 && !pkChr->IsWarp() && !pkChr->IsGoto()) // PC°¡ ¾Æ´Ï°í ÀÌ °÷¿¡ PC°¡ ÀÖ´Ù¸é Idle event¸¦ ½ÃÀÛ ½ÃÅ²´Ù.
+		else if (m_iPCCount > 0 && !pkChr->IsWarp() && !pkChr->IsGoto()) // PCê°€ ì•„ë‹ˆê³  ì´ ê³³ì— PCê°€ ìžˆë‹¤ë©´ Idle eventë¥¼ ì‹œìž‘ ì‹œí‚¨ë‹¤.
 		{
 			pkChr->StartStateMachine();
 		}

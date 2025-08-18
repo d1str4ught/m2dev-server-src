@@ -1,4 +1,4 @@
-#include "libthecore/stdafx.h"
+ï»¿#include "libthecore/stdafx.h"
 #include "attribute.h"
 
 #define SET_BIT(var,bit)                ((var) |= (bit))
@@ -85,13 +85,13 @@ void CAttribute::Alloc()
     }
 }
 
-CAttribute::CAttribute(DWORD width, DWORD height) // dword Å¸ÀÙÀ¸·Î ¸ğµÎ 0À» Ã¤¿î´Ù.
+CAttribute::CAttribute(DWORD width, DWORD height) // dword íƒ€ììœ¼ë¡œ ëª¨ë‘ 0ì„ ì±„ìš´ë‹¤.
 {
     Initialize(width, height);
     Alloc();
 }
 
-CAttribute::CAttribute(DWORD * attr, DWORD width, DWORD height) // attrÀ» ÀĞ¾î¼­ smartÇÏ°Ô ¼Ó¼ºÀ» ÀĞ¾î¿Â´Ù.
+CAttribute::CAttribute(DWORD * attr, DWORD width, DWORD height) // attrì„ ì½ì–´ì„œ smartí•˜ê²Œ ì†ì„±ì„ ì½ì–´ì˜¨ë‹¤.
 {
     Initialize(width, height);
 
@@ -102,7 +102,7 @@ CAttribute::CAttribute(DWORD * attr, DWORD width, DWORD height) // attrÀ» ÀĞ¾î¼­
 	if (attr[0] != attr[i])
 	    break;
 
-    // ¼Ó¼ºÀÌ ÀüºÎ °°À¸¸é ´ÜÁö defaultAttr¸¸ ¼³Á¤ÇÑ´Ù.
+    // ì†ì„±ì´ ì „ë¶€ ê°™ìœ¼ë©´ ë‹¨ì§€ defaultAttrë§Œ ì„¤ì •í•œë‹¤.
     if (i == size)
 	defaultAttr = attr[0];
     else
@@ -112,22 +112,22 @@ CAttribute::CAttribute(DWORD * attr, DWORD width, DWORD height) // attrÀ» ÀĞ¾î¼­
 	for (i = 0; i < size; ++i)
 	    allAttr |= attr[i];
 
-	// ÇÏÀ§ 8ºñÆ®¸¸ »ç¿ëÇÒ °æ¿ì D_BYTE
+	// í•˜ìœ„ 8ë¹„íŠ¸ë§Œ ì‚¬ìš©í•  ê²½ìš° D_BYTE
 	if (!(allAttr & 0xffffff00))
 	    dataType = D_BYTE;
-	// ÇÏÀ§ 16ºñÆ®¸¸ »ç¿ëÇÒ °æ¿ì D_WORD
+	// í•˜ìœ„ 16ë¹„íŠ¸ë§Œ ì‚¬ìš©í•  ê²½ìš° D_WORD
 	else if (!(allAttr & 0xffff0000))
 	    dataType = D_WORD;
-	else // ±× ÀÌ¿Ü¿¡´Â D_DWORD
+	else // ê·¸ ì´ì™¸ì—ëŠ” D_DWORD
 	    dataType = D_DWORD;
 
 	Alloc();
 
-	if (dataType == D_DWORD) // D_DWORDÀÏ ¶§´Â ¿øº» ¼Ó¼º°ú °°À¸¹Ç·Î ´ÜÁö º¹»ç.
+	if (dataType == D_DWORD) // D_DWORDì¼ ë•ŒëŠ” ì›ë³¸ ì†ì„±ê³¼ ê°™ìœ¼ë¯€ë¡œ ë‹¨ì§€ ë³µì‚¬.
 	    thecore_memcpy(data, attr, sizeof(DWORD) * width * height);
 	else
 	{
-	    // ¾Æ´Ï¸é ÄÁ¹öÆ® ÇØ¾ß ÇÑ´Ù.
+	    // ì•„ë‹ˆë©´ ì»¨ë²„íŠ¸ í•´ì•¼ í•œë‹¤.
 	    DWORD * pdw = (DWORD *) attr;
 
 	    if (dataType == D_BYTE)
@@ -199,7 +199,7 @@ void CAttribute::Remove(DWORD x, DWORD y, DWORD attr)
     if (x > width || y > height)
 	return;
 
-    if (!data) // ¼Ó¼ºÀ» »èÁ¦ÇÒ ¶§ ¸¸¾à µ¥ÀÌÅÍ°¡ ¾øÀ¸¸é ±×³É ¸®ÅÏÇÑ´Ù.
+    if (!data) // ì†ì„±ì„ ì‚­ì œí•  ë•Œ ë§Œì•½ ë°ì´í„°ê°€ ì—†ìœ¼ë©´ ê·¸ëƒ¥ ë¦¬í„´í•œë‹¤.
 	return;
 
     if (bytePtr)

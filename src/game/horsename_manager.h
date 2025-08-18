@@ -1,4 +1,4 @@
-
+﻿
 class CHorseNameManager : public singleton<CHorseNameManager>
 {
 	private :

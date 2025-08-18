@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "../../libgame/include/grid.h"
 #include "constants.h"
 #include "utils.h"
@@ -97,10 +97,10 @@ LPSHOP CShopManager::GetByNPCVnum(DWORD dwVnum)
 }
 
 /*
- * ÀÎÅÍÆäÀÌ½º ÇÔ¼öµé
+ * ì¸í„°í˜ì´ìŠ¤ í•¨ìˆ˜ë“¤
  */
 
-// »óÁ¡ °Å·¡¸¦ ½ÃÀÛ
+// ìƒì  ê±°ë˜ë¥¼ ì‹œì‘
 bool CShopManager::StartShopping(LPCHARACTER pkChr, LPCHARACTER pkChrShopKeeper, int iShopVnum)
 {
 	if (pkChr->GetShopOwner() == pkChrShopKeeper)
@@ -112,7 +112,7 @@ bool CShopManager::StartShopping(LPCHARACTER pkChr, LPCHARACTER pkChrShopKeeper,
 	//PREVENT_TRADE_WINDOW
 	if (pkChr->IsOpenSafebox() || pkChr->GetExchange() || pkChr->GetMyShop() || pkChr->IsCubeOpen())
 	{
-		pkChr->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("´Ù¸¥ °Å·¡Ã¢ÀÌ ¿­¸°»óÅÂ¿¡¼­´Â »óÁ¡°Å·¡¸¦ ÇÒ¼ö °¡ ¾ø½À´Ï´Ù."));
+		pkChr->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ë‹¤ë¥¸ ê±°ë˜ì°½ì´ ì—´ë¦°ìƒíƒœì—ì„œëŠ” ìƒì ê±°ë˜ë¥¼ í• ìˆ˜ ê°€ ì—†ìŠµë‹ˆë‹¤."));
 		return false;
 	}
 	//END_PREVENT_TRADE_WINDOW
@@ -187,7 +187,7 @@ void CShopManager::DestroyPCShop(LPCHARACTER ch)
 	M2_DELETE(pkShop);
 }
 
-// »óÁ¡ °Å·¡¸¦ Á¾·á
+// ìƒì  ê±°ë˜ë¥¼ ì¢…ë£Œ
 void CShopManager::StopShopping(LPCHARACTER ch)
 {
 	LPSHOP shop;
@@ -203,7 +203,7 @@ void CShopManager::StopShopping(LPCHARACTER ch)
 	sys_log(0, "SHOP: END: %s", ch->GetName());
 }
 
-// ¾ÆÀÌÅÛ ±¸ÀÔ
+// ì•„ì´í…œ êµ¬ì…
 void CShopManager::Buy(LPCHARACTER ch, BYTE pos)
 {
 	if (!ch->GetShop())
@@ -214,7 +214,7 @@ void CShopManager::Buy(LPCHARACTER ch, BYTE pos)
 
 	if (DISTANCE_APPROX(ch->GetX() - ch->GetShopOwner()->GetX(), ch->GetY() - ch->GetShopOwner()->GetY()) > 2000)
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("»óÁ¡°úÀÇ °Å¸®°¡ ³Ê¹« ¸Ö¾î ¹°°ÇÀ» »ì ¼ö ¾ø½À´Ï´Ù."));
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ìƒì ê³¼ì˜ ê±°ë¦¬ê°€ ë„ˆë¬´ ë©€ì–´ ë¬¼ê±´ì„ ì‚´ ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 		return;
 	}
 
@@ -243,7 +243,7 @@ void CShopManager::Buy(LPCHARACTER ch, BYTE pos)
 
 	int ret = pkShop->Buy(ch, pos);
 
-	if (SHOP_SUBHEADER_GC_OK != ret) // ¹®Á¦°¡ ÀÖ¾úÀ¸¸é º¸³½´Ù.
+	if (SHOP_SUBHEADER_GC_OK != ret) // ë¬¸ì œê°€ ìˆì—ˆìœ¼ë©´ ë³´ë‚¸ë‹¤.
 	{
 		TPacketGCShop pack;
 
@@ -271,7 +271,7 @@ void CShopManager::Sell(LPCHARACTER ch, BYTE bCell, BYTE bCount)
 
 	if (DISTANCE_APPROX(ch->GetX()-ch->GetShopOwner()->GetX(), ch->GetY()-ch->GetShopOwner()->GetY())>2000)
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("»óÁ¡°úÀÇ °Å¸®°¡ ³Ê¹« ¸Ö¾î ¹°°ÇÀ» ÆÈ ¼ö ¾ø½À´Ï´Ù."));
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ìƒì ê³¼ì˜ ê±°ë¦¬ê°€ ë„ˆë¬´ ë©€ì–´ ë¬¼ê±´ì„ íŒ” ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 		return;
 	}
 	
@@ -282,7 +282,7 @@ void CShopManager::Sell(LPCHARACTER ch, BYTE bCell, BYTE bCount)
 
 	if (item->IsEquipped() == true)
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Âø¿ë ÁßÀÎ ¾ÆÀÌÅÛÀº ÆÇ¸ÅÇÒ ¼ö ¾ø½À´Ï´Ù."));
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì°©ìš© ì¤‘ì¸ ì•„ì´í…œì€ íŒë§¤í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 		return;
 	}
 
@@ -313,7 +313,7 @@ void CShopManager::Sell(LPCHARACTER ch, BYTE bCell, BYTE bCount)
 
 	dwPrice /= 5;
 	
-	//¼¼±İ °è»ê
+	//ì„¸ê¸ˆ ê³„ì‚°
 	DWORD dwTax = 0;
 	int iVal = 3;
 	
@@ -336,22 +336,22 @@ void CShopManager::Sell(LPCHARACTER ch, BYTE bCell, BYTE bCount)
 	if (GOLD_MAX <= nTotalMoney)
 	{
 		sys_err("[OVERFLOW_GOLD] id %u name %s gold %u", ch->GetPlayerID(), ch->GetName(), ch->GetGold());
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("20¾ï³ÉÀÌ ÃÊ°úÇÏ¿© ¹°Ç°À» ÆÈ¼ö ¾ø½À´Ï´Ù."));
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("20ì–µëƒ¥ì´ ì´ˆê³¼í•˜ì—¬ ë¬¼í’ˆì„ íŒ”ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 		return;
 	}
 
-	// 20050802.myevan.»óÁ¡ ÆÇ¸Å ·Î±×¿¡ ¾ÆÀÌÅÛ ID Ãß°¡
+	// 20050802.myevan.ìƒì  íŒë§¤ ë¡œê·¸ì— ì•„ì´í…œ ID ì¶”ê°€
 	sys_log(0, "SHOP: SELL: %s item name: %s(x%d):%u price: %u", ch->GetName(), item->GetName(), bCount, item->GetID(), dwPrice);
 
 	if (iVal > 0)
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ÆÇ¸Å±İ¾×ÀÇ %d %% °¡ ¼¼±İÀ¸·Î ³ª°¡°ÔµË´Ï´Ù"), iVal);
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("íŒë§¤ê¸ˆì•¡ì˜ %d %% ê°€ ì„¸ê¸ˆìœ¼ë¡œ ë‚˜ê°€ê²Œë©ë‹ˆë‹¤"), iVal);
 
 	DBManager::instance().SendMoneyLog(MONEY_LOG_SHOP, item->GetVnum(), dwPrice);
 
 	if (bCount == item->GetCount())
 	{
-		// ÇÑ±¹¿¡´Â ¾ÆÀÌÅÛÀ» ¹ö¸®°í º¹±¸ÇØ´Ş¶ó´Â Áø»óÀ¯ÀúµéÀÌ ¸¹¾Æ¼­
-		// »óÁ¡ ÆÇ¸Å½Ã ¼Ó¼º·Î±×¸¦ ³²±ä´Ù.
+		// í•œêµ­ì—ëŠ” ì•„ì´í…œì„ ë²„ë¦¬ê³  ë³µêµ¬í•´ë‹¬ë¼ëŠ” ì§„ìƒìœ ì €ë“¤ì´ ë§ì•„ì„œ
+		// ìƒì  íŒë§¤ì‹œ ì†ì„±ë¡œê·¸ë¥¼ ë‚¨ê¸´ë‹¤.
 		if (LC_IsYMIR())
 			item->AttrLog();
 
@@ -360,7 +360,7 @@ void CShopManager::Sell(LPCHARACTER ch, BYTE bCell, BYTE bCount)
 	else
 		item->SetCount(item->GetCount() - bCount);
 
-	//±ºÁÖ ½Ã½ºÅÛ : ¼¼±İ Â¡¼ö
+	//êµ°ì£¼ ì‹œìŠ¤í…œ : ì„¸ê¸ˆ ì§•ìˆ˜
 	CMonarch::instance().SendtoDBAddMoney(dwTax, ch->GetEmpire(), ch);
 
 	ch->PointChange(POINT_GOLD, dwPrice, false);
@@ -491,8 +491,8 @@ bool ConvertToShopItemTable(IN CGroupNode* pNode, OUT TShopTableEx& shopTable)
 
 bool CShopManager::ReadShopTableEx(const char* stFileName)
 {
-	// file À¯¹« Ã¼Å©.
-	// ¾ø´Â °æ¿ì´Â ¿¡·¯·Î Ã³¸®ÇÏÁö ¾Ê´Â´Ù.
+	// file ìœ ë¬´ ì²´í¬.
+	// ì—†ëŠ” ê²½ìš°ëŠ” ì—ëŸ¬ë¡œ ì²˜ë¦¬í•˜ì§€ ì•ŠëŠ”ë‹¤.
 	FILE* fp = fopen(stFileName, "rb");
 	if (NULL == fp)
 		return true;

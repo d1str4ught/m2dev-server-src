@@ -1,4 +1,4 @@
-#ifndef __INC_AUCTION_MANAGER_H
+ï»¿#ifndef __INC_AUCTION_MANAGER_H
 #define __INC_AUCTION_MANAGER_H
 
 #include "../../libsql/AsyncSQL.h"
@@ -63,7 +63,7 @@ private:
 
 	TPCMap offer_map;
 
-	// sortingÀ» À§ÇÑ members
+	// sortingì„ ìœ„í•œ members
 public:
 	typedef std::vector <TAuctionItemInfo*> TItemInfoVec;
 private:
@@ -76,7 +76,7 @@ private:
 public:
 	void SortedItemInfos (TItemInfoVec& vec, BYTE grade, BYTE category, int start_idx, BYTE size, BYTE order[5]);
 
-	// ³ªÀÇ °æ¸ÅÀåÀ» À§ÇÑ ÇÔ¼ö.
+	// ë‚˜ì˜ ê²½ë§¤ì¥ì„ ìœ„í•œ í•¨ìˆ˜.
 	void YourItemInfoList (TItemInfoVec& vec, DWORD player_id, int start_idx, BYTE size);
 
 };
@@ -131,7 +131,7 @@ private:
 	typedef std::pair <int, bool> BidInfo;
 	typedef std::map <DWORD, BidInfo > TItemMap;
 	typedef std::unordered_map <DWORD, TItemMap*> TMyBidBoard;
-	// bidder_id°¡ key
+	// bidder_idê°€ key
 	TMyBidBoard pc_map;
 
 public:
@@ -144,7 +144,7 @@ public:
 
 	BidInfo GetMoney (DWORD player_id, DWORD item_id);
 	bool Delete (DWORD player_id, DWORD item_id);
-	// ÀÌ¹Ì ÀÖÀ¸¸é µ¤¾î ¾º¿î´Ù.
+	// ì´ë¯¸ ìˆìœ¼ë©´ ë®ì–´ ì”Œìš´ë‹¤.
 	void Insert (DWORD player_id, DWORD item_id, int money);
 	void Lock (DWORD player_id, DWORD item_id);
 	void UnLock (DWORD player_id, DWORD item_id);
@@ -156,7 +156,7 @@ private :
 	typedef std::unordered_map<DWORD, LPITEM> TItemMap;
 	TItemMap auction_item_map;
 
-	// auction¿¡ µî·ÏµÈ Á¤º¸ Áß °¡°İ, µîµî ¾ÆÀÌÅÛ Å×ÀÌºí¿¡ Æ÷ÇÔµÇÁö ¾Ê´Â Á¤º¸µéÀ» °ü¸®ÇÏ´Â °Íµé
+	// auctionì— ë“±ë¡ëœ ì •ë³´ ì¤‘ ê°€ê²©, ë“±ë“± ì•„ì´í…œ í…Œì´ë¸”ì— í¬í•¨ë˜ì§€ ì•ŠëŠ” ì •ë³´ë“¤ì„ ê´€ë¦¬í•˜ëŠ” ê²ƒë“¤
 	AuctionBoard Auction;
 	SaleBoard Sale;
 	WishBoard Wish;

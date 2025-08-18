@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "constants.h"
 #include "utils.h"
 #include "config.h"
@@ -77,7 +77,7 @@ DWORD CGuildManager::CreateGuild(TGuildCreateParameter& gcp)
 
 	if (!check_name(gcp.name))
 	{
-		gcp.master->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<±æµå> ±æµå ÀÌ¸§ÀÌ ÀûÇÕÇÏÁö ¾Ê½À´Ï´Ù."));
+		gcp.master->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<ê¸¸ë“œ> ê¸¸ë“œ ì´ë¦„ì´ ì í•©í•˜ì§€ ì•ŠìŠµë‹ˆë‹¤."));
 		return 0;
 	}
 
@@ -90,13 +90,13 @@ DWORD CGuildManager::CreateGuild(TGuildCreateParameter& gcp)
 
 		if (!(row[0] && row[0][0] == '0'))
 		{
-			gcp.master->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<±æµå> ÀÌ¹Ì °°Àº ÀÌ¸§ÀÇ ±æµå°¡ ÀÖ½À´Ï´Ù."));
+			gcp.master->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<ê¸¸ë“œ> ì´ë¯¸ ê°™ì€ ì´ë¦„ì˜ ê¸¸ë“œê°€ ìžˆìŠµë‹ˆë‹¤."));
 			return 0;
 		}
 	}
 	else
 	{
-		gcp.master->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<±æµå> ±æµå¸¦ »ý¼ºÇÒ ¼ö ¾ø½À´Ï´Ù."));
+		gcp.master->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<ê¸¸ë“œ> ê¸¸ë“œë¥¼ ìƒì„±í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 		return 0;
 	}
 
@@ -505,7 +505,7 @@ void CGuildManager::RequestWarOver(DWORD dwGuild1, DWORD dwGuild2, DWORD dwGuild
 	TPacketGuildWar p;
 
 	p.bWar = GUILD_WAR_OVER;
-	// ±æµåÀüÀÌ ³¡³ªµµ º¸»óÀº ¾ø´Ù.
+	// ê¸¸ë“œì „ì´ ëë‚˜ë„ ë³´ìƒì€ ì—†ë‹¤.
 	//p.lWarPrice = lReward;
 	p.lWarPrice = 0;
 	p.bType = dwGuildWinner == 0 ? 1 : 0; // bType == 1 means draw for this packet.
@@ -542,7 +542,7 @@ void CGuildManager::DeclareWar(DWORD guild_id1, DWORD guild_id2, BYTE bType)
 		if (false == LC_IsGermany())
 		{
 			char buf[256];
-			snprintf(buf, sizeof(buf), LC_TEXT("%s ±æµå°¡ %s ±æµå¿¡ ¼±ÀüÆ÷°í¸¦ ÇÏ¿´½À´Ï´Ù!"), TouchGuild(guild_id1)->GetName(), TouchGuild(guild_id2)->GetName());
+			snprintf(buf, sizeof(buf), LC_TEXT("%s ê¸¸ë“œê°€ %s ê¸¸ë“œì— ì„ ì „í¬ê³ ë¥¼ í•˜ì˜€ìŠµë‹ˆë‹¤!"), TouchGuild(guild_id1)->GetName(), TouchGuild(guild_id2)->GetName());
 			SendNotice(buf);
 		}
 	}
@@ -556,7 +556,7 @@ void CGuildManager::RefuseWar(DWORD guild_id1, DWORD guild_id2)
 	if (g1 && g2)
 	{
 		if (g2->GetMasterCharacter())
-			g2->GetMasterCharacter()->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<±æµå> %s ±æµå°¡ ±æµåÀüÀ» °ÅºÎÇÏ¿´½À´Ï´Ù."), g1->GetName());
+			g2->GetMasterCharacter()->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<ê¸¸ë“œ> %s ê¸¸ë“œê°€ ê¸¸ë“œì „ì„ ê±°ë¶€í•˜ì˜€ìŠµë‹ˆë‹¤."), g1->GetName());
 	}
 
 	if ( g1 != NULL )
@@ -580,7 +580,7 @@ void CGuildManager::WaitStartWar(DWORD guild_id1, DWORD guild_id2)
 	if (g1->WaitStartWar(guild_id2) || g2->WaitStartWar(guild_id1) )
 	{
 		char buf[256];
-		snprintf(buf, sizeof(buf), LC_TEXT("%s ±æµå¿Í %s ±æµå°¡ Àá½Ã ÈÄ ÀüÀïÀ» ½ÃÀÛÇÕ´Ï´Ù!"), g1->GetName(), g2->GetName());
+		snprintf(buf, sizeof(buf), LC_TEXT("%s ê¸¸ë“œì™€ %s ê¸¸ë“œê°€ ìž ì‹œ í›„ ì „ìŸì„ ì‹œìž‘í•©ë‹ˆë‹¤!"), g1->GetName(), g2->GetName());
 		SendNotice(buf);
 	}
 }
@@ -628,7 +628,7 @@ void CGuildManager::StartWar(DWORD guild_id1, DWORD guild_id2)
 	g2->StartWar(guild_id1);
 
 	char buf[256];
-	snprintf(buf, sizeof(buf), LC_TEXT("%s ±æµå¿Í %s ±æµå°¡ ÀüÀïÀ» ½ÃÀÛÇÏ¿´½À´Ï´Ù!"), g1->GetName(), g2->GetName());
+	snprintf(buf, sizeof(buf), LC_TEXT("%s ê¸¸ë“œì™€ %s ê¸¸ë“œê°€ ì „ìŸì„ ì‹œìž‘í•˜ì˜€ìŠµë‹ˆë‹¤!"), g1->GetName(), g2->GetName());
 	SendNotice(buf);
 
 	if (guild_id1 > guild_id2)
@@ -646,17 +646,17 @@ void SendGuildWarOverNotice(CGuild* g1, CGuild* g2, bool bDraw)
 
 		if (bDraw)
 		{
-			snprintf(buf, sizeof(buf), LC_TEXT("%s ±æµå¿Í %s ±æµå »çÀÌÀÇ ÀüÀïÀÌ ¹«½ÂºÎ·Î ³¡³µ½À´Ï´Ù."), g1->GetName(), g2->GetName());
+			snprintf(buf, sizeof(buf), LC_TEXT("%s ê¸¸ë“œì™€ %s ê¸¸ë“œ ì‚¬ì´ì˜ ì „ìŸì´ ë¬´ìŠ¹ë¶€ë¡œ ëë‚¬ìŠµë‹ˆë‹¤."), g1->GetName(), g2->GetName());
 		}
 		else
 		{
 			if ( g1->GetWarScoreAgainstTo( g2->GetID() ) > g2->GetWarScoreAgainstTo( g1->GetID() ) )
 			{
-				snprintf(buf, sizeof(buf), LC_TEXT("%s ±æµå°¡ %s ±æµå¿ÍÀÇ ÀüÀï¿¡¼­ ½Â¸® Çß½À´Ï´Ù."), g1->GetName(), g2->GetName());
+				snprintf(buf, sizeof(buf), LC_TEXT("%s ê¸¸ë“œê°€ %s ê¸¸ë“œì™€ì˜ ì „ìŸì—ì„œ ìŠ¹ë¦¬ í–ˆìŠµë‹ˆë‹¤."), g1->GetName(), g2->GetName());
 			}
 			else
 			{
-				snprintf(buf, sizeof(buf), LC_TEXT("%s ±æµå°¡ %s ±æµå¿ÍÀÇ ÀüÀï¿¡¼­ ½Â¸® Çß½À´Ï´Ù."), g2->GetName(), g1->GetName());
+				snprintf(buf, sizeof(buf), LC_TEXT("%s ê¸¸ë“œê°€ %s ê¸¸ë“œì™€ì˜ ì „ìŸì—ì„œ ìŠ¹ë¦¬ í–ˆìŠµë‹ˆë‹¤."), g2->GetName(), g1->GetName());
 			}
 		}
 
@@ -740,7 +740,7 @@ void CGuildManager::CancelWar(DWORD guild_id1, DWORD guild_id2)
 		LPCHARACTER master1 = g1->GetMasterCharacter();
 
 		if (master1)
-			master1->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<±æµå> ±æµåÀüÀÌ Ãë¼Ò µÇ¾ú½À´Ï´Ù."));
+			master1->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<ê¸¸ë“œ> ê¸¸ë“œì „ì´ ì·¨ì†Œ ë˜ì—ˆìŠµë‹ˆë‹¤."));
 	}
 
 	if (g2)
@@ -748,13 +748,13 @@ void CGuildManager::CancelWar(DWORD guild_id1, DWORD guild_id2)
 		LPCHARACTER master2 = g2->GetMasterCharacter();
 
 		if (master2)
-			master2->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<±æµå> ±æµåÀüÀÌ Ãë¼Ò µÇ¾ú½À´Ï´Ù."));
+			master2->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<ê¸¸ë“œ> ê¸¸ë“œì „ì´ ì·¨ì†Œ ë˜ì—ˆìŠµë‹ˆë‹¤."));
 	}
 
 	if (g1 && g2)
 	{
 		char buf[256+1];
-		snprintf(buf, sizeof(buf), LC_TEXT("%s ±æµå¿Í %s ±æµå »çÀÌÀÇ ÀüÀïÀÌ Ãë¼ÒµÇ¾ú½À´Ï´Ù."), g1->GetName(), g2->GetName());
+		snprintf(buf, sizeof(buf), LC_TEXT("%s ê¸¸ë“œì™€ %s ê¸¸ë“œ ì‚¬ì´ì˜ ì „ìŸì´ ì·¨ì†Œë˜ì—ˆìŠµë‹ˆë‹¤."), g1->GetName(), g2->GetName());
 		SendNotice(buf);
 	}
 }
@@ -953,7 +953,7 @@ void CGuildManager::ChangeMaster(DWORD dwGID)
 		iter->second->Load(dwGID);
 	}
 
-	// ¾÷µ¥ÀÌÆ®µÈ Á¤º¸ º¸³»ÁÖ±â
+	// ì—…ë°ì´íŠ¸ëœ ì •ë³´ ë³´ë‚´ì£¼ê¸°
 	DBManager::instance().FuncQuery(std::bind(&CGuild::SendGuildDataUpdateToAllMember, iter->second, std::placeholders::_1),		
 			"SELECT 1");
 

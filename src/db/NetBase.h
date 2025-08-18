@@ -1,4 +1,4 @@
-// vim: ts=8 sw=4
+﻿// vim: ts=8 sw=4
 #ifndef __INC_NETWORKBASE_H__
 #define __INC_NETWORKBASE_H__
 

@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "constants.h"
 #include "log.h"
 #include "item.h"
@@ -24,7 +24,7 @@ int CItem::GetAttributeSetIndex()
 		switch (GetSubType())
 		{
 			case ARMOR_BODY:
-//			case COSTUME_BODY: // ÄÚ½ºÃõ °©¿ÊÀº ÀÏ¹İ °©¿Ê°ú µ¿ÀÏÇÑ Attribute SetÀ» ÀÌ¿ëÇÏ¿© ·£´ı¼Ó¼º ºÙÀ½ (ARMOR_BODY == COSTUME_BODY)
+//			case COSTUME_BODY: // ì½”ìŠ¤ì¸” ê°‘ì˜·ì€ ì¼ë°˜ ê°‘ì˜·ê³¼ ë™ì¼í•œ Attribute Setì„ ì´ìš©í•˜ì—¬ ëœë¤ì†ì„± ë¶™ìŒ (ARMOR_BODY == COSTUME_BODY)
 				return ATTRIBUTE_SET_BODY;
 
 			case ARMOR_WRIST:
@@ -37,7 +37,7 @@ int CItem::GetAttributeSetIndex()
 				return ATTRIBUTE_SET_NECK;
 
 			case ARMOR_HEAD:
-//			case COSTUME_HAIR: // ÄÚ½ºÃõ Çì¾î´Â ÀÏ¹İ Åõ±¸ ¾ÆÀÌÅÛ°ú µ¿ÀÏÇÑ Attribute SetÀ» ÀÌ¿ëÇÏ¿© ·£´ı¼Ó¼º ºÙÀ½ (ARMOR_HEAD == COSTUME_HAIR)
+//			case COSTUME_HAIR: // ì½”ìŠ¤ì¸” í—¤ì–´ëŠ” ì¼ë°˜ íˆ¬êµ¬ ì•„ì´í…œê³¼ ë™ì¼í•œ Attribute Setì„ ì´ìš©í•˜ì—¬ ëœë¤ì†ì„± ë¶™ìŒ (ARMOR_HEAD == COSTUME_HAIR)
 				return ATTRIBUTE_SET_HEAD;
 
 			case ARMOR_SHIELD:
@@ -125,7 +125,7 @@ void CItem::PutAttributeWithLevel(BYTE bLevel)
 
 	int total = 0;
 
-	// ºÙÀÏ ¼ö ÀÖ´Â ¼Ó¼º ¹è¿­À» ±¸Ãà
+	// ë¶™ì¼ ìˆ˜ ìˆëŠ” ì†ì„± ë°°ì—´ì„ êµ¬ì¶•
 	for (int i = 0; i < MAX_APPLY_NUM; ++i)
 	{
 		const TItemAttrTable & r = g_map_itemAttr[i];
@@ -137,7 +137,7 @@ void CItem::PutAttributeWithLevel(BYTE bLevel)
 		}
 	}
 
-	// ±¸ÃàµÈ ¹è¿­·Î È®·ü °è»êÀ» ÅëÇØ ºÙÀÏ ¼Ó¼º ¼±Á¤
+	// êµ¬ì¶•ëœ ë°°ì—´ë¡œ í™•ë¥  ê³„ì‚°ì„ í†µí•´ ë¶™ì¼ ì†ì„± ì„ ì •
 	unsigned int prob = number(1, total);
 	int attr_idx = APPLY_NONE;
 
@@ -162,7 +162,7 @@ void CItem::PutAttributeWithLevel(BYTE bLevel)
 
 	const TItemAttrTable & r = g_map_itemAttr[attr_idx];
 
-	// Á¾·ùº° ¼Ó¼º ·¹º§ ÃÖ´ë°ª Á¦ÇÑ
+	// ì¢…ë¥˜ë³„ ì†ì„± ë ˆë²¨ ìµœëŒ€ê°’ ì œí•œ
 	if (bLevel > r.bMaxLevelBySet[iAttributeSet])
 		bLevel = r.bMaxLevelBySet[iAttributeSet];
 

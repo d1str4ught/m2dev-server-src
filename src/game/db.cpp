@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include <sstream>
 #include "../../common/billing.h"
 #include "../../common/length.h"
@@ -25,7 +25,7 @@ extern bool g_bNoPasspod;
 extern std::string g_stBlockDate;
 extern int openid_server;
 
-//Áß±¹ passpod Àü¿ë ÇÔ¼ö 
+//ì¤‘êµ­ passpod ì „ìš© í•¨ìˆ˜ 
 bool CheckPasspod(const char * account)
 {
 	char szQuery[1024];
@@ -434,7 +434,7 @@ void DBManager::FlushBilling(bool bForce)
 void DBManager::CheckBilling()
 {
 	std::vector<DWORD> vec;
-	vec.push_back(0); // Ä«¿îÆ®¸¦ À§ÇØ ¹Ì¸® ºñ¿öµÐ´Ù.
+	vec.push_back(0); // ì¹´ìš´íŠ¸ë¥¼ ìœ„í•´ ë¯¸ë¦¬ ë¹„ì›Œë‘”ë‹¤.
 
 	//sys_log(0, "CheckBilling: map size %d", m_map_pkLoginData.size());
 
@@ -451,7 +451,7 @@ void DBManager::CheckBilling()
 		}
 	}
 
-	vec[0] = vec.size() - 1; // ºñ¿öµÐ °÷¿¡ »çÀÌÁî¸¦ ³Ö´Â´Ù, »çÀÌÁî ÀÚ½ÅÀº Á¦¿ÜÇØ¾ß ÇÏ¹Ç·Î -1
+	vec[0] = vec.size() - 1; // ë¹„ì›Œë‘” ê³³ì— ì‚¬ì´ì¦ˆë¥¼ ë„£ëŠ”ë‹¤, ì‚¬ì´ì¦ˆ ìžì‹ ì€ ì œì™¸í•´ì•¼ í•˜ë¯€ë¡œ -1
 	db_clientdesc->DBPacket(HEADER_GD_BILLING_CHECK, 0, &vec[0], sizeof(DWORD) * vec.size());
 }
 
@@ -691,7 +691,7 @@ void DBManager::AnalyzeReturnQuery(SQLMsg * pMsg)
 					M2_DELETE(pinfo);
 					break;
 				}
-				//À§Ä¡ º¯°æ - By SeMinZ
+				//ìœ„ì¹˜ ë³€ê²½ - By SeMinZ
 				d->SetLogin(pinfo->login);
 
 				sys_log(0, "QID_AUTH_LOGIN: START %u %p", qi->dwIdent, get_pointer(d));
@@ -700,7 +700,7 @@ void DBManager::AnalyzeReturnQuery(SQLMsg * pMsg)
 				{
 					if (true == LC_IsBrazil())
 					{
-						// °èÁ¤ÀÌ ¾øÀ¸¸é »õ·Î ¸¸µé¾î¾ß ÇÑ´Ù
+						// ê³„ì •ì´ ì—†ìœ¼ë©´ ìƒˆë¡œ ë§Œë“¤ì–´ì•¼ í•œë‹¤
 						ReturnQuery(QID_BRAZIL_CREATE_ID, qi->dwIdent, pinfo,
 								"INSERT INTO account(login, password, social_id, create_time) "
 								"VALUES('%s', password('%s'), '0000000', NOW()) ;",
@@ -830,7 +830,7 @@ void DBManager::AnalyzeReturnQuery(SQLMsg * pMsg)
 
 					if (true == LC_IsBrazil())
 					{
-						nPasswordDiff = 0; // ºê¶óÁú ¹öÀü¿¡¼­´Â ºñ¹Ð¹øÈ£ Ã¼Å©¸¦ ÇÏÁö ¾Ê´Â´Ù.
+						nPasswordDiff = 0; // ë¸Œë¼ì§ˆ ë²„ì „ì—ì„œëŠ” ë¹„ë°€ë²ˆí˜¸ ì²´í¬ë¥¼ í•˜ì§€ ì•ŠëŠ”ë‹¤.
 					}
 
 					if (nPasswordDiff)
@@ -861,7 +861,7 @@ void DBManager::AnalyzeReturnQuery(SQLMsg * pMsg)
 					{
 						if (LC_IsEurope())
 						{
-							//stBlockData >= 0 == ³¯Â¥°¡ BlockDate º¸´Ù ¹Ì·¡ 
+							//stBlockData >= 0 == ë‚ ì§œê°€ BlockDate ë³´ë‹¤ ë¯¸ëž˜ 
 							if (strncmp(szCreateDate, g_stBlockDate.c_str(), 8) >= 0)
 							{
 								LoginFailure(d, "BLKLOGIN");
@@ -908,7 +908,7 @@ void DBManager::AnalyzeReturnQuery(SQLMsg * pMsg)
 					M2_DELETE(pinfo);
 					break;
 				}
-				//À§Ä¡ º¯°æ - By SeMinZ
+				//ìœ„ì¹˜ ë³€ê²½ - By SeMinZ
 				d->SetLogin(pinfo->login);
 
 				sys_log(0, "QID_AUTH_LOGIN_OPENID: START %u %p", qi->dwIdent, get_pointer(d));
@@ -917,7 +917,7 @@ void DBManager::AnalyzeReturnQuery(SQLMsg * pMsg)
 				{
 					if (true == LC_IsBrazil())
 					{
-						// °èÁ¤ÀÌ ¾øÀ¸¸é »õ·Î ¸¸µé¾î¾ß ÇÑ´Ù
+						// ê³„ì •ì´ ì—†ìœ¼ë©´ ìƒˆë¡œ ë§Œë“¤ì–´ì•¼ í•œë‹¤
 						ReturnQuery(QID_BRAZIL_CREATE_ID, qi->dwIdent, pinfo,
 								"INSERT INTO account(login, password, social_id, create_time) "
 								"VALUES('%s', password('%s'), '0000000', NOW()) ;",
@@ -926,7 +926,7 @@ void DBManager::AnalyzeReturnQuery(SQLMsg * pMsg)
 						sys_log(0, "[AUTH_BRAZIL] : Create A new AccountID From OnGame");
 					} else if (true == LC_IsJapan())
 					{
-						// °èÁ¤ÀÌ ¾øÀ¸¸é »õ·Î ¸¸µé¾î¾ß ÇÑ´Ù
+						// ê³„ì •ì´ ì—†ìœ¼ë©´ ìƒˆë¡œ ë§Œë“¤ì–´ì•¼ í•œë‹¤
 						ReturnQuery(QID_JAPAN_CREATE_ID, qi->dwIdent, pinfo,
 								"INSERT INTO account(login, password, social_id, create_time) "
 								"VALUES('%s', password('%s'), '0000000', NOW()) ;",
@@ -1056,10 +1056,10 @@ void DBManager::AnalyzeReturnQuery(SQLMsg * pMsg)
 
 					if (true == LC_IsBrazil())
 					{
-						nPasswordDiff = 0; // ºê¶óÁú ¹öÀü¿¡¼­´Â ºñ¹Ð¹øÈ£ Ã¼Å©¸¦ ÇÏÁö ¾Ê´Â´Ù.
+						nPasswordDiff = 0; // ë¸Œë¼ì§ˆ ë²„ì „ì—ì„œëŠ” ë¹„ë°€ë²ˆí˜¸ ì²´í¬ë¥¼ í•˜ì§€ ì•ŠëŠ”ë‹¤.
 					}
 
-					//OpenID : OpenID ÀÇ °æ¿ì, ºñ¹Ð¹øÈ£ Ã¼Å©¸¦ ÇÏÁö ¾Ê´Â´Ù.
+					//OpenID : OpenID ì˜ ê²½ìš°, ë¹„ë°€ë²ˆí˜¸ ì²´í¬ë¥¼ í•˜ì§€ ì•ŠëŠ”ë‹¤.
 					if (openid_server)
 					{
 						nPasswordDiff = 0;
@@ -1093,7 +1093,7 @@ void DBManager::AnalyzeReturnQuery(SQLMsg * pMsg)
 					{
 						if (LC_IsEurope())
 						{
-							//stBlockData >= 0 == ³¯Â¥°¡ BlockDate º¸´Ù ¹Ì·¡ 
+							//stBlockData >= 0 == ë‚ ì§œê°€ BlockDate ë³´ë‹¤ ë¯¸ëž˜ 
 							if (strncmp(szCreateDate, g_stBlockDate.c_str(), 8) >= 0)
 							{
 								LoginFailure(d, "BLKLOGIN");
@@ -1296,7 +1296,7 @@ void DBManager::AnalyzeReturnQuery(SQLMsg * pMsg)
 						if (pkItem)
 						{
 							sys_log(0, "GIVE LOTTO SUCCESS TO %s (pid %u)", ch->GetName(), qi->dwIdent);
-							//ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("¾ÆÀÌÅÛ È¹µæ: %s"), pkItem->GetName());
+							//ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì•„ì´í…œ íšë“: %s"), pkItem->GetName());
 
 							pkItem->SetSocket(0, pMsg->Get()->uiInsertID);
 							pkItem->SetSocket(1, pdw[2]);
@@ -1549,7 +1549,7 @@ void VCardUse(LPCHARACTER CardOwner, LPCHARACTER CardTaker, LPITEM item)
 
 	db_clientdesc->DBPacket(HEADER_GD_VCARD, 0, &p, sizeof(TPacketGDVCard));
 
-	CardTaker->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%dºÐÀÇ °áÁ¦½Ã°£ÀÌ Ãß°¡ µÇ¾ú½À´Ï´Ù. (°áÁ¦¹øÈ£ %d)"), item->GetSocket(1) / 60, item->GetSocket(0));
+	CardTaker->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%dë¶„ì˜ ê²°ì œì‹œê°„ì´ ì¶”ê°€ ë˜ì—ˆìŠµë‹ˆë‹¤. (ê²°ì œë²ˆí˜¸ %d)"), item->GetSocket(1) / 60, item->GetSocket(0));
 
 	LogManager::instance().VCardLog(p.dwID, CardTaker->GetX(), CardTaker->GetY(), g_stHostname.c_str(),
 			CardOwner->GetName(), CardOwner->GetDesc()->GetHostName(),
@@ -1685,7 +1685,7 @@ enum EAccountQID
 	QID_SPAM_DB,
 };
 
-// 10ºÐ¸¶´Ù ¸®·Îµå
+// 10ë¶„ë§ˆë‹¤ ë¦¬ë¡œë“œ
 static LPEVENT s_pkReloadSpamEvent = NULL;
 
 EVENTINFO(reload_spam_event_info)

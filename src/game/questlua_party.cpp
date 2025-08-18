@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include <sstream>
 
 #include "desc.h"
@@ -330,8 +330,8 @@ namespace quest
 		}
 	};
 	
-	// ÆÄÆ¼ ´ÜÀ§·Î ¹öÇÁ ÁÖ´Â ÇÔ¼ö.
-	// °°Àº ¸Ê¿¡ ÀÖ´Â ÆÄÆ¼¿ø¸¸ ¿µÇâÀ» ¹Ş´Â´Ù.
+	// íŒŒí‹° ë‹¨ìœ„ë¡œ ë²„í”„ ì£¼ëŠ” í•¨ìˆ˜.
+	// ê°™ì€ ë§µì— ìˆëŠ” íŒŒí‹°ì›ë§Œ ì˜í–¥ì„ ë°›ëŠ”ë‹¤.
 	int party_give_buff (lua_State* L)
 	{
 		CQuestManager & q = CQuestManager::instance();
@@ -412,7 +412,7 @@ namespace quest
 			{ "is_in_dungeon",	party_is_in_dungeon	},
 			{ "give_buff",		party_give_buff		},
 			{ "is_map_member_flag_lt",	party_is_map_member_flag_lt	},
-			{ "get_member_pids",		party_get_member_pids	}, // ÆÄÆ¼¿øµéÀÇ pid¸¦ return
+			{ "get_member_pids",		party_get_member_pids	}, // íŒŒí‹°ì›ë“¤ì˜ pidë¥¼ return
 			{ NULL,				NULL				}
 		};
 

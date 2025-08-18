@@ -1,4 +1,4 @@
-
+﻿
 #ifndef BANWORD_MANAGER_H_
 #define BANWORD_MANAGER_H_
 

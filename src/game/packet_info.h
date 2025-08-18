@@ -1,4 +1,4 @@
-#ifndef __INC_METIN_II_GAME_PACKET_HEADER_INFO_H__
+﻿#ifndef __INC_METIN_II_GAME_PACKET_HEADER_INFO_H__
 #define __INC_METIN_II_GAME_PACKET_HEADER_INFO_H__
 
 #include "packet.h"

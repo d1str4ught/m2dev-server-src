@@ -1,4 +1,4 @@
-#ifndef __INC_METIN_II_GAME_ENTITY_H__
+Ôªø#ifndef __INC_METIN_II_GAME_ENTITY_H__
 #define __INC_METIN_II_GAME_ENTITY_H__
 
 class SECTREE;
@@ -28,7 +28,7 @@ class CEntity
 		void			ViewCleanup();
 		void			ViewInsert(LPENTITY entity, bool recursive = true);
 		void			ViewRemove(LPENTITY entity, bool recursive = true);
-		void			ViewReencode();	// ¡÷¿ß Entityø° ∆–≈∂¿ª ¥ŸΩ√ ∫∏≥Ω¥Ÿ.
+		void			ViewReencode();	// Ï£ºÏúÑ EntityÏóê Ìå®ÌÇ∑ÏùÑ Îã§Ïãú Î≥¥ÎÇ∏Îã§.
 
 		int				GetViewAge() const	{ return m_iViewAge;	}
 

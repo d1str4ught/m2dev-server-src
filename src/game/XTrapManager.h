@@ -1,4 +1,4 @@
-
+﻿
 #ifndef _XTRAP_MANAGER_H_
 #define _XTRAP_MANAGER_H_
 

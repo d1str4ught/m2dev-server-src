@@ -1,4 +1,4 @@
-#ifndef __INC_LZO_MANAGER_H
+﻿#ifndef __INC_LZO_MANAGER_H
 #define __INC_LZO_MANAGER_H
 
 #include "minilzo.h"

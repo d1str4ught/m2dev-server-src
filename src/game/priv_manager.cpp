@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "constants.h"
 #include "priv_manager.h"
 #include "char.h"
@@ -105,13 +105,13 @@ void CPrivManager::GiveGuildPriv(DWORD guild_id, BYTE type, int value, BYTE bLog
 		if (value)
 		{
 			char buf[100];
-			snprintf(buf, sizeof(buf), LC_TEXT("%s ±æµåÀÇ %sÀÌ %d%% Áõ°¡Çß½À´Ï´Ù!"), g->GetName(), GetPrivName(type), value);
+			snprintf(buf, sizeof(buf), LC_TEXT("%s ê¸¸ë“œì˜ %sì´ %d%% ì¦ê°€í–ˆìŠµë‹ˆë‹¤!"), g->GetName(), GetPrivName(type), value);
 			SendNotice(buf);
 		}
 		else
 		{
 			char buf[100];
-			snprintf(buf, sizeof(buf), LC_TEXT("%s ±æµåÀÇ %sÀÌ Á¤»óÀ¸·Î µ¹¾Æ¿Ô½À´Ï´Ù."), g->GetName(), GetPrivName(type));
+			snprintf(buf, sizeof(buf), LC_TEXT("%s ê¸¸ë“œì˜ %sì´ ì •ìƒìœ¼ë¡œ ëŒì•„ì™”ìŠµë‹ˆë‹¤."), g->GetName(), GetPrivName(type));
 			SendNotice(buf);
 		}
 
@@ -160,7 +160,7 @@ void CPrivManager::GiveEmpirePriv(BYTE empire, BYTE type, int value, BYTE bLog, 
 	if (value)
 	{
 		char buf[100];
-		snprintf(buf, sizeof(buf), LC_TEXT("%sÀÇ %sÀÌ %d%% Áõ°¡Çß½À´Ï´Ù!"), GetEmpireName(empire), GetPrivName(type), value);
+		snprintf(buf, sizeof(buf), LC_TEXT("%sì˜ %sì´ %d%% ì¦ê°€í–ˆìŠµë‹ˆë‹¤!"), GetEmpireName(empire), GetPrivName(type), value);
 
 		if (empire)
 			SendNotice(buf);
@@ -170,7 +170,7 @@ void CPrivManager::GiveEmpirePriv(BYTE empire, BYTE type, int value, BYTE bLog, 
 	else
 	{
 		char buf[100];
-		snprintf(buf, sizeof(buf), LC_TEXT("%sÀÇ %sÀÌ Á¤»óÀ¸·Î µ¹¾Æ¿Ô½À´Ï´Ù."), GetEmpireName(empire), GetPrivName(type));
+		snprintf(buf, sizeof(buf), LC_TEXT("%sì˜ %sì´ ì •ìƒìœ¼ë¡œ ëŒì•„ì™”ìŠµë‹ˆë‹¤."), GetEmpireName(empire), GetPrivName(type));
 
 		if (empire)
 			SendNotice(buf);
@@ -225,7 +225,7 @@ void CPrivManager::RemoveCharacterPriv(DWORD pid, BYTE type)
 
 int CPrivManager::GetPriv(LPCHARACTER ch, BYTE type)
 {
-	// Ä³¸¯ÅÍÀÇ º¯°æ ¼öÄ¡°¡ -¶ó¸é ¹«Á¶°Ç -¸¸ Àû¿ëµÇ°Ô
+	// ìºë¦­í„°ì˜ ë³€ê²½ ìˆ˜ì¹˜ê°€ -ë¼ë©´ ë¬´ì¡°ê±´ -ë§Œ ì ìš©ë˜ê²Œ
 	int val_ch = GetPrivByCharacter(ch->GetPlayerID(), type);
 
 	if (val_ch < 0 && !ch->IsEquipUniqueItem(UNIQUE_ITEM_NO_BAD_LUCK_EFFECT))
@@ -234,7 +234,7 @@ int CPrivManager::GetPriv(LPCHARACTER ch, BYTE type)
 	{
 		int val;
 
-		// °³ÀÎ, Á¦±¹, ±æµå, ÀüÃ¼ Áß Å« °ªÀ» ÃëÇÑ´Ù.
+		// ê°œì¸, ì œêµ­, ê¸¸ë“œ, ì „ì²´ ì¤‘ í° ê°’ì„ ì·¨í•œë‹¤.
 		val = MAX(val_ch, GetPrivByEmpire(0, type));
 		val = MAX(val, GetPrivByEmpire(ch->GetEmpire(), type));
 

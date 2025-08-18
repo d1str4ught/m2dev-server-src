@@ -1,4 +1,4 @@
-#ifndef __INC_MESSENGER_MANAGER_H
+ï»¿#ifndef __INC_MESSENGER_MANAGER_H
 #define __INC_MESSENGER_MANAGER_H
 
 #include "db.h"
@@ -23,10 +23,10 @@ class MessengerManager : public singleton<MessengerManager>
 		// void	AuthToAdd(keyA account, keyA companion, bool bDeny);
 		bool	AuthToAdd(keyA account, keyA companion, bool bDeny);
 
-		void	__AddToList(keyA account, keyA companion);	// ½ÇÁ¦ m_Relation, m_InverseRelation ¼öÁ¤ÇÏ´Â ¸Þ¼Òµå
+		void	__AddToList(keyA account, keyA companion);	// ì‹¤ì œ m_Relation, m_InverseRelation ìˆ˜ì •í•˜ëŠ” ë©”ì†Œë“œ
 		void	AddToList(keyA account, keyA companion);
 
-		void	__RemoveFromList(keyA account, keyA companion); // ½ÇÁ¦ m_Relation, m_InverseRelation ¼öÁ¤ÇÏ´Â ¸Þ¼Òµå
+		void	__RemoveFromList(keyA account, keyA companion); // ì‹¤ì œ m_Relation, m_InverseRelation ìˆ˜ì •í•˜ëŠ” ë©”ì†Œë“œ
 		void	RemoveFromList(keyA account, keyA companion);	
 
 		void	RemoveAllList(keyA account);

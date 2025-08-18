@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #define SAFE_BUFFER_DELETE(buf)		{ if(buf != NULL) { buffer_delete(buf); buf = NULL; } }
 

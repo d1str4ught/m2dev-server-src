@@ -1,4 +1,4 @@
-#ifndef __INC_METIN_II_GAME_TARGET_H__
+ï»¿#ifndef __INC_METIN_II_GAME_TARGET_H__
 #define __INC_METIN_II_GAME_TARGET_H__
 
 enum ETargetTypes
@@ -17,8 +17,8 @@ EVENTINFO(TargetInfo)
 	DWORD       dwPID;
 	DWORD       dwQuestIndex;
 
-	char        szTargetName[32+1]; // Äù½ºÆ®¿¡¼­ »ç¿ëÇÏ´Â ÀÌ¸§
-	char        szTargetDesc[32+1]; // ½ÇÁ¦ Å¬¶óÀÌ¾ğÆ®¿¡ Àü¼ÛµÇ´Â ÀÌ¸§
+	char        szTargetName[32+1]; // í€˜ìŠ¤íŠ¸ì—ì„œ ì‚¬ìš©í•˜ëŠ” ì´ë¦„
+	char        szTargetDesc[32+1]; // ì‹¤ì œ í´ë¼ì´ì–¸íŠ¸ì— ì „ì†¡ë˜ëŠ” ì´ë¦„
 
 	int         iType;
 	int         iArg1;

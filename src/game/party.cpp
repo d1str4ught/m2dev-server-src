@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "utils.h"
 #include "char.h"
 #include "party.h"
@@ -34,7 +34,7 @@ void CPartyManager::DeleteAllParty()
 	}
 }
 
-bool CPartyManager::SetParty(LPCHARACTER ch)	// PC¸¸ »ç¿ëÇØ¾ß ÇÑ´Ù!!
+bool CPartyManager::SetParty(LPCHARACTER ch)	// PCë§Œ ì‚¬ìš©í•´ì•¼ í•œë‹¤!!
 {
 	TPartyMap::iterator it = m_map_pkParty.find(ch->GetPlayerID());
 
@@ -295,7 +295,7 @@ void CParty::Destroy()
 {
 	sys_log(2, "Party::Destroy");
 
-	// PC°¡ ¸¸µç ÆÄÆ¼¸é ÆÄÆ¼¸Å´ÏÀú¿¡ ¸Ê¿¡¼­ PID¸¦ »èÁ¦ÇØ¾ß ÇÑ´Ù.
+	// PCê°€ ë§Œë“  íŒŒí‹°ë©´ íŒŒí‹°ë§¤ë‹ˆì €ì— ë§µì—ì„œ PIDë¥¼ ì‚­ì œí•´ì•¼ í•œë‹¤.
 	if (m_bPCParty)
 	{
 		for (TMemberMap::iterator it = m_memberMap.begin(); it != m_memberMap.end(); ++it)
@@ -323,11 +323,11 @@ void CParty::Destroy()
 				p.header = HEADER_GC_PARTY_REMOVE;
 				p.pid = rMember.pCharacter->GetPlayerID();
 				rMember.pCharacter->GetDesc()->Packet(&p, sizeof(p));
-				rMember.pCharacter->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<ÆÄÆ¼> ÆÄÆ¼°¡ ÇØ»ê µÇ¾ú½À´Ï´Ù."));
+				rMember.pCharacter->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<íŒŒí‹°> íŒŒí‹°ê°€ í•´ì‚° ë˜ì—ˆìŠµë‹ˆë‹¤."));
 			}
 			else
 			{
-				// NPCÀÏ °æ¿ì ÀÏÁ¤ ½Ã°£ ÈÄ ÀüÅõ ÁßÀÌ ¾Æ´Ò ¶§ »ç¶óÁö°Ô ÇÏ´Â ÀÌº¥Æ®¸¦ ½ÃÀÛ½ÃÅ²´Ù.
+				// NPCì¼ ê²½ìš° ì¼ì • ì‹œê°„ í›„ ì „íˆ¬ ì¤‘ì´ ì•„ë‹ ë•Œ ì‚¬ë¼ì§€ê²Œ í•˜ëŠ” ì´ë²¤íŠ¸ë¥¼ ì‹œì‘ì‹œí‚¨ë‹¤.
 				rMember.pCharacter->SetLastAttacked(dwTime);
 				rMember.pCharacter->StartDestroyWhenIdleEvent();
 			}
@@ -458,7 +458,7 @@ void CParty::Join(DWORD dwPID)
 		TPacketPartyAdd p;
 		p.dwLeaderPID = GetLeaderPID();
 		p.dwPID = dwPID;
-		p.bState = PARTY_ROLE_NORMAL; // #0000790: [M2EU] CZ Å©·¡½¬ Áõ°¡: ÃÊ±âÈ­ Áß¿ä! 
+		p.bState = PARTY_ROLE_NORMAL; // #0000790: [M2EU] CZ í¬ë˜ì‰¬ ì¦ê°€: ì´ˆê¸°í™” ì¤‘ìš”! 
 		db_clientdesc->DBPacket(HEADER_GD_PARTY_ADD, 0, &p, sizeof(p));
 	}
 }
@@ -504,11 +504,11 @@ void CParty::P2PQuit(DWORD dwPID)
 	if (m_bPCParty)
 		CPartyManager::instance().SetPartyMember(dwPID, NULL);
 
-	// ¸®´õ°¡ ³ª°¡¸é ÆÄÆ¼´Â ÇØ»êµÇ¾î¾ß ÇÑ´Ù.
+	// ë¦¬ë”ê°€ ë‚˜ê°€ë©´ íŒŒí‹°ëŠ” í•´ì‚°ë˜ì–´ì•¼ í•œë‹¤.
 	if (bRole == PARTY_ROLE_LEADER)
 		CPartyManager::instance().DeleteParty(this);
 
-	// ÀÌ ¾Æ·¡´Â ÄÚµå¸¦ Ãß°¡ÇÏÁö ¸» °Í!!! À§ DeleteParty ÇÏ¸é this´Â ¾ø´Ù.
+	// ì´ ì•„ë˜ëŠ” ì½”ë“œë¥¼ ì¶”ê°€í•˜ì§€ ë§ ê²ƒ!!! ìœ„ DeleteParty í•˜ë©´ thisëŠ” ì—†ë‹¤.
 }
 
 void CParty::Quit(DWORD dwPID)
@@ -546,7 +546,7 @@ void CParty::Link(LPCHARACTER pkChr)
 		return;
 	}
 
-	// ÇÃ·¹ÀÌ¾î ÆÄÆ¼ÀÏ °æ¿ì ¾÷µ¥ÀÌÆ® ÀÌº¥Æ® »ı¼º
+	// í”Œë ˆì´ì–´ íŒŒí‹°ì¼ ê²½ìš° ì—…ë°ì´íŠ¸ ì´ë²¤íŠ¸ ìƒì„±
 	if (m_bPCParty && !m_eventUpdate)
 	{
 		party_update_event_info* info = AllocEventInfo<party_update_event_info>();
@@ -644,7 +644,7 @@ void CParty::Unlink(LPCHARACTER pkChr)
 	if (pkChr->IsPC())
 	{
 		SendPartyUnlinkOneToAll(pkChr);
-		//SendPartyUnlinkAllToOne(pkChr); // ²÷±â´Â °ÍÀÌ¹Ç·Î ±¸Áö Unlink ÆĞÅ¶À» º¸³¾ ÇÊ¿ä ¾ø´Ù.
+		//SendPartyUnlinkAllToOne(pkChr); // ëŠê¸°ëŠ” ê²ƒì´ë¯€ë¡œ êµ¬ì§€ Unlink íŒ¨í‚·ì„ ë³´ë‚¼ í•„ìš” ì—†ë‹¤.
 
 		if (it->second.bRole == PARTY_ROLE_LEADER)
 		{
@@ -652,7 +652,7 @@ void CParty::Unlink(LPCHARACTER pkChr)
 
 			if (it->second.pCharacter->GetDungeon())
 			{
-				// TODO: ´øÁ¯¿¡ ÀÖÀ¸¸é ³ª¸ÓÁöµµ ³ª°£´Ù
+				// TODO: ë˜ì ¼ì— ìˆìœ¼ë©´ ë‚˜ë¨¸ì§€ë„ ë‚˜ê°„ë‹¤
 				FExitDungeon f;
 				ForEachNearMember(f);
 			}
@@ -900,9 +900,9 @@ void CParty::SendMessage(LPCHARACTER ch, BYTE bMsg, DWORD dwArg1, DWORD dwArg2)
 			}
 			break;
 
-		case PM_ATTACKED_BY:	// °ø°İ ¹Ş¾ÒÀ½, ¸®´õ¿¡°Ô µµ¿òÀ» ¿äÃ»
+		case PM_ATTACKED_BY:	// ê³µê²© ë°›ì•˜ìŒ, ë¦¬ë”ì—ê²Œ ë„ì›€ì„ ìš”ì²­
 			{
-				// ¸®´õ°¡ ¾øÀ» ¶§
+				// ë¦¬ë”ê°€ ì—†ì„ ë•Œ
 				LPCHARACTER pkChrVictim = ch->GetVictim();
 
 				if (!pkChrVictim)
@@ -1069,7 +1069,7 @@ void CParty::RemoveBonusForOne(DWORD pid)
 
 void CParty::HealParty()
 {
-	// XXX DELETEME Å¬¶óÀÌ¾ğÆ® ¿Ï·áµÉ¶§±îÁö
+	// XXX DELETEME í´ë¼ì´ì–¸íŠ¸ ì™„ë£Œë ë•Œê¹Œì§€
 	{
 		return;
 	}
@@ -1123,7 +1123,7 @@ void CParty::SummonToLeader(DWORD pid)
 
 	if (m_memberMap.find(pid) == m_memberMap.end())
 	{
-		l->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<ÆÄÆ¼> ¼ÒÈ¯ÇÏ·Á´Â ´ë»óÀ» Ã£À» ¼ö ¾ø½À´Ï´Ù."));
+		l->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<íŒŒí‹°> ì†Œí™˜í•˜ë ¤ëŠ” ëŒ€ìƒì„ ì°¾ì„ ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 		return;
 	}
 
@@ -1131,13 +1131,13 @@ void CParty::SummonToLeader(DWORD pid)
 
 	if (!ch)
 	{
-		l->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<ÆÄÆ¼> ¼ÒÈ¯ÇÏ·Á´Â ´ë»óÀ» Ã£À» ¼ö ¾ø½À´Ï´Ù."));
+		l->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<íŒŒí‹°> ì†Œí™˜í•˜ë ¤ëŠ” ëŒ€ìƒì„ ì°¾ì„ ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 		return;
 	}
 
 	if (!ch->CanSummon(m_iLeadership))
 	{
-		l->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<ÆÄÆ¼> ´ë»óÀ» ¼ÒÈ¯ÇÒ ¼ö ¾ø½À´Ï´Ù."));
+		l->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<íŒŒí‹°> ëŒ€ìƒì„ ì†Œí™˜í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 		return;
 	}
 
@@ -1154,7 +1154,7 @@ void CParty::SummonToLeader(DWORD pid)
 	}
 
 	if (n == 0)
-		l->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<ÆÄÆ¼> ÆÄÆ¼¿øÀ» ÇöÀç À§Ä¡·Î ¼ÒÈ¯ÇÒ ¼ö ¾ø½À´Ï´Ù."));
+		l->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<íŒŒí‹°> íŒŒí‹°ì›ì„ í˜„ì¬ ìœ„ì¹˜ë¡œ ì†Œí™˜í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 	else
 	{
 		int i = number(0, n - 1);
@@ -1360,7 +1360,7 @@ void CParty::Update()
 
 	bool bLongTimeExpBonusChanged = false;
 
-	// ÆÄÆ¼ °á¼º ÈÄ ÃæºĞÇÑ ½Ã°£ÀÌ Áö³ª¸é °æÇèÄ¡ º¸³Ê½º¸¦ ¹Ş´Â´Ù.
+	// íŒŒí‹° ê²°ì„± í›„ ì¶©ë¶„í•œ ì‹œê°„ì´ ì§€ë‚˜ë©´ ê²½í—˜ì¹˜ ë³´ë„ˆìŠ¤ë¥¼ ë°›ëŠ”ë‹¤.
 	if (!m_iLongTimeExpBonus && (get_dword_time() - m_dwPartyStartTime > PARTY_ENOUGH_MINUTE_FOR_EXP_BONUS * 60 * 1000 / (g_iUseLocale?1:2)))
 	{
 		bLongTimeExpBonusChanged = true;
@@ -1376,7 +1376,7 @@ void CParty::Update()
 			continue;
 
 		if (bLongTimeExpBonusChanged && ch->GetDesc())
-			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ÆÄÆ¼ÀÇ Çùµ¿·ÂÀÌ ³ô¾ÆÁ® Áö±İºÎÅÍ Ãß°¡ °æÇèÄ¡ º¸³Ê½º¸¦ ¹Ş½À´Ï´Ù."));
+			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("íŒŒí‹°ì˜ í˜‘ë™ë ¥ì´ ë†’ì•„ì ¸ ì§€ê¸ˆë¶€í„° ì¶”ê°€ ê²½í—˜ì¹˜ ë³´ë„ˆìŠ¤ë¥¼ ë°›ìŠµë‹ˆë‹¤."));
 
 		bool bNear = it->second.bNear;
 
@@ -1405,9 +1405,9 @@ void CParty::Update()
 		if (!m_bCanUsePartyHeal && m_iLeadership >= 18)
 			m_dwPartyHealTime = get_dword_time();
 
-		m_bCanUsePartyHeal = m_iLeadership >= 18; // Åë¼Ö·Â 18 ÀÌ»óÀº ÈúÀ» »ç¿ëÇÒ ¼ö ÀÖÀ½.
+		m_bCanUsePartyHeal = m_iLeadership >= 18; // í†µì†”ë ¥ 18 ì´ìƒì€ íì„ ì‚¬ìš©í•  ìˆ˜ ìˆìŒ.
 
-		// Åë¼Ö·Â 40ÀÌ»óÀº ÆÄÆ¼ Èú ÄğÅ¸ÀÓÀÌ Àû´Ù.
+		// í†µì†”ë ¥ 40ì´ìƒì€ íŒŒí‹° í ì¿¨íƒ€ì„ì´ ì ë‹¤.
 		DWORD PartyHealCoolTime = (m_iLeadership >= 40) ? PARTY_HEAL_COOLTIME_SHORT * 60 * 1000 : PARTY_HEAL_COOLTIME_LONG * 60 * 1000;
 
 		if (m_bCanUsePartyHeal)
@@ -1417,7 +1417,7 @@ void CParty::Update()
 				m_bPartyHealReady = true;
 
 				// send heal ready
-				if (0) // XXX  DELETEME Å¬¶óÀÌ¾ğÆ® ¿Ï·áµÉ¶§±îÁö
+				if (0) // XXX  DELETEME í´ë¼ì´ì–¸íŠ¸ ì™„ë£Œë ë•Œê¹Œì§€
 					if (GetLeaderCharacter())
 						GetLeaderCharacter()->ChatPacket(CHAT_TYPE_COMMAND, "PartyHealReady");
 			}
@@ -1689,7 +1689,7 @@ int CParty::ComputePartyBonusExpPercent()
 	if (leader && (leader->IsEquipUniqueItem(UNIQUE_ITEM_PARTY_BONUS_EXP) || leader->IsEquipUniqueItem(UNIQUE_ITEM_PARTY_BONUS_EXP_MALL)
 		|| leader->IsEquipUniqueItem(UNIQUE_ITEM_PARTY_BONUS_EXP_GIFT) || leader->IsEquipUniqueGroup(10010)))
 	{
-		// Áß±¹Ãø À°µµ Àû¿ëÀ» È®ÀÎÇØ¾ßÇÑ´Ù.
+		// ì¤‘êµ­ì¸¡ ìœ¡ë„ ì ìš©ì„ í™•ì¸í•´ì•¼í•œë‹¤.
 		if (g_iUseLocale)
 		{
 			iBonusPartyExpFromItem = 30;

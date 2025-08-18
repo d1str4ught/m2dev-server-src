@@ -1,4 +1,4 @@
-/**
+﻿/**
  *
  * @file	TrafficProfiler.cpp
  * @brief	TrafficProfiler class implementation file

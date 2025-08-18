@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "utils.h"
 #include "config.h"
 #include "desc.h"
@@ -149,7 +149,7 @@ void CHARACTER::DistributeSP(LPCHARACTER pkKiller, int iMethod)
 			else if (bMoving)
 				iAmount = 3 + GetMaxSP() * 2 / 100;
 			else
-				iAmount = 10 + GetMaxSP() * 3 / 100; // Æò»ó½Ã
+				iAmount = 10 + GetMaxSP() * 3 / 100; // í‰ìƒì‹œ
 
 			iAmount += (iAmount * pkKiller->GetPoint(POINT_SP_REGEN)) / 100;
 			pkKiller->PointChange(POINT_SP, iAmount);
@@ -164,11 +164,11 @@ void CHARACTER::DistributeSP(LPCHARACTER pkKiller, int iMethod)
 				iAmount = 2 + pkKiller->GetMaxSP() / 100;
 			else
 			{
-				// Æò»ó½Ã
+				// í‰ìƒì‹œ
 				if (pkKiller->GetHP() < pkKiller->GetMaxHP())
-					iAmount = 2 + (pkKiller->GetMaxSP() / 100); // ÇÇ ´Ù ¾ÈÃ¡À»¶§
+					iAmount = 2 + (pkKiller->GetMaxSP() / 100); // í”¼ ë‹¤ ì•ˆì°¼ì„ë•Œ
 				else
-					iAmount = 9 + (pkKiller->GetMaxSP() / 100); // ±âº»
+					iAmount = 9 + (pkKiller->GetMaxSP() / 100); // ê¸°ë³¸
 			}
 
 			iAmount += (iAmount * pkKiller->GetPoint(POINT_SP_REGEN)) / 100;
@@ -216,7 +216,7 @@ bool CHARACTER::Attack(LPCHARACTER pkVictim, BYTE bType)
 	if (bType == 0)
 	{
 		//
-		// ÀÏ¹İ °ø°İ
+		// ì¼ë°˜ ê³µê²©
 		//
 		switch (GetMobBattleType())
 		{
@@ -291,14 +291,14 @@ void CHARACTER::DeathPenalty(BYTE bTown)
 	if (GetLevel() < 10)
 	{
 		sys_log(0, "NO_DEATH_PENALTY_LESS_LV10(%s)", GetName());
-		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("¿ë½ÅÀÇ °¡È£·Î °æÇèÄ¡°¡ ¶³¾îÁöÁö ¾Ê¾Ò½À´Ï´Ù."));
+		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ìš©ì‹ ì˜ ê°€í˜¸ë¡œ ê²½í—˜ì¹˜ê°€ ë–¨ì–´ì§€ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤."));
 		return;
 	}
 
    	if (number(0, 2))
 	{
 		sys_log(0, "NO_DEATH_PENALTY_LUCK(%s)", GetName());
-		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("¿ë½ÅÀÇ °¡È£·Î °æÇèÄ¡°¡ ¶³¾îÁöÁö ¾Ê¾Ò½À´Ï´Ù."));
+		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ìš©ì‹ ì˜ ê°€í˜¸ë¡œ ê²½í—˜ì¹˜ê°€ ë–¨ì–´ì§€ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤."));
 		return;
 	}
 
@@ -307,22 +307,22 @@ void CHARACTER::DeathPenalty(BYTE bTown)
 		REMOVE_BIT(m_pointsInstant.instant_flag, INSTANT_FLAG_DEATH_PENALTY);
 
 		// NO_DEATH_PENALTY_BUG_FIX 
-		if (LC_IsYMIR()) // Ãµ¸¶ ¹öÀü¿¡¼­´Â ¾ğÁ¦³ª ¿ë½ÅÀÇ °¡È£ ¾ÆÀÌÅÛÀ» Ã¼Å©ÇÑ´Ù.
+		if (LC_IsYMIR()) // ì²œë§ˆ ë²„ì „ì—ì„œëŠ” ì–¸ì œë‚˜ ìš©ì‹ ì˜ ê°€í˜¸ ì•„ì´í…œì„ ì²´í¬í•œë‹¤.
 		{
 			if (FindAffect(AFFECT_NO_DEATH_PENALTY))
 			{
 				sys_log(0, "NO_DEATH_PENALTY_AFFECT(%s)", GetName());
-				ChatPacket(CHAT_TYPE_INFO, LC_TEXT("¿ë½ÅÀÇ °¡È£·Î °æÇèÄ¡°¡ ¶³¾îÁöÁö ¾Ê¾Ò½À´Ï´Ù."));
+				ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ìš©ì‹ ì˜ ê°€í˜¸ë¡œ ê²½í—˜ì¹˜ê°€ ë–¨ì–´ì§€ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤."));
 				RemoveAffect(AFFECT_NO_DEATH_PENALTY);
 				return;
 			}
 		}
-		else if (!bTown) // ±¹Á¦ ¹öÀü¿¡¼­´Â Á¦ÀÚ¸® ºÎÈ°½Ã¸¸ ¿ë½ÅÀÇ °¡È£¸¦ »ç¿ëÇÑ´Ù. (¸¶À» º¹±Í½Ã´Â °æÇèÄ¡ ÆĞ³ÎÆ¼ ¾øÀ½)
+		else if (!bTown) // êµ­ì œ ë²„ì „ì—ì„œëŠ” ì œìë¦¬ ë¶€í™œì‹œë§Œ ìš©ì‹ ì˜ ê°€í˜¸ë¥¼ ì‚¬ìš©í•œë‹¤. (ë§ˆì„ ë³µê·€ì‹œëŠ” ê²½í—˜ì¹˜ íŒ¨ë„í‹° ì—†ìŒ)
 		{
 			if (FindAffect(AFFECT_NO_DEATH_PENALTY))
 			{
 				sys_log(0, "NO_DEATH_PENALTY_AFFECT(%s)", GetName());
-				ChatPacket(CHAT_TYPE_INFO, LC_TEXT("¿ë½ÅÀÇ °¡È£·Î °æÇèÄ¡°¡ ¶³¾îÁöÁö ¾Ê¾Ò½À´Ï´Ù."));
+				ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ìš©ì‹ ì˜ ê°€í˜¸ë¡œ ê²½í—˜ì¹˜ê°€ ë–¨ì–´ì§€ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤."));
 				RemoveAffect(AFFECT_NO_DEATH_PENALTY);
 				return;
 			}
@@ -416,7 +416,7 @@ void CHARACTER::Stun()
 
 	CloseMyShop();
 
-	event_cancel(&m_pkRecoveryEvent); // È¸º¹ ÀÌº¥Æ®¸¦ Á×ÀÎ´Ù.
+	event_cancel(&m_pkRecoveryEvent); // íšŒë³µ ì´ë²¤íŠ¸ë¥¼ ì£½ì¸ë‹¤.
 
 	TPacketGCStun pack;
 	pack.header	= HEADER_GC_STUN;
@@ -540,7 +540,7 @@ void CHARACTER::RewardGold(LPCHARACTER pkAttacker)
 	bool isAutoLoot = 
 		(pkAttacker->GetPremiumRemainSeconds(PREMIUM_AUTOLOOT) > 0 ||
 		 pkAttacker->IsEquipUniqueGroup(UNIQUE_GROUP_AUTOLOOT))
-		? true : false; // Á¦3ÀÇ ¼Õ
+		? true : false; // ì œ3ì˜ ì†
 	// END_OF_ADD_PREMIUM
 
 	PIXEL_POSITION pos;
@@ -551,7 +551,7 @@ void CHARACTER::RewardGold(LPCHARACTER pkAttacker)
 
 	int iTotalGold = 0;
 	//
-	// --------- µ· µå·Ó È®·ü °è»ê ----------
+	// --------- ëˆ ë“œë¡­ í™•ë¥  ê³„ì‚° ----------
 	//
 	int iGoldPercent = MobRankStats[GetMobRank()].iGoldPercent;
 
@@ -585,35 +585,35 @@ void CHARACTER::RewardGold(LPCHARACTER pkAttacker)
 
 	int iGoldMultipler = GetGoldMultipler();
 
-	if (1 == number(1, 50000)) // 1/50000 È®·ü·Î µ·ÀÌ 10¹è
+	if (1 == number(1, 50000)) // 1/50000 í™•ë¥ ë¡œ ëˆì´ 10ë°°
 		iGoldMultipler *= 10;
-	else if (1 == number(1, 10000)) // 1/10000 È®·ü·Î µ·ÀÌ 5¹è
+	else if (1 == number(1, 10000)) // 1/10000 í™•ë¥ ë¡œ ëˆì´ 5ë°°
 		iGoldMultipler *= 5;
 
-	// °³ÀÎ Àû¿ë
+	// ê°œì¸ ì ìš©
 	if (pkAttacker->GetPoint(POINT_GOLD_DOUBLE_BONUS))
 		if (number(1, 100) <= pkAttacker->GetPoint(POINT_GOLD_DOUBLE_BONUS))
 			iGoldMultipler *= 2;
 
 	//
-	// --------- µ· µå·Ó ¹è¼ö °áÁ¤ ----------
+	// --------- ëˆ ë“œë¡­ ë°°ìˆ˜ ê²°ì • ----------
 	//
 	if (test_server)
 		pkAttacker->ChatPacket(CHAT_TYPE_PARTY, "gold_mul %d rate %d", iGoldMultipler, CHARACTER_MANAGER::instance().GetMobGoldAmountRate(pkAttacker));
 
 	//
-	// --------- ½ÇÁ¦ µå·Ó Ã³¸® -------------
+	// --------- ì‹¤ì œ ë“œë¡­ ì²˜ë¦¬ -------------
 	// 
 	LPITEM item;
 
 	int iGold10DropPct = 100;
 	iGold10DropPct = (iGold10DropPct * 100) / (100 + CPrivManager::instance().GetPriv(pkAttacker, PRIV_GOLD10_DROP));
 
-	// MOB_RANK°¡ BOSSº¸´Ù ³ôÀ¸¸é ¹«Á¶°Ç µ·ÆøÅº
+	// MOB_RANKê°€ BOSSë³´ë‹¤ ë†’ìœ¼ë©´ ë¬´ì¡°ê±´ ëˆí­íƒ„
 	if (GetMobRank() >= MOB_RANK_BOSS && !IsStone() && GetMobTable().dwGoldMax != 0)
 	{
 		if (1 == number(1, iGold10DropPct))
-			iGoldMultipler *= 10; // 1% È®·ü·Î µ· 10¹è
+			iGoldMultipler *= 10; // 1% í™•ë¥ ë¡œ ëˆ 10ë°°
 
 		int iSplitCount = number(25, 35);
 
@@ -636,7 +636,7 @@ void CHARACTER::RewardGold(LPCHARACTER pkAttacker)
 				sys_log(0, "Drop Money gold %d GoldMin %d GoldMax %d", iGold, GetMobTable().dwGoldMax, GetMobTable().dwGoldMax);
 			}
 
-			// NOTE: µ· ÆøÅºÀº Á¦ 3ÀÇ ¼Õ Ã³¸®¸¦ ÇÏÁö ¾ÊÀ½
+			// NOTE: ëˆ í­íƒ„ì€ ì œ 3ì˜ ì† ì²˜ë¦¬ë¥¼ í•˜ì§€ ì•ŠìŒ
 			if ((item = ITEM_MANAGER::instance().CreateItem(1, iGold)))
 			{
 				pos.x = GetX() + ((number(-14, 14) + number(-14, 14)) * 23);
@@ -649,11 +649,11 @@ void CHARACTER::RewardGold(LPCHARACTER pkAttacker)
 			}
 		}
 	}
-	// 1% È®·ü·Î µ·À» 10°³ ¶³¾î ¶ß¸°´Ù. (10¹è µå·ÓÀÓ)
+	// 1% í™•ë¥ ë¡œ ëˆì„ 10ê°œ ë–¨ì–´ ëœ¨ë¦°ë‹¤. (10ë°° ë“œë¡­ì„)
 	else if (1 == number(1, iGold10DropPct))
 	{
 		//
-		// µ· ÆøÅº½Ä µå·Ó
+		// ëˆ í­íƒ„ì‹ ë“œë¡­
 		//
 		for (int i = 0; i < 10; ++i)
 		{
@@ -666,7 +666,7 @@ void CHARACTER::RewardGold(LPCHARACTER pkAttacker)
 				continue;
 			}
 
-			// NOTE: µ· ÆøÅºÀº Á¦ 3ÀÇ ¼Õ Ã³¸®¸¦ ÇÏÁö ¾ÊÀ½
+			// NOTE: ëˆ í­íƒ„ì€ ì œ 3ì˜ ì† ì²˜ë¦¬ë¥¼ í•˜ì§€ ì•ŠìŒ
 			if ((item = ITEM_MANAGER::instance().CreateItem(1, iGold)))
 			{
 				pos.x = GetX() + (number(-7, 7) * 20);
@@ -682,7 +682,7 @@ void CHARACTER::RewardGold(LPCHARACTER pkAttacker)
 	else
 	{
 		//
-		// ÀÏ¹İÀûÀÎ ¹æ½ÄÀÇ µ· µå·Ó
+		// ì¼ë°˜ì ì¸ ë°©ì‹ì˜ ëˆ ë“œë¡­
 		//
 		int iGold = number(GetMobTable().dwGoldMin, GetMobTable().dwGoldMax);
 		iGold = iGold * CHARACTER_MANAGER::instance().GetMobGoldAmountRate(pkAttacker) / 100;
@@ -729,7 +729,7 @@ void CHARACTER::RewardGold(LPCHARACTER pkAttacker)
 
 void CHARACTER::Reward(bool bItemDrop)
 {
-	if (GetRaceNum() == 5001) // ¿Ö±¸´Â µ·À» ¹«Á¶°Ç µå·Ó
+	if (GetRaceNum() == 5001) // ì™œêµ¬ëŠ” ëˆì„ ë¬´ì¡°ê±´ ë“œë¡­
 	{
 		PIXEL_POSITION pos;
 
@@ -816,7 +816,7 @@ void CHARACTER::Reward(bool bItemDrop)
 		return;
 
 	//
-	// µ· µå·Ó
+	// ëˆ ë“œë¡­
 	//
 	//PROF_UNIT pu2("r2");
 	if (test_server)
@@ -825,7 +825,7 @@ void CHARACTER::Reward(bool bItemDrop)
 	//pu2.Pop();
 
 	//
-	// ¾ÆÀÌÅÛ µå·Ó
+	// ì•„ì´í…œ ë“œë¡­
 	//
 	//PROF_UNIT pu3("r3");
 	LPITEM item;
@@ -888,7 +888,7 @@ void CHARACTER::Reward(bool bItemDrop)
 
 			if (v.empty())
 			{
-				// µ¥¹ÌÁö¸¦ Æ¯º°È÷ ¸¹ÀÌ ÁØ »ç¶÷ÀÌ ¾øÀ¸´Ï ¼ÒÀ¯±Ç ¾øÀ½
+				// ë°ë¯¸ì§€ë¥¼ íŠ¹ë³„íˆ ë§ì´ ì¤€ ì‚¬ëŒì´ ì—†ìœ¼ë‹ˆ ì†Œìœ ê¶Œ ì—†ìŒ
 				while (iItemIdx >= 0)
 				{
 					item = s_vec_item[iItemIdx--];
@@ -900,7 +900,7 @@ void CHARACTER::Reward(bool bItemDrop)
 					}
 
 					item->AddToGround(GetMapIndex(), pos);
-					// 10% ÀÌÇÏ µ¥¹ÌÁö ÁØ »ç¶÷³¢¸®´Â ¼ÒÀ¯±Ç¾øÀ½
+					// 10% ì´í•˜ ë°ë¯¸ì§€ ì¤€ ì‚¬ëŒë¼ë¦¬ëŠ” ì†Œìœ ê¶Œì—†ìŒ
 					//item->SetOwnership(pkAttacker);
 					item->StartDestroyEvent();
 
@@ -914,7 +914,7 @@ void CHARACTER::Reward(bool bItemDrop)
 			}
 			else
 			{
-				// µ¥¹ÌÁö ¸¹ÀÌ ÁØ »ç¶÷µé ³¢¸®¸¸ ¼ÒÀ¯±Ç ³ª´²°¡Áü
+				// ë°ë¯¸ì§€ ë§ì´ ì¤€ ì‚¬ëŒë“¤ ë¼ë¦¬ë§Œ ì†Œìœ ê¶Œ ë‚˜ëˆ ê°€ì§
 				std::vector<LPCHARACTER>::iterator it = v.begin();
 
 				while (iItemIdx >= 0)
@@ -970,20 +970,20 @@ struct TItemDropPenalty
 
 TItemDropPenalty aItemDropPenalty_kor[9] =
 {
-	{   0,   0,  0,  0 },	// ¼±¿Õ
-	{   0,   0,  0,  0 },	// ¿µ¿õ
-	{   0,   0,  0,  0 },	// ¼ºÀÚ
-	{   0,   0,  0,  0 },	// ÁöÀÎ
-	{   0,   0,  0,  0 },	// ¾ç¹Î
-	{  25,   1,  5,  1 },	// ³¶ÀÎ
-	{  50,   2, 10,  1 },	// ¾ÇÀÎ
-	{  75,   4, 15,  1 },	// ¸¶µÎ
-	{ 100,   8, 20,  1 },	// ÆĞ¿Õ
+	{   0,   0,  0,  0 },	// ì„ ì™•
+	{   0,   0,  0,  0 },	// ì˜ì›…
+	{   0,   0,  0,  0 },	// ì„±ì
+	{   0,   0,  0,  0 },	// ì§€ì¸
+	{   0,   0,  0,  0 },	// ì–‘ë¯¼
+	{  25,   1,  5,  1 },	// ë‚­ì¸
+	{  50,   2, 10,  1 },	// ì•…ì¸
+	{  75,   4, 15,  1 },	// ë§ˆë‘
+	{ 100,   8, 20,  1 },	// íŒ¨ì™•
 };
 
 void CHARACTER::ItemDropPenalty(LPCHARACTER pkKiller)
 {
-	// °³ÀÎ»óÁ¡À» ¿¬ »óÅÂ¿¡¼­´Â ¾ÆÀÌÅÛÀ» µå·ÓÇÏÁö ¾Ê´Â´Ù.
+	// ê°œì¸ìƒì ì„ ì—° ìƒíƒœì—ì„œëŠ” ì•„ì´í…œì„ ë“œë¡­í•˜ì§€ ì•ŠëŠ”ë‹¤.
 	if (GetMyShop())
 		return;
 
@@ -1218,7 +1218,7 @@ void CHARACTER::Dead(LPCHARACTER pkKiller, bool bImmediateDead)
 	if (!pkKiller && m_dwKillerPID)
 		pkKiller = CHARACTER_MANAGER::instance().FindByPID(m_dwKillerPID);
 
-	m_dwKillerPID = 0; // ¹İµå½Ã ÃÊ±âÈ­ ÇØ¾ßÇÔ DO NOT DELETE THIS LINE UNLESS YOU ARE 1000000% SURE
+	m_dwKillerPID = 0; // ë°˜ë“œì‹œ ì´ˆê¸°í™” í•´ì•¼í•¨ DO NOT DELETE THIS LINE UNLESS YOU ARE 1000000% SURE
 
 	bool isAgreedPVP = false;
 	bool isUnderGuildWar = false;
@@ -1318,7 +1318,7 @@ void CHARACTER::Dead(LPCHARACTER pkKiller, bool bImmediateDead)
 
 				if (GetPoint(POINT_EMPIRE_POINT) < 10)
 				{
-					// TODO : ÀÔ±¸·Î ³¯¸®´Â ÄÚµå¸¦ ³Ö¾î¾ß ÇÑ´Ù.
+					// TODO : ì…êµ¬ë¡œ ë‚ ë¦¬ëŠ” ì½”ë“œë¥¼ ë„£ì–´ì•¼ í•œë‹¤.
 				}
 
 				char buf[256];
@@ -1344,7 +1344,7 @@ void CHARACTER::Dead(LPCHARACTER pkKiller, bool bImmediateDead)
 					}
 
 					if (number(1, 100) < iNoPenaltyProb)
-						pkKiller->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("¿ë½ÅÀÇ º¸È£·Î ¾ÆÀÌÅÛÀÌ ¶³¾îÁöÁö ¾Ê¾Ò½À´Ï´Ù."));
+						pkKiller->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ìš©ì‹ ì˜ ë³´í˜¸ë¡œ ì•„ì´í…œì´ ë–¨ì–´ì§€ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤."));
 					else
 					{
 						if (g_iUseLocale && pkKiller->GetParty())
@@ -1386,7 +1386,7 @@ void CHARACTER::Dead(LPCHARACTER pkKiller, bool bImmediateDead)
 	ClearSync();
 
 	//sys_log(1, "stun cancel %s[%d]", GetName(), (DWORD)GetVID());
-	event_cancel(&m_pkStunEvent); // ±âÀı ÀÌº¥Æ®´Â Á×ÀÎ´Ù.
+	event_cancel(&m_pkStunEvent); // ê¸°ì ˆ ì´ë²¤íŠ¸ëŠ” ì£½ì¸ë‹¤.
 
 	if (IsPC())
 	{
@@ -1396,12 +1396,12 @@ void CHARACTER::Dead(LPCHARACTER pkKiller, bool bImmediateDead)
 	}
 	else
 	{
-		// °¡µå¿¡°Ô °ø°İ¹ŞÀº ¸ó½ºÅÍ´Â º¸»óÀÌ ¾ø¾î¾ß ÇÑ´Ù.
+		// ê°€ë“œì—ê²Œ ê³µê²©ë°›ì€ ëª¬ìŠ¤í„°ëŠ” ë³´ìƒì´ ì—†ì–´ì•¼ í•œë‹¤.
 		if (!IS_SET(m_pointsInstant.instant_flag, INSTANT_FLAG_NO_REWARD))
 		{
 			if (!(pkKiller && pkKiller->IsPC() && pkKiller->GetGuild() && pkKiller->GetGuild()->UnderAnyWar(GUILD_WAR_TYPE_FIELD)))
 			{
-				// ºÎÈ°ÇÏ´Â ¸ó½ºÅÍ´Â º¸»óÀ» ÁÖÁö ¾Ê´Â´Ù.
+				// ë¶€í™œí•˜ëŠ” ëª¬ìŠ¤í„°ëŠ” ë³´ìƒì„ ì£¼ì§€ ì•ŠëŠ”ë‹¤.
 				if (GetMobTable().dwResurrectionVnum)
 				{
 					// DUNGEON_MONSTER_REBIRTH_BUG_FIX
@@ -1428,7 +1428,7 @@ void CHARACTER::Dead(LPCHARACTER pkKiller, bool bImmediateDead)
 				if (pkKiller->m_dwUnderGuildWarInfoMessageTime < get_dword_time())
 				{
 					pkKiller->m_dwUnderGuildWarInfoMessageTime = get_dword_time() + 60000;
-					pkKiller->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<±æµå> ±æµåÀüÁß¿¡´Â »ç³É¿¡ µû¸¥ ÀÌÀÍÀÌ ¾ø½À´Ï´Ù."));
+					pkKiller->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<ê¸¸ë“œ> ê¸¸ë“œì „ì¤‘ì—ëŠ” ì‚¬ëƒ¥ì— ë”°ë¥¸ ì´ìµì´ ì—†ìŠµë‹ˆë‹¤."));
 				}
 			}
 		}
@@ -1453,10 +1453,10 @@ void CHARACTER::Dead(LPCHARACTER pkKiller, bool bImmediateDead)
 
 	REMOVE_BIT(m_pointsInstant.instant_flag, INSTANT_FLAG_STUN);
 
-	// ÇÃ·¹ÀÌ¾î Ä³¸¯ÅÍÀÌ¸é
+	// í”Œë ˆì´ì–´ ìºë¦­í„°ì´ë©´
 	if (GetDesc() != NULL) {
 		//
-		// Å¬¶óÀÌ¾ğÆ®¿¡ ¿¡ÆåÆ® ÆĞÅ¶À» ´Ù½Ã º¸³½´Ù.
+		// í´ë¼ì´ì–¸íŠ¸ì— ì—í™íŠ¸ íŒ¨í‚·ì„ ë‹¤ì‹œ ë³´ë‚¸ë‹¤.
 		//
 		itertype(m_list_pkAffect) it = m_list_pkAffect.begin();
 
@@ -1465,11 +1465,11 @@ void CHARACTER::Dead(LPCHARACTER pkKiller, bool bImmediateDead)
 	}
 
 	//
-	// Dead ÀÌº¥Æ® »ı¼º,
+	// Dead ì´ë²¤íŠ¸ ìƒì„±,
 	//
-	// Dead ÀÌº¥Æ®¿¡¼­´Â ¸ó½ºÅÍÀÇ °æ¿ì ¸îÃÊ ÈÄ¿¡ Destroy µÇµµ·Ï ÇØÁÖ¸ç,
-	// PCÀÇ °æ¿ì 3ºĞ ÀÖ´Ù°¡ ¸¶À»¿¡¼­ ³ª¿Àµµ·Ï ÇØ ÁØ´Ù. 3ºĞ ³»¿¡´Â À¯Àú·ÎºÎÅÍ
-	// ¸¶À»¿¡¼­ ½ÃÀÛÇÒ °ÇÁö, ¿©±â¼­ ½ÃÀÛÇÒ °ÇÁö °áÁ¤À» ¹Ş´Â´Ù.
+	// Dead ì´ë²¤íŠ¸ì—ì„œëŠ” ëª¬ìŠ¤í„°ì˜ ê²½ìš° ëª‡ì´ˆ í›„ì— Destroy ë˜ë„ë¡ í•´ì£¼ë©°,
+	// PCì˜ ê²½ìš° 3ë¶„ ìˆë‹¤ê°€ ë§ˆì„ì—ì„œ ë‚˜ì˜¤ë„ë¡ í•´ ì¤€ë‹¤. 3ë¶„ ë‚´ì—ëŠ” ìœ ì €ë¡œë¶€í„°
+	// ë§ˆì„ì—ì„œ ì‹œì‘í•  ê±´ì§€, ì—¬ê¸°ì„œ ì‹œì‘í•  ê±´ì§€ ê²°ì •ì„ ë°›ëŠ”ë‹¤.
 	if (isDuel == false)
 	{
 		if (m_pkDeadEvent)
@@ -1593,12 +1593,12 @@ void CHARACTER::SendDamagePacket(LPCHARACTER pAttacker, int Damage, BYTE DamageF
 }
 
 //
-// CHARACTER::Damage ¸Ş¼Òµå´Â this°¡ µ¥¹ÌÁö¸¦ ÀÔ°Ô ÇÑ´Ù.
+// CHARACTER::Damage ë©”ì†Œë“œëŠ” thisê°€ ë°ë¯¸ì§€ë¥¼ ì…ê²Œ í•œë‹¤.
 //
 // Arguments
-//    pAttacker		: °ø°İÀÚ
-//    dam		: µ¥¹ÌÁö
-//    EDamageType	: ¾î¶² Çü½ÄÀÇ °ø°İÀÎ°¡?
+//    pAttacker		: ê³µê²©ì
+//    dam		: ë°ë¯¸ì§€
+//    EDamageType	: ì–´ë–¤ í˜•ì‹ì˜ ê³µê²©ì¸ê°€?
 //    
 // Return value
 //    true		: dead
@@ -1671,7 +1671,7 @@ bool CHARACTER::Damage(LPCHARACTER pAttacker, int dam, EDamageType type) // retu
 		}
 	}
 
-	// ÆòÅ¸°¡ ¾Æ´Ò ¶§´Â °øÆ÷ Ã³¸®
+	// í‰íƒ€ê°€ ì•„ë‹ ë•ŒëŠ” ê³µí¬ ì²˜ë¦¬
 	if (type != DAMAGE_TYPE_NORMAL && type != DAMAGE_TYPE_NORMAL_RANGE)
 	{
 		if (IsAffectFlag(AFF_TERROR))
@@ -1703,19 +1703,19 @@ bool CHARACTER::Damage(LPCHARACTER pAttacker, int dam, EDamageType type) // retu
 	//PROF_UNIT puAttr("Attr");
 
 	//
-	// ¸¶¹ıÇü ½ºÅ³°ú, ·¹ÀÎÁöÇü ½ºÅ³Àº(±ÃÀÚ°´) Å©¸®Æ¼ÄÃ°ú, °üÅë°ø°İ °è»êÀ» ÇÑ´Ù.
-	// ¿ø·¡´Â ÇÏÁö ¾Ê¾Æ¾ß ÇÏ´Âµ¥ Nerf(´Ù¿î¹ë·±½º)ÆĞÄ¡¸¦ ÇÒ ¼ö ¾ø¾î¼­ Å©¸®Æ¼ÄÃ°ú
-	// °üÅë°ø°İÀÇ ¿ø·¡ °ªÀ» ¾²Áö ¾Ê°í, /2 ÀÌ»óÇÏ¿© Àû¿ëÇÑ´Ù.
+	// ë§ˆë²•í˜• ìŠ¤í‚¬ê³¼, ë ˆì¸ì§€í˜• ìŠ¤í‚¬ì€(ê¶ìê°) í¬ë¦¬í‹°ì»¬ê³¼, ê´€í†µê³µê²© ê³„ì‚°ì„ í•œë‹¤.
+	// ì›ë˜ëŠ” í•˜ì§€ ì•Šì•„ì•¼ í•˜ëŠ”ë° Nerf(ë‹¤ìš´ë°¸ëŸ°ìŠ¤)íŒ¨ì¹˜ë¥¼ í•  ìˆ˜ ì—†ì–´ì„œ í¬ë¦¬í‹°ì»¬ê³¼
+	// ê´€í†µê³µê²©ì˜ ì›ë˜ ê°’ì„ ì“°ì§€ ì•Šê³ , /2 ì´ìƒí•˜ì—¬ ì ìš©í•œë‹¤.
 	// 
-	// ¹«»ç ÀÌ¾ß±â°¡ ¸¹¾Æ¼­ ¹Ğ¸® ½ºÅ³µµ Ãß°¡
+	// ë¬´ì‚¬ ì´ì•¼ê¸°ê°€ ë§ì•„ì„œ ë°€ë¦¬ ìŠ¤í‚¬ë„ ì¶”ê°€
 	//
-	// 20091109 : ¹«»ç°¡ °á°úÀûÀ¸·Î ¾öÃ»³ª°Ô °­ÇØÁø °ÍÀ¸·Î °á·Ğ³², µ¶ÀÏ ±âÁØ ¹«»ç ºñÀ² 70% À°¹Ú
+	// 20091109 : ë¬´ì‚¬ê°€ ê²°ê³¼ì ìœ¼ë¡œ ì—„ì²­ë‚˜ê²Œ ê°•í•´ì§„ ê²ƒìœ¼ë¡œ ê²°ë¡ ë‚¨, ë…ì¼ ê¸°ì¤€ ë¬´ì‚¬ ë¹„ìœ¨ 70% ìœ¡ë°•
 	//
 	if (type == DAMAGE_TYPE_MELEE || type == DAMAGE_TYPE_RANGE || type == DAMAGE_TYPE_MAGIC)
 	{
 		if (pAttacker)
 		{
-			// Å©¸®Æ¼ÄÃ
+			// í¬ë¦¬í‹°ì»¬
 			int iCriticalPct = pAttacker->GetPoint(POINT_CRITICAL_PCT);
 
 			if (!IsPC())
@@ -1723,12 +1723,12 @@ bool CHARACTER::Damage(LPCHARACTER pAttacker, int dam, EDamageType type) // retu
 
 			if (iCriticalPct)
 			{
-				if (iCriticalPct >= 10) // 10º¸´Ù Å©¸é 5% + (4¸¶´Ù 1%¾¿ Áõ°¡), µû¶ó¼­ ¼öÄ¡°¡ 50ÀÌ¸é 20%
+				if (iCriticalPct >= 10) // 10ë³´ë‹¤ í¬ë©´ 5% + (4ë§ˆë‹¤ 1%ì”© ì¦ê°€), ë”°ë¼ì„œ ìˆ˜ì¹˜ê°€ 50ì´ë©´ 20%
 					iCriticalPct = 5 + (iCriticalPct - 10) / 4;
-				else // 10º¸´Ù ÀÛÀ¸¸é ´Ü¼øÈ÷ ¹İÀ¸·Î ±ğÀ½, 10 = 5%
+				else // 10ë³´ë‹¤ ì‘ìœ¼ë©´ ë‹¨ìˆœíˆ ë°˜ìœ¼ë¡œ ê¹ìŒ, 10 = 5%
 					iCriticalPct /= 2;
 
-				//Å©¸®Æ¼ÄÃ ÀúÇ× °ª Àû¿ë.
+				//í¬ë¦¬í‹°ì»¬ ì €í•­ ê°’ ì ìš©.
 				iCriticalPct -= GetPoint(POINT_RESIST_CRITICAL);
 
 				if (number(1, 100) <= iCriticalPct)
@@ -1744,7 +1744,7 @@ bool CHARACTER::Damage(LPCHARACTER pAttacker, int dam, EDamageType type) // retu
 				}
 			}
 
-			// °üÅë°ø°İ
+			// ê´€í†µê³µê²©
 			int iPenetratePct = pAttacker->GetPoint(POINT_PENETRATE_PCT);
 
 			if (!IsPC())
@@ -1766,16 +1766,16 @@ bool CHARACTER::Damage(LPCHARACTER pAttacker, int dam, EDamageType type) // retu
 
 				if (iPenetratePct >= 10)
 				{
-					// 10º¸´Ù Å©¸é 5% + (4¸¶´Ù 1%¾¿ Áõ°¡), µû¶ó¼­ ¼öÄ¡°¡ 50ÀÌ¸é 20%
+					// 10ë³´ë‹¤ í¬ë©´ 5% + (4ë§ˆë‹¤ 1%ì”© ì¦ê°€), ë”°ë¼ì„œ ìˆ˜ì¹˜ê°€ 50ì´ë©´ 20%
 					iPenetratePct = 5 + (iPenetratePct - 10) / 4;
 				}
 				else
 				{
-					// 10º¸´Ù ÀÛÀ¸¸é ´Ü¼øÈ÷ ¹İÀ¸·Î ±ğÀ½, 10 = 5%
+					// 10ë³´ë‹¤ ì‘ìœ¼ë©´ ë‹¨ìˆœíˆ ë°˜ìœ¼ë¡œ ê¹ìŒ, 10 = 5%
 					iPenetratePct /= 2;
 				}
 
-				//°üÅëÅ¸°İ ÀúÇ× °ª Àû¿ë.
+				//ê´€í†µíƒ€ê²© ì €í•­ ê°’ ì ìš©.
 				iPenetratePct -= GetPoint(POINT_RESIST_PENETRATE);
 
 				if (number(1, 100) <= iPenetratePct)
@@ -1783,7 +1783,7 @@ bool CHARACTER::Damage(LPCHARACTER pAttacker, int dam, EDamageType type) // retu
 					IsPenetrate = true;
 
 					if (test_server)
-						ChatPacket(CHAT_TYPE_INFO, LC_TEXT("°üÅë Ãß°¡ µ¥¹ÌÁö %d"), GetPoint(POINT_DEF_GRADE) * (100 + GetPoint(POINT_DEF_BONUS)) / 100);
+						ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ê´€í†µ ì¶”ê°€ ë°ë¯¸ì§€ %d"), GetPoint(POINT_DEF_GRADE) * (100 + GetPoint(POINT_DEF_BONUS)) / 100);
 
 					dam += GetPoint(POINT_DEF_GRADE) * (100 + GetPoint(POINT_DEF_BONUS)) / 100;
 
@@ -1796,19 +1796,19 @@ bool CHARACTER::Damage(LPCHARACTER pAttacker, int dam, EDamageType type) // retu
 		}
 	}
 	// 
-	// ÄŞº¸ °ø°İ, È° °ø°İ, Áï ÆòÅ¸ ÀÏ ¶§¸¸ ¼Ó¼º°ªµéÀ» °è»êÀ» ÇÑ´Ù.
+	// ì½¤ë³´ ê³µê²©, í™œ ê³µê²©, ì¦‰ í‰íƒ€ ì¼ ë•Œë§Œ ì†ì„±ê°’ë“¤ì„ ê³„ì‚°ì„ í•œë‹¤.
 	//
 	else if (type == DAMAGE_TYPE_NORMAL || type == DAMAGE_TYPE_NORMAL_RANGE)
 	{
 		if (type == DAMAGE_TYPE_NORMAL)
 		{
-			// ±ÙÁ¢ ÆòÅ¸ÀÏ °æ¿ì ¸·À» ¼ö ÀÖÀ½
+			// ê·¼ì ‘ í‰íƒ€ì¼ ê²½ìš° ë§‰ì„ ìˆ˜ ìˆìŒ
 			if (GetPoint(POINT_BLOCK) && number(1, 100) <= GetPoint(POINT_BLOCK))
 			{
 				if (test_server)
 				{
-					pAttacker->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%s ºí·°! (%d%%)"), GetName(), GetPoint(POINT_BLOCK));
-					ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%s ºí·°! (%d%%)"), GetName(), GetPoint(POINT_BLOCK));
+					pAttacker->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%s ë¸”ëŸ­! (%d%%)"), GetName(), GetPoint(POINT_BLOCK));
+					ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%s ë¸”ëŸ­! (%d%%)"), GetName(), GetPoint(POINT_BLOCK));
 				}
 
 				SendDamagePacket(pAttacker, 0, DAMAGE_BLOCK);
@@ -1817,13 +1817,13 @@ bool CHARACTER::Damage(LPCHARACTER pAttacker, int dam, EDamageType type) // retu
 		}
 		else if (type == DAMAGE_TYPE_NORMAL_RANGE)
 		{
-			// ¿ø°Å¸® ÆòÅ¸ÀÇ °æ¿ì ÇÇÇÒ ¼ö ÀÖÀ½
+			// ì›ê±°ë¦¬ í‰íƒ€ì˜ ê²½ìš° í”¼í•  ìˆ˜ ìˆìŒ
 			if (GetPoint(POINT_DODGE) && number(1, 100) <= GetPoint(POINT_DODGE))
 			{
 				if (test_server)
 				{
-					pAttacker->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%s È¸ÇÇ! (%d%%)"), GetName(), GetPoint(POINT_DODGE));
-					ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%s È¸ÇÇ! (%d%%)"), GetName(), GetPoint(POINT_DODGE));
+					pAttacker->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%s íšŒí”¼! (%d%%)"), GetName(), GetPoint(POINT_DODGE));
+					ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%s íšŒí”¼! (%d%%)"), GetName(), GetPoint(POINT_DODGE));
 				}
 
 				SendDamagePacket(pAttacker, 0, DAMAGE_DODGE);
@@ -1841,19 +1841,19 @@ bool CHARACTER::Damage(LPCHARACTER pAttacker, int dam, EDamageType type) // retu
 			dam = dam * (100 - GetPoint(POINT_RESIST_NORMAL_DAMAGE)) / 100;
 
 		//
-		// °ø°İÀÚ ¼Ó¼º Àû¿ë
+		// ê³µê²©ì ì†ì„± ì ìš©
 		//
 		if (pAttacker)
 		{
 			if (type == DAMAGE_TYPE_NORMAL)
 			{
-				// ¹İ»ç
+				// ë°˜ì‚¬
 				if (GetPoint(POINT_REFLECT_MELEE))
 				{
 					int reflectDamage = dam * GetPoint(POINT_REFLECT_MELEE) / 100;
 
-					// NOTE: °ø°İÀÚ°¡ IMMUNE_REFLECT ¼Ó¼ºÀ» °®°íÀÖ´Ù¸é ¹İ»ç¸¦ ¾È ÇÏ´Â °Ô 
-					// ¾Æ´Ï¶ó 1/3 µ¥¹ÌÁö·Î °íÁ¤ÇØ¼­ µé¾î°¡µµ·Ï ±âÈ¹¿¡¼­ ¿äÃ».
+					// NOTE: ê³µê²©ìê°€ IMMUNE_REFLECT ì†ì„±ì„ ê°–ê³ ìˆë‹¤ë©´ ë°˜ì‚¬ë¥¼ ì•ˆ í•˜ëŠ” ê²Œ 
+					// ì•„ë‹ˆë¼ 1/3 ë°ë¯¸ì§€ë¡œ ê³ ì •í•´ì„œ ë“¤ì–´ê°€ë„ë¡ ê¸°íšì—ì„œ ìš”ì²­.
 					if (pAttacker->IsImmune(IMMUNE_REFLECT))
 						reflectDamage = int(reflectDamage / 3.0f + 0.5f);
 
@@ -1861,7 +1861,7 @@ bool CHARACTER::Damage(LPCHARACTER pAttacker, int dam, EDamageType type) // retu
 				}
 			}
 
-			// Å©¸®Æ¼ÄÃ
+			// í¬ë¦¬í‹°ì»¬
 			int iCriticalPct = pAttacker->GetPoint(POINT_CRITICAL_PCT);
 
 			if (!IsPC())
@@ -1869,7 +1869,7 @@ bool CHARACTER::Damage(LPCHARACTER pAttacker, int dam, EDamageType type) // retu
 
 			if (iCriticalPct)
 			{
-				//Å©¸®Æ¼ÄÃ ÀúÇ× °ª Àû¿ë.
+				//í¬ë¦¬í‹°ì»¬ ì €í•­ ê°’ ì ìš©.
 				iCriticalPct -= GetPoint(POINT_RESIST_CRITICAL);
 
 				if (number(1, 100) <= iCriticalPct)
@@ -1880,7 +1880,7 @@ bool CHARACTER::Damage(LPCHARACTER pAttacker, int dam, EDamageType type) // retu
 				}
 			}
 
-			// °üÅë°ø°İ
+			// ê´€í†µê³µê²©
 			int iPenetratePct = pAttacker->GetPoint(POINT_PENETRATE_PCT);
 
 			if (!IsPC())
@@ -1901,7 +1901,7 @@ bool CHARACTER::Damage(LPCHARACTER pAttacker, int dam, EDamageType type) // retu
 			if (iPenetratePct)
 			{
 				
-				//°üÅëÅ¸°İ ÀúÇ× °ª Àû¿ë.
+				//ê´€í†µíƒ€ê²© ì €í•­ ê°’ ì ìš©.
 				iPenetratePct -= GetPoint(POINT_RESIST_PENETRATE);
 
 				if (number(1, 100) <= iPenetratePct)
@@ -1909,12 +1909,12 @@ bool CHARACTER::Damage(LPCHARACTER pAttacker, int dam, EDamageType type) // retu
 					IsPenetrate = true;
 
 					if (test_server)
-						ChatPacket(CHAT_TYPE_INFO, LC_TEXT("°üÅë Ãß°¡ µ¥¹ÌÁö %d"), GetPoint(POINT_DEF_GRADE) * (100 + GetPoint(POINT_DEF_BONUS)) / 100);
+						ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ê´€í†µ ì¶”ê°€ ë°ë¯¸ì§€ %d"), GetPoint(POINT_DEF_GRADE) * (100 + GetPoint(POINT_DEF_BONUS)) / 100);
 					dam += GetPoint(POINT_DEF_GRADE) * (100 + GetPoint(POINT_DEF_BONUS)) / 100;
 				}
 			}
 
-			// HP ½ºÆ¿
+			// HP ìŠ¤í‹¸
 			if (pAttacker->GetPoint(POINT_STEAL_HP))
 			{
 				int pct = 1;
@@ -1932,7 +1932,7 @@ bool CHARACTER::Damage(LPCHARACTER pAttacker, int dam, EDamageType type) // retu
 				}
 			}
 
-			// SP ½ºÆ¿
+			// SP ìŠ¤í‹¸
 			if (pAttacker->GetPoint(POINT_STEAL_SP))
 			{
 				int pct = 1;
@@ -1959,7 +1959,7 @@ bool CHARACTER::Damage(LPCHARACTER pAttacker, int dam, EDamageType type) // retu
 				}
 			}
 
-			// µ· ½ºÆ¿
+			// ëˆ ìŠ¤í‹¸
 			if (pAttacker->GetPoint(POINT_STEAL_GOLD))
 			{
 				if (number(1, 100) <= pAttacker->GetPoint(POINT_STEAL_GOLD))
@@ -1970,8 +1970,8 @@ bool CHARACTER::Damage(LPCHARACTER pAttacker, int dam, EDamageType type) // retu
 				}
 			}
 
-			// Ä¥ ¶§¸¶´Ù HPÈ¸º¹
-			if (pAttacker->GetPoint(POINT_HIT_HP_RECOVERY) && number(0, 4) > 0) // 80% È®·ü
+			// ì¹  ë•Œë§ˆë‹¤ HPíšŒë³µ
+			if (pAttacker->GetPoint(POINT_HIT_HP_RECOVERY) && number(0, 4) > 0) // 80% í™•ë¥ 
 			{
 				// int i = MIN(dam, iCurHP) * pAttacker->GetPoint(POINT_HIT_HP_RECOVERY) / 100;
 				int i = ((iCurHP>=0)?MIN(dam, iCurHP):dam) * pAttacker->GetPoint(POINT_HIT_HP_RECOVERY) / 100; // Fix
@@ -1983,8 +1983,8 @@ bool CHARACTER::Damage(LPCHARACTER pAttacker, int dam, EDamageType type) // retu
 				}
 			}
 
-			// Ä¥ ¶§¸¶´Ù SPÈ¸º¹
-			if (pAttacker->GetPoint(POINT_HIT_SP_RECOVERY) && number(0, 4) > 0) // 80% È®·ü
+			// ì¹  ë•Œë§ˆë‹¤ SPíšŒë³µ
+			if (pAttacker->GetPoint(POINT_HIT_SP_RECOVERY) && number(0, 4) > 0) // 80% í™•ë¥ 
 			{
 				// int i = MIN(dam, iCurHP) * pAttacker->GetPoint(POINT_HIT_SP_RECOVERY) / 100;
 				int i = ((iCurHP>=0)?MIN(dam, iCurHP):dam) * pAttacker->GetPoint(POINT_HIT_SP_RECOVERY) / 100; // Fix
@@ -1996,7 +1996,7 @@ bool CHARACTER::Damage(LPCHARACTER pAttacker, int dam, EDamageType type) // retu
 				}
 			}
 
-			// »ó´ë¹æÀÇ ¸¶³ª¸¦ ¾ø¾Ø´Ù.
+			// ìƒëŒ€ë°©ì˜ ë§ˆë‚˜ë¥¼ ì—†ì•¤ë‹¤.
 			if (pAttacker->GetPoint(POINT_MANA_BURN_PCT))
 			{
 				if (number(1, 100) <= pAttacker->GetPoint(POINT_MANA_BURN_PCT))
@@ -2006,7 +2006,7 @@ bool CHARACTER::Damage(LPCHARACTER pAttacker, int dam, EDamageType type) // retu
 	}
 
 	//
-	// ÆòÅ¸ ¶Ç´Â ½ºÅ³·Î ÀÎÇÑ º¸³Ê½º ÇÇÇØ/¹æ¾î °è»ê
+	// í‰íƒ€ ë˜ëŠ” ìŠ¤í‚¬ë¡œ ì¸í•œ ë³´ë„ˆìŠ¤ í”¼í•´/ë°©ì–´ ê³„ì‚°
 	// 
 	switch (type)
 	{
@@ -2037,16 +2037,16 @@ bool CHARACTER::Damage(LPCHARACTER pAttacker, int dam, EDamageType type) // retu
 	}
 
 	//
-	// ¸¶³ª½¯µå(Èæ½Å¼öÈ£)
+	// ë§ˆë‚˜ì‰´ë“œ(í‘ì‹ ìˆ˜í˜¸)
 	//
 	if (IsAffectFlag(AFF_MANASHIELD))
 	{
-		// POINT_MANASHIELD ´Â ÀÛ¾ÆÁú¼ö·Ï ÁÁ´Ù
+		// POINT_MANASHIELD ëŠ” ì‘ì•„ì§ˆìˆ˜ë¡ ì¢‹ë‹¤
 		int iDamageSPPart = dam / 3;
 		int iDamageToSP = iDamageSPPart * GetPoint(POINT_MANASHIELD) / 100;
 		int iSP = GetSP();
 
-		// SP°¡ ÀÖÀ¸¸é ¹«Á¶°Ç µ¥¹ÌÁö Àı¹İ °¨¼Ò
+		// SPê°€ ìˆìœ¼ë©´ ë¬´ì¡°ê±´ ë°ë¯¸ì§€ ì ˆë°˜ ê°ì†Œ
 		if (iDamageToSP <= iSP)
 		{
 			PointChange(POINT_SP, -iDamageToSP);
@@ -2054,14 +2054,14 @@ bool CHARACTER::Damage(LPCHARACTER pAttacker, int dam, EDamageType type) // retu
 		}
 		else
 		{
-			// Á¤½Å·ÂÀÌ ¸ğÀÚ¶ó¼­ ÇÇ°¡ ´õ ±ï¿©¾ßÇÒ‹š
+			// ì •ì‹ ë ¥ì´ ëª¨ìë¼ì„œ í”¼ê°€ ë” ê¹ì—¬ì•¼í• ë–„
 			PointChange(POINT_SP, -GetSP());
 			dam -= iSP * 100 / MAX(GetPoint(POINT_MANASHIELD), 1);
 		}
 	}
 
 	//
-	// ÀüÃ¼ ¹æ¾î·Â »ó½Â (¸ô ¾ÆÀÌÅÛ)
+	// ì „ì²´ ë°©ì–´ë ¥ ìƒìŠ¹ (ëª° ì•„ì´í…œ)
 	// 
 	if (GetPoint(POINT_MALL_DEFBONUS) > 0)
 	{
@@ -2072,7 +2072,7 @@ bool CHARACTER::Damage(LPCHARACTER pAttacker, int dam, EDamageType type) // retu
 	if (pAttacker)
 	{
 		//
-		// ÀüÃ¼ °ø°İ·Â »ó½Â (¸ô ¾ÆÀÌÅÛ)
+		// ì „ì²´ ê³µê²©ë ¥ ìƒìŠ¹ (ëª° ì•„ì´í…œ)
 		//
 		if (pAttacker->GetPoint(POINT_MALL_ATTBONUS) > 0)
 		{
@@ -2081,7 +2081,7 @@ bool CHARACTER::Damage(LPCHARACTER pAttacker, int dam, EDamageType type) // retu
 		}
 
 		//
-		// Á¦±¹À¸·Î ÀÎÇÑ º¸³Ê½º (ÇÑ±¹ ¿Ãµå ¹öÀü¸¸ Àû¿ë)
+		// ì œêµ­ìœ¼ë¡œ ì¸í•œ ë³´ë„ˆìŠ¤ (í•œêµ­ ì˜¬ë“œ ë²„ì „ë§Œ ì ìš©)
 		//
 		int iEmpire = GetEmpire();
 		long lMapIndex = GetMapIndex();
@@ -2101,7 +2101,7 @@ bool CHARACTER::Damage(LPCHARACTER pAttacker, int dam, EDamageType type) // retu
 			lMapIndex = pAttacker->GetMapIndex();
 			iMapEmpire = SECTREE_MANAGER::instance().GetEmpireFromMapIndex(lMapIndex);
 
-			// ´Ù¸¥ Á¦±¹ »ç¶÷ÀÎ °æ¿ì µ¥¹ÌÁö 10% °¨¼Ò
+			// ë‹¤ë¥¸ ì œêµ­ ì‚¬ëŒì¸ ê²½ìš° ë°ë¯¸ì§€ 10% ê°ì†Œ
 			if (iEmpire && iMapEmpire && iEmpire != iMapEmpire)
 			{
 				int percent = 10;
@@ -2146,17 +2146,17 @@ bool CHARACTER::Damage(LPCHARACTER pAttacker, int dam, EDamageType type) // retu
 		}
 
 		//
-		// ±ºÁÖÀÇ ±İ°­±Ç & »çÀÚÈÄ 
+		// êµ°ì£¼ì˜ ê¸ˆê°•ê¶Œ & ì‚¬ìí›„ 
 		//
 		if (pAttacker->IsPC() && CMonarch::instance().IsPowerUp(pAttacker->GetEmpire()))
 		{
-			// 10% ÇÇÇØ Áõ°¡
+			// 10% í”¼í•´ ì¦ê°€
 			dam += dam / 10;
 		}
 
 		if (IsPC() && CMonarch::instance().IsDefenceUp(GetEmpire()))
 		{
-			// 10% ÇÇÇØ °¨¼Ò
+			// 10% í”¼í•´ ê°ì†Œ
 			dam -= dam / 10;
 		}
 	}
@@ -2172,7 +2172,7 @@ bool CHARACTER::Damage(LPCHARACTER pAttacker, int dam, EDamageType type) // retu
 		else
 			SetLastAttacked(get_dword_time());
 
-		// ¸ó½ºÅÍ ´ë»ç : ¸ÂÀ» ¶§
+		// ëª¬ìŠ¤í„° ëŒ€ì‚¬ : ë§ì„ ë•Œ
 		MonsterChat(MONSTER_CHAT_ATTACKED);
 	}
 
@@ -2185,7 +2185,7 @@ bool CHARACTER::Damage(LPCHARACTER pAttacker, int dam, EDamageType type) // retu
 	if (IsDead())
 		return true;
 
-	// µ¶ °ø°İÀ¸·Î Á×Áö ¾Êµµ·Ï ÇÔ.
+	// ë… ê³µê²©ìœ¼ë¡œ ì£½ì§€ ì•Šë„ë¡ í•¨.
 	if (type == DAMAGE_TYPE_POISON)
 	{
 		if (GetHP() - dam <= 0)
@@ -2195,7 +2195,7 @@ bool CHARACTER::Damage(LPCHARACTER pAttacker, int dam, EDamageType type) // retu
 	}
 
 	// ------------------------
-	// µ¶ÀÏ ÇÁ¸®¹Ì¾ö ¸ğµå 
+	// ë…ì¼ í”„ë¦¬ë¯¸ì—„ ëª¨ë“œ 
 	// -----------------------
 	if (LC_IsGermany() && pAttacker && pAttacker->IsPC())
 	{
@@ -2203,7 +2203,7 @@ bool CHARACTER::Damage(LPCHARACTER pAttacker, int dam, EDamageType type) // retu
 		dam = dam * iDmgPct / 100;
 	}
 
-	// STONE SKIN : ÇÇÇØ ¹İÀ¸·Î °¨¼Ò
+	// STONE SKIN : í”¼í•´ ë°˜ìœ¼ë¡œ ê°ì†Œ
 	if (IsMonster() && IsStoneSkinner())
 	{
 		if (GetHPPct() < GetMobTable().bStoneSkinPoint)
@@ -2213,7 +2213,7 @@ bool CHARACTER::Damage(LPCHARACTER pAttacker, int dam, EDamageType type) // retu
 	//PROF_UNIT puRest1("Rest1");
 	if (pAttacker)
 	{
-		// DEATH BLOW : È®·ü ÀûÀ¸·Î 4¹è ÇÇÇØ (!? ÇöÀç ÀÌº¥Æ®³ª °ø¼ºÀü¿ë ¸ó½ºÅÍ¸¸ »ç¿ëÇÔ)
+		// DEATH BLOW : í™•ë¥  ì ìœ¼ë¡œ 4ë°° í”¼í•´ (!? í˜„ì¬ ì´ë²¤íŠ¸ë‚˜ ê³µì„±ì „ìš© ëª¬ìŠ¤í„°ë§Œ ì‚¬ìš©í•¨)
 		if (pAttacker->IsMonster() && pAttacker->IsDeathBlower())
 		{
 			if (pAttacker->IsDeathBlow())
@@ -2243,7 +2243,7 @@ bool CHARACTER::Damage(LPCHARACTER pAttacker, int dam, EDamageType type) // retu
 			damageFlag |= DAMAGE_PENETRATE;
 
 
-		//ÃÖÁ¾ µ¥¹ÌÁö º¸Á¤
+		//ìµœì¢… ë°ë¯¸ì§€ ë³´ì •
 		float damMul = this->GetDamMul();
 		float tempDam = dam;
 		dam = tempDam * damMul + 0.5f;
@@ -2278,12 +2278,12 @@ bool CHARACTER::Damage(LPCHARACTER pAttacker, int dam, EDamageType type) // retu
 
 		if (m_bDetailLog)
 		{
-			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%s[%d]°¡ °ø°İ À§Ä¡: %d %d"), pAttacker->GetName(), (DWORD) pAttacker->GetVID(), pAttacker->GetX(), pAttacker->GetY());
+			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%s[%d]ê°€ ê³µê²© ìœ„ì¹˜: %d %d"), pAttacker->GetName(), (DWORD) pAttacker->GetVID(), pAttacker->GetX(), pAttacker->GetY());
 		}
 	}
 
 	//
-	// !!!!!!!!! ½ÇÁ¦ HP¸¦ ÁÙÀÌ´Â ºÎºĞ !!!!!!!!!
+	// !!!!!!!!! ì‹¤ì œ HPë¥¼ ì¤„ì´ëŠ” ë¶€ë¶„ !!!!!!!!!
 	//
 	if (!cannot_dead)
 	{
@@ -2310,7 +2310,7 @@ bool CHARACTER::Damage(LPCHARACTER pAttacker, int dam, EDamageType type) // retu
 		//puRest20.Pop();
 
 		//PROF_UNIT puRest21("Rest21");
-		StartRecoveryEvent(); // ¸ó½ºÅÍ´Â µ¥¹ÌÁö¸¦ ÀÔÀ¸¸é È¸º¹À» ½ÃÀÛÇÑ´Ù.
+		StartRecoveryEvent(); // ëª¬ìŠ¤í„°ëŠ” ë°ë¯¸ì§€ë¥¼ ì…ìœ¼ë©´ íšŒë³µì„ ì‹œì‘í•œë‹¤.
 		//puRest21.Pop();
 
 		//PROF_UNIT puRest22("Rest22");
@@ -2335,40 +2335,40 @@ bool CHARACTER::Damage(LPCHARACTER pAttacker, int dam, EDamageType type) // retu
 
 void CHARACTER::DistributeHP(LPCHARACTER pkKiller)
 {
-	if (pkKiller->GetDungeon()) // ´øÁ¯³»¿¡¼± ¸¸µÎ°¡³ª¿ÀÁö¾Ê´Â´Ù
+	if (pkKiller->GetDungeon()) // ë˜ì ¼ë‚´ì—ì„  ë§Œë‘ê°€ë‚˜ì˜¤ì§€ì•ŠëŠ”ë‹¤
 		return;
 }
 
 static void GiveExp(LPCHARACTER from, LPCHARACTER to, int iExp)
 {
-	// ·¹º§Â÷ °æÇèÄ¡ °¡°¨ºñÀ²
+	// ë ˆë²¨ì°¨ ê²½í—˜ì¹˜ ê°€ê°ë¹„ìœ¨
 	iExp = CALCULATE_VALUE_LVDELTA(to->GetLevel(), from->GetLevel(), iExp);
 
-	// ¿ÜºÎ Å×½ºÆ® ¼­¹ö °æÇèÄ¡ 3¹è º¸³Ê½º
+	// ì™¸ë¶€ í…ŒìŠ¤íŠ¸ ì„œë²„ ê²½í—˜ì¹˜ 3ë°° ë³´ë„ˆìŠ¤
 	if (distribution_test_server)
 		iExp *= 3;
 
 	int iBaseExp = iExp;
 
-	// Á¡¼ú, È¸»ç °æÇèÄ¡ ÀÌº¥Æ® Àû¿ë
+	// ì ìˆ , íšŒì‚¬ ê²½í—˜ì¹˜ ì´ë²¤íŠ¸ ì ìš©
 	iExp = iExp * (100 + CPrivManager::instance().GetPriv(to, PRIV_EXP_PCT)) / 100;
 
-	// °ÔÀÓ³» ±âº» Á¦°øµÇ´Â °æÇèÄ¡ º¸³Ê½º
+	// ê²Œì„ë‚´ ê¸°ë³¸ ì œê³µë˜ëŠ” ê²½í—˜ì¹˜ ë³´ë„ˆìŠ¤
 	{
-		// ³ëµ¿Àı ¸Ş´Ş
+		// ë…¸ë™ì ˆ ë©”ë‹¬
 		if (to->IsEquipUniqueItem(UNIQUE_ITEM_LARBOR_MEDAL))
 			iExp += iExp * 20 /100;
 
-		// »ç±ÍÅ¸¿ö °æÇèÄ¡ º¸³Ê½º
+		// ì‚¬ê·€íƒ€ì›Œ ê²½í—˜ì¹˜ ë³´ë„ˆìŠ¤
 		if (to->GetMapIndex() >= 660000 && to->GetMapIndex() < 670000) 
-			iExp += iExp * 20 / 100; // 1.2¹è (20%)
+			iExp += iExp * 20 / 100; // 1.2ë°° (20%)
 
-		// ¾ÆÀÌÅÛ °æÇèÄ¡ µÎ¹è ¼Ó¼º
+		// ì•„ì´í…œ ê²½í—˜ì¹˜ ë‘ë°° ì†ì„±
 		if (to->GetPoint(POINT_EXP_DOUBLE_BONUS))
 			if (number(1, 100) <= to->GetPoint(POINT_EXP_DOUBLE_BONUS))
-				iExp += iExp * 30 / 100; // 1.3¹è (30%)
+				iExp += iExp * 30 / 100; // 1.3ë°° (30%)
 
-		// °æÇèÀÇ ¹İÁö (2½Ã°£Â¥¸®)
+		// ê²½í—˜ì˜ ë°˜ì§€ (2ì‹œê°„ì§œë¦¬)
 		if (to->IsEquipUniqueItem(UNIQUE_ITEM_DOUBLE_EXP))
 			iExp += iExp * 50 / 100;
 
@@ -2392,16 +2392,16 @@ static void GiveExp(LPCHARACTER from, LPCHARACTER to, int iExp)
 			case 20123:
 			case 20124:
 			case 20125:
-				// ¹é»çÀÚ °æÇèÄ¡ º¸³Ê½º
+				// ë°±ì‚¬ì ê²½í—˜ì¹˜ ë³´ë„ˆìŠ¤
 				iExp += iExp * 30 / 100;
 				break;
 		}
 	}
 
-	// ¾ÆÀÌÅÛ ¸ô ÆÇ¸Å °æÇèÄ¡ º¸³Ê½º
+	// ì•„ì´í…œ ëª° íŒë§¤ ê²½í—˜ì¹˜ ë³´ë„ˆìŠ¤
 	if (LC_IsHongKong() || LC_IsEurope() || LC_IsCanada())
 	{
-		// ¾ÆÀÌÅÛ ¸ô: °æÇèÄ¡ °áÁ¦
+		// ì•„ì´í…œ ëª°: ê²½í—˜ì¹˜ ê²°ì œ
 		if (to->GetPremiumRemainSeconds(PREMIUM_EXP) > 0)
 		{
 			iExp += (iExp * 50 / 100);
@@ -2412,19 +2412,19 @@ static void GiveExp(LPCHARACTER from, LPCHARACTER to, int iExp)
 			iExp += (iExp * 50 / 100);
 		}
 
-		// PC¹æ ¾ÆÅÛ °æÄ¡ º¸³Ê½º
+		// PCë°© ì•„í…œ ê²½ì¹˜ ë³´ë„ˆìŠ¤
 		if (to->GetPoint(POINT_PC_BANG_EXP_BONUS) > 0)
 		{
 			if (to->IsPCBang() == true)
 				iExp += (iExp * to->GetPoint(POINT_PC_BANG_EXP_BONUS)/100);
 		}
 
-		// °áÈ¥ º¸³Ê½º
+		// ê²°í˜¼ ë³´ë„ˆìŠ¤
 		iExp += iExp * to->GetMarriageBonus(UNIQUE_ITEM_MARRIAGE_EXP_BONUS) / 100;
 	}
 	else if (/*LC_IsNewCIBN() || */LC_IsBrazil())
 	{
-		// ¾ÆÀÌÅÛ ¸ô: °æÇèÄ¡ °áÁ¦
+		// ì•„ì´í…œ ëª°: ê²½í—˜ì¹˜ ê²°ì œ
 		if (to->GetPremiumRemainSeconds(PREMIUM_EXP) > 0)
 		{
 			iExp += iExp;
@@ -2435,19 +2435,19 @@ static void GiveExp(LPCHARACTER from, LPCHARACTER to, int iExp)
 			iExp += iExp;
 		}
 
-		// PC¹æ ¾ÆÅÛ °æÄ¡ º¸³Ê½º
+		// PCë°© ì•„í…œ ê²½ì¹˜ ë³´ë„ˆìŠ¤
 		if (to->GetPoint(POINT_PC_BANG_EXP_BONUS) > 0)
 		{
 			if (to->IsPCBang() == true)
 				iExp += (iExp * to->GetPoint(POINT_PC_BANG_EXP_BONUS)/100);
 		}
 
-		// °áÈ¥ º¸³Ê½º
+		// ê²°í˜¼ ë³´ë„ˆìŠ¤
 		iExp += iExp * to->GetMarriageBonus(UNIQUE_ITEM_MARRIAGE_EXP_BONUS) / 100;
 	}
 	else
 	{
-		// ¾ÆÀÌÅÛ ¸ô: °æÇèÄ¡ °áÁ¦
+		// ì•„ì´í…œ ëª°: ê²½í—˜ì¹˜ ê²°ì œ
 		if (to->GetPremiumRemainSeconds(PREMIUM_EXP) > 0)
 		{
 			iExp += (iExp * 20 / 100);
@@ -2458,14 +2458,14 @@ static void GiveExp(LPCHARACTER from, LPCHARACTER to, int iExp)
 			iExp += (iExp * 20 / 100);
 		}
 
-		// PC¹æ ¾ÆÅÛ °æÄ¡ º¸³Ê½º
+		// PCë°© ì•„í…œ ê²½ì¹˜ ë³´ë„ˆìŠ¤
 		if (to->GetPoint(POINT_PC_BANG_EXP_BONUS) > 0)
 		{
 			if (to->IsPCBang() == true)
 				iExp += (iExp * to->GetPoint(POINT_PC_BANG_EXP_BONUS)/100);
 		}
 
-		// °áÈ¥ º¸³Ê½º
+		// ê²°í˜¼ ë³´ë„ˆìŠ¤
 		iExp += iExp * to->GetMarriageBonus(UNIQUE_ITEM_MARRIAGE_EXP_BONUS) / 100;
 	}
 
@@ -2488,10 +2488,10 @@ static void GiveExp(LPCHARACTER from, LPCHARACTER to, int iExp)
 			   );
 	}
 
-	// ±âÈ¹Ãø Á¶Á¤°ª 2005.04.21 ÇöÀç 85%
+	// ê¸°íšì¸¡ ì¡°ì •ê°’ 2005.04.21 í˜„ì¬ 85%
 	iExp = iExp * CHARACTER_MANAGER::instance().GetMobExpRate(to) / 100;
 
-	// °æÇèÄ¡ ÇÑ¹ø È¹µæ·® Á¦ÇÑ
+	// ê²½í—˜ì¹˜ í•œë²ˆ íšë“ëŸ‰ ì œí•œ
 	iExp = MIN(to->GetNextExp() / 10, iExp);
 
 	if (test_server)
@@ -2507,10 +2507,10 @@ static void GiveExp(LPCHARACTER from, LPCHARACTER to, int iExp)
 
 	{
 		LPCHARACTER you = to->GetMarryPartner();
-		// ºÎºÎ°¡ ¼­·Î ÆÄÆ¼ÁßÀÌ¸é ±İ½½ÀÌ ¿À¸¥´Ù
+		// ë¶€ë¶€ê°€ ì„œë¡œ íŒŒí‹°ì¤‘ì´ë©´ ê¸ˆìŠ¬ì´ ì˜¤ë¥¸ë‹¤
 		if (you)
 		{
-			// 1¾ïÀÌ 100%
+			// 1ì–µì´ 100%
 			DWORD dwUpdatePoint = 2000*iExp/to->GetLevel()/to->GetLevel()/3;
 
 			if (to->GetPremiumRemainSeconds(PREMIUM_MARRIAGE_FAST) > 0 || 
@@ -2629,7 +2629,7 @@ typedef struct SDamageInfo
 					pParty->ChatPacketToAllMember(CHAT_TYPE_INFO, "exp party bonus %d%%", pParty->GetExpBonusPercent());
 			}
 
-			// °æÇèÄ¡ ¸ô¾ÆÁÖ±â (ÆÄÆ¼°¡ È¹µæÇÑ °æÇèÄ¡¸¦ 5% »©¼­ ¸ÕÀú ÁÜ)
+			// ê²½í—˜ì¹˜ ëª°ì•„ì£¼ê¸° (íŒŒí‹°ê°€ íšë“í•œ ê²½í—˜ì¹˜ë¥¼ 5% ë¹¼ì„œ ë¨¼ì € ì¤Œ)
 			if (pParty->GetExpCentralizeCharacter())
 			{
 				LPCHARACTER tch = pParty->GetExpCentralizeCharacter();
@@ -2668,7 +2668,7 @@ LPCHARACTER CHARACTER::DistributeExp()
 
 	TDamageMap::iterator it = m_map_kDamage.begin();
 
-	// ÀÏ´Ü ÁÖÀ§¿¡ ¾ø´Â »ç¶÷À» °É·¯ ³½´Ù. (50m)
+	// ì¼ë‹¨ ì£¼ìœ„ì— ì—†ëŠ” ì‚¬ëŒì„ ê±¸ëŸ¬ ë‚¸ë‹¤. (50m)
 	while (it != m_map_kDamage.end())
 	{
 		const VID & c_VID = it->first;
@@ -2678,7 +2678,7 @@ LPCHARACTER CHARACTER::DistributeExp()
 
 		LPCHARACTER pAttacker = CHARACTER_MANAGER::instance().Find(c_VID);
 
-		// NPC°¡ ¶§¸®±âµµ ÇÏ³ª? -.-;
+		// NPCê°€ ë•Œë¦¬ê¸°ë„ í•˜ë‚˜? -.-;
 		if (!pAttacker || pAttacker->IsNPC() || DISTANCE_APPROX(GetX()-pAttacker->GetX(), GetY()-pAttacker->GetY())>5000)
 			continue;
 
@@ -2728,10 +2728,10 @@ LPCHARACTER CHARACTER::DistributeExp()
 	SetExp(0);
 	//m_map_kDamage.clear();
 
-	if (iTotalDam == 0)	// µ¥¹ÌÁö ÁØ°Ô 0ÀÌ¸é ¸®ÅÏ
+	if (iTotalDam == 0)	// ë°ë¯¸ì§€ ì¤€ê²Œ 0ì´ë©´ ë¦¬í„´
 		return NULL;
 
-	if (m_pkChrStone)	// µ¹ÀÌ ÀÖÀ» °æ¿ì °æÇèÄ¡ÀÇ ¹İÀ» µ¹¿¡°Ô ³Ñ±ä´Ù.
+	if (m_pkChrStone)	// ëŒì´ ìˆì„ ê²½ìš° ê²½í—˜ì¹˜ì˜ ë°˜ì„ ëŒì—ê²Œ ë„˜ê¸´ë‹¤.
 	{
 		//sys_log(0, "__ Give half to Stone : %d", iExpToDistribute>>1);
 		int iExp = iExpToDistribute >> 1;
@@ -2747,11 +2747,11 @@ LPCHARACTER CHARACTER::DistributeExp()
 	if (damage_info_table.empty())
 		return NULL;
 
-	// Á¦ÀÏ µ¥¹ÌÁö¸¦ ¸¹ÀÌ ÁØ »ç¶÷ÀÌ HP È¸º¹À» ÇÑ´Ù.
-	DistributeHP(pkChrMostAttacked);	// ¸¸µÎ ½Ã½ºÅÛ
+	// ì œì¼ ë°ë¯¸ì§€ë¥¼ ë§ì´ ì¤€ ì‚¬ëŒì´ HP íšŒë³µì„ í•œë‹¤.
+	DistributeHP(pkChrMostAttacked);	// ë§Œë‘ ì‹œìŠ¤í…œ
 
 	{
-		// Á¦ÀÏ µ¥¹ÌÁö¸¦ ¸¹ÀÌ ÁØ »ç¶÷ÀÌ³ª ÆÄÆ¼°¡ ÃÑ °æÇèÄ¡ÀÇ 20% + ÀÚ±â°¡ ¶§¸°¸¸Å­ÀÇ °æÇèÄ¡¸¦ ¸Ô´Â´Ù.
+		// ì œì¼ ë°ë¯¸ì§€ë¥¼ ë§ì´ ì¤€ ì‚¬ëŒì´ë‚˜ íŒŒí‹°ê°€ ì´ ê²½í—˜ì¹˜ì˜ 20% + ìê¸°ê°€ ë•Œë¦°ë§Œí¼ì˜ ê²½í—˜ì¹˜ë¥¼ ë¨¹ëŠ”ë‹¤.
 		TDamageInfoTable::iterator di = damage_info_table.begin();
 		{
 			TDamageInfoTable::iterator it;
@@ -2780,7 +2780,7 @@ LPCHARACTER CHARACTER::DistributeExp()
 
 		di->Distribute(this, iExp);
 
-		// 100% ´Ù ¸Ô¾úÀ¸¸é ¸®ÅÏÇÑ´Ù.
+		// 100% ë‹¤ ë¨¹ì—ˆìœ¼ë©´ ë¦¬í„´í•œë‹¤.
 		if (fPercent == 1.0f)
 			return pkChrMostAttacked;
 
@@ -2788,7 +2788,7 @@ LPCHARACTER CHARACTER::DistributeExp()
 	}
 
 	{
-		// ³²Àº 80%ÀÇ °æÇèÄ¡¸¦ ºĞ¹èÇÑ´Ù.
+		// ë‚¨ì€ 80%ì˜ ê²½í—˜ì¹˜ë¥¼ ë¶„ë°°í•œë‹¤.
 		TDamageInfoTable::iterator it;
 
 		for (it = damage_info_table.begin(); it != damage_info_table.end(); ++it)
@@ -2811,7 +2811,7 @@ LPCHARACTER CHARACTER::DistributeExp()
 	return pkChrMostAttacked;
 }
 
-// È­»ì °³¼ö¸¦ ¸®ÅÏÇØ ÁÜ
+// í™”ì‚´ ê°œìˆ˜ë¥¼ ë¦¬í„´í•´ ì¤Œ
 int CHARACTER::GetArrowAndBow(LPITEM * ppkBow, LPITEM * ppkArrow, int iArrowCount/* = 1 */)
 {
 	LPITEM pkBow;
@@ -2883,7 +2883,7 @@ class CFuncShoot
 			if (!pkVictim)
 				return;
 
-			// °ø°İ ºÒ°¡
+			// ê³µê²© ë¶ˆê°€
 			if (!battle_is_attackable(m_me, pkVictim))
 				return;
 
@@ -2897,7 +2897,7 @@ class CFuncShoot
 
 			switch (m_bType)
 			{
-				case 0: // ÀÏ¹İÈ°
+				case 0: // ì¼ë°˜í™œ
 					{
 						int iDam = 0;
 
@@ -2931,7 +2931,7 @@ class CFuncShoot
 
 						NormalAttackAffect(m_me, pkVictim);
 
-						// µ¥¹ÌÁö °è»ê
+						// ë°ë¯¸ì§€ ê³„ì‚°
 						iDam = iDam * (100 - pkVictim->GetPoint(POINT_RESIST_BOW)) / 100;
 
 						//sys_log(0, "%s arrow %s dam %d", m_me->GetName(), pkVictim->GetName(), iDam);
@@ -2943,11 +2943,11 @@ class CFuncShoot
 							pkVictim->BeginFight(m_me);
 
 						pkVictim->Damage(m_me, iDam, DAMAGE_TYPE_NORMAL_RANGE);
-						// Å¸°İÄ¡ °è»êºÎ ³¡
+						// íƒ€ê²©ì¹˜ ê³„ì‚°ë¶€ ë
 					}
 					break;
 
-				case 1: // ÀÏ¹İ ¸¶¹ı
+				case 1: // ì¼ë°˜ ë§ˆë²•
 					{
 						int iDam;
 
@@ -2958,7 +2958,7 @@ class CFuncShoot
 
 						NormalAttackAffect(m_me, pkVictim);
 
-						// µ¥¹ÌÁö °è»ê
+						// ë°ë¯¸ì§€ ê³„ì‚°
 						iDam = iDam * (100 - pkVictim->GetPoint(POINT_RESIST_MAGIC)) / 100;
 
 						//sys_log(0, "%s arrow %s dam %d", m_me->GetName(), pkVictim->GetName(), iDam);
@@ -2970,16 +2970,16 @@ class CFuncShoot
 							pkVictim->BeginFight(m_me); 
 
 						pkVictim->Damage(m_me, iDam, DAMAGE_TYPE_MAGIC);
-						// Å¸°İÄ¡ °è»êºÎ ³¡
+						// íƒ€ê²©ì¹˜ ê³„ì‚°ë¶€ ë
 					}
 					break;
 
-				case SKILL_YEONSA:	// ¿¬»ç
+				case SKILL_YEONSA:	// ì—°ì‚¬
 					{
 						//int iUseArrow = 2 + (m_me->GetSkillPower(SKILL_YEONSA) *6/100);
 						int iUseArrow = 1;
 
-						// ÅäÅ»¸¸ °è»êÇÏ´Â°æ¿ì
+						// í† íƒˆë§Œ ê³„ì‚°í•˜ëŠ”ê²½ìš°
 						{
 							if (iUseArrow == m_me->GetArrowAndBow(&pkBow, &pkArrow, iUseArrow))
 							{
@@ -3111,7 +3111,7 @@ class CFuncShoot
 						sys_log(0, "%s - Skill %d -> %s", m_me->GetName(), m_bType, pkVictim->GetName());
 						m_me->ComputeSkill(m_bType, pkVictim);
 
-						// TODO ¿©·¯¸í¿¡°Ô ½µ ½µ ½µ ÇÏ±â
+						// TODO ì—¬ëŸ¬ëª…ì—ê²Œ ìŠ‰ ìŠ‰ ìŠ‰ í•˜ê¸°
 					}
 					break;
 
@@ -3208,7 +3208,7 @@ LPCHARACTER CHARACTER::GetNearestVictim(LPCHARACTER pkChr)
 
 	TDamageMap::iterator it = m_map_kDamage.begin();
 
-	// ÀÏ´Ü ÁÖÀ§¿¡ ¾ø´Â »ç¶÷À» °É·¯ ³½´Ù.
+	// ì¼ë‹¨ ì£¼ìœ„ì— ì—†ëŠ” ì‚¬ëŒì„ ê±¸ëŸ¬ ë‚¸ë‹¤.
 	while (it != m_map_kDamage.end())
 	{
 		const VID & c_VID = it->first;
@@ -3241,7 +3241,7 @@ void CHARACTER::SetVictim(LPCHARACTER pkVictim)
 	if (!pkVictim)
 	{
 		if (0 != (DWORD)m_kVIDVictim)
-			MonsterLog("°ø°İ ´ë»óÀ» ÇØÁ¦");
+			MonsterLog("ê³µê²© ëŒ€ìƒì„ í•´ì œ");
 
 		m_kVIDVictim.Reset();
 		battle_end(this);
@@ -3249,7 +3249,7 @@ void CHARACTER::SetVictim(LPCHARACTER pkVictim)
 	else
 	{
 		if (m_kVIDVictim != pkVictim->GetVID())
-			MonsterLog("°ø°İ ´ë»óÀ» ¼³Á¤: %s", pkVictim->GetName());
+			MonsterLog("ê³µê²© ëŒ€ìƒì„ ì„¤ì •: %s", pkVictim->GetName());
 
 		m_kVIDVictim = pkVictim->GetVID();
 		m_dwLastVictimSetTime = get_dword_time();
@@ -3261,7 +3261,7 @@ LPCHARACTER CHARACTER::GetVictim() const
 	return CHARACTER_MANAGER::instance().Find(m_kVIDVictim);
 }
 
-LPCHARACTER CHARACTER::GetProtege() const // º¸È£ÇØ¾ß ÇÒ ´ë»óÀ» ¸®ÅÏ
+LPCHARACTER CHARACTER::GetProtege() const // ë³´í˜¸í•´ì•¼ í•  ëŒ€ìƒì„ ë¦¬í„´
 {
 	if (m_pkChrStone)
 		return m_pkChrStone;
@@ -3414,7 +3414,7 @@ struct FuncAggregateMonster
 			if (ch->GetVictim())
 				return;
 
-			if (number(1, 100) <= 50) // ÀÓ½Ã·Î 50% È®·ü·Î ÀûÀ» ²ø¾î¿Â´Ù
+			if (number(1, 100) <= 50) // ì„ì‹œë¡œ 50% í™•ë¥ ë¡œ ì ì„ ëŒì–´ì˜¨ë‹¤
 				if (DISTANCE_APPROX(ch->GetX() - m_ch->GetX(), ch->GetY() - m_ch->GetY()) < 5000)
 					if (ch->CanBeginFight())
 						ch->BeginFight(m_ch);
@@ -3542,7 +3542,7 @@ void CHARACTER::PullMonster()
 
 void CHARACTER::UpdateAggrPointEx(LPCHARACTER pAttacker, EDamageType type, int dam, CHARACTER::TBattleInfo & info)
 {
-	// Æ¯Á¤ °ø°İÅ¸ÀÔ¿¡ µû¶ó ´õ ¿Ã¶ó°£´Ù
+	// íŠ¹ì • ê³µê²©íƒ€ì…ì— ë”°ë¼ ë” ì˜¬ë¼ê°„ë‹¤
 	switch (type)
 	{
 		case DAMAGE_TYPE_NORMAL_RANGE:
@@ -3561,7 +3561,7 @@ void CHARACTER::UpdateAggrPointEx(LPCHARACTER pAttacker, EDamageType type, int d
 			break;
 	}
 
-	// °ø°İÀÚ°¡ ÇöÀç ´ë»óÀÎ °æ¿ì º¸³Ê½º¸¦ ÁØ´Ù.
+	// ê³µê²©ìê°€ í˜„ì¬ ëŒ€ìƒì¸ ê²½ìš° ë³´ë„ˆìŠ¤ë¥¼ ì¤€ë‹¤.
 	if (pAttacker == GetVictim())
 		dam = (int) (dam * 1.2f);
 
@@ -3575,7 +3575,7 @@ void CHARACTER::UpdateAggrPointEx(LPCHARACTER pAttacker, EDamageType type, int d
 	{
 		LPPARTY pParty = GetParty();
 
-		// ¸®´õÀÎ °æ¿ì ¿µÇâ·ÂÀÌ Á»´õ °­ÇÏ´Ù
+		// ë¦¬ë”ì¸ ê²½ìš° ì˜í–¥ë ¥ì´ ì¢€ë” ê°•í•˜ë‹¤
 		int iPartyAggroDist = dam;
 
 		if (pParty->GetLeaderPID() == GetVID())
@@ -3607,7 +3607,7 @@ void CHARACTER::UpdateAggrPoint(LPCHARACTER pAttacker, EDamageType type, int dam
 
 void CHARACTER::ChangeVictimByAggro(int iNewAggro, LPCHARACTER pNewVictim)
 {
-	if (get_dword_time() - m_dwLastVictimSetTime < 3000) // 3ÃÊ´Â ±â´Ù·Á¾ßÇÑ´Ù
+	if (get_dword_time() - m_dwLastVictimSetTime < 3000) // 3ì´ˆëŠ” ê¸°ë‹¤ë ¤ì•¼í•œë‹¤
 		return;
 
 	if (pNewVictim == GetVictim())
@@ -3618,7 +3618,7 @@ void CHARACTER::ChangeVictimByAggro(int iNewAggro, LPCHARACTER pNewVictim)
 			return;
 		}
 
-		// Aggro°¡ °¨¼ÒÇÑ °æ¿ì
+		// Aggroê°€ ê°ì†Œí•œ ê²½ìš°
 		TDamageMap::iterator it;
 		TDamageMap::iterator itFind = m_map_kDamage.end();
 

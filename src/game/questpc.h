@@ -1,4 +1,4 @@
-#ifndef __QUEST_PC_H
+ï»¿#ifndef __QUEST_PC_H
 #define __QUEST_PC_H
 
 #include "quest.h"
@@ -35,12 +35,12 @@ namespace quest
 			enum 
 			{
 				QUEST_SEND_ISBEGIN		= (1 << 0),
-				QUEST_SEND_TITLE		= (1 << 1),  // 30ÀÚ ±îÁö 
-				QUEST_SEND_CLOCK_NAME		= (1 << 2),  // 16ÀÚ ±îÁö		
+				QUEST_SEND_TITLE		= (1 << 1),  // 30ì ê¹Œì§€ 
+				QUEST_SEND_CLOCK_NAME		= (1 << 2),  // 16ì ê¹Œì§€		
 				QUEST_SEND_CLOCK_VALUE		= (1 << 3),
-				QUEST_SEND_COUNTER_NAME		= (1 << 4),  // 16ÀÚ ±îÁö	
+				QUEST_SEND_COUNTER_NAME		= (1 << 4),  // 16ì ê¹Œì§€	
 				QUEST_SEND_COUNTER_VALUE	= (1 << 5),
-				QUEST_SEND_ICON_FILE		= (1 << 6),  // 24ÀÚ ±îÁö
+				QUEST_SEND_ICON_FILE		= (1 << 6),  // 24ì ê¹Œì§€
 			};
 
 			typedef map<unsigned int, QuestState>	QuestInfo;
@@ -122,7 +122,7 @@ namespace quest
 			bool		IsLoaded() const	{ return m_bLoaded; }
 			void		SetLoaded()	{ m_bLoaded = true; }
 			void		Build();
-			// DB¿¡ ÀúÀå
+			// DBì— ì €ì¥
 			void		Save();
 
 			bool		HasReward() { return !m_vRewardData.empty() || m_bIsGivenReward; }
@@ -176,7 +176,7 @@ namespace quest
 			TTimerMap		m_TimerMap;
 
 			int			m_iSendToClient;
-			bool		m_bLoaded; // ·Îµå´Â ÇÑ¹ø¸¸ ÇÑ´Ù.
+			bool		m_bLoaded; // ë¡œë“œëŠ” í•œë²ˆë§Œ í•œë‹¤.
 
 			int			m_iLastState;
 

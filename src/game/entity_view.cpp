@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 
 #include "utils.h"
 #include "char.h"
@@ -98,21 +98,21 @@ class CFuncViewInsert
 
 		void operator () (LPENTITY ent)
 		{
-			// ¿ÀºêÁ§Æ®°¡ ¾Æ´Ñ °ÍÀº °Å¸®¸¦ °è»êÇÏ¿© °Å¸®°¡ ¸Ö¸é Ãß°¡ÇÏÁö ¾Ê´Â´Ù.
+			// ì˜¤ë¸Œì íŠ¸ê°€ ì•„ë‹Œ ê²ƒì€ ê±°ë¦¬ë¥¼ ê³„ì‚°í•˜ì—¬ ê±°ë¦¬ê°€ ë©€ë©´ ì¶”ê°€í•˜ì§€ ì•ŠëŠ”ë‹¤.
 			if (!ent->IsType(ENTITY_OBJECT))
 				if (DISTANCE_APPROX(ent->GetX() - m_me->GetX(), ent->GetY() - m_me->GetY()) > dwViewRange)
 					return;
 
-			// ³ª¸¦ ´ë»ó¿¡ Ãß°¡
+			// ë‚˜ë¥¼ ëŒ€ìƒì— ì¶”ê°€
 			m_me->ViewInsert(ent);
 
-			// µÑ´Ù Ä³¸¯ÅÍ¸é
+			// ë‘˜ë‹¤ ìºë¦­í„°ë©´
 			if (ent->IsType(ENTITY_CHARACTER) && m_me->IsType(ENTITY_CHARACTER))
 			{
 				LPCHARACTER chMe = (LPCHARACTER) m_me;
 				LPCHARACTER chEnt = (LPCHARACTER) ent;
 
-				// ´ë»óÀÌ NPC¸é StateMachineÀ» Å²´Ù.
+				// ëŒ€ìƒì´ NPCë©´ StateMachineì„ í‚¨ë‹¤.
 				if (chMe->IsPC() && !chEnt->IsPC() && !chEnt->IsWarp() && !chEnt->IsGoto())
 					chEnt->StartStateMachine();
 			}
@@ -134,13 +134,13 @@ void CEntity::UpdateSectree()
 
 	++m_iViewAge;
 
-	CFuncViewInsert f(this); // ³ª¸¦ ¼½Æ®¸®¿¡ ÀÖ´Â »ç¶÷µé¿¡°Ô Ãß°¡
+	CFuncViewInsert f(this); // ë‚˜ë¥¼ ì„¹íŠ¸ë¦¬ì— ìžˆëŠ” ì‚¬ëžŒë“¤ì—ê²Œ ì¶”ê°€
 	GetSectree()->ForEachAround(f);
 
 	ENTITY_MAP::iterator it, this_it;
 
 	//
-	// m_map_view¿¡¼­ ÇÊ¿ä ¾ø´Â ³à¼®µé Áö¿ì±â
+	// m_map_viewì—ì„œ í•„ìš” ì—†ëŠ” ë…€ì„ë“¤ ì§€ìš°ê¸°
 	// 
 	if (m_bObserverModeChange)
 	{
@@ -155,11 +155,11 @@ void CEntity::UpdateSectree()
 				{
 					LPENTITY ent = this_it->first;
 
-					// ³ª·Î ºÎÅÍ »ó´ë¹æÀ» Áö¿î´Ù.
+					// ë‚˜ë¡œ ë¶€í„° ìƒëŒ€ë°©ì„ ì§€ìš´ë‹¤.
 					ent->EncodeRemovePacket(this);
 					m_map_view.erase(this_it);
 
-					// »ó´ë·Î ºÎÅÍ ³ª¸¦ Áö¿î´Ù.
+					// ìƒëŒ€ë¡œ ë¶€í„° ë‚˜ë¥¼ ì§€ìš´ë‹¤.
 					ent->ViewRemove(this, false);
 				}
 				else
@@ -167,11 +167,11 @@ void CEntity::UpdateSectree()
 
 					LPENTITY ent = this_it->first;
 
-					// ³ª·Î ºÎÅÍ »ó´ë¹æÀ» Áö¿î´Ù.
+					// ë‚˜ë¡œ ë¶€í„° ìƒëŒ€ë°©ì„ ì§€ìš´ë‹¤.
 					//ent->EncodeRemovePacket(this);
 					//m_map_view.erase(this_it);
 
-					// »ó´ë·Î ºÎÅÍ ³ª¸¦ Áö¿î´Ù.
+					// ìƒëŒ€ë¡œ ë¶€í„° ë‚˜ë¥¼ ì§€ìš´ë‹¤.
 					//ent->ViewRemove(this, false);
 					EncodeRemovePacket(ent);
 				}
@@ -189,11 +189,11 @@ void CEntity::UpdateSectree()
 				{
 					LPENTITY ent = this_it->first;
 
-					// ³ª·Î ºÎÅÍ »ó´ë¹æÀ» Áö¿î´Ù.
+					// ë‚˜ë¡œ ë¶€í„° ìƒëŒ€ë°©ì„ ì§€ìš´ë‹¤.
 					ent->EncodeRemovePacket(this);
 					m_map_view.erase(this_it);
 
-					// »ó´ë·Î ºÎÅÍ ³ª¸¦ Áö¿î´Ù.
+					// ìƒëŒ€ë¡œ ë¶€í„° ë‚˜ë¥¼ ì§€ìš´ë‹¤.
 					ent->ViewRemove(this, false);
 				}
 				else
@@ -223,11 +223,11 @@ void CEntity::UpdateSectree()
 				{
 					LPENTITY ent = this_it->first;
 
-					// ³ª·Î ºÎÅÍ »ó´ë¹æÀ» Áö¿î´Ù.
+					// ë‚˜ë¡œ ë¶€í„° ìƒëŒ€ë°©ì„ ì§€ìš´ë‹¤.
 					ent->EncodeRemovePacket(this);
 					m_map_view.erase(this_it);
 
-					// »ó´ë·Î ºÎÅÍ ³ª¸¦ Áö¿î´Ù.
+					// ìƒëŒ€ë¡œ ë¶€í„° ë‚˜ë¥¼ ì§€ìš´ë‹¤.
 					ent->ViewRemove(this, false);
 				}
 			}

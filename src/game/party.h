@@ -1,11 +1,11 @@
-#ifndef __INC_METIN_II_GAME_PARTY_H__
+ï»¿#ifndef __INC_METIN_II_GAME_PARTY_H__
 #define __INC_METIN_II_GAME_PARTY_H__
 
 #include "char.h"
 
 enum // unit : minute
 {
-	PARTY_ENOUGH_MINUTE_FOR_EXP_BONUS = 60, // ÆÄÆ¼ °á¼º ÈÄ 60ºÐ ÈÄ ºÎÅÍ Ãß°¡ °æÇèÄ¡ º¸³Ê½º
+	PARTY_ENOUGH_MINUTE_FOR_EXP_BONUS = 60, // íŒŒí‹° ê²°ì„± í›„ 60ë¶„ í›„ ë¶€í„° ì¶”ê°€ ê²½í—˜ì¹˜ ë³´ë„ˆìŠ¤
 	PARTY_HEAL_COOLTIME_LONG = 60,
 	PARTY_HEAL_COOLTIME_SHORT = 30,
 	PARTY_MAX_MEMBER = 8,
@@ -69,12 +69,12 @@ class CPartyManager : public singleton<CPartyManager>
 		void		P2PQuitParty(DWORD pid);
 
 	private:
-		TPartyMap	m_map_pkParty;		// PID·Î ¾î´À ÆÄÆ¼¿¡ ÀÖ³ª °Ë»öÇÏ±â À§ÇÑ ÄÁÅ×ÀÌ³Ê
-		TPartyMap	m_map_pkMobParty;	// Mob ÆÄÆ¼´Â PID ´ë½Å VID ·Î µû·Î °ü¸®ÇÑ´Ù.
+		TPartyMap	m_map_pkParty;		// PIDë¡œ ì–´ëŠ íŒŒí‹°ì— ìžˆë‚˜ ê²€ìƒ‰í•˜ê¸° ìœ„í•œ ì»¨í…Œì´ë„ˆ
+		TPartyMap	m_map_pkMobParty;	// Mob íŒŒí‹°ëŠ” PID ëŒ€ì‹  VID ë¡œ ë”°ë¡œ ê´€ë¦¬í•œë‹¤.
 
-		TPCPartySet	m_set_pkPCParty;	// »ç¶÷µéÀÇ ÆÄÆ¼ ÀüÃ¼ ÁýÇÕ
+		TPCPartySet	m_set_pkPCParty;	// ì‚¬ëžŒë“¤ì˜ íŒŒí‹° ì „ì²´ ì§‘í•©
 
-		bool		m_bEnablePCParty;	// µðºñ°¡ ÄÑÁ®ÀÖÁö ¾ÊÀ¸¸é »ç¶÷µéÀÇ ÆÄÆ¼ »óÅÂ°¡ º¯°æºÒ°¡
+		bool		m_bEnablePCParty;	// ë””ë¹„ê°€ ì¼œì ¸ìžˆì§€ ì•Šìœ¼ë©´ ì‚¬ëžŒë“¤ì˜ íŒŒí‹° ìƒíƒœê°€ ë³€ê²½ë¶ˆê°€
 };
 
 enum EPartyMessages
@@ -246,9 +246,9 @@ class CParty
 		TFlagMap	m_map_iFlag;
 
 		LPDUNGEON	m_pkDungeon;
-		// ¾Æ±Í µ¿±¼¿ë dungeon ¸â¹ö º¯¼ö.
-		// Á¤¸» ÀÌ·¸°Ô±îÁö ÇÏ°í ½ÍÁø ¾Ê¾Ò´Âµ¥, ´øÀü¿¡¼­ party °ü¸®°¡ Á¤¸»·Î °³ÆÇÀÌ¶ó
-		// ±×°Å °íÄ¡±â Àü±îÁö´Â ÀÌ·¸°Ô ÀÓ½Ã·Î ÇØ³õ´Â´Ù.
+		// ì•„ê·€ ë™êµ´ìš© dungeon ë©¤ë²„ ë³€ìˆ˜.
+		// ì •ë§ ì´ë ‡ê²Œê¹Œì§€ í•˜ê³  ì‹¶ì§„ ì•Šì•˜ëŠ”ë°, ë˜ì „ì—ì„œ party ê´€ë¦¬ê°€ ì •ë§ë¡œ ê°œíŒì´ë¼
+		// ê·¸ê±° ê³ ì¹˜ê¸° ì „ê¹Œì§€ëŠ” ì´ë ‡ê²Œ ìž„ì‹œë¡œ í•´ë†“ëŠ”ë‹¤.
 		LPDUNGEON	m_pkDungeon_for_Only_party;
 	public:
 		void SetDungeon_for_Only_party(LPDUNGEON pDungeon);

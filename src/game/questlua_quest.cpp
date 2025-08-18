@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 
 #include "questlua.h"
 #include "questmanager.h"
@@ -149,7 +149,7 @@ namespace quest
 	int quest_coroutine_yield(lua_State * L)
 	{
 		CQuestManager& q = CQuestManager::instance();
-		// other_pc_block ³»ºÎ¿¡¼­´Â yield°¡ ÀÏ¾î³ª¼­´Â ¾ÈµÈ´Ù. Àı´ë·Î.
+		// other_pc_block ë‚´ë¶€ì—ì„œëŠ” yieldê°€ ì¼ì–´ë‚˜ì„œëŠ” ì•ˆëœë‹¤. ì ˆëŒ€ë¡œ.
 		if (q.IsInOtherPCBlock())
 		{
 			sys_err("FATAL ERROR! Yield occur in other_pc_block.");
@@ -223,10 +223,10 @@ namespace quest
 			{ "done",					quest_done					},
 			{ "getcurrentquestindex",	quest_get_current_quest_index	},
 			{ "no_send",				quest_no_send				},
-			// begin_other_pc_block(pid), end_other_pc_block »çÀÌ¸¦ other_pc_blockÀÌ¶ó°í ÇÏÀÚ.
-			// other_pc_block¿¡¼­´Â current_pc°¡ pid·Î º¯°æµÈ´Ù.
-			//						³¡³ª¸é ´Ù½Ã ¿ø·¡ÀÇ current_pc·Î µ¹¾Æ°£´Ù.
-			/*		ÀÌ·± °ÍÀ» À§ÇØ ¸¸µë.
+			// begin_other_pc_block(pid), end_other_pc_block ì‚¬ì´ë¥¼ other_pc_blockì´ë¼ê³  í•˜ì.
+			// other_pc_blockì—ì„œëŠ” current_pcê°€ pidë¡œ ë³€ê²½ëœë‹¤.
+			//						ëë‚˜ë©´ ë‹¤ì‹œ ì›ë˜ì˜ current_pcë¡œ ëŒì•„ê°„ë‹¤.
+			/*		ì´ëŸ° ê²ƒì„ ìœ„í•´ ë§Œë“¬.
 					for i, pid in next, pids, nil do
 						q.begin_other_pc_block(pid)
 						if pc.count_item(PASS_TICKET) < 1 then
@@ -236,7 +236,7 @@ namespace quest
 						q.end_other_pc_block()
 					end
 			*/
-			// ÁÖÀÇ : other_pc_block ³»ºÎ¿¡¼­´Â Àı´ë·Î yield°¡ ÀÏ¾î³ª¼­´Â ¾ÈµÈ´Ù.(ex. wait, select, input, ...)
+			// ì£¼ì˜ : other_pc_block ë‚´ë¶€ì—ì„œëŠ” ì ˆëŒ€ë¡œ yieldê°€ ì¼ì–´ë‚˜ì„œëŠ” ì•ˆëœë‹¤.(ex. wait, select, input, ...)
 			{ "begin_other_pc_block",	quest_begin_other_pc_block	}, 
 			{ "end_other_pc_block",		quest_end_other_pc_block	},
 			{ NULL,						NULL						}

@@ -1,4 +1,4 @@
-#ifndef __METIN2_SERVER_QUEST_MANAGER__
+ï»¿#ifndef __METIN2_SERVER_QUEST_MANAGER__
 #define __METIN2_SERVER_QUEST_MANAGER__
 
 #include <unordered_map>
@@ -50,7 +50,7 @@ namespace quest
 			bool		RunState(QuestState& qs);
 
 			PC *		GetPC(unsigned int pc);
-			PC *		GetPCForce(unsigned int pc);	// ÇöÀç PC¸¦ ¹Ù²ÙÁö ¾Ê°í PC Æ÷ÀÎÅÍ¸¦ °¡Á®¿Â´Ù.
+			PC *		GetPCForce(unsigned int pc);	// í˜„ì¬ PCë¥¼ ë°”ê¾¸ì§€ ì•Šê³  PC í¬ì¸í„°ë¥¼ ê°€ì ¸ì˜¨ë‹¤.
 
 			unsigned int	GetCurrentNPCRace();
 			const string & 	GetCurrentQuestName();
@@ -100,7 +100,7 @@ namespace quest
 			void		Letter(DWORD pc);
 			void		Letter(DWORD pc, DWORD quest_index, int state);
 			
-			void		ItemInformer(unsigned int pc, unsigned int vnum);	//µ¶ÀÏ¼±¹°±â´É
+			void		ItemInformer(unsigned int pc, unsigned int vnum);	//ë…ì¼ì„ ë¬¼ê¸°ëŠ¥
 
 			//
 
@@ -248,7 +248,7 @@ namespace quest
 			static bool ExecuteQuestScript(PC& pc, DWORD quest_index, const int state, const char* code, const int code_size, vector<AArgScript*>* pChatScripts = NULL, bool bUseCache = true);
 		
 
-		// begin_other_pc_blcok, end_other_pc_blockÀ» À§ÇÑ °´Ã¼µé.
+		// begin_other_pc_blcok, end_other_pc_blockì„ ìœ„í•œ ê°ì²´ë“¤.
 		public:
 			void		BeginOtherPCBlock(DWORD pid);
 			void		EndOtherPCBlock();

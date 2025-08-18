@@ -1,4 +1,4 @@
-#ifndef _OBJECT_ALLOCATOR_H_
+﻿#ifndef _OBJECT_ALLOCATOR_H_
 #define _OBJECT_ALLOCATOR_H_
 
 #include "debug_allocator.h"

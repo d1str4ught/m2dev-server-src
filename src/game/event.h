@@ -1,8 +1,8 @@
-/*
+ï»¿/*
  *    Filename: event.h
- * Description: ÀÌº¥Æ® °ü·Ã (timed event)
+ * Description: ì´ë²¤íŠ¸ ê´€ë ¨ (timed event)
  *
- *      Author: ±èÇÑÁÖ (aka. ºñ¿±, Cronan), ¼Û¿µÁø (aka. myevan, ºøÀÚ·ç)
+ *      Author: ê¹€í•œì£¼ (aka. ë¹„ì—½, Cronan), ì†¡ì˜ì§„ (aka. myevan, ë¹—ìë£¨)
  */
 #ifndef __INC_LIBTHECORE_EVENT_H__
 #define __INC_LIBTHECORE_EVENT_H__
@@ -81,10 +81,10 @@ extern int		event_count();
 
 #define event_create(func, info, when) event_create_ex(func, info, when)
 extern LPEVENT	event_create_ex(TEVENTFUNC func, event_info_data* info, long when);
-extern void		event_cancel(LPEVENT * event);			// ÀÌº¥Æ® Ãë¼Ò
-extern long		event_processing_time(LPEVENT event);	// ¼öÇà ½Ã°£ ¸®ÅÏ
-extern long		event_time(LPEVENT event);			// ³²Àº ½Ã°£ ¸®ÅÏ
-extern void		event_reset_time(LPEVENT event, long when);	// ½ÇÇà ½Ã°£ Àç ¼³Á¤
+extern void		event_cancel(LPEVENT * event);			// ì´ë²¤íŠ¸ ì·¨ì†Œ
+extern long		event_processing_time(LPEVENT event);	// ìˆ˜í–‰ ì‹œê°„ ë¦¬í„´
+extern long		event_time(LPEVENT event);			// ë‚¨ì€ ì‹œê°„ ë¦¬í„´
+extern void		event_reset_time(LPEVENT event, long when);	// ì‹¤í–‰ ì‹œê°„ ì¬ ì„¤ì •
 extern void		event_set_verbose(int level);
 
 extern event_info_data* FindEventInfo(DWORD dwID);

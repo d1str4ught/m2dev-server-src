@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "MarkManager.h"
 
 #include "crc32.h"
@@ -15,7 +15,7 @@ void CGuildMarkManager::__DeleteImage(CGuildMarkImage * pkImgDel)
 
 CGuildMarkManager::CGuildMarkManager()
 {
-	// ³²Àº mark id ¼ÂÀ» ¸¸µç´Ù. (¼­¹ö¿ë)
+	// ë‚¨ì€ mark id ì…‹ì„ ë§Œë“ ë‹¤. (ì„œë²„ìš©)
 	for (DWORD i = 0; i < MAX_IMAGE_COUNT * CGuildMarkImage::MARK_TOTAL_COUNT; ++i)
 		m_setFreeMarkID.insert(i);
 }
@@ -44,7 +44,7 @@ void CGuildMarkManager::SetMarkPathPrefix(const char * prefix)
 	m_pathPrefix = prefix;
 }
 
-// ¸¶Å© ÀÎµ¦½º ºÒ·¯¿À±â (¼­¹ö¿¡¼­¸¸ »ç¿ë)
+// ë§ˆí¬ ì¸ë±ìŠ¤ ë¶ˆëŸ¬ì˜¤ê¸° (ì„œë²„ì—ì„œë§Œ ì‚¬ìš©)
 bool CGuildMarkManager::LoadMarkIndex()
 {
 	char buf[64];
@@ -178,7 +178,7 @@ DWORD CGuildMarkManager::__AllocMarkID(DWORD guildID)
 	DWORD markID = *it;
 	
 	DWORD imgIdx = markID / CGuildMarkImage::MARK_TOTAL_COUNT;
-	CGuildMarkImage * pkImage = __GetImage(imgIdx); // ÀÌ¹ÌÁö°¡ ¾ø´Ù¸é ¸¸µé±â À§ÇØ 
+	CGuildMarkImage * pkImage = __GetImage(imgIdx); // ì´ë¯¸ì§€ê°€ ì—†ë‹¤ë©´ ë§Œë“¤ê¸° ìœ„í•´ 
 
 	if (pkImage && AddMarkIDByGuildID(guildID, markID))
 		return markID;
@@ -264,7 +264,7 @@ void CGuildMarkManager::GetDiffBlocks(DWORD imgIdx, const DWORD * crcList, std::
 {
 	mapDiffBlocks.clear();
 
-	// Å¬¶óÀÌ¾ğÆ®¿¡¼­ ¼­¹ö¿¡ ¾ø´Â ÀÌ¹ÌÁö¸¦ ¿äÃ»ÇÒ ¼ö´Â ¾ø´Ù.
+	// í´ë¼ì´ì–¸íŠ¸ì—ì„œ ì„œë²„ì— ì—†ëŠ” ì´ë¯¸ì§€ë¥¼ ìš”ì²­í•  ìˆ˜ëŠ” ì—†ë‹¤.
 	if (m_mapIdx_Image.end() == m_mapIdx_Image.find(imgIdx))
 	{
 		sys_err("invalid idx %u", imgIdx);
@@ -291,7 +291,7 @@ bool CGuildMarkManager::SaveBlockFromCompressedData(DWORD imgIdx, DWORD posBlock
 // CLIENT
 bool CGuildMarkManager::GetBlockCRCList(DWORD imgIdx, DWORD * crcList)
 {
-	// Å¬¶óÀÌ¾ğÆ®¿¡¼­ ¼­¹ö¿¡ ¾ø´Â ÀÌ¹ÌÁö¸¦ ¿äÃ»ÇÒ ¼ö´Â ¾ø´Ù.
+	// í´ë¼ì´ì–¸íŠ¸ì—ì„œ ì„œë²„ì— ì—†ëŠ” ì´ë¯¸ì§€ë¥¼ ìš”ì²­í•  ìˆ˜ëŠ” ì—†ë‹¤.
 	if (m_mapIdx_Image.end() == m_mapIdx_Image.find(imgIdx))
 	{
 		sys_err("invalid idx %u", imgIdx);

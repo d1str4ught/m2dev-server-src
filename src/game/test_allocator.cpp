@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 
 #include <gtest/gtest.h>
 #define DBG_ALLOC

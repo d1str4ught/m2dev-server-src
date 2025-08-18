@@ -1,4 +1,4 @@
-#ifndef _M2_CHECK_SERVER_KEY_H_
+ï»¿#ifndef _M2_CHECK_SERVER_KEY_H_
 #define _M2_CHECK_SERVER_KEY_H_
 
 #include <string>
@@ -15,7 +15,7 @@ public:
 
 	static FORCEINLINE bool CheckIp(const char* ip)
 	{
-		// µğÆÄÀÎ ¾È°É¸®¸é Ã¼Å© ¾ÈÇÔ
+		// ë””íŒŒì¸ ì•ˆê±¸ë¦¬ë©´ ì²´í¬ ì•ˆí•¨
 		#ifndef _USE_SERVER_KEY_
 			fail_ = false;
 			return true;
@@ -23,7 +23,7 @@ public:
 
 		for (int i = 0; i < keys_.size(); i++)
 		{
-			// ÇÏ³ª¶óµµ ¸Â´Â ¼­¹öÅ°°¡ ÀÖÀ¸¸é ok
+			// í•˜ë‚˜ë¼ë„ ë§ëŠ” ì„œë²„í‚¤ê°€ ìˆìœ¼ë©´ ok
 			std::string errorString;
 			if (CheckServerKey(keys_[i].c_str(), ip, "", errorString))
 			{

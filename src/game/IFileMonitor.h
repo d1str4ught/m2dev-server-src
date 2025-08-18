@@ -1,4 +1,4 @@
-#ifndef IFILEMONITOR_INCLUDED
+﻿#ifndef IFILEMONITOR_INCLUDED
 #define IFILEMONITOR_INCLUDED
 
 //#include <boost/function.hpp>

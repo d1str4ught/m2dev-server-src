@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "constants.h"
 #include "config.h"
 #include "questmanager.h"
@@ -155,11 +155,11 @@ bool COXEventManager::ShowQuizList(LPCHARACTER pkChar)
 	{
 		for (size_t j = 0; j < m_vec_quiz[i].size(); ++j, ++c)
 		{
-			pkChar->ChatPacket(CHAT_TYPE_INFO, "%d %s %s", m_vec_quiz[i][j].level, m_vec_quiz[i][j].Quiz, m_vec_quiz[i][j].answer ? LC_TEXT("Âü") : LC_TEXT("°ÅÁş"));
+			pkChar->ChatPacket(CHAT_TYPE_INFO, "%d %s %s", m_vec_quiz[i][j].level, m_vec_quiz[i][j].Quiz, m_vec_quiz[i][j].answer ? LC_TEXT("ì°¸") : LC_TEXT("ê±°ì§“"));
 		}
 	}
 
-	pkChar->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ÃÑ ÄûÁî ¼ö: %d"), c);	
+	pkChar->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì´ í€´ì¦ˆ ìˆ˜: %d"), c);	
 	return true;
 }
 
@@ -197,31 +197,31 @@ EVENTFUNC(oxevent_timer)
 	switch (flag)
 	{
 		case 0:
-			SendNoticeMap(LC_TEXT("10ÃÊµÚ ÆÇÁ¤ÇÏ°Ú½À´Ï´Ù."), OXEVENT_MAP_INDEX, true);
+			SendNoticeMap(LC_TEXT("10ì´ˆë’¤ íŒì •í•˜ê² ìŠµë‹ˆë‹¤."), OXEVENT_MAP_INDEX, true);
 			flag++;
 			return PASSES_PER_SEC(10);
 			
 		case 1:
-			SendNoticeMap(LC_TEXT("Á¤´äÀº"), OXEVENT_MAP_INDEX, true);
+			SendNoticeMap(LC_TEXT("ì •ë‹µì€"), OXEVENT_MAP_INDEX, true);
 
 			if (info->answer == true)
 			{
 				COXEventManager::instance().CheckAnswer(true);
-				SendNoticeMap(LC_TEXT("O ÀÔ´Ï´Ù"), OXEVENT_MAP_INDEX, true);
+				SendNoticeMap(LC_TEXT("O ì…ë‹ˆë‹¤"), OXEVENT_MAP_INDEX, true);
 			}
 			else
 			{
 				COXEventManager::instance().CheckAnswer(false);
-				SendNoticeMap(LC_TEXT("X ÀÔ´Ï´Ù"), OXEVENT_MAP_INDEX, true);
+				SendNoticeMap(LC_TEXT("X ì…ë‹ˆë‹¤"), OXEVENT_MAP_INDEX, true);
 			}
 
 			if (LC_IsJapan())
 			{
-				SendNoticeMap("ŠÔˆá‚¦‚½•ûX‚ğŠO‚ÉˆÚ“®‚³‚¹‚Ü‚·B", OXEVENT_MAP_INDEX, true);
+				SendNoticeMap("ë“©ëŒ¾ê¶‘ê¶«ëº´ê°²ê·©ë‘–ê¶¸ëŒ·ë²ê¶ ê¶§ê·ê¶¥ê°ƒ", OXEVENT_MAP_INDEX, true);
 			}
 			else
 			{
-				SendNoticeMap(LC_TEXT("5ÃÊ µÚ Æ²¸®½Å ºĞµéÀ» ¹Ù±ùÀ¸·Î ÀÌµ¿ ½ÃÅ°°Ú½À´Ï´Ù."), OXEVENT_MAP_INDEX, true);
+				SendNoticeMap(LC_TEXT("5ì´ˆ ë’¤ í‹€ë¦¬ì‹  ë¶„ë“¤ì„ ë°”ê¹¥ìœ¼ë¡œ ì´ë™ ì‹œí‚¤ê² ìŠµë‹ˆë‹¤."), OXEVENT_MAP_INDEX, true);
 			}
 
 			flag++;
@@ -230,7 +230,7 @@ EVENTFUNC(oxevent_timer)
 		case 2:
 			COXEventManager::instance().WarpToAudience();
 			COXEventManager::instance().SetStatus(OXEVENT_CLOSE);
-			SendNoticeMap(LC_TEXT("´ÙÀ½ ¹®Á¦ ÁØºñÇØÁÖ¼¼¿ä."), OXEVENT_MAP_INDEX, true);
+			SendNoticeMap(LC_TEXT("ë‹¤ìŒ ë¬¸ì œ ì¤€ë¹„í•´ì£¼ì„¸ìš”."), OXEVENT_MAP_INDEX, true);
 			flag = 0;
 			break;
 	}
@@ -247,9 +247,9 @@ bool COXEventManager::Quiz(unsigned char level, int timelimit)
 
 	int idx = number(0, m_vec_quiz[level].size()-1);
 
-	SendNoticeMap(LC_TEXT("¹®Á¦ ÀÔ´Ï´Ù."), OXEVENT_MAP_INDEX, true);
+	SendNoticeMap(LC_TEXT("ë¬¸ì œ ì…ë‹ˆë‹¤."), OXEVENT_MAP_INDEX, true);
 	SendNoticeMap(m_vec_quiz[level][idx].Quiz, OXEVENT_MAP_INDEX, true);
-	SendNoticeMap(LC_TEXT("¸ÂÀ¸¸é O, Æ²¸®¸é X·Î ÀÌµ¿ÇØÁÖ¼¼¿ä"), OXEVENT_MAP_INDEX, true);
+	SendNoticeMap(LC_TEXT("ë§ìœ¼ë©´ O, í‹€ë¦¬ë©´ Xë¡œ ì´ë™í•´ì£¼ì„¸ìš”"), OXEVENT_MAP_INDEX, true);
 
 	if (m_timedEvent != NULL) {
 		event_cancel(&m_timedEvent);
@@ -312,17 +312,17 @@ bool COXEventManager::CheckAnswer(bool answer)
 			}
 			else
 			{
-				pkChar->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Á¤´äÀÔ´Ï´Ù!"));
+				pkChar->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì •ë‹µì…ë‹ˆë‹¤!"));
 				// pkChar->CreateFly(number(FLY_FIREWORK1, FLY_FIREWORK6), pkChar);
 				char chatbuf[256];
 				int len = snprintf(chatbuf, sizeof(chatbuf), 
 						"%s %u %u", number(0, 1) == 1 ? "cheer1" : "cheer2", (DWORD)pkChar->GetVID(), 0);
 
-				// ¸®ÅÏ°ªÀÌ sizeof(chatbuf) ÀÌ»óÀÏ °æ¿ì truncateµÇ¾ú´Ù´Â ¶æ..
+				// ë¦¬í„´ê°’ì´ sizeof(chatbuf) ì´ìƒì¼ ê²½ìš° truncateë˜ì—ˆë‹¤ëŠ” ëœ»..
 				if (len < 0 || len >= (int) sizeof(chatbuf))
 					len = sizeof(chatbuf) - 1;
 
-				// \0 ¹®ÀÚ Æ÷ÇÔ
+				// \0 ë¬¸ì í¬í•¨
 				++len;
 
 				TPacketGCChat pack_chat;

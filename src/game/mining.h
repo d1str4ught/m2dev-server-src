@@ -1,4 +1,4 @@
-#ifndef __MINING_H
+﻿#ifndef __MINING_H
 #define __MINING_H
 
 namespace mining

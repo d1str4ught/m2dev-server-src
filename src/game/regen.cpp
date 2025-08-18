@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "config.h"
 #include "char.h"
 #include "char_manager.h"
@@ -24,7 +24,7 @@ enum ERegenModes
 	MODE_VNUM
 };
 
-static bool get_word(FILE *fp, char *buf) // ¿öµå´ÜÀ§·Î ¹Ş´Â´Ù.
+static bool get_word(FILE *fp, char *buf) // ì›Œë“œë‹¨ìœ„ë¡œ ë°›ëŠ”ë‹¤.
 {
 	int i = 0;
 	int c;
@@ -172,7 +172,7 @@ static bool read_line(FILE *fp, LPREGEN regen)
 			case MODE_Z_SECTION:
 				str_to_number(regen->z_section, szTmp);
 
-				// ÀÍ¼Á¼Ç ÀÌ¸é ³ª°¡ÁÖÀÚ.
+				// ìµì…‰ì…˜ ì´ë©´ ë‚˜ê°€ì£¼ì.
 				if (regen->type == REGEN_TYPE_EXCEPTION)
 					return true;
 
@@ -500,7 +500,7 @@ bool regen_do(const char* filename, long lMapIndex, int base_x, int base_y, LPDU
 				// before the call to CHARACTER::SetRegen()
 			}
 
-			// Ã³À½¿£ ¹«Á¶°Ç ¸®Á¨ ÇØÁØ´Ù.
+			// ì²˜ìŒì—” ë¬´ì¡°ê±´ ë¦¬ì   í•´ì¤€ë‹¤.
 			regen_spawn_dungeon(regen, pDungeon, bOnce);
 
 		}
@@ -576,7 +576,7 @@ bool regen_load_in_file(const char* filename, long lMapIndex, int base_x, int ba
 				}
 			}
 
-			// Ã³À½¿£ ¹«Á¶°Ç ¸®Á¨ ÇØÁØ´Ù.
+			// ì²˜ìŒì—” ë¬´ì¡°ê±´ ë¦¬ì   í•´ì¤€ë‹¤.
 			regen_spawn(regen, true);
 		}
 	}
@@ -683,11 +683,11 @@ bool regen_load(const char* filename, long lMapIndex, int base_x, int base_y)
 			}
 
 			//NO_REGEN
-			// Desc: 	regen.txt (¿Ü ¸®Á¨°ü·Ã ÅØ½ºÆ® ) ¿¡¼­ ¸®Á¨ ½Ã°£À» 0À¸·Î ¼¼ÆÃÇÒ½Ã 
-			// 			¸®Á¨À» ÇÏÁö ¾ÈÇÑ´Ù.
+			// Desc: 	regen.txt (ì™¸ ë¦¬ì  ê´€ë ¨ í…ìŠ¤íŠ¸ ) ì—ì„œ ë¦¬ì   ì‹œê°„ì„ 0ìœ¼ë¡œ ì„¸íŒ…í• ì‹œ 
+			// 			ë¦¬ì  ì„ í•˜ì§€ ì•ˆí•œë‹¤.
 			if (regen->time != 0)
 			{
-				// Ã³À½¿£ ¹«Á¶°Ç ¸®Á¨ ÇØÁØ´Ù.
+				// ì²˜ìŒì—” ë¬´ì¡°ê±´ ë¦¬ì   í•´ì¤€ë‹¤.
 				regen_spawn(regen, false);
 
 				regen_event_info* info = AllocEventInfo<regen_event_info>();
@@ -752,14 +752,14 @@ void regen_reset(int x, int y)
 		if (!regen->event)
 			continue;
 
-		// ÁÂÇ¥°¡ ÀÖÀ¸¸é ÁÂÇ¥ ³»¿¡ ÀÖ´Â ¸®Á¨ ¸®½ºÆ®¸¸ ¸®Á¨ ½ÃÅ²´Ù.
+		// ì¢Œí‘œê°€ ìˆìœ¼ë©´ ì¢Œí‘œ ë‚´ì— ìˆëŠ” ë¦¬ì   ë¦¬ìŠ¤íŠ¸ë§Œ ë¦¬ì   ì‹œí‚¨ë‹¤.
 		if (x != 0 || y != 0)
 		{
 			if (x >= regen->sx && x <= regen->ex)
 				if (y >= regen->sy && y <= regen->ey)
 					event_reset_time(regen->event, 1);
 		}
-		// ¾øÀ¸¸é ÀüºÎ ¸®Á¨
+		// ì—†ìœ¼ë©´ ì „ë¶€ ë¦¬ì  
 		else
 			event_reset_time(regen->event, 1);
 	}

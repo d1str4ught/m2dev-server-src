@@ -1,4 +1,4 @@
-#ifndef __INC_METIN_II_GAME_CHARACTER_MANAGER_H__
+ï»¿#ifndef __INC_METIN_II_GAME_CHARACTER_MANAGER_H__
 #define __INC_METIN_II_GAME_CHARACTER_MANAGER_H__
 
 #ifdef M2_USE_POOL
@@ -24,7 +24,7 @@ class CHARACTER_MANAGER : public singleton<CHARACTER_MANAGER>
 
 		void                    Destroy();
 
-		void			GracefulShutdown();	// Á¤»óÀû ¼Ë´Ù¿îÇÒ ¶§ »ç¿ë. PC¸¦ ¸ðµÎ ÀúÀå½ÃÅ°°í Destroy ÇÑ´Ù.
+		void			GracefulShutdown();	// ì •ìƒì  ì…§ë‹¤ìš´í•  ë•Œ ì‚¬ìš©. PCë¥¼ ëª¨ë‘ ì €ìž¥ì‹œí‚¤ê³  Destroy í•œë‹¤.
 
 		DWORD			AllocVID();
 
@@ -56,11 +56,11 @@ class CHARACTER_MANAGER : public singleton<CHARACTER_MANAGER>
 		bool			AddToStateList(LPCHARACTER ch);
 		void			RemoveFromStateList(LPCHARACTER ch);
 
-		// DelayedSave: ¾î¶°ÇÑ ·çÆ¾ ³»¿¡¼­ ÀúÀåÀ» ÇØ¾ß ÇÒ ÁþÀ» ¸¹ÀÌ ÇÏ¸é ÀúÀå
-		// Äõ¸®°¡ ³Ê¹« ¸¹¾ÆÁö¹Ç·Î "ÀúÀåÀ» ÇÑ´Ù" ¶ó°í Ç¥½Ã¸¸ ÇØµÎ°í Àá±ñ
-		// (¿¹: 1 frame) ÈÄ¿¡ ÀúÀå½ÃÅ²´Ù.
+		// DelayedSave: ì–´ë– í•œ ë£¨í‹´ ë‚´ì—ì„œ ì €ìž¥ì„ í•´ì•¼ í•  ì§“ì„ ë§Žì´ í•˜ë©´ ì €ìž¥
+		// ì¿¼ë¦¬ê°€ ë„ˆë¬´ ë§Žì•„ì§€ë¯€ë¡œ "ì €ìž¥ì„ í•œë‹¤" ë¼ê³  í‘œì‹œë§Œ í•´ë‘ê³  ìž ê¹
+		// (ì˜ˆ: 1 frame) í›„ì— ì €ìž¥ì‹œí‚¨ë‹¤.
 		void                    DelayedSave(LPCHARACTER ch);
-		bool                    FlushDelayedSave(LPCHARACTER ch); // Delayed ¸®½ºÆ®¿¡ ÀÖ´Ù¸é Áö¿ì°í ÀúÀåÇÑ´Ù. ²÷±è Ã³¸®½Ã »ç¿ë µÊ.
+		bool                    FlushDelayedSave(LPCHARACTER ch); // Delayed ë¦¬ìŠ¤íŠ¸ì— ìžˆë‹¤ë©´ ì§€ìš°ê³  ì €ìž¥í•œë‹¤. ëŠê¹€ ì²˜ë¦¬ì‹œ ì‚¬ìš© ë¨.
 		void			ProcessDelayedSave();
 
 		template<class Func>	Func for_each_pc(Func f);
@@ -124,7 +124,7 @@ class CHARACTER_MANAGER : public singleton<CHARACTER_MANAGER>
 		NAME_MAP			m_map_pkPCChr;
 
 		char				dummy1[1024];	// memory barrier
-		CHARACTER_SET		m_set_pkChrState;	// FSMÀÌ µ¹¾Æ°¡°í ÀÖ´Â ³ðµé
+		CHARACTER_SET		m_set_pkChrState;	// FSMì´ ëŒì•„ê°€ê³  ìžˆëŠ” ë†ˆë“¤
 		CHARACTER_SET		m_set_pkChrForDelayedSave;
 		CHARACTER_SET		m_set_pkChrMonsterLog;
 

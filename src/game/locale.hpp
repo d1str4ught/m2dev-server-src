@@ -1,4 +1,4 @@
-#ifndef __INC_METIN2_GAME_LOCALE_H__
+﻿#ifndef __INC_METIN2_GAME_LOCALE_H__
 #define __INC_METIN2_GAME_LOCALE_H__
 
 extern "C"

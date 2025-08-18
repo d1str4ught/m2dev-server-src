@@ -1,4 +1,4 @@
-#ifndef PASSPOD_H
+﻿#ifndef PASSPOD_H
 #define PASSPOD_H
 
 class CPasspod : public singleton<CPasspod>

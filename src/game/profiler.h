@@ -1,4 +1,4 @@
-#ifndef __INC_METIN_II_GAME_PROFILER_H__
+﻿#ifndef __INC_METIN_II_GAME_PROFILER_H__
 #define __INC_METIN_II_GAME_PROFILER_H__
 
 #include <unordered_map>

@@ -1,4 +1,4 @@
-// vim: ts=4 sw=4
+ï»¿// vim: ts=4 sw=4
 #ifndef __MARRIAGE_H
 #define __MARRIAGE_H
 
@@ -49,7 +49,7 @@ namespace marriage
 		DWORD pid2;
 		int   love_point;
 		DWORD time;
-		BYTE is_married; // false : ¾àÈ¥ »óÅÂ, true : °áÈ¥ »óÅÂ
+		BYTE is_married; // false : ì•½í˜¼ ìƒíƒœ, true : ê²°í˜¼ ìƒíƒœ
 		std::string name1;
 		std::string name2;
 

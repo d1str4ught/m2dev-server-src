@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 
 #include "questlua.h"
 #include "questmanager.h"
@@ -68,10 +68,10 @@ namespace quest
 	{
 		LPCHARACTER ch = CQuestManager::instance().GetCurrentCharacterPtr();
 
-		// ¼ÒÈ¯ÇÏ¸é ¸Ö¸®¼­ºÎÅÍ ´Ş·Á¿À´ÂÁö ¿©ºÎ
+		// ì†Œí™˜í•˜ë©´ ë©€ë¦¬ì„œë¶€í„° ë‹¬ë ¤ì˜¤ëŠ”ì§€ ì—¬ë¶€
 		bool bFromFar = lua_isboolean(L, 1) ? lua_toboolean(L, 1) : false;
 
-		// ¼ÒÈ¯¼öÀÇ vnum
+		// ì†Œí™˜ìˆ˜ì˜ vnum
 		DWORD horseVnum= lua_isnumber(L, 2) ? lua_tonumber(L, 2) : 0;
 
 		const char* name = lua_isstring(L, 3) ? lua_tostring(L, 3) : 0;
@@ -219,10 +219,10 @@ namespace quest
 
 	int horse_set_name(lua_State* L)
 	{
-		// ¸®ÅÏ°ª
-		// 0 : ¼ÒÀ¯ÇÑ ¸»ÀÌ ¾ø´Ù
-		// 1 : Àß¸øµÈ ÀÌ¸§ÀÌ´Ù
-		// 2 : ÀÌ¸§ ¹Ù²Ù±â ¼º°ø
+		// ë¦¬í„´ê°’
+		// 0 : ì†Œìœ í•œ ë§ì´ ì—†ë‹¤
+		// 1 : ì˜ëª»ëœ ì´ë¦„ì´ë‹¤
+		// 2 : ì´ë¦„ ë°”ê¾¸ê¸° ì„±ê³µ
 
 		if ( lua_isstring(L, -1) != true ) return 0;
 

@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 
 #include "questlua.h"
 #include "questmanager.h"
@@ -41,13 +41,13 @@ namespace quest
 			return 1;
 		}
 
-		// ¼ÒÈ¯¼öÀÇ vnum
+		// ì†Œí™˜ìˆ˜ì˜ vnum
 		DWORD mobVnum= lua_isnumber(L, 1) ? lua_tonumber(L, 1) : 0;
 
-		// ¼ÒÈ¯¼öÀÇ ÀÌ¸§
+		// ì†Œí™˜ìˆ˜ì˜ ì´ë¦„
 		const char* petName = lua_isstring(L, 2) ? lua_tostring(L, 2) : 0;
 
-		// ¼ÒÈ¯ÇÏ¸é ¸Ö¸®¼­ºÎÅÍ ´Þ·Á¿À´ÂÁö ¿©ºÎ
+		// ì†Œí™˜í•˜ë©´ ë©€ë¦¬ì„œë¶€í„° ë‹¬ë ¤ì˜¤ëŠ”ì§€ ì—¬ë¶€
 		bool bFromFar = lua_isboolean(L, 3) ? lua_toboolean(L, 3) : false;
 
 		CPetActor* pet = petSystem->Summon(mobVnum, pItem, petName, bFromFar);
@@ -69,7 +69,7 @@ namespace quest
 		if (0 == petSystem)
 			return 0;
 
-		// ¼ÒÈ¯¼öÀÇ vnum
+		// ì†Œí™˜ìˆ˜ì˜ vnum
 		DWORD mobVnum= lua_isnumber(L, 1) ? lua_tonumber(L, 1) : 0;
 
 		petSystem->Unsummon(mobVnum);
@@ -101,7 +101,7 @@ namespace quest
 		if (0 == petSystem)
 			return 0;
 
-		// ¼ÒÈ¯¼öÀÇ vnum
+		// ì†Œí™˜ìˆ˜ì˜ vnum
 		DWORD mobVnum= lua_isnumber(L, 1) ? lua_tonumber(L, 1) : 0;
 
 		CPetActor* petActor = petSystem->GetByVnum(mobVnum);

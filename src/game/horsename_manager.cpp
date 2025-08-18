@@ -1,4 +1,4 @@
-
+﻿
 #include "stdafx.h"
 #include "horsename_manager.h"
 #include "desc_client.h"

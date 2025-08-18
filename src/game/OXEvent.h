@@ -1,4 +1,4 @@
-
+ï»¿
 #define OXEVENT_MAP_INDEX 113
 
 struct tag_Quiz
@@ -10,10 +10,10 @@ struct tag_Quiz
 
 enum OXEventStatus
 {
-	OXEVENT_FINISH = 0, // OXÀÌº¥Æ®°¡ ¿ÏÀüÈ÷ ³¡³­ »óÅÂ
-	OXEVENT_OPEN = 1,	// OXÀÌº¥Æ®°¡ ½ÃÀÛµÊ. À»µÎÁö(20012)¸¦ ÅëÇØ¼­ ÀÔÀå°¡´É
-	OXEVENT_CLOSE = 2,	// OXÀÌº¥Æ®ÀÇ Âü°¡°¡ ³¡³². À»µÎÁö(20012)¸¦ ÅëÇÑ ÀÔÀåÀÌ Â÷´ÜµÊ
-	OXEVENT_QUIZ = 3,	// ÄûÁî¸¦ ÃâÁ¦ÇÔ.
+	OXEVENT_FINISH = 0, // OXì´ë²¤íŠ¸ê°€ ì™„ì „ížˆ ëë‚œ ìƒíƒœ
+	OXEVENT_OPEN = 1,	// OXì´ë²¤íŠ¸ê°€ ì‹œìž‘ë¨. ì„ë‘ì§€(20012)ë¥¼ í†µí•´ì„œ ìž…ìž¥ê°€ëŠ¥
+	OXEVENT_CLOSE = 2,	// OXì´ë²¤íŠ¸ì˜ ì°¸ê°€ê°€ ëë‚¨. ì„ë‘ì§€(20012)ë¥¼ í†µí•œ ìž…ìž¥ì´ ì°¨ë‹¨ë¨
+	OXEVENT_QUIZ = 3,	// í€´ì¦ˆë¥¼ ì¶œì œí•¨.
 
 	OXEVENT_ERR = 0xff
 };

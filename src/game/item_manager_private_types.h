@@ -1,4 +1,4 @@
-class CItemDropInfo
+﻿class CItemDropInfo
 {
 public:
 	CItemDropInfo(int iLevelStart, int iLevelEnd, int iPercent, DWORD dwVnum) :

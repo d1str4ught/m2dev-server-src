@@ -1,4 +1,4 @@
-/*----- atoi function -----*/
+﻿/*----- atoi function -----*/
 inline bool str_to_number (bool& out, const char *in)
 {
 	if (0==in || 0==in[0])	return false;

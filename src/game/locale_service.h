@@ -1,4 +1,4 @@
-#ifndef __LOCALE_SERVCICE__
+﻿#ifndef __LOCALE_SERVCICE__
 #define __LOCALE_SERVCICE__
 
 bool LocaleService_Init(const std::string& c_rstServiceName);

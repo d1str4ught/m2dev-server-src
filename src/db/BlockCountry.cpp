@@ -1,4 +1,4 @@
-// vim:ts=4 sw=4
+ï»¿// vim:ts=4 sw=4
 /*********************************************************************
  * date        : 2007.05.31
  * file        : BlockCountry.cpp
@@ -114,7 +114,7 @@ bool CBlockCountry::IsBlockedCountryIp(const char *user_ip)
 	st_addr.s_addr = in_address;
 	if (INADDR_NONE == in_address)
 #endif
-		return true;  // ¾ÆÀÌÇÇ°¡ ±«»óÇÏ´Ï ÀÏ´Ü ºí·°Ã³¸®
+		return true;  // ì•„ì´í”¼ê°€ ê´´ìƒí•˜ë‹ˆ ì¼ë‹¨ ë¸”ëŸ­ì²˜ë¦¬
 
 	DO_ALL_BLOCK_IP(iter)
 	{

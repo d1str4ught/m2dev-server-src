@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "config.h"
 #include "xmas_event.h"
 #include "desc.h"
@@ -14,7 +14,7 @@ namespace xmas
 	{
 		if (name == "xmas_snow" || name == "xmas_boom" || name == "xmas_song" || name == "xmas_tree")
 		{
-			// »Ñ·ÁÁØ´Ù
+			// ë¿Œë ¤ì¤€ë‹¤
 			const DESC_MANAGER::DESC_SET & c_ref_set = DESC_MANAGER::instance().GetClientSet();
 
 			for (itertype(c_ref_set) it = c_ref_set.begin(); it != c_ref_set.end(); ++it)
@@ -44,13 +44,13 @@ namespace xmas
 				{
 					CharacterVectorInteractor i;
 
-					// ¾øÀ¸¸é ¸¸µé¾îÁØ´Ù
+					// ì—†ìœ¼ë©´ ë§Œë“¤ì–´ì¤€ë‹¤
 					if (!CHARACTER_MANAGER::instance().GetCharactersByRaceNum(MOB_XMAS_TREE_VNUM, i))
 						CHARACTER_MANAGER::instance().SpawnMob(MOB_XMAS_TREE_VNUM, 61, 76500 + 358400, 60900 + 153600, 0, false, -1);
 				}
 				else if (prev_value > 0 && value == 0)
 				{
-					// ÀÖÀ¸¸é Áö¿öÁØ´Ù
+					// ìˆìœ¼ë©´ ì§€ì›Œì¤€ë‹¤
 					CharacterVectorInteractor i;
 
 					if (CHARACTER_MANAGER::instance().GetCharactersByRaceNum(MOB_XMAS_TREE_VNUM, i))
@@ -68,7 +68,7 @@ namespace xmas
 			switch (value)
 			{
 				case 0:
-					// ÀÖÀ¸¸é Áö¿ì´Â ÄÚµå
+					// ìˆìœ¼ë©´ ì§€ìš°ëŠ” ì½”ë“œ
 					{
 						CharacterVectorInteractor i;
 
@@ -84,7 +84,7 @@ namespace xmas
 					break;
 
 				case 1:
-					// ³»°¡ ¼­ÇÑ»êÀÌ¸é »êÅ¸ ¾øÀ¸¸é ¸¸µé°í »óÅÂ¸¦ 2·Î ¸¸µç´Ù.
+					// ë‚´ê°€ ì„œí•œì‚°ì´ë©´ ì‚°íƒ€ ì—†ìœ¼ë©´ ë§Œë“¤ê³  ìƒíƒœë¥¼ 2ë¡œ ë§Œë“ ë‹¤.
 					if (map_allow_find(61))
 					{
 						quest::CQuestManager::instance().RequestSetEventFlag("xmas_santa", 2);
@@ -160,7 +160,7 @@ namespace xmas
 	{
 		if ( spawn == true )
 		{
-			// ¾øÀ¸¸é ¸¸µé¾îÁØ´Ù
+			// ì—†ìœ¼ë©´ ë§Œë“¤ì–´ì¤€ë‹¤
 			struct SNPCSellFireworkPosition
 			{
 				long lMapIndex;
@@ -199,7 +199,7 @@ namespace xmas
 		{
 			CharacterVectorInteractor i;
 
-			// ÀÖÀ¸¸é Áö¿öÁØ´Ù
+			// ìˆìœ¼ë©´ ì§€ì›Œì¤€ë‹¤
 			if (CHARACTER_MANAGER::instance().GetCharactersByRaceNum(MOB_XMAS_FIRWORK_SELLER_VNUM, i))
 			{
 				CharacterVectorInteractor::iterator it = i.begin();

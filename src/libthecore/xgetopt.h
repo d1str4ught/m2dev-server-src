@@ -1,4 +1,4 @@
-// XGetopt.h  Version 1.2
+﻿// XGetopt.h  Version 1.2
 //
 // Author:  Hans Dietrich
 //          hdietrich2@hotmail.com

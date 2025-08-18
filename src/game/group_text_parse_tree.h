@@ -1,4 +1,4 @@
-#ifndef __INC_METIN_II_GROUP_TEXT_PARSE_TREE_H__
+ï»¿#ifndef __INC_METIN_II_GROUP_TEXT_PARSE_TREE_H__
 #define __INC_METIN_II_GROUP_TEXT_PARSE_TREE_H__
 
 #include "../../common/d3dtype.h"
@@ -45,15 +45,15 @@ public:
 	int GetRowCount();
 	
 	template <typename T>
-	bool GetValue(size_t i, const std::string & c_rstrColKey, T& tValue) const;	// n¹øÂ°(map¿¡ µé¾îÀÖ´Â ¼ø¼­ÀÏ »Ó, txtÀÇ ¼ø¼­¿Í´Â °ü°è ¾øÀ½) rowÀÇ Æ¯Á¤ ÄÃ·³ÀÇ °ªÀ» ¹İÈ¯ÇÏ´Â ÇÔ¼ö. 
-																				// ÀÌÁúÀûÀÌ±ä ÇÏÁö¸¸, ÆíÀÇ¸¦ À§ÇÑ ÇÔ¼ö.
+	bool GetValue(size_t i, const std::string & c_rstrColKey, T& tValue) const;	// në²ˆì§¸(mapì— ë“¤ì–´ìˆëŠ” ìˆœì„œì¼ ë¿, txtì˜ ìˆœì„œì™€ëŠ” ê´€ê³„ ì—†ìŒ) rowì˜ íŠ¹ì • ì»¬ëŸ¼ì˜ ê°’ì„ ë°˜í™˜í•˜ëŠ” í•¨ìˆ˜. 
+																				// ì´ì§ˆì ì´ê¸´ í•˜ì§€ë§Œ, í¸ì˜ë¥¼ ìœ„í•œ í•¨ìˆ˜.
 	template <typename T>
 	bool GetValue(const std::string & c_rstrRowKey, const std::string & c_rstrColKey, T& tValue) const;
 	template <typename T>
 	bool GetValue(const std::string & c_rstrRowKey, int index, T& tValue) const;
 
 	bool GetRow(const std::string & c_rstrKey, OUT const CGroupNodeRow ** ppRow) const;
-	// Âü°í·Î, idx¶û txt¿¡ ¾²¿©Áø ¼ø¼­¶û °ü°è ¾øÀ½.
+	// ì°¸ê³ ë¡œ, idxë‘ txtì— ì“°ì—¬ì§„ ìˆœì„œë‘ ê´€ê³„ ì—†ìŒ.
 	bool GetRow(int idx, OUT const CGroupNodeRow ** ppRow) const;
 	bool GetGroupRow(const std::string& stGroupName, const std::string& stRow, OUT const CGroupNode::CGroupNodeRow ** ppRow) const;
 
@@ -184,7 +184,7 @@ bool CGroupNode::GetGroupValue(const std::string& stGroupName, const std::string
 		if (pChildGroup->GetValue(stRow, iCol, tValue))
 			return true;
 	}
-	// default groupÀ» »ìÆìº½.
+	// default groupì„ ì‚´í´ë´„.
 	pChildGroup = GetChildNode("default");
 	if (NULL != pChildGroup)
 	{
@@ -203,7 +203,7 @@ bool CGroupNode::GetGroupValue(const std::string& stGroupName, const std::string
 		if (pChildGroup->GetValue(stRow, stCol, tValue))
 			return true;
 	}
-	// default groupÀ» »ìÆìº½.
+	// default groupì„ ì‚´í´ë´„.
 	pChildGroup = GetChildNode("default");
 	if (NULL != pChildGroup)
 	{

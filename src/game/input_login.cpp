@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "constants.h"
 #include "../../common/teen_packet.h"
 #include "config.h"
@@ -48,22 +48,22 @@ static void _send_bonus_info(LPCHARACTER ch)
 	if (item_drop_bonus)
 	{
 		ch->ChatPacket(CHAT_TYPE_NOTICE, 
-				LC_TEXT("¾ÆÀÌÅÛ µå·Ó·ü  %d%% Ãß°¡ ÀÌº¥Æ® ÁßÀÔ´Ï´Ù."), item_drop_bonus);
+				LC_TEXT("ì•„ì´í…œ ë“œë¡­ë¥   %d%% ì¶”ê°€ ì´ë²¤íŠ¸ ì¤‘ì…ë‹ˆë‹¤."), item_drop_bonus);
 	}
 	if (gold_drop_bonus)
 	{
 		ch->ChatPacket(CHAT_TYPE_NOTICE, 
-				LC_TEXT("°ñµå µå·Ó·ü %d%% Ãß°¡ ÀÌº¥Æ® ÁßÀÔ´Ï´Ù."), gold_drop_bonus);
+				LC_TEXT("ê³¨ë“œ ë“œë¡­ë¥  %d%% ì¶”ê°€ ì´ë²¤íŠ¸ ì¤‘ì…ë‹ˆë‹¤."), gold_drop_bonus);
 	}
 	if (gold10_drop_bonus)
 	{
 		ch->ChatPacket(CHAT_TYPE_NOTICE, 
-				LC_TEXT("´ë¹Ú°ñµå µå·Ó·ü %d%% Ãß°¡ ÀÌº¥Æ® ÁßÀÔ´Ï´Ù."), gold10_drop_bonus);
+				LC_TEXT("ëŒ€ë°•ê³¨ë“œ ë“œë¡­ë¥  %d%% ì¶”ê°€ ì´ë²¤íŠ¸ ì¤‘ì…ë‹ˆë‹¤."), gold10_drop_bonus);
 	}
 	if (exp_bonus)
 	{
 		ch->ChatPacket(CHAT_TYPE_NOTICE, 
-				LC_TEXT("°æÇèÄ¡ %d%% Ãß°¡ È¹µæ ÀÌº¥Æ® ÁßÀÔ´Ï´Ù."), exp_bonus);
+				LC_TEXT("ê²½í—˜ì¹˜ %d%% ì¶”ê°€ íšë“ ì´ë²¤íŠ¸ ì¤‘ì…ë‹ˆë‹¤."), exp_bonus);
 	}
 }
 
@@ -71,13 +71,13 @@ static bool FN_is_battle_zone(LPCHARACTER ch)
 {
 	switch (ch->GetMapIndex())
 	{
-		case 1:         // ½Å¼ö 1Â÷ ¸¶À»
-		case 2:         // ½Å¼ö 2Â÷ ¸¶À»
-		case 21:        // ÃµÁ¶ 1Â÷ ¸¶À»
-		case 23:        // ÃµÁ¶ 2Â÷ ¸¶À»
-		case 41:        // Áø³ë 1Â÷ ¸¶À»
-		case 43:        // Áø³ë 2Â÷ ¸¶À»
-		case 113:       // OX ¸Ê
+		case 1:         // ì‹ ìˆ˜ 1ì°¨ ë§ˆì„
+		case 2:         // ì‹ ìˆ˜ 2ì°¨ ë§ˆì„
+		case 21:        // ì²œì¡° 1ì°¨ ë§ˆì„
+		case 23:        // ì²œì¡° 2ì°¨ ë§ˆì„
+		case 41:        // ì§„ë…¸ 1ì°¨ ë§ˆì„
+		case 43:        // ì§„ë…¸ 2ì°¨ ë§ˆì„
+		case 113:       // OX ë§µ
 			return false;
 	}
 
@@ -379,7 +379,7 @@ bool RaceToJob(unsigned race, unsigned* ret_job)
 	return true;
 }
 
-// ½Å±Ô Ä³¸¯ÅÍ Áö¿ø
+// ì‹ ê·œ ìºë¦­í„° ì§€ì›
 bool NewPlayerTable2(TPlayerTable * table, const char * name, BYTE race, BYTE shape, BYTE bEmpire)
 {
 	if (race >= MAIN_RACE_MAX_NUM)
@@ -403,7 +403,7 @@ bool NewPlayerTable2(TPlayerTable * table, const char * name, BYTE race, BYTE sh
 	strlcpy(table->name, name, sizeof(table->name));
 
 	table->level		= 1;
-	table->job			= race;	// Á÷¾÷´ë½Å Á¾Á·À» ³Ö´Â´Ù
+	table->job			= race;	// ì§ì—…ëŒ€ì‹  ì¢…ì¡±ì„ ë„£ëŠ”ë‹¤
 	table->voice		= 0;
 	table->part_base	= shape;
 
@@ -449,7 +449,7 @@ void CInputLogin::CharacterCreate(LPDESC d, const char * data)
 		return;
 	}
 
-	// »ç¿ëÇÒ ¼ö ¾ø´Â ÀÌ¸§ÀÌ°Å³ª, Àß¸øµÈ Æò»óº¹ÀÌ¸é »ı¼³ ½ÇÆĞ
+	// ì‚¬ìš©í•  ìˆ˜ ì—†ëŠ” ì´ë¦„ì´ê±°ë‚˜, ì˜ëª»ëœ í‰ìƒë³µì´ë©´ ìƒì„¤ ì‹¤íŒ¨
 	if (!check_name(pinfo->name) || pinfo->shape > 1)
 	{
 		if (LC_IsCanada() == true)
@@ -579,7 +579,7 @@ void CInputLogin::Entergame(LPDESC d, const char * data)
 
 	CGuildManager::instance().LoginMember(ch);
 
-	// Ä³¸¯ÅÍ¸¦ ¸Ê¿¡ Ãß°¡ 
+	// ìºë¦­í„°ë¥¼ ë§µì— ì¶”ê°€ 
 	ch->Show(ch->GetMapIndex(), pos.x, pos.y, pos.z);
 
 	SECTREE_MANAGER::instance().SendNPCPosition(ch);
@@ -587,8 +587,8 @@ void CInputLogin::Entergame(LPDESC d, const char * data)
 
 	d->SetPhase(PHASE_GAME);
 
-	if(ch->GetItemAward_cmd())																		//°ÔÀÓÆäÀÌÁî µé¾î°¡¸é
-		quest::CQuestManager::instance().ItemInformer(ch->GetPlayerID(),ch->GetItemAward_vnum());	//questmanager È£Ãâ
+	if(ch->GetItemAward_cmd())																		//ê²Œì„í˜ì´ì¦ˆ ë“¤ì–´ê°€ë©´
+		quest::CQuestManager::instance().ItemInformer(ch->GetPlayerID(),ch->GetItemAward_vnum());	//questmanager í˜¸ì¶œ
 	
 	sys_log(0, "ENTERGAME: %s %dx%dx%d %s map_index %d", 
 			ch->GetName(), ch->GetX(), ch->GetY(), ch->GetZ(), d->GetHostName(), ch->GetMapIndex());
@@ -598,10 +598,10 @@ void CInputLogin::Entergame(LPDESC d, const char * data)
 		ch->EnterHorse();
 	}
 
-	// ÇÃ·¹ÀÌ½Ã°£ ·¹ÄÚµù ½ÃÀÛ
+	// í”Œë ˆì´ì‹œê°„ ë ˆì½”ë”© ì‹œì‘
 	ch->ResetPlayTime();
 
-	// ÀÚµ¿ ÀúÀå ÀÌº¥Æ® Ãß°¡
+	// ìë™ ì €ì¥ ì´ë²¤íŠ¸ ì¶”ê°€
 	ch->StartSaveEvent();
 	ch->StartRecoveryEvent();
 	ch->StartCheckSpeedHackEvent();
@@ -662,7 +662,7 @@ void CInputLogin::Entergame(LPDESC d, const char * data)
 				// if (version > date)
 				if (version != date) // Fix
 				{
-					ch->ChatPacket(CHAT_TYPE_NOTICE, LC_TEXT("Å¬¶óÀÌ¾ğÆ® ¹öÀüÀÌ Æ²·Á ·Î±×¾Æ¿ô µË´Ï´Ù. Á¤»óÀûÀ¸·Î ÆĞÄ¡ ÈÄ Á¢¼ÓÇÏ¼¼¿ä."));
+					ch->ChatPacket(CHAT_TYPE_NOTICE, LC_TEXT("í´ë¼ì´ì–¸íŠ¸ ë²„ì „ì´ í‹€ë ¤ ë¡œê·¸ì•„ì›ƒ ë©ë‹ˆë‹¤. ì •ìƒì ìœ¼ë¡œ íŒ¨ì¹˜ í›„ ì ‘ì†í•˜ì„¸ìš”."));
 					d->DelayedDisconnect(10);
 					LogManager::instance().HackLog("VERSION_CONFLICT", ch);
 
@@ -758,10 +758,10 @@ void CInputLogin::Entergame(LPDESC d, const char * data)
 	}
 	else if (ch->GetMapIndex() == 113)
 	{
-		// ox ÀÌº¥Æ® ¸Ê
+		// ox ì´ë²¤íŠ¸ ë§µ
 		if (COXEventManager::instance().Enter(ch) == false)
 		{
-			// ox ¸Ê ÁøÀÔ Çã°¡°¡ ³ªÁö ¾ÊÀ½. ÇÃ·¹ÀÌ¾î¸é ¸¶À»·Î º¸³»ÀÚ
+			// ox ë§µ ì§„ì… í—ˆê°€ê°€ ë‚˜ì§€ ì•ŠìŒ. í”Œë ˆì´ì–´ë©´ ë§ˆì„ë¡œ ë³´ë‚´ì
 			if (ch->GetGMLevel() == GM_PLAYER)
 				ch->WarpSet(EMPIRE_START_X(ch->GetEmpire()), EMPIRE_START_Y(ch->GetEmpire()));
 		}
@@ -776,8 +776,8 @@ void CInputLogin::Entergame(LPDESC d, const char * data)
 		}
 	}
 
-	// Ã»¼Ò³â º¸È£
-	if (g_TeenDesc) // BufferedPacket »ç¿ë ±İÁö
+	// ì²­ì†Œë…„ ë³´í˜¸
+	if (g_TeenDesc) // BufferedPacket ì‚¬ìš© ê¸ˆì§€
 	{
 		TPacketGTLogin p;
 
@@ -797,14 +797,14 @@ void CInputLogin::Entergame(LPDESC d, const char * data)
 			db_clientdesc->DBPacket(HEADER_GD_REQ_HORSE_NAME, 0, &pid, sizeof(DWORD));
 	}
 
-	// Áß¸³¸Ê¿¡ µé¾î°¬À»¶§ ¾È³»ÇÏ±â
+	// ì¤‘ë¦½ë§µì— ë“¤ì–´ê°”ì„ë•Œ ì•ˆë‚´í•˜ê¸°
 	if (g_noticeBattleZone)
 	{
 		if (FN_is_battle_zone(ch))
 		{
-			ch->ChatPacket(CHAT_TYPE_NOTICE, LC_TEXT("ÀÌ ¸Ê¿¡¼± °­Á¦ÀûÀÎ ´ëÀüÀÌ ÀÖÀ»¼ö µµ ÀÖ½À´Ï´Ù."));
-			ch->ChatPacket(CHAT_TYPE_NOTICE, LC_TEXT("ÀÌ Á¶Ç×¿¡ µ¿ÀÇÇÏÁö ¾ÊÀ»½Ã"));
-			ch->ChatPacket(CHAT_TYPE_NOTICE, LC_TEXT("º»ÀÎÀÇ ÁÖ¼º ¹× ºÎ¼ºÀ¸·Î µ¹¾Æ°¡½Ã±â ¹Ù¶ø´Ï´Ù."));
+			ch->ChatPacket(CHAT_TYPE_NOTICE, LC_TEXT("ì´ ë§µì—ì„  ê°•ì œì ì¸ ëŒ€ì „ì´ ìˆì„ìˆ˜ ë„ ìˆìŠµë‹ˆë‹¤."));
+			ch->ChatPacket(CHAT_TYPE_NOTICE, LC_TEXT("ì´ ì¡°í•­ì— ë™ì˜í•˜ì§€ ì•Šì„ì‹œ"));
+			ch->ChatPacket(CHAT_TYPE_NOTICE, LC_TEXT("ë³¸ì¸ì˜ ì£¼ì„± ë° ë¶€ì„±ìœ¼ë¡œ ëŒì•„ê°€ì‹œê¸° ë°”ëë‹ˆë‹¤."));
 		}
 	}
 }
@@ -857,13 +857,13 @@ int CInputLogin::GuildSymbolUpload(LPDESC d, const char* c_pData, size_t uiBytes
 
 	if (iSymbolSize <= 0 || iSymbolSize > 64 * 1024)
 	{
-		// 64k º¸´Ù Å« ±æµå ½Éº¼Àº ¿Ã¸±¼ö¾ø´Ù
-		// Á¢¼ÓÀ» ²÷°í ¹«½Ã
+		// 64k ë³´ë‹¤ í° ê¸¸ë“œ ì‹¬ë³¼ì€ ì˜¬ë¦´ìˆ˜ì—†ë‹¤
+		// ì ‘ì†ì„ ëŠê³  ë¬´ì‹œ
 		d->SetPhase(PHASE_CLOSE);
 		return 0;
 	}
 
-	// ¶¥À» ¼ÒÀ¯ÇÏÁö ¾ÊÀº ±æµåÀÎ °æ¿ì.
+	// ë•…ì„ ì†Œìœ í•˜ì§€ ì•Šì€ ê¸¸ë“œì¸ ê²½ìš°.
 	if (!test_server)
 		if (!building::CManager::instance().FindLandByGuild(p->guild_id))
 		{
@@ -979,7 +979,7 @@ void CInputLogin::GuildMarkCRCList(LPDESC d, const char* c_pData)
 	CGuildMarkManager::instance().GetDiffBlocks(pCG->imgIdx, pCG->crclist, mapDiffBlocks);
 
 	DWORD blockCount = 0;
-	TEMP_BUFFER buf(1024 * 1024); // 1M ¹öÆÛ
+	TEMP_BUFFER buf(1024 * 1024); // 1M ë²„í¼
 
 	for (itertype(mapDiffBlocks) it = mapDiffBlocks.begin(); it != mapDiffBlocks.end(); ++it)
 	{

@@ -1,4 +1,4 @@
-
+ï»¿
 #ifndef P2P_MANAGER_H_
 #define P2P_MANAGER_H_
 
@@ -24,19 +24,19 @@ class P2P_MANAGER : public singleton<P2P_MANAGER>
 		P2P_MANAGER();
 		~P2P_MANAGER();
 
-		// ¾Æ·¡ Register* Unregister* pairµéÀº ³»ºÎÀûÀ¸·Î »ç½Ç °°Àº ·çÆ¾À» »ç¿ëÇÑ´Ù.
-		// ´ÜÁö ¸í½ÃÀûÀ¸·Î Ç¥½ÃÇÏ±â À§ÇÑ °Í
+		// ì•„ë˜ Register* Unregister* pairë“¤ì€ ë‚´ë¶€ì ìœ¼ë¡œ ì‚¬ì‹¤ ê°™ì€ ë£¨í‹´ì„ ì‚¬ìš©í•œë‹¤.
+		// ë‹¨ì§€ ëª…ì‹œì ìœ¼ë¡œ í‘œì‹œí•˜ê¸° ìœ„í•œ ê²ƒ
 		void			RegisterAcceptor(LPDESC d);
 		void			UnregisterAcceptor(LPDESC d);
 
 		void			RegisterConnector(LPDESC d);
 		void			UnregisterConnector(LPDESC d);
 
-		void			EraseUserByDesc(LPDESC d);	// ÇØ´ç desc¿¡ ÀÖ´Â À¯ÀúµéÀ» Áö¿î´Ù.
+		void			EraseUserByDesc(LPDESC d);	// í•´ë‹¹ descì— ìˆëŠ” ìœ ì €ë“¤ì„ ì§€ìš´ë‹¤.
 
 		void			FlushOutput();
 
-		void			Boot(LPDESC d);	// p2p Ã³¸®¿¡ ÇÊ¿äÇÑ Á¤º¸¸¦ º¸³»ÁØ´Ù. (Àü Ä³¸¯ÅÍÀÇ ·Î±×ÀÎ Á¤º¸ µî)
+		void			Boot(LPDESC d);	// p2p ì²˜ë¦¬ì— í•„ìš”í•œ ì •ë³´ë¥¼ ë³´ë‚´ì¤€ë‹¤. (ì „ ìºë¦­í„°ì˜ ë¡œê·¸ì¸ ì •ë³´ ë“±)
 
 		void			Send(const void * c_pvData, int iSize, LPDESC except = NULL);
 

@@ -1,4 +1,4 @@
-#ifndef __INC_METIN_II_GAME_SHOP_SECONDARY_COIN_H__
+ï»¿#ifndef __INC_METIN_II_GAME_SHOP_SECONDARY_COIN_H__
 #define __INC_METIN_II_GAME_SHOP_SECONDARY_COIN_H__
 #include "typedef.h"
 #include "shop.h"
@@ -12,11 +12,11 @@ typedef struct SShopTableEx : SShopTable
 
 class CGroupNode;
 
-// È®Àå shop.
-// ¸íµµÀüÀ» È­Æó·Î ¾µ ¼ö ÀÖ°í, ¾ÆÀÌÅÛÀ» ¿©·¯ ÅÇ¿¡ ³ª´² ¹èÄ¡ÇÒ ¼ö ÀÖ´Ù.
-// ´Ü, pc ¼¥Àº ±¸ÇöÇÏÁö ¾ÊÀ½.
-// Å¬¶ó¿Í Åë½ÅÇÒ ¶§¿¡ ÅÇÀº pos 45 ´ÜÀ§·Î ±¸ºÐ.
-// ±âÁ¸ ¼¥ÀÇ m_itemVectorÀº »ç¿ëÇÏÁö ¾Ê´Â´Ù.
+// í™•ìž¥ shop.
+// ëª…ë„ì „ì„ í™”íë¡œ ì“¸ ìˆ˜ ìžˆê³ , ì•„ì´í…œì„ ì—¬ëŸ¬ íƒ­ì— ë‚˜ëˆ  ë°°ì¹˜í•  ìˆ˜ ìžˆë‹¤.
+// ë‹¨, pc ìƒµì€ êµ¬í˜„í•˜ì§€ ì•ŠìŒ.
+// í´ë¼ì™€ í†µì‹ í•  ë•Œì— íƒ­ì€ pos 45 ë‹¨ìœ„ë¡œ êµ¬ë¶„.
+// ê¸°ì¡´ ìƒµì˜ m_itemVectorì€ ì‚¬ìš©í•˜ì§€ ì•ŠëŠ”ë‹¤.
 class CShopEx: public CShop
 {
 public:

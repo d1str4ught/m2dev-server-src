@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "MarkImage.h"
 
 #include "crc32.h"
@@ -129,10 +129,10 @@ void CGuildMarkImage::GetData(UINT x, UINT y, UINT width, UINT height, void * da
 	ilCopyPixels(x, y, 0, width, height, 1, IL_BGRA, IL_UNSIGNED_BYTE, data);	
 }
 
-// ÀÌ¹ÌÁö = 512x512
-//   ºí·° = ¸¶Å© 4 x 4
-//   ¸¶Å© = 16 x 12
-// ÇÑ ÀÌ¹ÌÁöÀÇ ºí·° = 8 x 10
+// ì´ë¯¸ì§€ = 512x512
+//   ë¸”ëŸ­ = ë§ˆí¬ 4 x 4
+//   ë§ˆí¬ = 16 x 12
+// í•œ ì´ë¯¸ì§€ì˜ ë¸”ëŸ­ = 8 x 10
 
 // SERVER
 bool CGuildMarkImage::SaveMark(DWORD posMark, BYTE * pbImage)
@@ -143,14 +143,14 @@ bool CGuildMarkImage::SaveMark(DWORD posMark, BYTE * pbImage)
 		return false;
 	}
 
-	// ¸¶Å©¸¦ ÀüÃ¼ ÀÌ¹ÌÁö¿¡ ±×¸°´Ù.
+	// ë§ˆí¬ë¥¼ ì „ì²´ ì´ë¯¸ì§€ì— ê·¸ë¦°ë‹¤.
 	DWORD colMark = posMark % MARK_COL_COUNT;
 	DWORD rowMark = posMark / MARK_COL_COUNT;
 
 	printf("PutMark pos %u %ux%u\n", posMark, colMark * SGuildMark::WIDTH, rowMark * SGuildMark::HEIGHT);
 	PutData(colMark * SGuildMark::WIDTH, rowMark * SGuildMark::HEIGHT, SGuildMark::WIDTH, SGuildMark::HEIGHT, pbImage);
 
-	// ±×·ÁÁø °÷ÀÇ ºí·°À» ¾÷µ¥ÀÌÆ®
+	// ê·¸ë ¤ì§„ ê³³ì˜ ë¸”ëŸ­ì„ ì—…ë°ì´íŠ¸
 	DWORD rowBlock = rowMark / SGuildMarkBlock::MARK_PER_BLOCK_HEIGHT;
 	DWORD colBlock = colMark / SGuildMarkBlock::MARK_PER_BLOCK_WIDTH;
 
@@ -197,7 +197,7 @@ bool CGuildMarkImage::SaveBlockFromCompressedData(DWORD posBlock, const BYTE * p
 	return true;
 }
 
-void CGuildMarkImage::BuildAllBlocks() // ÀÌ¹ÌÁö ÀüÃ¼¸¦ ºí·°È­
+void CGuildMarkImage::BuildAllBlocks() // ì´ë¯¸ì§€ ì „ì²´ë¥¼ ë¸”ëŸ­í™”
 {
 	Pixel apxBuf[SGuildMarkBlock::SIZE];
 	sys_log(0, "GuildMarkImage::BuildAllBlocks");

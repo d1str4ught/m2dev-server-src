@@ -1,4 +1,4 @@
-#include "stdafx.h"
+О╩©#include "stdafx.h"
 #include "config.h"
 #include "char.h"
 #include "char_manager.h"
@@ -35,7 +35,7 @@ namespace quest
 		if (!q.ServerTimer(info->npc_id, info->arg))
 			return passes_per_sec / 2 + 1;
 
-		if (0 == info->time_cycle)	// ╥Гга╟║ ╬ф╢о╤С╦И а╬╥А ╫це╡╢ы.
+		if (0 == info->time_cycle)	// Кё╗М■└Й╟─ Л∙└К▀┬К²╪К╘╢ Л╒┘Кё▄ Л▀°М┌╗К▀╓.
 		{
 			q.ClearServerTimerNotCancel(info->name, info->arg);
 			M2_DELETE_ARRAY(info->name);
@@ -62,7 +62,7 @@ namespace quest
 			if (!CQuestManager::instance().Timer(info->player_id, info->npc_id))
 				return (passes_per_sec / 2 + 1);
 
-			if (0 == info->time_cycle)	// ╥Гга╟║ ╬ф╢о╤С╦И а╬╥А ╫це╡╢ы.
+			if (0 == info->time_cycle)	// Кё╗М■└Й╟─ Л∙└К▀┬К²╪К╘╢ Л╒┘Кё▄ Л▀°М┌╗К▀╓.
 				goto END_OF_TIMER_EVENT;
 		}
 		else

@@ -1,4 +1,4 @@
-#ifndef __INC_METIN_II_D3DTYPE_H__
+﻿#ifndef __INC_METIN_II_D3DTYPE_H__
 #define __INC_METIN_II_D3DTYPE_H__
 
 typedef struct D3DXVECTOR2

@@ -1,4 +1,4 @@
-#ifndef __INC_METIN_II_COMMON_FILE_LOADER_H__
+﻿#ifndef __INC_METIN_II_COMMON_FILE_LOADER_H__
 #define __INC_METIN_II_COMMON_FILE_LOADER_H__
 
 typedef std::vector< std::string > TTokenVector;

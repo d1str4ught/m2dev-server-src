@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include <sstream>
 #ifndef OS_WINDOWS
 #include <ifaddrs.h>
@@ -29,7 +29,7 @@ int		passes_per_sec = 25;
 WORD	db_port = 0;
 WORD	p2p_port = 50900;
 char	db_addr[ADDRESS_MAX_LEN + 1];
-int		save_event_second_cycle = passes_per_sec * 120;	// 3ºĞ
+int		save_event_second_cycle = passes_per_sec * 120;	// 3ë¶„
 int		ping_event_second_cycle = passes_per_sec * 60;
 bool	g_bNoMoreClient = false;
 bool	g_bNoRegen = false;
@@ -104,17 +104,17 @@ int SPEEDHACK_LIMIT_COUNT   = 50;
 int SPEEDHACK_LIMIT_BONUS   = 80;
 int g_iSyncHackLimitCount = 20; // 10 -> 20 2013 09 11 CYH
 
-//½Ã¾ß = VIEW_RANGE + VIEW_BONUS_RANGE
-//VIEW_BONUSE_RANGE : Å¬¶óÀÌ¾ğÆ®¿Í ½Ã¾ß Ã³¸®¿¡¼­³Ê¹« µü ¶³¾îÁú°æ¿ì ¹®Á¦°¡ ¹ß»ıÇÒ¼öÀÖ¾î 500CMÀÇ ¿©ºĞÀ» Ç×»óÁØ´Ù.
+//ì‹œì•¼ = VIEW_RANGE + VIEW_BONUS_RANGE
+//VIEW_BONUSE_RANGE : í´ë¼ì´ì–¸íŠ¸ì™€ ì‹œì•¼ ì²˜ë¦¬ì—ì„œë„ˆë¬´ ë”± ë–¨ì–´ì§ˆê²½ìš° ë¬¸ì œê°€ ë°œìƒí• ìˆ˜ìˆì–´ 500CMì˜ ì—¬ë¶„ì„ í•­ìƒì¤€ë‹¤.
 int VIEW_RANGE = 5000;
 int VIEW_BONUS_RANGE = 500;
 
 int g_server_id = 0;
 string g_strWebMallURL = "www.metin2.de";
 
-unsigned int g_uiSpamBlockDuration = 60 * 15; // ±âº» 15ºĞ
-unsigned int g_uiSpamBlockScore = 100; // ±âº» 100Á¡
-unsigned int g_uiSpamReloadCycle = 60 * 10; // ±âº» 10ºĞ
+unsigned int g_uiSpamBlockDuration = 60 * 15; // ê¸°ë³¸ 15ë¶„
+unsigned int g_uiSpamBlockScore = 100; // ê¸°ë³¸ 100ì 
+unsigned int g_uiSpamReloadCycle = 60 * 10; // ê¸°ë³¸ 10ë¶„
 
 bool		g_bCheckMultiHack = true;
 
@@ -123,8 +123,8 @@ int			g_iSpamBlockMaxLevel = 10;
 void		LoadStateUserCount();
 void		LoadValidCRCList();
 bool		LoadClientVersion();
-bool            g_protectNormalPlayer   = false;        // ¹ü¹ıÀÚ°¡ "ÆòÈ­¸ğµå" ÀÎ ÀÏ¹İÀ¯Àú¸¦ °ø°İÇÏÁö ¸øÇÔ
-bool            g_noticeBattleZone      = false;        // Áß¸³Áö´ë¿¡ ÀÔÀåÇÏ¸é ¾È³»¸Ş¼¼Áö¸¦ ¾Ë·ÁÁÜ
+bool            g_protectNormalPlayer   = false;        // ë²”ë²•ìê°€ "í‰í™”ëª¨ë“œ" ì¸ ì¼ë°˜ìœ ì €ë¥¼ ê³µê²©í•˜ì§€ ëª»í•¨
+bool            g_noticeBattleZone      = false;        // ì¤‘ë¦½ì§€ëŒ€ì— ì…ì¥í•˜ë©´ ì•ˆë‚´ë©”ì„¸ì§€ë¥¼ ì•Œë ¤ì¤Œ
 
 // bool		isHackShieldEnable = false;
 // int			HackShield_FirstCheckWaitTime = passes_per_sec * 30;
@@ -373,7 +373,7 @@ void config_init(const string& st_localeServiceName)
 	}
 
 	char db_host[2][64], db_user[2][64], db_pwd[2][64], db_db[2][64];
-	// ... ¾Æ... db_port´Â ÀÌ¹Ì ÀÖ´Âµ¥... ³×ÀÌ¹Ö ¾îÂîÇØ¾ßÇÔ...
+	// ... ì•„... db_portëŠ” ì´ë¯¸ ìˆëŠ”ë°... ë„¤ì´ë° ì–´ì°Œí•´ì•¼í•¨...
 	int mysql_db_port[2];
 
 	for (int n = 0; n < 2; ++n)
@@ -394,9 +394,9 @@ void config_init(const string& st_localeServiceName)
 	*log_db = '\0';
 
 
-	// DB¿¡¼­ ·ÎÄÉÀÏÁ¤º¸¸¦ ¼¼ÆÃÇÏ±âÀ§ÇØ¼­´Â ´Ù¸¥ ¼¼ÆÃ°ªº¸´Ù ¼±ÇàµÇ¾î¼­
-	// DBÁ¤º¸¸¸ ÀĞ¾î¿Í ·ÎÄÉÀÏ ¼¼ÆÃÀ» ÇÑÈÄ ´Ù¸¥ ¼¼ÆÃÀ» Àû¿ë½ÃÄÑ¾ßÇÑ´Ù.
-	// ÀÌÀ¯´Â ·ÎÄÉÀÏ°ü·ÃµÈ ÃÊ±âÈ­ ·çÆ¾ÀÌ °÷°÷¿¡ Á¸ÀçÇÏ±â ¶§¹®.
+	// DBì—ì„œ ë¡œì¼€ì¼ì •ë³´ë¥¼ ì„¸íŒ…í•˜ê¸°ìœ„í•´ì„œëŠ” ë‹¤ë¥¸ ì„¸íŒ…ê°’ë³´ë‹¤ ì„ í–‰ë˜ì–´ì„œ
+	// DBì •ë³´ë§Œ ì½ì–´ì™€ ë¡œì¼€ì¼ ì„¸íŒ…ì„ í•œí›„ ë‹¤ë¥¸ ì„¸íŒ…ì„ ì ìš©ì‹œì¼œì•¼í•œë‹¤.
+	// ì´ìœ ëŠ” ë¡œì¼€ì¼ê´€ë ¨ëœ ì´ˆê¸°í™” ë£¨í‹´ì´ ê³³ê³³ì— ì¡´ì¬í•˜ê¸° ë•Œë¬¸.
 
 	bool isCommonSQL = false;	
 	bool isPlayerSQL = false;
@@ -550,7 +550,7 @@ void config_init(const string& st_localeServiceName)
 		}
 	}
 
-	//Ã³¸®°¡ ³¡³µÀ¸´Ï ÆÄÀÏÀ» ´İÀÚ.
+	//ì²˜ë¦¬ê°€ ëë‚¬ìœ¼ë‹ˆ íŒŒì¼ì„ ë‹«ì.
 	fclose(fpOnlyForDB);
 
 	// CONFIG_SQL_INFO_ERROR
@@ -576,7 +576,7 @@ void config_init(const string& st_localeServiceName)
 		exit(1);
 	}
 
-	// Common DB °¡ Locale Á¤º¸¸¦ °¡Áö°í ÀÖ±â ¶§¹®¿¡ °¡Àå ¸ÕÀú Á¢¼ÓÇØ¾ß ÇÑ´Ù.
+	// Common DB ê°€ Locale ì •ë³´ë¥¼ ê°€ì§€ê³  ìˆê¸° ë•Œë¬¸ì— ê°€ì¥ ë¨¼ì € ì ‘ì†í•´ì•¼ í•œë‹¤.
 	AccountDB::instance().Connect(db_host[1], mysql_db_port[1], db_user[1], db_pwd[1], db_db[1]);
 
 	if (false == AccountDB::instance().IsConnected())
@@ -587,8 +587,8 @@ void config_init(const string& st_localeServiceName)
 
 	fprintf(stdout, "CommonSQL connected\n");
 
-	// ·ÎÄÉÀÏ Á¤º¸¸¦ °¡Á®¿ÀÀÚ 
-	// <°æ°í> Äõ¸®¹®¿¡ Àı´ë Á¶°Ç¹®(WHERE) ´ŞÁö ¸¶¼¼¿ä. (´Ù¸¥ Áö¿ª¿¡¼­ ¹®Á¦°¡ »ı±æ¼ö ÀÖ½À´Ï´Ù)
+	// ë¡œì¼€ì¼ ì •ë³´ë¥¼ ê°€ì ¸ì˜¤ì 
+	// <ê²½ê³ > ì¿¼ë¦¬ë¬¸ì— ì ˆëŒ€ ì¡°ê±´ë¬¸(WHERE) ë‹¬ì§€ ë§ˆì„¸ìš”. (ë‹¤ë¥¸ ì§€ì—­ì—ì„œ ë¬¸ì œê°€ ìƒê¸¸ìˆ˜ ìˆìŠµë‹ˆë‹¤)
 	{
 		char szQuery[512];
 		snprintf(szQuery, sizeof(szQuery), "SELECT mKey, mValue FROM locale");
@@ -605,7 +605,7 @@ void config_init(const string& st_localeServiceName)
 
 		while (NULL != (row = mysql_fetch_row(pMsg->Get()->pSQLResult)))
 		{
-			// ·ÎÄÉÀÏ ¼¼ÆÃ
+			// ë¡œì¼€ì¼ ì„¸íŒ…
 			if (strcasecmp(row[0], "LOCALE") == 0)
 			{
 				if (LocaleService_Init(row[1]) == false)
@@ -617,15 +617,15 @@ void config_init(const string& st_localeServiceName)
 		}
 	}
 
-	// ·ÎÄÉÀÏ Á¤º¸¸¦ COMMON SQL¿¡ ¼¼ÆÃÇØÁØ´Ù.
-	// Âü°í·Î g_stLocale Á¤º¸´Â LocaleService_Init() ³»ºÎ¿¡¼­ ¼¼ÆÃµÈ´Ù.
+	// ë¡œì¼€ì¼ ì •ë³´ë¥¼ COMMON SQLì— ì„¸íŒ…í•´ì¤€ë‹¤.
+	// ì°¸ê³ ë¡œ g_stLocale ì •ë³´ëŠ” LocaleService_Init() ë‚´ë¶€ì—ì„œ ì„¸íŒ…ëœë‹¤.
 	fprintf(stdout, "Setting DB to locale %s\n", g_stLocale.c_str());
 
 	AccountDB::instance().SetLocale(g_stLocale);
 
 	AccountDB::instance().ConnectAsync(db_host[1], mysql_db_port[1], db_user[1], db_pwd[1], db_db[1], g_stLocale.c_str());
 
-	// Player DB Á¢¼Ó
+	// Player DB ì ‘ì†
 	DBManager::instance().Connect(db_host[0], mysql_db_port[0], db_user[0], db_pwd[0], db_db[0]);
 
 	if (!DBManager::instance().IsConnected())
@@ -636,9 +636,9 @@ void config_init(const string& st_localeServiceName)
 
 	fprintf(stdout, "PlayerSQL connected\n");
 
-	if (false == g_bAuthServer) // ÀÎÁõ ¼­¹ö°¡ ¾Æ´Ò °æ¿ì
+	if (false == g_bAuthServer) // ì¸ì¦ ì„œë²„ê°€ ì•„ë‹ ê²½ìš°
 	{
-		// Log DB Á¢¼Ó
+		// Log DB ì ‘ì†
 		LogManager::instance().Connect(log_host, log_port, log_user, log_pwd, log_db);
 
 		if (!LogManager::instance().IsConnected())
@@ -653,8 +653,8 @@ void config_init(const string& st_localeServiceName)
 	}
 
 	// SKILL_POWER_BY_LEVEL
-	// ½ºÆ®¸µ ºñ±³ÀÇ ¹®Á¦·Î ÀÎÇØ¼­ AccountDB::instance().SetLocale(g_stLocale) ÈÄºÎÅÍ ÇÑ´Ù.
-	// ¹°·Ğ ±¹³»´Â º°·Î ¹®Á¦°¡ ¾ÈµÈ´Ù(ÇØ¿Ü°¡ ¹®Á¦)
+	// ìŠ¤íŠ¸ë§ ë¹„êµì˜ ë¬¸ì œë¡œ ì¸í•´ì„œ AccountDB::instance().SetLocale(g_stLocale) í›„ë¶€í„° í•œë‹¤.
+	// ë¬¼ë¡  êµ­ë‚´ëŠ” ë³„ë¡œ ë¬¸ì œê°€ ì•ˆëœë‹¤(í•´ì™¸ê°€ ë¬¸ì œ)
 	{
 		char szQuery[256];
 		snprintf(szQuery, sizeof(szQuery), "SELECT mValue FROM locale WHERE mKey='SKILL_POWER_BY_LEVEL'");
@@ -695,13 +695,13 @@ void config_init(const string& st_localeServiceName)
 			}
 		}
 
-		// Á¾Á·º° ½ºÅ³ ¼¼ÆÃ
+		// ì¢…ì¡±ë³„ ìŠ¤í‚¬ ì„¸íŒ…
 		for (int job = 0; job < JOB_MAX_NUM * 2; ++job)
 		{
 			snprintf(szQuery, sizeof(szQuery), "SELECT mValue from locale where mKey='SKILL_POWER_BY_LEVEL_TYPE%d' ORDER BY CAST(mValue AS unsigned)", job);
 			std::unique_ptr<SQLMsg> pMsg(AccountDB::instance().DirectQuery(szQuery));
 
-			// ¼¼ÆÃÀÌ ¾ÈµÇ¾îÀÖÀ¸¸é ±âº»Å×ÀÌºíÀ» »ç¿ëÇÑ´Ù.
+			// ì„¸íŒ…ì´ ì•ˆë˜ì–´ìˆìœ¼ë©´ ê¸°ë³¸í…Œì´ë¸”ì„ ì‚¬ìš©í•œë‹¤.
 			if (pMsg->Get()->uiNumRows == 0)
 			{
 				CTableBySkill::instance().SetSkillPowerByLevelFromType(job, aiBaseSkillPowerByLevelTable);
@@ -1064,7 +1064,7 @@ void config_init(const string& st_localeServiceName)
 		TOKEN("spam_block_reload_cycle")
 		{
 			str_to_number(g_uiSpamReloadCycle, value_string);
-			g_uiSpamReloadCycle = MAX(60, g_uiSpamReloadCycle); // ÃÖ¼Ò 1ºĞ
+			g_uiSpamReloadCycle = MAX(60, g_uiSpamReloadCycle); // ìµœì†Œ 1ë¶„
 		}
 
 		TOKEN("check_multihack")
@@ -1340,7 +1340,7 @@ void CheckClientVersion()
 		// if (version > date)
 		if (version != date) // Fix
 		{
-			d->GetCharacter()->ChatPacket(CHAT_TYPE_NOTICE, LC_TEXT("Å¬¶óÀÌ¾ğÆ® ¹öÀüÀÌ Æ²·Á ·Î±×¾Æ¿ô µË´Ï´Ù. Á¤»óÀûÀ¸·Î ÆĞÄ¡ ÈÄ Á¢¼ÓÇÏ¼¼¿ä."));
+			d->GetCharacter()->ChatPacket(CHAT_TYPE_NOTICE, LC_TEXT("í´ë¼ì´ì–¸íŠ¸ ë²„ì „ì´ í‹€ë ¤ ë¡œê·¸ì•„ì›ƒ ë©ë‹ˆë‹¤. ì •ìƒì ìœ¼ë¡œ íŒ¨ì¹˜ í›„ ì ‘ì†í•˜ì„¸ìš”."));
 			d->DelayedDisconnect(10);
 		}
 	}

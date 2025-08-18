@@ -1,4 +1,4 @@
-#ifndef _DEBUG_ADAPTER_H_
+﻿#ifndef _DEBUG_ADAPTER_H_
 #define _DEBUG_ADAPTER_H_
 
 // Intended to be included only in "debug_allocator.h"

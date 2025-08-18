@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "FileMonitor_FreeBSD.h"
 #include "../../libthecore/include/log.h"
 

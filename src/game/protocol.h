@@ -1,4 +1,4 @@
-#ifndef __PROTOCOL_H__
+﻿#ifndef __PROTOCOL_H__
 #define __PROTOCOL_H__
 
 inline const char *encode_byte(char ind)

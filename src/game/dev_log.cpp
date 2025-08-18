@@ -1,4 +1,4 @@
-/*********************************************************************
+ï»¿/*********************************************************************
  * date        : 2006.09.07
  * file        : dev_log.cpp
  * author      : mhh
@@ -31,7 +31,7 @@ static int	s_log_mask = 0xffffffff;
 
 void dev_log(const char *file, int line, const char *function, int level, const char *fmt, ...)
 {
-	// Å×½ºÆ® ¼­¹ö¿¡¼­¸¸ ³²±â¸ç, ¸¶½ºÅ©°¡ ²¨Á®ÀÖÀ¸¸é ³²±âÁö ¾Ê´Â´Ù.
+	// í…ŒìŠ¤íŠ¸ ì„œë²„ì—ì„œë§Œ ë‚¨ê¸°ë©°, ë§ˆìŠ¤í¬ê°€ êº¼ì ¸ìˆìœ¼ë©´ ë‚¨ê¸°ì§€ ì•ŠëŠ”ë‹¤.
 	if (!test_server || !IS_SET(s_log_mask, level))
 		return;
 

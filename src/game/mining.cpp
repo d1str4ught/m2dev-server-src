@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "mining.h"
 #include "char.h"
 #include "char_manager.h"
@@ -292,7 +292,7 @@ namespace mining
 		CItem& pick = *item;
 		Pick_MaxCurExp(pick);
 
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("°î±ªÀÌ ¼ö·Ãµµ°¡ ÃÖ´ë(%d)°¡ µÇ¾ú½À´Ï´Ù."), Pick_GetCurExp(pick));
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ê³¡ê´­ì´ ìˆ˜ë ¨ë„ê°€ ìµœëŒ€(%d)ê°€ ë˜ì—ˆìŠµë‹ˆë‹¤."), Pick_GetCurExp(pick));
 	}
 
 	void PracticePick(LPCHARACTER ch, LPITEM item)
@@ -312,20 +312,20 @@ namespace mining
 
 			if (Pick_Refinable(pick))
 			{
-				ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("°î±ªÀÌ°¡ ÃÖ´ë ¼ö·Ãµµ¿¡ µµ´ŞÇÏ¿´½À´Ï´Ù."));
-				ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("³ª¹«²Û¸¦ ÅëÇØ ´ÙÀ½ ·¹º§ÀÇ °î±ªÀÌ·Î ¾÷±×·¹ÀÌµå ÇÒ ¼ö ÀÖ½À´Ï´Ù."));
+				ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ê³¡ê´­ì´ê°€ ìµœëŒ€ ìˆ˜ë ¨ë„ì— ë„ë‹¬í•˜ì˜€ìŠµë‹ˆë‹¤."));
+				ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ë‚˜ë¬´ê¾¼ë¥¼ í†µí•´ ë‹¤ìŒ ë ˆë²¨ì˜ ê³¡ê´­ì´ë¡œ ì—…ê·¸ë ˆì´ë“œ í•  ìˆ˜ ìˆìŠµë‹ˆë‹¤."));
 			}
 			else
 			{
 				Pick_IncCurExp(pick);	
 
-				ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("°î±ªÀÌÀÇ ¼ö·Ãµµ°¡ Áõ°¡ÇÏ¿´½À´Ï´Ù! (%d/%d)"),
+				ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ê³¡ê´­ì´ì˜ ìˆ˜ë ¨ë„ê°€ ì¦ê°€í•˜ì˜€ìŠµë‹ˆë‹¤! (%d/%d)"),
 						Pick_GetCurExp(pick), Pick_GetMaxExp(pick));
 
 				if (Pick_Refinable(pick))
 				{
-					ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("°î±ªÀÌ°¡ ÃÖ´ë ¼ö·Ãµµ¿¡ µµ´ŞÇÏ¿´½À´Ï´Ù."));
-					ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("³ª¹«²Û¸¦ ÅëÇØ ´ÙÀ½ ·¹º§ÀÇ °î±ªÀÌ·Î ¾÷±×·¹ÀÌµå ÇÒ ¼ö ÀÖ½À´Ï´Ù."));
+					ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ê³¡ê´­ì´ê°€ ìµœëŒ€ ìˆ˜ë ¨ë„ì— ë„ë‹¬í•˜ì˜€ìŠµë‹ˆë‹¤."));
+					ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ë‚˜ë¬´ê¾¼ë¥¼ í†µí•´ ë‹¤ìŒ ë ˆë²¨ì˜ ê³¡ê´­ì´ë¡œ ì—…ê·¸ë ˆì´ë“œ í•  ìˆ˜ ìˆìŠµë‹ˆë‹¤."));
 				}
 			}
 		}
@@ -355,14 +355,14 @@ namespace mining
 		// REFINE_PICK
 		if (!pick || !Pick_Check(*pick))
 		{
-			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("°î±ªÀÌ¸¦ µé°í ÀÖÁö ¾Ê¾Æ¼­ Ä¶ ¼ö ¾ø½À´Ï´Ù."));
+			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ê³¡ê´­ì´ë¥¼ ë“¤ê³  ìˆì§€ ì•Šì•„ì„œ ìº˜ ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 			return 0;
 		}
 		// END_OF_REFINE_PICK
 
 		if (!load)
 		{
-			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("´õÀÌ»ó Ä³³¾ ¼ö ¾ø½À´Ï´Ù."));
+			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ë”ì´ìƒ ìºë‚¼ ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 			return 0;
 		}
 
@@ -371,11 +371,11 @@ namespace mining
 		if (number(1, 100) <= iPct)
 		{
 			OreDrop(ch, load->GetRaceNum());
-			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Ã¤±¤¿¡ ¼º°øÇÏ¿´½À´Ï´Ù."));
+			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì±„ê´‘ì— ì„±ê³µí•˜ì˜€ìŠµë‹ˆë‹¤."));
 		}
 		else
 		{
-			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Ã¤±¤¿¡ ½ÇÆĞÇÏ¿´½À´Ï´Ù."));
+			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì±„ê´‘ì— ì‹¤íŒ¨í•˜ì˜€ìŠµë‹ˆë‹¤."));
 		}
 
 		PracticePick(ch, pick);

@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "GuildManager.h"
 #include "Main.h"
 #include "ClientManager.h"
@@ -242,7 +242,7 @@ void CGuildManager::ResultRanking(MYSQL_RES * pRes)
 
 void CGuildManager::Update()
 {
-	ProcessReserveWar(); // ¿¹¾à ÀüÀï Ã³¸®
+	ProcessReserveWar(); // ì˜ˆì•½ ì „ìŸ ì²˜ë¦¬
 
 	time_t now = CClientManager::instance().GetCurrentTime();
 
@@ -462,7 +462,7 @@ void CGuildManager::RemoveWar(DWORD GID1, DWORD GID2)
 }
 
 //
-// ±æµåÀü ºñÁ¤»ó Á¾·á ¹× ÇÊµåÀü Á¾·á
+// ê¸¸ë“œì „ ë¹„ì •ìƒ ì¢…ë£Œ ë° í•„ë“œì „ ì¢…ë£Œ
 //
 void CGuildManager::WarEnd(DWORD GID1, DWORD GID2, bool bForceDraw)
 {
@@ -493,7 +493,7 @@ void CGuildManager::WarEnd(DWORD GID1, DWORD GID2, bool bForceDraw)
 
 	bool bDraw = false;
 
-	if (!bForceDraw) // °­Á¦ ¹«½ÂºÎ°¡ ¾Æ´Ò °æ¿ì¿¡´Â Á¡¼ö¸¦ Ã¼Å©ÇÑ´Ù.
+	if (!bForceDraw) // ê°•ì œ ë¬´ìŠ¹ë¶€ê°€ ì•„ë‹ ê²½ìš°ì—ëŠ” ì ìˆ˜ë¥¼ ì²´í¬í•œë‹¤.
 	{
 		if (pData->iScore[0] > pData->iScore[1])
 		{
@@ -508,7 +508,7 @@ void CGuildManager::WarEnd(DWORD GID1, DWORD GID2, bool bForceDraw)
 		else
 			bDraw = true;
 	}
-	else // °­Á¦ ¹«½ÂºÎÀÏ °æ¿ì¿¡´Â ¹«Á¶°Ç ¹«½ÂºÎ
+	else // ê°•ì œ ë¬´ìŠ¹ë¶€ì¼ ê²½ìš°ì—ëŠ” ë¬´ì¡°ê±´ ë¬´ìŠ¹ë¶€
 		bDraw = true;
 
 	if (bDraw)
@@ -516,14 +516,14 @@ void CGuildManager::WarEnd(DWORD GID1, DWORD GID2, bool bForceDraw)
 	else
 		ProcessWinLose(win_guild, lose_guild);
 
-	// DB ¼­¹ö¿¡¼­ ÀÚÃ¼ÀûÀ¸·Î ³¡³¾ ¶§µµ ÀÖ±â ¶§¹®¿¡ µû·Î ÆĞÅ¶À» º¸³»Áà¾ß ÇÑ´Ù.
+	// DB ì„œë²„ì—ì„œ ìì²´ì ìœ¼ë¡œ ëë‚¼ ë•Œë„ ìˆê¸° ë•Œë¬¸ì— ë”°ë¡œ íŒ¨í‚·ì„ ë³´ë‚´ì¤˜ì•¼ í•œë‹¤.
 	CClientManager::instance().for_each_peer(FSendPeerWar(0, GUILD_WAR_END, GID1, GID2));
 
 	RemoveWar(GID1, GID2);
 }
 
 //
-// ±æµåÀü Á¤»ó Á¾·á
+// ê¸¸ë“œì „ ì •ìƒ ì¢…ë£Œ
 // 
 void CGuildManager::RecvWarOver(DWORD dwGuildWinner, DWORD dwGuildLoser, bool bDraw, long lWarPrice)
 {
@@ -571,7 +571,7 @@ void CGuildManager::RecvWarOver(DWORD dwGuildWinner, DWORD dwGuildLoser, bool bD
 void CGuildManager::RecvWarEnd(DWORD GID1, DWORD GID2)
 {
 	sys_log(0, "GuildWar: RecvWarEnded : %u vs %u", GID1, GID2);
-	WarEnd(GID1, GID2, true); // ¹«Á¶°Ç ºñÁ¤»ó Á¾·á ½ÃÄÑ¾ß ÇÑ´Ù.
+	WarEnd(GID1, GID2, true); // ë¬´ì¡°ê±´ ë¹„ì •ìƒ ì¢…ë£Œ ì‹œì¼œì•¼ í•œë‹¤.
 }
 
 void CGuildManager::StartWar(BYTE bType, DWORD GID1, DWORD GID2, CGuildWarReserve * pkReserve)
@@ -745,7 +745,7 @@ void CGuildManager::ChangeLadderPoint(DWORD GID, int change)
 	sys_log(0, "GuildManager::ChangeLadderPoint %u %d", GID, r.ladder_point);
 	sys_log(0, "%s", buf);
 
-	// Packet º¸³»±â
+	// Packet ë³´ë‚´ê¸°
 	TPacketGuildLadder p;
 
 	p.dwGuild = GID;
@@ -808,7 +808,7 @@ void CGuildManager::WithdrawMoney(CPeer* peer, DWORD dwGuild, INT iGold)
 		return;
 	}
 
-	// µ·ÀÌÀÖÀ¸´Ï Ãâ±İÇÏ°í ¿Ã·ÁÁØ´Ù
+	// ëˆì´ìˆìœ¼ë‹ˆ ì¶œê¸ˆí•˜ê³  ì˜¬ë ¤ì¤€ë‹¤
 	if (it->second.gold >= iGold)
 	{
 		it->second.gold -= iGold;
@@ -839,7 +839,7 @@ void CGuildManager::WithdrawMoneyReply(DWORD dwGuild, BYTE bGiveSuccess, INT iGo
 }
 
 //
-// ¿¹¾à ±æµåÀü(°üÀüÀÚ°¡ ¹èÆÃÇÒ ¼ö ÀÖ´Ù)
+// ì˜ˆì•½ ê¸¸ë“œì „(ê´€ì „ìê°€ ë°°íŒ…í•  ìˆ˜ ìˆë‹¤)
 //
 const int c_aiScoreByLevel[GUILD_MAX_LEVEL+1] =
 {
@@ -869,7 +869,7 @@ const int c_aiScoreByLevel[GUILD_MAX_LEVEL+1] =
 const int c_aiScoreByRanking[GUILD_RANK_MAX_NUM+1] =
 {
 	0,
-	55000,	// 1À§
+	55000,	// 1ìœ„
 	50000,
 	45000,
 	40000,
@@ -878,7 +878,7 @@ const int c_aiScoreByRanking[GUILD_RANK_MAX_NUM+1] =
 	28000,
 	24000,
 	21000,
-	18000,	// 10À§
+	18000,	// 10ìœ„
 	15000,
 	12000,
 	10000,
@@ -888,7 +888,7 @@ const int c_aiScoreByRanking[GUILD_RANK_MAX_NUM+1] =
 	3000,
 	2000,
 	1000,
-	500		// 20À§
+	500		// 20ìœ„
 };
 
 void CGuildManager::BootReserveWar()
@@ -932,8 +932,8 @@ void CGuildManager::BootReserveWar()
 
 			char buf[512];
 			snprintf(buf, sizeof(buf), "GuildWar: BootReserveWar : step %d id %u GID1 %u GID2 %u", i, t.dwID, t.dwGuildFrom, t.dwGuildTo);
-			// i == 0 ÀÌ¸é ±æµåÀü µµÁß DB°¡ Æ¨±ä °ÍÀÌ¹Ç·Î ¹«½ÂºÎ Ã³¸®ÇÑ´Ù.
-			// ¶Ç´Â, 5ºĞ ÀÌÇÏ ³²Àº ¿¹¾à ±æµåÀüµµ ¹«½ÂºÎ Ã³¸®ÇÑ´Ù. (°¢ÀÚÀÇ ¹èÆÃ¾×À» µ¹·ÁÁØ´Ù)
+			// i == 0 ì´ë©´ ê¸¸ë“œì „ ë„ì¤‘ DBê°€ íŠ•ê¸´ ê²ƒì´ë¯€ë¡œ ë¬´ìŠ¹ë¶€ ì²˜ë¦¬í•œë‹¤.
+			// ë˜ëŠ”, 5ë¶„ ì´í•˜ ë‚¨ì€ ì˜ˆì•½ ê¸¸ë“œì „ë„ ë¬´ìŠ¹ë¶€ ì²˜ë¦¬í•œë‹¤. (ê°ìì˜ ë°°íŒ…ì•¡ì„ ëŒë ¤ì¤€ë‹¤)
 			//if (i == 0 || (int) t.dwTime - CClientManager::instance().GetCurrentTime() < 60 * 5)
 			if (i == 0 || (int) t.dwTime - CClientManager::instance().GetCurrentTime() < 0)
 			{
@@ -1010,7 +1010,7 @@ bool CGuildManager::ReserveWar(TPacketGuildWar * p)
 
 	int lvp, rkp, alv, mc;
 
-	// ÆÄ¿ö °è»ê
+	// íŒŒì›Œ ê³„ì‚°
 	TGuild & k1 = TouchGuild(GID1);
 
 	lvp = c_aiScoreByLevel[MIN(GUILD_MAX_LEVEL, k1.level)];
@@ -1026,7 +1026,7 @@ bool CGuildManager::ReserveWar(TPacketGuildWar * p)
 	t.lPowerFrom = (long) polyPower.Eval();
 	sys_log(0, "GuildWar: %u lvp %d rkp %d alv %d mc %d power %d", GID1, lvp, rkp, alv, mc, t.lPowerFrom);
 
-	// ÆÄ¿ö °è»ê
+	// íŒŒì›Œ ê³„ì‚°
 	TGuild & k2 = TouchGuild(GID2);
 
 	lvp = c_aiScoreByLevel[MIN(GUILD_MAX_LEVEL, k2.level)];
@@ -1042,7 +1042,7 @@ bool CGuildManager::ReserveWar(TPacketGuildWar * p)
 	t.lPowerTo = (long) polyPower.Eval();
 	sys_log(0, "GuildWar: %u lvp %d rkp %d alv %d mc %d power %d", GID2, lvp, rkp, alv, mc, t.lPowerTo);
 
-	// ÇÚµğÄ¸ °è»ê
+	// í•¸ë””ìº¡ ê³„ì‚°
 	if (t.lPowerTo > t.lPowerFrom)
 	{
 		polyHandicap.SetVar("pA", t.lPowerTo);
@@ -1057,7 +1057,7 @@ bool CGuildManager::ReserveWar(TPacketGuildWar * p)
 	t.lHandicap = (long) polyHandicap.Eval();
 	sys_log(0, "GuildWar: handicap %d", t.lHandicap);
 
-	// Äõ¸®
+	// ì¿¼ë¦¬
 	char szQuery[512];
 
 	snprintf(szQuery, sizeof(szQuery),
@@ -1094,7 +1094,7 @@ void CGuildManager::ProcessReserveWar()
 		CGuildWarReserve * pk = it2->second;
 		TGuildWarReserve & r = pk->GetDataRef();
 
-		if (!r.bStarted && r.dwTime - 1800 <= dwCurTime) // 30ºĞ ÀüºÎÅÍ ¾Ë¸°´Ù.
+		if (!r.bStarted && r.dwTime - 1800 <= dwCurTime) // 30ë¶„ ì „ë¶€í„° ì•Œë¦°ë‹¤.
 		{
 			int iMin = (int) ceil((int)(r.dwTime - dwCurTime) / 60.0);
 
@@ -1135,9 +1135,9 @@ void CGuildManager::ProcessReserveWar()
 					pk->SetLastNoticeMin(iMin);
 
 					if (!g_stLocale.compare("euckr"))
-						CClientManager::instance().SendNotice("%s ±æµå¿Í %s ±æµåÀÇ ÀüÀïÀÌ ¾à %dºĞ ÈÄ ½ÃÀÛ µË´Ï´Ù!", r_1.szName, r_2.szName, iMin);
+						CClientManager::instance().SendNotice("%s ê¸¸ë“œì™€ %s ê¸¸ë“œì˜ ì „ìŸì´ ì•½ %dë¶„ í›„ ì‹œì‘ ë©ë‹ˆë‹¤!", r_1.szName, r_2.szName, iMin);
 					else if (!g_stLocale.compare("gb2312"))
-						CClientManager::instance().SendNotice("%s °ï»áºÍ %s °ï»áµÄ°ï»áÕ½Õù½«ÔÚ %d·ÖÖÓºó¿ªÊ¼!", r_1.szName, r_2.szName, iMin);
+						CClientManager::instance().SendNotice("%s ê³¤ì‚”ëµ¨ %s ê³¤ì‚”ë¨ê³¤ì‚”æ¿«è½¢ì‰¥ç³ %dë¡¸çˆë¹ˆì—­è¿¦!", r_1.szName, r_2.szName, iMin);
 				}
 			}
 		}
@@ -1239,7 +1239,7 @@ void CGuildWarReserve::Initialize()
 
 void CGuildWarReserve::OnSetup(CPeer * peer)
 {
-	if (m_data.bStarted) // ÀÌ¹Ì ½ÃÀÛµÈ °ÍÀº º¸³»Áö ¾Ê´Â´Ù.
+	if (m_data.bStarted) // ì´ë¯¸ ì‹œì‘ëœ ê²ƒì€ ë³´ë‚´ì§€ ì•ŠëŠ”ë‹¤.
 		return;
 
 	FSendPeerWar(m_data.bType, GUILD_WAR_RESERVE, m_data.dwGuildFrom, m_data.dwGuildTo) (peer);
@@ -1325,8 +1325,8 @@ bool CGuildWarReserve::Bet(const char * pszLogin, DWORD dwGold, DWORD dwGuild)
 }
 
 //
-// ¹«½ÂºÎ Ã³¸®: ´ëºÎºĞ ½ÂºÎ°¡ ³ª¾ß Á¤»óÀÌÁö¸¸, ¼­¹ö ¹®Á¦ µî Æ¯Á¤ »óÈ²ÀÏ °æ¿ì¿¡´Â
-//              ¹«½ÂºÎ Ã³¸®°¡ ÀÖ¾î¾ß ÇÑ´Ù.
+// ë¬´ìŠ¹ë¶€ ì²˜ë¦¬: ëŒ€ë¶€ë¶„ ìŠ¹ë¶€ê°€ ë‚˜ì•¼ ì •ìƒì´ì§€ë§Œ, ì„œë²„ ë¬¸ì œ ë“± íŠ¹ì • ìƒí™©ì¼ ê²½ìš°ì—ëŠ”
+//              ë¬´ìŠ¹ë¶€ ì²˜ë¦¬ê°€ ìˆì–´ì•¼ í•œë‹¤.
 //
 void CGuildWarReserve::Draw() 
 {
@@ -1458,7 +1458,7 @@ void CGuildWarReserve::End(int iScoreFrom, int iScoreTo)
 
 			double ratio = (double) it->second.second / dwWinnerBet;
 
-			// 10% ¼¼±İ °øÁ¦ ÈÄ ºĞ¹è
+			// 10% ì„¸ê¸ˆ ê³µì œ í›„ ë¶„ë°°
 			sys_log(0, "WAR_REWARD: %s %u ratio %f", it->first.c_str(), it->second.second, ratio);
 
 			DWORD dwGold = (DWORD) (dwTotalBet * ratio * 0.9);

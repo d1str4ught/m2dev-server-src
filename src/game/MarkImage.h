@@ -1,4 +1,4 @@
-#ifndef __INC_METIN_II_MARKIMAGE_H__
+ï»¿#ifndef __INC_METIN_II_MARKIMAGE_H__
 #define __INC_METIN_II_MARKIMAGE_H__
 
 #include <IL/il.h>
@@ -16,7 +16,7 @@ struct SGuildMark
 	};
 
 	///////////////////////////////////////////////////////////////////////////////
-	Pixel m_apxBuf[SIZE];	// ½ÇÁ¦ ÀÌ¹ÌÁö
+	Pixel m_apxBuf[SIZE];	// ì‹¤ì œ ì´ë¯¸ì§€
 
 	///////////////////////////////////////////////////////////////////////////////
 	void Clear();
@@ -38,11 +38,11 @@ struct SGuildMarkBlock
 	};
 
 	///////////////////////////////////////////////////////////////////////////////
-	Pixel	m_apxBuf[SIZE];	// ½ÇÁ¦ ÀÌ¹ÌÁö
+	Pixel	m_apxBuf[SIZE];	// ì‹¤ì œ ì´ë¯¸ì§€
 
-	BYTE 	m_abCompBuf[MAX_COMP_SIZE];	// ¾ĞÃàµÈ µ¥ÀÌÅÍ
-	lzo_uint m_sizeCompBuf;	// ¾ĞÃàµÈ Å©±â
-	DWORD	m_crc;			// ¾ĞÃàµÈ µ¥ÀÌÅÍÀÇ CRC
+	BYTE 	m_abCompBuf[MAX_COMP_SIZE];	// ì••ì¶•ëœ ë°ì´í„°
+	lzo_uint m_sizeCompBuf;	// ì••ì¶•ëœ í¬ê¸°
+	DWORD	m_crc;			// ì••ì¶•ëœ ë°ì´í„°ì˜ CRC
 
 	///////////////////////////////////////////////////////////////////////////////
 	DWORD	GetCRC() const;
@@ -87,9 +87,9 @@ class CGuildMarkImage
 
 		bool SaveMark(DWORD posMark, BYTE * pbMarkImage);
 		bool DeleteMark(DWORD posMark);
-		bool SaveBlockFromCompressedData(DWORD posBlock, const BYTE * pbComp, DWORD dwCompSize); // ¼­¹ö -> Å¬¶óÀÌ¾ğÆ®
+		bool SaveBlockFromCompressedData(DWORD posBlock, const BYTE * pbComp, DWORD dwCompSize); // ì„œë²„ -> í´ë¼ì´ì–¸íŠ¸
 
-		DWORD GetEmptyPosition(); // ºó ¸¶Å© À§Ä¡¸¦ ¾ò´Â´Ù.
+		DWORD GetEmptyPosition(); // ë¹ˆ ë§ˆí¬ ìœ„ì¹˜ë¥¼ ì–»ëŠ”ë‹¤.
 
 		void GetBlockCRCList(DWORD * crcList);
 		void GetDiffBlocks(const DWORD * crcList, std::map<BYTE, const SGuildMarkBlock *> & mapDiffBlocks);

@@ -1,4 +1,4 @@
-// vim:ts=8 sw=4
+﻿// vim:ts=8 sw=4
 #ifndef __INC_ITEM_AWARD_H
 #define __INC_ITEM_AWARD_H
 #include <map>

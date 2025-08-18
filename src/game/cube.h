@@ -1,8 +1,8 @@
-/*********************************************************************
+ï»¿/*********************************************************************
  * date        : 2006.11.20
  * file        : cube.h
  * author      : mhh
- * description : Å¥ºê½Ã½ºÅÛ
+ * description : íë¸Œì‹œìŠ¤í…œ
  */
 
 #ifndef _cube_h_
@@ -30,7 +30,7 @@ struct CUBE_DATA
 	std::vector<CUBE_VALUE>	item;
 	std::vector<CUBE_VALUE>	reward;
 	int						percent;
-	unsigned int			gold;		// Á¦Á¶½Ã ÇÊ¿äÇÑ ±İ¾×
+	unsigned int			gold;		// ì œì¡°ì‹œ í•„ìš”í•œ ê¸ˆì•¡
 
 	CUBE_DATA();
 

@@ -1,4 +1,4 @@
-
+﻿
 enum BLUEDRAGON_STONE_EFFECT
 {
 	DEF_BONUS	=	1,

@@ -1,4 +1,4 @@
-#ifndef __INC_METIN_II_GAME_CMD_H__
+ï»¿#ifndef __INC_METIN_II_GAME_CMD_H__
 #define __INC_METIN_II_GAME_CMD_H__
 
 #define ACMD(name)  void (name)(LPCHARACTER ch, const char *argument, int cmd, int subcmd)
@@ -51,11 +51,11 @@ enum SCMD_XMAS
 };
 
 extern void Shutdown(int iSec);
-extern void SendNotice(const char * c_pszBuf);		// ÀÌ °ÔÀÓ¼­¹ö¿¡¸¸ °øÁö
-extern void SendLog(const char * c_pszBuf);		// ¿î¿µÀÚ¿¡°Ô¸¸ °øÁö
-extern void BroadcastNotice(const char * c_pszBuf);	// Àü ¼­¹ö¿¡ °øÁö
-extern void SendNoticeMap(const char* c_pszBuf, int nMapIndex, bool bBigFont); // ÁöÁ¤ ¸Ê¿¡¸¸ °øÁö
-extern void SendMonarchNotice(BYTE bEmpire, const char * c_pszBuf);		// °°Àº Á¦±¹¿¡°Ô °øÁö
+extern void SendNotice(const char * c_pszBuf);		// ì´ ê²Œì„ì„œë²„ì—ë§Œ ê³µì§€
+extern void SendLog(const char * c_pszBuf);		// ìš´ì˜ìì—ê²Œë§Œ ê³µì§€
+extern void BroadcastNotice(const char * c_pszBuf);	// ì „ ì„œë²„ì— ê³µì§€
+extern void SendNoticeMap(const char* c_pszBuf, int nMapIndex, bool bBigFont); // ì§€ì • ë§µì—ë§Œ ê³µì§€
+extern void SendMonarchNotice(BYTE bEmpire, const char * c_pszBuf);		// ê°™ì€ ì œêµ­ì—ê²Œ ê³µì§€
 
 // LUA_ADD_BGM_INFO
 void CHARACTER_SetBGMVolumeEnable();

@@ -1,4 +1,4 @@
-// vim:ts=4 sw=4
+﻿// vim:ts=4 sw=4
 #include "stdafx.h"
 #include "ClientManager.h"
 #include "Config.h"

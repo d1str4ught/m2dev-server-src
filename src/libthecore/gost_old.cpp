@@ -1,4 +1,4 @@
-/*
+﻿/*
  * The GOST 28147-89 cipher
  *
  * This is based on the 25 Movember 1993 draft translation

@@ -1,4 +1,4 @@
-#ifndef __INC_METIN_II_SEMAPHORE_H__
+﻿#ifndef __INC_METIN_II_SEMAPHORE_H__
 #define __INC_METIN_II_SEMAPHORE_H__
 
 #ifndef OS_WINDOWS

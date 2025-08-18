@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 /* TEA is a 64-bit symmetric block cipher with a 128-bit key, developed
     by David J. Wheeler and Roger M. Needham, and described in their

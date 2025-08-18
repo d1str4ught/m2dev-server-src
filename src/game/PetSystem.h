@@ -1,10 +1,10 @@
-#ifndef	__HEADER_PET_SYSTEM__
+ï»¿#ifndef	__HEADER_PET_SYSTEM__
 #define	__HEADER_PET_SYSTEM__
 
 
 class CHARACTER;
 
-// TODO: ÆêÀ¸·Î¼­ÀÇ ´É·ÂÄ¡? ¶ó´ø°¡ Ä£¹Ğµµ, ¹è°íÇÄ ±âÅ¸µîµî... ¼öÄ¡
+// TODO: í«ìœ¼ë¡œì„œì˜ ëŠ¥ë ¥ì¹˜? ë¼ë˜ê°€ ì¹œë°€ë„, ë°°ê³ í”” ê¸°íƒ€ë“±ë“±... ìˆ˜ì¹˜
 struct SPetAbility
 {
 };
@@ -34,8 +34,8 @@ protected:
 	virtual bool	Update(DWORD deltaTime);
 
 protected:
-	virtual bool	_UpdateFollowAI();				///< ÁÖÀÎÀ» µû¶ó´Ù´Ï´Â AI Ã³¸®
-	virtual bool	_UpdatAloneActionAI(float fMinDist, float fMaxDist);			///< ÁÖÀÎ ±ÙÃ³¿¡¼­ È¥ÀÚ ³ë´Â AI Ã³¸®
+	virtual bool	_UpdateFollowAI();				///< ì£¼ì¸ì„ ë”°ë¼ë‹¤ë‹ˆëŠ” AI ì²˜ë¦¬
+	virtual bool	_UpdatAloneActionAI(float fMinDist, float fMaxDist);			///< ì£¼ì¸ ê·¼ì²˜ì—ì„œ í˜¼ì ë…¸ëŠ” AI ì²˜ë¦¬
 
 	/// @TODO
 	//virtual bool	_UpdateCombatAI();
@@ -62,13 +62,13 @@ public:
 	bool			IsSummoned() const			{ return 0 != m_pkChar; }
 	void			SetSummonItem (LPITEM pItem);
 	DWORD			GetSummonItemVID () { return m_dwSummonItemVID; }
-	// ¹öÇÁ ÁÖ´Â ÇÔ¼ö¿Í °ÅµÎ´Â ÇÔ¼ö.
-	// ÀÌ°Ô Á» ±«¶öÇÑ°Ô, ¼­¹ö°¡ ¤´¶ó¼­, 
-	// POINT_MOV_SPEED, POINT_ATT_SPEED, POINT_CAST_SPEED´Â PointChange()¶õ ÇÔ¼ö¸¸ ½á¼­ º¯°æÇØ ºÁ¾ß ¼Ò¿ëÀÌ ¾ø´Â°Ô,
-	// PointChange() ÀÌÈÄ¿¡ ¾îµğ¼±°¡ ComputePoints()¸¦ ÇÏ¸é ½Ï´Ù ÃÊ±âÈ­µÇ°í, 
-	// ´õ ¿ô±ä°Ç, ComputePoints()¸¦ ºÎ¸£Áö ¾ÊÀ¸¸é Å¬¶óÀÇ POINT´Â ÀüÇô º¯ÇÏÁö ¾Ê´Â´Ù´Â °Å´Ù.
-	// ±×·¡¼­ ¹öÇÁ¸¦ ÁÖ´Â °ÍÀº ComputePoints() ³»ºÎ¿¡¼­ petsystem->RefreshBuff()¸¦ ºÎ¸£µµ·Ï ÇÏ¿´°í,
-	// ¹öÇÁ¸¦ »©´Â °ÍÀº ClearBuff()¸¦ ºÎ¸£°í, ComputePoints¸¦ ÇÏ´Â °ÍÀ¸·Î ÇÑ´Ù.
+	// ë²„í”„ ì£¼ëŠ” í•¨ìˆ˜ì™€ ê±°ë‘ëŠ” í•¨ìˆ˜.
+	// ì´ê²Œ ì¢€ ê´´ë„í•œê²Œ, ì„œë²„ê°€ ã…„ë¼ì„œ, 
+	// POINT_MOV_SPEED, POINT_ATT_SPEED, POINT_CAST_SPEEDëŠ” PointChange()ë€ í•¨ìˆ˜ë§Œ ì¨ì„œ ë³€ê²½í•´ ë´ì•¼ ì†Œìš©ì´ ì—†ëŠ”ê²Œ,
+	// PointChange() ì´í›„ì— ì–´ë””ì„ ê°€ ComputePoints()ë¥¼ í•˜ë©´ ì‹¹ë‹¤ ì´ˆê¸°í™”ë˜ê³ , 
+	// ë” ì›ƒê¸´ê±´, ComputePoints()ë¥¼ ë¶€ë¥´ì§€ ì•Šìœ¼ë©´ í´ë¼ì˜ POINTëŠ” ì „í˜€ ë³€í•˜ì§€ ì•ŠëŠ”ë‹¤ëŠ” ê±°ë‹¤.
+	// ê·¸ë˜ì„œ ë²„í”„ë¥¼ ì£¼ëŠ” ê²ƒì€ ComputePoints() ë‚´ë¶€ì—ì„œ petsystem->RefreshBuff()ë¥¼ ë¶€ë¥´ë„ë¡ í•˜ì˜€ê³ ,
+	// ë²„í”„ë¥¼ ë¹¼ëŠ” ê²ƒì€ ClearBuff()ë¥¼ ë¶€ë¥´ê³ , ComputePointsë¥¼ í•˜ëŠ” ê²ƒìœ¼ë¡œ í•œë‹¤.
 	void			GiveBuff();
 	void			ClearBuff();
 
@@ -87,7 +87,7 @@ private:
 	LPCHARACTER		m_pkChar;					// Instance of pet(CHARACTER)
 	LPCHARACTER		m_pkOwner;
 
-//	SPetAbility		m_petAbility;				// ´É·ÂÄ¡
+//	SPetAbility		m_petAbility;				// ëŠ¥ë ¥ì¹˜
 };
 
 /**
@@ -95,7 +95,7 @@ private:
 class CPetSystem
 {
 public:
-	typedef	std::unordered_map<DWORD,	CPetActor*>		TPetActorMap;		/// <VNUM, PetActor> map. (ÇÑ Ä³¸¯ÅÍ°¡ °°Àº vnumÀÇ ÆêÀ» ¿©·¯°³ °¡Áú ÀÏÀÌ ÀÖÀ»±î..??)
+	typedef	std::unordered_map<DWORD,	CPetActor*>		TPetActorMap;		/// <VNUM, PetActor> map. (í•œ ìºë¦­í„°ê°€ ê°™ì€ vnumì˜ í«ì„ ì—¬ëŸ¬ê°œ ê°€ì§ˆ ì¼ì´ ìˆì„ê¹Œ..??)
 
 public:
 	CPetSystem(LPCHARACTER owner);
@@ -107,7 +107,7 @@ public:
 	bool		Update(DWORD deltaTime);
 	void		Destroy();
 
-	size_t		CountSummoned() const;			///< ÇöÀç ¼ÒÈ¯µÈ(½ÇÃ¼È­ µÈ Ä³¸¯ÅÍ°¡ ÀÖ´Â) ÆêÀÇ °³¼ö
+	size_t		CountSummoned() const;			///< í˜„ì¬ ì†Œí™˜ëœ(ì‹¤ì²´í™” ëœ ìºë¦­í„°ê°€ ìˆëŠ”) í«ì˜ ê°œìˆ˜
 
 public:
 	void		SetUpdatePeriod(DWORD ms);
@@ -117,7 +117,7 @@ public:
 	void		Unsummon(DWORD mobVnum, bool bDeleteFromList = false);
 	void		Unsummon(CPetActor* petActor, bool bDeleteFromList = false);
 
-	// TODO: ÁøÂ¥ Æê ½Ã½ºÅÛÀÌ µé¾î°¥ ¶§ ±¸Çö. (Ä³¸¯ÅÍ°¡ º¸À¯ÇÑ ÆêÀÇ Á¤º¸¸¦ Ãß°¡ÇÒ ¶§ ¶ó´ø°¡...)
+	// TODO: ì§„ì§œ í« ì‹œìŠ¤í…œì´ ë“¤ì–´ê°ˆ ë•Œ êµ¬í˜„. (ìºë¦­í„°ê°€ ë³´ìœ í•œ í«ì˜ ì •ë³´ë¥¼ ì¶”ê°€í•  ë•Œ ë¼ë˜ê°€...)
 	CPetActor*	AddPet(DWORD mobVnum, const char* petName, const SPetAbility& ability, DWORD options = CPetActor::EPetOption_Followable | CPetActor::EPetOption_Summonable | CPetActor::EPetOption_Combatable);
 
 	void		DeletePet(DWORD mobVnum);
@@ -126,8 +126,8 @@ public:
 
 private:
 	TPetActorMap	m_petActorMap;
-	LPCHARACTER		m_pkOwner;					///< Æê ½Ã½ºÅÛÀÇ Owner
-	DWORD			m_dwUpdatePeriod;			///< ¾÷µ¥ÀÌÆ® ÁÖ±â (ms´ÜÀ§)
+	LPCHARACTER		m_pkOwner;					///< í« ì‹œìŠ¤í…œì˜ Owner
+	DWORD			m_dwUpdatePeriod;			///< ì—…ë°ì´íŠ¸ ì£¼ê¸° (msë‹¨ìœ„)
 	DWORD			m_dwLastUpdateTime;
 	LPEVENT			m_pkPetSystemUpdateEvent;
 };

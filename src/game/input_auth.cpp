@@ -1,4 +1,4 @@
-#include "stdafx.h" 
+ï»¿#include "stdafx.h" 
 #include "constants.h"
 #include "config.h"
 #include "input.h"
@@ -30,11 +30,11 @@ bool FN_IS_VALID_LOGIN_STRING(const char *str)
 
 	for (tmp = str; *tmp; ++tmp)
 	{
-		// ¾ËÆÄºª°ú ¼öÀÚ¸¸ Çã¿ë
+		// ì•ŒíŒŒë²³ê³¼ ìˆ˜ìë§Œ í—ˆìš©
 		if (isdigit(*tmp) || isalpha(*tmp))
 			continue;
 
-		// Ä³³ª´Ù´Â ¸î¸î Æ¯¼ö¹®ÀÚ Çã¿ë
+		// ìºë‚˜ë‹¤ëŠ” ëª‡ëª‡ íŠ¹ìˆ˜ë¬¸ì í—ˆìš©
 		if (LC_IsCanada())
 		{
 			switch (*tmp)
@@ -130,7 +130,7 @@ void CInputAuth::Login(LPDESC d, const char * c_pData)
 		return;
 	}
 
-	// string ¹«°á¼ºÀ» À§ÇØ º¹»ç
+	// string ë¬´ê²°ì„±ì„ ìœ„í•´ ë³µì‚¬
 	char login[LOGIN_MAX_LEN + 1];
 	trim_and_lower(pinfo->login, login, sizeof(login));
 
@@ -254,13 +254,13 @@ void CInputAuth::LoginOpenID(LPDESC d, const char * c_pData)
 	//OpenID test code.
 	TPacketCGLogin5 *tempInfo1 = (TPacketCGLogin5 *)c_pData;
 
-	//ÀÏº» À¥ ¼­¹ö¿¡ ÀÎÁõÅ° È®ÀÎ ¿äÃ»À» º¸³½´Ù.
+	//ì¼ë³¸ ì›¹ ì„œë²„ì— ì¸ì¦í‚¤ í™•ì¸ ìš”ì²­ì„ ë³´ë‚¸ë‹¤.
 	char* authKey = tempInfo1->authKey;
 	char returnID[LOGIN_MAX_LEN + 1] = {0};
 
 	int test_url_get_protocol = auth_OpenID(authKey, inet_ntoa(d->GetAddr().sin_addr), returnID);
 
-	//ÀÎÁõ ½ÇÆĞ. ¿¡·¯ Ã³¸®
+	//ì¸ì¦ ì‹¤íŒ¨. ì—ëŸ¬ ì²˜ë¦¬
 	if (0!=test_url_get_protocol)
 	{
 		LoginFailure(d, "OpenID Fail");
@@ -282,7 +282,7 @@ void CInputAuth::LoginOpenID(LPDESC d, const char * c_pData)
 		return;
 	}
 
-	// string ¹«°á¼ºÀ» À§ÇØ º¹»ç
+	// string ë¬´ê²°ì„±ì„ ìœ„í•´ ë³µì‚¬
 	char login[LOGIN_MAX_LEN + 1];
 	trim_and_lower(pinfo->login, login, sizeof(login));
 
@@ -459,7 +459,7 @@ int CInputAuth::auth_OpenID(const char *authKey, const char *ipAddr, char *rID)
 	    return 3;
 	}
 
-	//°á°ú°ª ÆÄ½Ì
+	//ê²°ê³¼ê°’ íŒŒì‹±
 	char buffer[1024];
 	strcpy(buffer, reply);
 
@@ -484,7 +484,7 @@ int CInputAuth::auth_OpenID(const char *authKey, const char *ipAddr, char *rID)
 		return 4;
 	}
 
-	if (0 != strcmp("OK", success))		//¿¡·¯ Ã³¸®
+	if (0 != strcmp("OK", success))		//ì—ëŸ¬ ì²˜ë¦¬
 	{
 		int returnNumber = 0;
 		str_to_number(returnNumber, id);
@@ -547,7 +547,7 @@ int CInputAuth::Analyze(LPDESC d, BYTE bHeader, const char * c_pData)
 			Login(d, c_pData);
 			break;
 
-		//2012.07.19 OpenID : ±è¿ë¿í
+		//2012.07.19 OpenID : ê¹€ìš©ìš±
 		case HEADER_CG_LOGIN5_OPENID:
 			if (openid_server)
 				LoginOpenID(d, c_pData);

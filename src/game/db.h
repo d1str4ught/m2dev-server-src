@@ -1,4 +1,4 @@
-#ifndef __INC_METIN_II_DB_MANAGER_H__
+ï»¿#ifndef __INC_METIN_II_DB_MANAGER_H__
 #define __INC_METIN_II_DB_MANAGER_H__
 
 #include "../../libsql/AsyncSQL.h"
@@ -109,7 +109,7 @@ class DBManager : public singleton<DBManager>
 		void			FlushBilling(bool bForce=false);
 		void			CheckBilling();
 
-		void			StopAllBilling(); // 20050503.ipkn.DB-AUTH Á¢¼Ó Á¾·á½Ã ºô¸µ Å×ÀÌºí ¸ğµÎ Áö¿ì±â (Àç¿¬°á½Ã º¹±¸ÇÔ)
+		void			StopAllBilling(); // 20050503.ipkn.DB-AUTH ì ‘ì† ì¢…ë£Œì‹œ ë¹Œë§ í…Œì´ë¸” ëª¨ë‘ ì§€ìš°ê¸° (ì¬ì—°ê²°ì‹œ ë³µêµ¬í•¨)
 
 		DWORD			CountQuery()		{ return m_sql.CountQuery(); }
 		DWORD			CountQueryResult()	{ return m_sql.CountResult(); }
@@ -123,8 +123,8 @@ class DBManager : public singleton<DBManager>
 		const std::string &	GetDBString(const std::string& key);
 		const std::vector<std::string> & GetGreetMessage();
 
-		template<class Functor> void FuncQuery(Functor f, const char * c_pszFormat, ...); // °á°ú¸¦ fÀÎÀÚ·Î È£ÃâÇÔ (SQLMsg *) ¾Ë¾Æ¼­ ÇØÁ¦µÊ
-		template<class Functor> void FuncAfterQuery(Functor f, const char * c_pszFormat, ...); // ³¡³ª°í ³ª¸é f°¡ È£ÃâµÊ void			f(void) ÇüÅÂ
+		template<class Functor> void FuncQuery(Functor f, const char * c_pszFormat, ...); // ê²°ê³¼ë¥¼ fì¸ìë¡œ í˜¸ì¶œí•¨ (SQLMsg *) ì•Œì•„ì„œ í•´ì œë¨
+		template<class Functor> void FuncAfterQuery(Functor f, const char * c_pszFormat, ...); // ëë‚˜ê³  ë‚˜ë©´ fê°€ í˜¸ì¶œë¨ void			f(void) í˜•íƒœ
 
 		size_t EscapeString(char* dst, size_t dstSize, const char *src, size_t srcSize);
 

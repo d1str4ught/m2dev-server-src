@@ -1,4 +1,4 @@
-// vim: ts=8 sw=4
+ï»¿// vim: ts=8 sw=4
 #ifndef __INC_PRIV_MANAGER_H
 #define __INC_PRIV_MANAGER_H
 
@@ -23,7 +23,7 @@ struct TPrivEmpireData
 };
 
 /**
- * @version 05/06/08	Bang2ni - Áö¼Ó½Ã°£ Ãß°¡
+ * @version 05/06/08	Bang2ni - ì§€ì†ì‹œê°„ ì¶”ê°€
  */
 struct TPrivGuildData
 {
@@ -33,7 +33,7 @@ struct TPrivGuildData
     DWORD guild_id;
 
 	// ADD_GUILD_PRIV_TIME
-    time_t end_time_sec;	///< Áö¼Ó½Ã°£
+    time_t end_time_sec;	///< ì§€ì†ì‹œê°„
 
     TPrivGuildData(BYTE type, int value, DWORD guild_id, time_t _end_time_sec)
 	: type(type), value(value), bRemoved(false), guild_id(guild_id), end_time_sec(_end_time_sec )
@@ -53,7 +53,7 @@ struct TPrivCharData
 };
 
 /**
- * @version 05/06/08	Bang2ni - Guild privilege °ü·Ã ÇÔ¼ö Áö¼Ó ½Ã°£ Ãß°¡
+ * @version 05/06/08	Bang2ni - Guild privilege ê´€ë ¨ í•¨ìˆ˜ ì§€ì† ì‹œê°„ ì¶”ê°€
  */
 class CPrivManager : public singleton<CPrivManager>
 {

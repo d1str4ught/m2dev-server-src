@@ -1,4 +1,4 @@
-#ifndef __INC_EMPIRE_CHAT_CONVERT
+﻿#ifndef __INC_EMPIRE_CHAT_CONVERT
 #define __INC_EMPIRE_CHAT_CONVERT
 
 bool LoadEmpireTextConvertTable(DWORD dwEmpireID, const char* c_szFileName);

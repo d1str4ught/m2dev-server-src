@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "QID.h"
 #include "DBManager.h"
 #include "ItemAwardManager.h"
@@ -54,19 +54,19 @@ void ItemAwardManager::Load(SQLMsg * pMsg)
 		if (row[col])
 		{
 			strlcpy(kData->szWhy, row[col], sizeof(kData->szWhy));
-			//°ÔÀÓ Áß¿¡ whyÄİ·ë¿¡ º¯µ¿ÀÌ »ı±â¸é				
-			char* whyStr = kData->szWhy;	//why Äİ·ë ÀĞ±â
-			char cmdStr[100] = "";	//whyÄİ·ë¿¡¼­ ÀĞÀº °ªÀ» ÀÓ½Ã ¹®ÀÚ¿­¿¡ º¹»çÇØµÒ
-			strcpy(cmdStr,whyStr);	//¸í·É¾î ¾ò´Â °úÁ¤¿¡¼­ ÅäÅ«¾²¸é ¿øº»µµ ÅäÅ«È­ µÇ±â ¶§¹®
+			//ê²Œì„ ì¤‘ì— whyì½œë£¸ì— ë³€ë™ì´ ìƒê¸°ë©´				
+			char* whyStr = kData->szWhy;	//why ì½œë£¸ ì½ê¸°
+			char cmdStr[100] = "";	//whyì½œë£¸ì—ì„œ ì½ì€ ê°’ì„ ì„ì‹œ ë¬¸ìì—´ì— ë³µì‚¬í•´ë‘ 
+			strcpy(cmdStr,whyStr);	//ëª…ë ¹ì–´ ì–»ëŠ” ê³¼ì •ì—ì„œ í† í°ì“°ë©´ ì›ë³¸ë„ í† í°í™” ë˜ê¸° ë•Œë¬¸
 			char command[20] = "";
-			strcpy(command,CClientManager::instance().GetCommand(cmdStr));	// command ¾ò±â
+			strcpy(command,CClientManager::instance().GetCommand(cmdStr));	// command ì–»ê¸°
 			//sys_err("%d,  %s",pItemAward->dwID,command);
-			if( !(strcmp(command,"GIFT") ))	// command °¡ GIFTÀÌ¸é
+			if( !(strcmp(command,"GIFT") ))	// command ê°€ GIFTì´ë©´
 			{
 				TPacketItemAwardInfromer giftData;
-				strcpy(giftData.login, kData->szLogin);	//·Î±×ÀÎ ¾ÆÀÌµğ º¹»ç
-				strcpy(giftData.command, command);					//¸í·É¾î º¹»ç
-				giftData.vnum = kData->dwVnum;				//¾ÆÀÌÅÛ vnumµµ º¹»ç
+				strcpy(giftData.login, kData->szLogin);	//ë¡œê·¸ì¸ ì•„ì´ë”” ë³µì‚¬
+				strcpy(giftData.command, command);					//ëª…ë ¹ì–´ ë³µì‚¬
+				giftData.vnum = kData->dwVnum;				//ì•„ì´í…œ vnumë„ ë³µì‚¬
 				CClientManager::instance().ForwardPacket(HEADER_DG_ITEMAWARD_INFORMER,&giftData,sizeof(TPacketItemAwardInfromer));
 			}
 		}

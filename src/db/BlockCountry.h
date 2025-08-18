@@ -1,4 +1,4 @@
-// vim: ts=4 sw=4
+﻿// vim: ts=4 sw=4
 // Date        : 2007.05.31
 // File        : BlockCountry.h
 // Author      : mhh

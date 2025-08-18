@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "constants.h"
 #include "passpod.h"
 
@@ -46,7 +46,7 @@ int CPasspod::ConfirmPasspod( const char * account, const char * passpod )
 	char szResult[1024];
 	char szTmp[128];
 
-	int ret_code = 1; // 0 ÀÌ ¼º°ø 
+	int ret_code = 1; // 0 ì´ ì„±ê³µ 
 
 	snprintf( szRequest, sizeof(szRequest), "username=%s&systemname=%s&passpod=%s&algname=%s", account, servername, passpod, algname );
 	snprintf( szResult, sizeof(szResult), "POST %s%s HTTP/1.0\r\n", posspod_server, auth );
@@ -105,14 +105,14 @@ int CPasspod::ConfirmPasspod( const char * account, const char * passpod )
 	{
 		int n = 0;
 
-		//¶óÀÎ³Ñ±â±â
+		//ë¼ì¸ë„˜ê¸°ê¸°
 		for (; pos[n]!='\n'; ++n  ) {}
 	
-		//\n¿¡¼­ ¸ØÃß±â ÇÏ³ª´õ ³²°ÜÁÖÀÚ 	
+		//\nì—ì„œ ë©ˆì¶”ê¸° í•˜ë‚˜ë” ë‚¨ê²¨ì£¼ì 	
 		pos = pos+n+1;
 
 		
-		//Return Value ¸¦ ºñ±³ 
+		//Return Value ë¥¼ ë¹„êµ 
 		if ( 0 == strncmp( pos, "AUTH_SUCCESS", strlen(ERR_STRINGS[0]) ) )
 		{
 			ret_code = E_PASSPOD_SUCCESS;

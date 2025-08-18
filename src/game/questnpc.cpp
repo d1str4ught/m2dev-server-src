@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include <fstream>
 #include <sstream>
 #include "questmanager.h"
@@ -132,7 +132,7 @@ namespace quest
 			//
 
 			///////////////////////////////////////////////////////////////////////////
-			// ¼ø¼­ Index (¿©·¯°³ ÀÖÀ» ¼ö ÀÖÀ¸¹Ç·Î ÀÖ´Â °ÍÀÓ, ½ÇÁ¦ index °ªÀº ¾²Áö ¾ÊÀ½)
+			// ìˆœì„œ Index (ì—¬ëŸ¬ê°œ ìˆì„ ìˆ˜ ìˆìœ¼ë¯€ë¡œ ìˆëŠ” ê²ƒì„, ì‹¤ì œ index ê°’ì€ ì“°ì§€ ì•ŠìŒ)
 			j = i;
 			i = s.find('.', i + 1);
 
@@ -411,7 +411,7 @@ namespace quest
 
 		void operator()(PC::QuestInfoIterator& itPCQuest, NPC::QuestMapType::iterator& itQuestMap)
 		{
-			// ¾øÀ¸´Ï »õ·Î ½ÃÀÛ
+			// ì—†ìœ¼ë‹ˆ ìƒˆë¡œ ì‹œì‘
 			DWORD dwQuestIndex = itQuestMap->first;
 
 			if (NPC::HasStartState(itQuestMap->second) && CQuestManager::instance().CanStartQuest(dwQuestIndex))
@@ -495,8 +495,8 @@ namespace quest
 			for (int i = 0; i < fMatch.size; i++)
 			{
 				if ( i != 0 ) {
-					//2012.05.14 <±è¿ë¿í> : Äù½ºÆ® ¸Å´ÏÀúÀÇ m_pCurrentPC°¡ ¹Ù²î´Â °æ¿ì°¡ ¹ß»ıÇÏ¿©,
-					//µÎ°³ ÀÌ»óÀÇ ½ºÅ©¸³Æ®¸¦ ½ÇÇà½Ã, µÎ¹øÂ° ºÎÅÍ´Â Äù½ºÆ® ¸Å´ÏÀúÀÇ PC °ªÀ» »õ·Î ¼ÂÆÃÇÑ´Ù.
+					//2012.05.14 <ê¹€ìš©ìš±> : í€˜ìŠ¤íŠ¸ ë§¤ë‹ˆì €ì˜ m_pCurrentPCê°€ ë°”ë€ŒëŠ” ê²½ìš°ê°€ ë°œìƒí•˜ì—¬,
+					//ë‘ê°œ ì´ìƒì˜ ìŠ¤í¬ë¦½íŠ¸ë¥¼ ì‹¤í–‰ì‹œ, ë‘ë²ˆì§¸ ë¶€í„°ëŠ” í€˜ìŠ¤íŠ¸ ë§¤ë‹ˆì €ì˜ PC ê°’ì„ ìƒˆë¡œ ì…‹íŒ…í•œë‹¤.
 					PC * pPC = CQuestManager::instance().GetPC(pc.GetID());		
 				}
 				
@@ -806,7 +806,7 @@ namespace quest
 		QuestMapType & rmapEventOwnQuest = m_mapOwnQuest[EventIndex];
 		QuestMapType::iterator itQuestMap = rmapEventOwnQuest.find(quest_index);
 
-		// ±×·± Äù½ºÆ®°¡ ¾øÀ½
+		// ê·¸ëŸ° í€˜ìŠ¤íŠ¸ê°€ ì—†ìŒ
 		if (itQuestMap == rmapEventOwnQuest.end())
 			return false;
 
@@ -818,7 +818,7 @@ namespace quest
 		}
 		else
 		{
-			// »õ·Î ½ÃÀÛÇÒ±î¿ä?
+			// ìƒˆë¡œ ì‹œì‘í• ê¹Œìš”?
 			if (CQuestManager::instance().CanStartQuest(itQuestMap->first, pc) && HasStartState(itQuestMap->second))
 				iState = 0;
 			else
@@ -918,7 +918,7 @@ namespace quest
 			{
 				os << ",\"" << ScriptToString(AvailScript[i]->arg.c_str()) << '"';
 			}
-			os << ", '"<<LC_TEXT("´İ±â")<<"'";
+			os << ", '"<<LC_TEXT("ë‹«ê¸°")<<"'";
 			os << ")";
 
 			CQuestManager::ExecuteQuestScript(pc, "QUEST_CHAT_TEMP_QUEST", 0, os.str().c_str(), os.str().size(), &AvailScript, false);
@@ -963,7 +963,7 @@ namespace quest
 		else
 			return HandleEvent(pc, QUEST_ITEM_PICK_EVENT);
 	}
-	//µ¶ÀÏ ¼±¹° ±â´É Å×½ºÆ®
+	//ë…ì¼ ì„ ë¬¼ ê¸°ëŠ¥ í…ŒìŠ¤íŠ¸
 	bool NPC::OnItemInformer(PC& pc, unsigned int vnum)
 	{
 		return HandleEvent(pc, QUEST_ITEM_INFORMER_EVENT);

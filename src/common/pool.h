@@ -1,4 +1,4 @@
-#ifndef __INC_METIN_II_COMMON_POOL_H__
+﻿#ifndef __INC_METIN_II_COMMON_POOL_H__
 #define __INC_METIN_II_COMMON_POOL_H__
 
 #include <assert.h>

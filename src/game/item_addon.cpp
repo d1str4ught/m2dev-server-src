@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "constants.h"
 #include "utils.h"
 #include "item.h"
@@ -20,7 +20,7 @@ void CItemAddonManager::ApplyAddonTo(int iAddonType, LPITEM pItem)
 		return;
 	}
 
-	// TODO ÀÏ´Ü ÇÏµåÄÚµùÀ¸·Î ÆòÅ¸ ½ºÅ³ ¼öÄ¡ º¯°æ¸¸ °æ¿ì¸¸ Àû¿ë¹Ş°ÔÇÑ´Ù.
+	// TODO ì¼ë‹¨ í•˜ë“œì½”ë”©ìœ¼ë¡œ í‰íƒ€ ìŠ¤í‚¬ ìˆ˜ì¹˜ ë³€ê²½ë§Œ ê²½ìš°ë§Œ ì ìš©ë°›ê²Œí•œë‹¤.
 
 	int iSkillBonus = MINMAX(-30, (int) (gauss_random(0, 5) + 0.5f), 30);
 	int iNormalHitBonus = 0;

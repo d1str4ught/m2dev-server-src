@@ -1,4 +1,4 @@
-#ifndef __INC_CONFIG_H__
+﻿#ifndef __INC_CONFIG_H__
 #define __INC_CONFIG_H__
 
 typedef std::map<std::string, std::string> TValueMap;

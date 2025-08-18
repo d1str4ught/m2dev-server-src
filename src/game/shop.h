@@ -1,4 +1,4 @@
-#ifndef __INC_METIN_II_GAME_SHOP_H__
+ï»¿#ifndef __INC_METIN_II_GAME_SHOP_H__
 #define __INC_METIN_II_GAME_SHOP_H__
 
 enum
@@ -14,12 +14,12 @@ class CShop
 	public:
 		typedef struct shop_item
 		{
-			DWORD	vnum;		// ¾ÆÀÌÅÛ ¹øÈ£
-			long	price;		// °¡°İ
-			BYTE	count;		// ¾ÆÀÌÅÛ °³¼ö
+			DWORD	vnum;		// ì•„ì´í…œ ë²ˆí˜¸
+			long	price;		// ê°€ê²©
+			BYTE	count;		// ì•„ì´í…œ ê°œìˆ˜
 
 			LPITEM	pkItem;
-			int		itemid;		// ¾ÆÀÌÅÛ °íÀ¯¾ÆÀÌµğ
+			int		itemid;		// ì•„ì´í…œ ê³ ìœ ì•„ì´ë””
 
 			shop_item()
 			{
@@ -40,20 +40,20 @@ class CShop
 		virtual void	SetPCShop(LPCHARACTER ch);
 		virtual bool	IsPCShop()	{ return m_pkPC ? true : false; }
 
-		// °Ô½ºÆ® Ãß°¡/»èÁ¦
+		// ê²ŒìŠ¤íŠ¸ ì¶”ê°€/ì‚­ì œ
 		virtual bool	AddGuest(LPCHARACTER ch,DWORD owner_vid, bool bOtherEmpire);
 		void	RemoveGuest(LPCHARACTER ch);
 
-		// ¹°°Ç ±¸ÀÔ
+		// ë¬¼ê±´ êµ¬ì…
 		virtual int	Buy(LPCHARACTER ch, BYTE pos);
 
-		// °Ô½ºÆ®¿¡°Ô ÆĞÅ¶À» º¸³¿
+		// ê²ŒìŠ¤íŠ¸ì—ê²Œ íŒ¨í‚·ì„ ë³´ëƒ„
 		void	BroadcastUpdateItem(BYTE pos);
 
-		// ÆÇ¸ÅÁßÀÎ ¾ÆÀÌÅÛÀÇ °¹¼ö¸¦ ¾Ë·ÁÁØ´Ù.
+		// íŒë§¤ì¤‘ì¸ ì•„ì´í…œì˜ ê°¯ìˆ˜ë¥¼ ì•Œë ¤ì¤€ë‹¤.
 		int		GetNumberByVnum(DWORD dwVnum);
 
-		// ¾ÆÀÌÅÛÀÌ »óÁ¡¿¡ µî·ÏµÇ¾î ÀÖ´ÂÁö ¾Ë·ÁÁØ´Ù.
+		// ì•„ì´í…œì´ ìƒì ì— ë“±ë¡ë˜ì–´ ìˆëŠ”ì§€ ì•Œë ¤ì¤€ë‹¤.
 		virtual bool	IsSellingItem(DWORD itemID);
 
 		DWORD	GetVnum() { return m_dwVnum; }
@@ -70,7 +70,7 @@ class CShop
 
 		typedef std::unordered_map<LPCHARACTER, bool> GuestMapType;
 		GuestMapType m_map_guest;
-		std::vector<SHOP_ITEM>		m_itemVector;	// ÀÌ »óÁ¡¿¡¼­ Ãë±ŞÇÏ´Â ¹°°Çµé
+		std::vector<SHOP_ITEM>		m_itemVector;	// ì´ ìƒì ì—ì„œ ì·¨ê¸‰í•˜ëŠ” ë¬¼ê±´ë“¤
 
 		LPCHARACTER			m_pkPC;
 };

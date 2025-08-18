@@ -1,4 +1,4 @@
-
+ï»¿
 #include "stdafx.h"
 
 #include "ClientManager.h"
@@ -249,7 +249,7 @@ TAccountTable * CreateAccountTableFromRes(MYSQL_RES * res)
 	TAccountTable * pkTab = new TAccountTable;
 	memset(pkTab, 0, sizeof(TAccountTable));
 
-	// Ã¹¹øÂ° ÄÃ·³ °Í¸¸ Âü°í ÇÑ´Ù (JOIN QUERY¸¦ À§ÇÑ °Í ÀÓ)
+	// ì²«ë²ˆì§¸ ì»¬ëŸ¼ ê²ƒë§Œ ì°¸ê³  í•œë‹¤ (JOIN QUERYë¥¼ ìœ„í•œ ê²ƒ ìž„)
 	strlcpy(input_pwd, row[col++], sizeof(input_pwd));
 	str_to_number(pkTab->id, row[col++]);
 	strlcpy(pkTab->login, row[col++], sizeof(pkTab->login));
@@ -373,7 +373,7 @@ void CClientManager::RESULT_LOGIN(CPeer * peer, SQLMsg * msg)
 
 	if (info->account_index == 0)
 	{
-		// °èÁ¤ÀÌ ¾ø³×?
+		// ê³„ì •ì´ ì—†ë„¤?
 		if (msg->Get()->uiNumRows == 0)
 		{
 			sys_log(0, "RESULT_LOGIN: no account");
@@ -415,14 +415,14 @@ void CClientManager::RESULT_LOGIN(CPeer * peer, SQLMsg * msg)
 	}
 	else
 	{
-		if (!info->pAccountTable) // ÀÌ·²¸®´Â ¾ø°ÚÁö¸¸;;
+		if (!info->pAccountTable) // ì´ëŸ´ë¦¬ëŠ” ì—†ê² ì§€ë§Œ;;
 		{
 			peer->EncodeReturn(HEADER_DG_LOGIN_WRONG_PASSWD, info->dwHandle);
 			delete info;
 			return;
 		}
 
-		// ´Ù¸¥ ÄÁ³Ø¼ÇÀÌ ÀÌ¹Ì ·Î±×ÀÎ ÇØ¹ö·È´Ù¸é.. ÀÌ¹Ì Á¢¼ÓÇß´Ù°í º¸³»¾ß ÇÑ´Ù.
+		// ë‹¤ë¥¸ ì»¨ë„¥ì…˜ì´ ì´ë¯¸ ë¡œê·¸ì¸ í•´ë²„ë ¸ë‹¤ë©´.. ì´ë¯¸ ì ‘ì†í–ˆë‹¤ê³  ë³´ë‚´ì•¼ í•œë‹¤.
 		if (!InsertLogonAccount(info->pAccountTable->login, peer->GetHandle(), info->ip))
 		{
 			sys_log(0, "RESULT_LOGIN: already logon %s", info->pAccountTable->login);

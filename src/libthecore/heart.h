@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 typedef struct heart	HEART;
 typedef struct heart *	LPHEART;
 
@@ -18,5 +18,5 @@ struct heart
 
 LPHEART	heart_new(int opt_usec, HEARTFUNC func);
 void	heart_delete(LPHEART ht);
-int	    heart_idle(LPHEART ht);	// ¸î pulse°¡ Áö³µ³ª ¸®ÅÏÇÑ´Ù.
+int	    heart_idle(LPHEART ht);	// ëª‡ pulseê°€ ì§€ë‚¬ë‚˜ ë¦¬í„´í•œë‹¤.
 void	heart_beat(LPHEART ht, int pulses);

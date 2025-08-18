@@ -1,4 +1,4 @@
-/*
+﻿/*
 ** $Id: lobject.h,v 1.159 2003/03/18 12:50:04 roberto Exp $
 ** Type definitions for Lua objects
 ** See Copyright Notice in lua.h

@@ -1,4 +1,4 @@
-#ifndef _FIFO_ALLOCATOR_H_
+﻿#ifndef _FIFO_ALLOCATOR_H_
 #define _FIFO_ALLOCATOR_H_
 
 #include <deque>

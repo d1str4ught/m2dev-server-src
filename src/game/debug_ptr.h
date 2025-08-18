@@ -1,4 +1,4 @@
-#ifndef _DEBUG_PTR_H_
+﻿#ifndef _DEBUG_PTR_H_
 #define _DEBUG_PTR_H_
 
 // Intended to be include only in "debug_allocator.h"

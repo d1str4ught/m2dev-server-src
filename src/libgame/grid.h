@@ -1,4 +1,4 @@
-#ifndef __INC_METIN_II_GRID_H__
+﻿#ifndef __INC_METIN_II_GRID_H__
 #define __INC_METIN_II_GRID_H__
 
 class CGrid

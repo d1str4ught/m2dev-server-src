@@ -1,4 +1,4 @@
-#ifndef __INC_GUILD_H
+ï»¿#ifndef __INC_GUILD_H
 #define __INC_GUILD_H
 
 #include "skill.h"
@@ -29,12 +29,12 @@ struct SGuildMaster
 
 typedef struct SGuildMember
 {
-	DWORD pid; // player Å×ÀÌºíÀÇ id; primary key
-	BYTE grade; // ±æµå»óÀÇ ÇÃ·¹ÀÌ¾îÀÇ °è±Ş 1 to 15 (1ÀÌ Â¯)
+	DWORD pid; // player í…Œì´ë¸”ì˜ id; primary key
+	BYTE grade; // ê¸¸ë“œìƒì˜ í”Œë ˆì´ì–´ì˜ ê³„ê¸‰ 1 to 15 (1ì´ ì§±)
 	BYTE is_general;
 	BYTE job;
 	BYTE level;
-	DWORD offer_exp; // °øÇåÇÑ °æÇèÄ¡
+	DWORD offer_exp; // ê³µí—Œí•œ ê²½í—˜ì¹˜
 	BYTE _dummy;
 
 	std::string name;
@@ -72,7 +72,7 @@ typedef struct packet_guild_sub_info
 
 typedef struct SGuildGrade
 {
-	char grade_name[GUILD_GRADE_NAME_MAX_LEN+1]; // 8+1 ±æµåÀå, ±æµå¿ø µîÀÇ ÀÌ¸§
+	char grade_name[GUILD_GRADE_NAME_MAX_LEN+1]; // 8+1 ê¸¸ë“œì¥, ê¸¸ë“œì› ë“±ì˜ ì´ë¦„
 	BYTE auth_flag;
 } TGuildGrade;
 
@@ -256,7 +256,7 @@ class CGuild
 		bool		ChargeSP(LPCHARACTER ch, int iSP);
 
 		void		Chat(const char* c_pszText); 
-		void		P2PChat(const char* c_pszText); // ±æµå Ã¤ÆÃ
+		void		P2PChat(const char* c_pszText); // ê¸¸ë“œ ì±„íŒ…
 
 		void		SkillUsableChange(DWORD dwSkillVnum, bool bUsable);
 		void		AdvanceLevel(int iLevel);
@@ -266,7 +266,7 @@ class CGuild
 		void		RequestWithdrawMoney(LPCHARACTER ch, int iGold);
 
 		void		RecvMoneyChange(int iGold);
-		void		RecvWithdrawMoneyGive(int iChangeGold); // bGive==1 ÀÌ¸é ±æµåÀå¿¡°Ô ÁÖ´Â °É ½ÃµµÇÏ°í ¼º°ø½ÇÆĞ¸¦ µğºñ¿¡°Ô º¸³½´Ù
+		void		RecvWithdrawMoneyGive(int iChangeGold); // bGive==1 ì´ë©´ ê¸¸ë“œì¥ì—ê²Œ ì£¼ëŠ” ê±¸ ì‹œë„í•˜ê³  ì„±ê³µì‹¤íŒ¨ë¥¼ ë””ë¹„ì—ê²Œ ë³´ë‚¸ë‹¤
 
 		int		GetGuildMoney() const	{ return m_data.gold; }
 
@@ -277,7 +277,7 @@ class CGuild
 		int		GetGuildWarState(DWORD guild_id);
 		bool		CanStartWar(BYTE bGuildWarType);
 		DWORD		GetWarStartTime(DWORD guild_id);
-		bool		UnderWar(DWORD guild_id); // ÀüÀïÁßÀÎ°¡?
+		bool		UnderWar(DWORD guild_id); // ì „ìŸì¤‘ì¸ê°€?
 		DWORD		UnderAnyWar(BYTE bType = GUILD_WAR_TYPE_MAX_NUM);
 
 		// War map relative
@@ -320,26 +320,26 @@ class CGuild
 		bool		HasLand();
 
 		// GUILD_JOIN_BUG_FIX
-		/// character ¿¡°Ô ±æµå°¡ÀÔ ÃÊ´ë¸¦ ÇÑ´Ù.
+		/// character ì—ê²Œ ê¸¸ë“œê°€ì… ì´ˆëŒ€ë¥¼ í•œë‹¤.
 		/**
-		 * @param	pchInviter ÃÊ´ëÇÑ character.
-		 * @param	pchInvitee ÃÊ´ëÇÒ character.
+		 * @param	pchInviter ì´ˆëŒ€í•œ character.
+		 * @param	pchInvitee ì´ˆëŒ€í•  character.
 		 *
-		 * ÃÊ´ëÇÏ°Å³ª ¹ŞÀ»¼ö ¾ø´Â »óÅÂ¶ó¸é ÇØ´çÇÏ´Â Ã¤ÆÃ ¸Ş¼¼Áö¸¦ Àü¼ÛÇÑ´Ù.
+		 * ì´ˆëŒ€í•˜ê±°ë‚˜ ë°›ì„ìˆ˜ ì—†ëŠ” ìƒíƒœë¼ë©´ í•´ë‹¹í•˜ëŠ” ì±„íŒ… ë©”ì„¸ì§€ë¥¼ ì „ì†¡í•œë‹¤.
 		 */
 		void		Invite( LPCHARACTER pchInviter, LPCHARACTER pchInvitee );
 
-		/// ±æµåÃÊ´ë¿¡ ´ëÇÑ »ó´ë character ÀÇ ¼ö¶ôÀ» Ã³¸®ÇÑ´Ù.
+		/// ê¸¸ë“œì´ˆëŒ€ì— ëŒ€í•œ ìƒëŒ€ character ì˜ ìˆ˜ë½ì„ ì²˜ë¦¬í•œë‹¤.
 		/**
-		 * @param	pchInvitee ÃÊ´ë¹ŞÀº character
+		 * @param	pchInvitee ì´ˆëŒ€ë°›ì€ character
 		 *
-		 * ±æµå¿¡ °¡ÀÔ°¡´ÉÇÑ »óÅÂ°¡ ¾Æ´Ï¶ó¸é ÇØ´çÇÏ´Â Ã¤ÆÃ ¸Ş¼¼Áö¸¦ Àü¼ÛÇÑ´Ù.
+		 * ê¸¸ë“œì— ê°€ì…ê°€ëŠ¥í•œ ìƒíƒœê°€ ì•„ë‹ˆë¼ë©´ í•´ë‹¹í•˜ëŠ” ì±„íŒ… ë©”ì„¸ì§€ë¥¼ ì „ì†¡í•œë‹¤.
 		 */
 		void		InviteAccept( LPCHARACTER pchInvitee );
 
-		/// ±æµåÃÊ´ë¿¡ ´ëÇÑ »ó´ë character ÀÇ °ÅºÎ¸¦ Ã³¸®ÇÑ´Ù.
+		/// ê¸¸ë“œì´ˆëŒ€ì— ëŒ€í•œ ìƒëŒ€ character ì˜ ê±°ë¶€ë¥¼ ì²˜ë¦¬í•œë‹¤.
 		/**
-		 * @param	dwPID ÃÊ´ë¹ŞÀº character ÀÇ PID
+		 * @param	dwPID ì´ˆëŒ€ë°›ì€ character ì˜ PID
 		 */
 		void		InviteDeny( DWORD dwPID );
 		// END_OF_GUILD_JOIN_BUG_FIX
@@ -377,27 +377,27 @@ class CGuild
 		bool	abSkillUsable[GUILD_SKILL_COUNT];
 
 		// GUILD_JOIN_BUG_FIX
-		/// ±æµå °¡ÀÔÀ» ÇÒ ¼ö ¾øÀ» °æ¿ìÀÇ ¿¡·¯ÄÚµå.
+		/// ê¸¸ë“œ ê°€ì…ì„ í•  ìˆ˜ ì—†ì„ ê²½ìš°ì˜ ì—ëŸ¬ì½”ë“œ.
 		enum GuildJoinErrCode {
-			GERR_NONE			= 0,	///< Ã³¸®¼º°ø
-			GERR_WITHDRAWPENALTY,		///< Å»ÅğÈÄ °¡ÀÔ°¡´ÉÇÑ ½Ã°£ÀÌ Áö³ªÁö ¾ÊÀ½
-			GERR_COMMISSIONPENALTY,		///< ÇØ»êÈÄ °¡ÀÔ°¡´ÉÇÑ ½Ã°£ÀÌ Áö³ªÁö ¾ÊÀ½
-			GERR_ALREADYJOIN,			///< ±æµå°¡ÀÔ ´ë»ó Ä³¸¯ÅÍ°¡ ÀÌ¹Ì ±æµå¿¡ °¡ÀÔÇØ ÀÖÀ½
-			GERR_GUILDISFULL,			///< ±æµåÀÎ¿ø Á¦ÇÑ ÃÊ°ú
-			GERR_GUILD_IS_IN_WAR,		///< ±æµå°¡ ÇöÀç ÀüÀïÁß
-			GERR_INVITE_LIMIT,			///< ±æµå¿ø °¡ÀÔ Á¦ÇÑ »óÅÂ
-			GERR_MAX				///< Error code ÃÖ°íÄ¡. ÀÌ ¾Õ¿¡ Error code ¸¦ Ãß°¡ÇÑ´Ù.
+			GERR_NONE			= 0,	///< ì²˜ë¦¬ì„±ê³µ
+			GERR_WITHDRAWPENALTY,		///< íƒˆí‡´í›„ ê°€ì…ê°€ëŠ¥í•œ ì‹œê°„ì´ ì§€ë‚˜ì§€ ì•ŠìŒ
+			GERR_COMMISSIONPENALTY,		///< í•´ì‚°í›„ ê°€ì…ê°€ëŠ¥í•œ ì‹œê°„ì´ ì§€ë‚˜ì§€ ì•ŠìŒ
+			GERR_ALREADYJOIN,			///< ê¸¸ë“œê°€ì… ëŒ€ìƒ ìºë¦­í„°ê°€ ì´ë¯¸ ê¸¸ë“œì— ê°€ì…í•´ ìˆìŒ
+			GERR_GUILDISFULL,			///< ê¸¸ë“œì¸ì› ì œí•œ ì´ˆê³¼
+			GERR_GUILD_IS_IN_WAR,		///< ê¸¸ë“œê°€ í˜„ì¬ ì „ìŸì¤‘
+			GERR_INVITE_LIMIT,			///< ê¸¸ë“œì› ê°€ì… ì œí•œ ìƒíƒœ
+			GERR_MAX				///< Error code ìµœê³ ì¹˜. ì´ ì•ì— Error code ë¥¼ ì¶”ê°€í•œë‹¤.
 		};
 
-		/// ±æµå¿¡ °¡ÀÔ °¡´ÉÇÑ Á¶°ÇÀ» °Ë»çÇÑ´Ù.
+		/// ê¸¸ë“œì— ê°€ì… ê°€ëŠ¥í•œ ì¡°ê±´ì„ ê²€ì‚¬í•œë‹¤.
 		/**
-		 * @param [in]	pchInvitee ÃÊ´ë¹Ş´Â character
+		 * @param [in]	pchInvitee ì´ˆëŒ€ë°›ëŠ” character
 		 * @return	GuildJoinErrCode
 		 */
 		GuildJoinErrCode	VerifyGuildJoinableCondition( const LPCHARACTER pchInvitee );
 
 		typedef std::map< DWORD, LPEVENT >	EventMap;
-		EventMap	m_GuildInviteEventMap;	///< ±æµå ÃÊÃ» Event map. key: ÃÊ´ë¹ŞÀº Ä³¸¯ÅÍÀÇ PID
+		EventMap	m_GuildInviteEventMap;	///< ê¸¸ë“œ ì´ˆì²­ Event map. key: ì´ˆëŒ€ë°›ì€ ìºë¦­í„°ì˜ PID
 		// END_OF_GUILD_JOIN_BUG_FIX
 };
 

@@ -1,4 +1,4 @@
-#ifndef __INC_SECTREE_H__
+ï»¿#ifndef __INC_SECTREE_H__
 #define __INC_SECTREE_H__
 
 #include "entity.h"
@@ -132,7 +132,7 @@ class SECTREE
 
 			while (it_tree != m_neighbor_list.end())
 			{
-				//Ã¹¹øÂ°¸¦ Ã£À¸¸é ¹Ù·Î ¸®ÅÏ
+				//ì²«ë²ˆì§¸ë¥¼ ì°¾ìœ¼ë©´ ë°”ë¡œ ë¦¬í„´
 				if ( (*(it_tree++))->for_each_entity_for_find_victim(func) )
 					return;
 			}
@@ -143,7 +143,7 @@ class SECTREE
 
 			while (it != m_set_entity.end())
 			{
-				//Á¤»óÀûÀ¸·Î Ã£À¸¸é ¹Ù·Î ¸®ÅÏ
+				//ì •ìƒì ìœ¼ë¡œ ì°¾ìœ¼ë©´ ë°”ë¡œ ë¦¬í„´
 				if ( func(*it++) )
 					return true;
 			}
@@ -176,9 +176,9 @@ class SECTREE
 		DWORD				GetAttribute(long x, long y);
 		bool				IsAttr(long x, long y, DWORD dwFlag);
 
-		void				CloneAttribute(LPSECTREE tree); // private map Ã³¸®½Ã »ç¿ë
+		void				CloneAttribute(LPSECTREE tree); // private map ì²˜ë¦¬ì‹œ ì‚¬ìš©
 
-		int				GetEventAttribute(long x, long y); // 20050313 ÇöÀç´Â »ç¿ëÇÏÁö ¾ÊÀ½
+		int				GetEventAttribute(long x, long y); // 20050313 í˜„ì¬ëŠ” ì‚¬ìš©í•˜ì§€ ì•ŠìŒ
 
 		void				SetAttribute(DWORD x, DWORD y, DWORD dwAttr);
 		void				RemoveAttribute(DWORD x, DWORD y, DWORD dwAttr);

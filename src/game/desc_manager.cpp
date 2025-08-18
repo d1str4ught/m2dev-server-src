@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "config.h"
 #include "utils.h"
 #include "crc32.h"
@@ -55,7 +55,7 @@ int IsValidIP(struct valid_ip* ip_table, const char *host)
 DESC_MANAGER::DESC_MANAGER() : m_bDestroyed(false)
 {
 	Initialize();
-	//NOTE : Destroy ³¡¿¡¼­ Initialize ¸¦ ºÎ¸£´Â°Ç ¶Ç ¹«½¼ ÁþÀÌ³Ä..-_-; Á¤¸» 
+	//NOTE : Destroy ëì—ì„œ Initialize ë¥¼ ë¶€ë¥´ëŠ”ê±´ ë˜ ë¬´ìŠ¨ ì§“ì´ëƒ..-_-; ì •ë§ 
 
 	m_pPackageCrypt = new CClientPackageCryptInfo;
 }
@@ -168,7 +168,7 @@ LPDESC DESC_MANAGER::AcceptDesc(LPFDWATCH fdw, socket_t s)
 		}
 	}
 
-	if (!IsValidIP(admin_ip, host)) // admin_ip ¿¡ µî·ÏµÈ IP ´Â ÃÖ´ë »ç¿ëÀÚ ¼ö¿¡ ±¸¾Ö¹ÞÁö ¾Ê´Â´Ù.
+	if (!IsValidIP(admin_ip, host)) // admin_ip ì— ë“±ë¡ëœ IP ëŠ” ìµœëŒ€ ì‚¬ìš©ìž ìˆ˜ì— êµ¬ì• ë°›ì§€ ì•ŠëŠ”ë‹¤.
 	{
 		if (m_iSocketsConnected >= MAX_ALLOW_USER)
 		{

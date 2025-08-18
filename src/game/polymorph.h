@@ -1,4 +1,4 @@
-
+﻿
 #ifndef __POLYMORPH_UTILS__
 #define __POLYMORPH_UTILS__
 

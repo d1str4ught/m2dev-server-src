@@ -1,4 +1,4 @@
-#ifndef OS_WINDOWS
+ï»¿#ifndef OS_WINDOWS
 #include <sys/time.h>
 #endif
 
@@ -145,10 +145,10 @@ bool CAsyncSQL::Connect()
 
 	fprintf(stdout, "AsyncSQL: connected to %s (reconnect %d)\n", m_stHost.c_str(), reconnect);
 
-	// db cache´Â common dbÀÇ LOCALE Å×ÀÌºí¿¡¼­ localeÀ» ¾Ë¾Æ¿À°í, ÀÌÈÄ character setÀ» ¼öÁ¤ÇÑ´Ù.
-	// µû¶ó¼­ ÃÖÃÊ ConnectionÀ» ¸ÎÀ» ¶§¿¡´Â localeÀ» ¸ğ¸£±â ¶§¹®¿¡ character setÀ» Á¤ÇÒ ¼ö°¡ ¾øÀ½¿¡µµ ºÒ±¸ÇÏ°í,
-	// °­Á¦·Î character setÀ» euckr·Î Á¤ÇÏµµ·Ï µÇ¾îÀÖ¾î ÀÌ ºÎºĞÀ» ÁÖ¼®Ã³¸® ÇÏ¿´´Ù.
-	// (¾Æ·¡ ÁÖ¼®À» Ç®¸é mysql¿¡ euckrÀÌ ¾È ±ò·ÁÀÖ´Â µğºñ¿¡ Á¢±ÙÇÒ ¼ö°¡ ¾ø´Ù.)
+	// db cacheëŠ” common dbì˜ LOCALE í…Œì´ë¸”ì—ì„œ localeì„ ì•Œì•„ì˜¤ê³ , ì´í›„ character setì„ ìˆ˜ì •í•œë‹¤.
+	// ë”°ë¼ì„œ ìµœì´ˆ Connectionì„ ë§ºì„ ë•Œì—ëŠ” localeì„ ëª¨ë¥´ê¸° ë•Œë¬¸ì— character setì„ ì •í•  ìˆ˜ê°€ ì—†ìŒì—ë„ ë¶ˆêµ¬í•˜ê³ ,
+	// ê°•ì œë¡œ character setì„ euckrë¡œ ì •í•˜ë„ë¡ ë˜ì–´ìˆì–´ ì´ ë¶€ë¶„ì„ ì£¼ì„ì²˜ë¦¬ í•˜ì˜€ë‹¤.
+	// (ì•„ë˜ ì£¼ì„ì„ í’€ë©´ mysqlì— euckrì´ ì•ˆ ê¹”ë ¤ìˆëŠ” ë””ë¹„ì— ì ‘ê·¼í•  ìˆ˜ê°€ ì—†ë‹¤.)
 	//while (!QueryLocaleSet());
 	m_ulThreadID = mysql_thread_id(&m_hDB);
 
@@ -529,7 +529,7 @@ class cProfiler
 
 void CAsyncSQL::ChildLoop()
 {
-	cProfiler profiler(500000); // 0.5ÃÊ
+	cProfiler profiler(500000); // 0.5ì´ˆ
 
 	while (!m_bEnd)
 	{
@@ -546,7 +546,7 @@ void CAsyncSQL::ChildLoop()
 
 		while (count--)
 		{
-			//½Ã°£ Ã¼Å© ½ÃÀÛ 
+			//ì‹œê°„ ì²´í¬ ì‹œì‘ 
 			profiler.Start();
 
 			if (!PeekQueryFromCopyQueue(&p))
@@ -591,7 +591,7 @@ void CAsyncSQL::ChildLoop()
 
 			profiler.Stop();
 			
-			// 0.5ÃÊ ÀÌ»ó °É·ÈÀ¸¸é ·Î±×¿¡ ³²±â±â
+			// 0.5ì´ˆ ì´ìƒ ê±¸ë ¸ìœ¼ë©´ ë¡œê·¸ì— ë‚¨ê¸°ê¸°
 			if (!profiler.IsOk())
 				sys_log(0, "[QUERY : LONG INTERVAL(OverSec %ld.%ld)] : %s", 
 						profiler.GetResultSec(), profiler.GetResultUSec(), p->stQuery.c_str());
@@ -693,9 +693,9 @@ size_t CAsyncSQL::EscapeString(char* dst, size_t dstSize, const char *src, size_
 
 	if (dstSize < srcSize * 2 + 1)
 	{
-		// \0ÀÌ ¾ÈºÙ¾îÀÖÀ» ¶§¸¦ ´ëºñÇØ¼­ 256 ¹ÙÀÌÆ®¸¸ º¹»çÇØ¼­ ·Î±×·Î Ãâ·Â
+		// \0ì´ ì•ˆë¶™ì–´ìˆì„ ë•Œë¥¼ ëŒ€ë¹„í•´ì„œ 256 ë°”ì´íŠ¸ë§Œ ë³µì‚¬í•´ì„œ ë¡œê·¸ë¡œ ì¶œë ¥
 		char tmp[256];
-		size_t tmpLen = sizeof(tmp) > srcSize ? srcSize : sizeof(tmp); // µÑ Áß¿¡ ÀÛÀº Å©±â
+		size_t tmpLen = sizeof(tmp) > srcSize ? srcSize : sizeof(tmp); // ë‘˜ ì¤‘ì— ì‘ì€ í¬ê¸°
 		std::strncpy(tmp, src, tmpLen);
 
 		sys_err("FATAL ERROR!! not enough buffer size (dstSize %u srcSize %u src%s: %s)",

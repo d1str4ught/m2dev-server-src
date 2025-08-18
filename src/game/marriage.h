@@ -1,4 +1,4 @@
-#ifndef __MARRIAGE_H
+﻿#ifndef __MARRIAGE_H
 #define __MARRIAGE_H
 
 namespace marriage

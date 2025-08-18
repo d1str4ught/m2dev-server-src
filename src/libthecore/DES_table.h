@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 static DWORD SP_boxes[8][64]=
 {
     /* 0 */

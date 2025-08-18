@@ -1,4 +1,4 @@
-#include <string>
+﻿#include <string>
 #include "Poly.h"
 #include "Constants.h"
 #include <cmath>

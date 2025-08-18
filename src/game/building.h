@@ -1,4 +1,4 @@
-#ifndef __INC_METIN_II_BUILDING_H__
+﻿#ifndef __INC_METIN_II_BUILDING_H__
 #define __INC_METIN_II_BUILDING_H__
 
 #include "../../common/building.h"

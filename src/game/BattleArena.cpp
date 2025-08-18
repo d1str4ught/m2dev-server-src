@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "constants.h"
 #include "BattleArena.h"
 #include "start_position.h"
@@ -102,14 +102,14 @@ EVENTFUNC(battle_arena_event)
 			case 0:
 				{
 					++pInfo->state;
-					BroadcastNotice(LC_TEXT("¸ó½ºÅÍµéÀÇ °ø°İ±îÁö 5ºĞ ³²¾Ò½À´Ï´Ù!!!"));
+					BroadcastNotice(LC_TEXT("ëª¬ìŠ¤í„°ë“¤ì˜ ê³µê²©ê¹Œì§€ 5ë¶„ ë‚¨ì•˜ìŠµë‹ˆë‹¤!!!"));
 				}
 				return test_server ? PASSES_PER_SEC(60) : PASSES_PER_SEC(60*4);
 
 			case 1:
 				{
 					++pInfo->state;
-					BroadcastNotice(LC_TEXT("¸ó½ºÅÍµéÀÇ °ø°İ±îÁö 1ºĞ ³²¾Ò½À´Ï´Ù!!!"));
+					BroadcastNotice(LC_TEXT("ëª¬ìŠ¤í„°ë“¤ì˜ ê³µê²©ê¹Œì§€ 1ë¶„ ë‚¨ì•˜ìŠµë‹ˆë‹¤!!!"));
 				}
 				return test_server ? PASSES_PER_SEC(10) : PASSES_PER_SEC(60);
 
@@ -119,7 +119,7 @@ EVENTFUNC(battle_arena_event)
 					pInfo->wait_count = 0;
 
 					quest::CQuestManager::instance().RequestSetEventFlag("battle_arena", 0);
-					BroadcastNotice(LC_TEXT("¸ó½ºÅÍµéÀÌ ¼ºÀ» °ø°İÇÏ±â ½ÃÀÛÇß½À´Ï´Ù."));
+					BroadcastNotice(LC_TEXT("ëª¬ìŠ¤í„°ë“¤ì´ ì„±ì„ ê³µê²©í•˜ê¸° ì‹œì‘í–ˆìŠµë‹ˆë‹¤."));
 
 					LPSECTREE_MAP sectree = SECTREE_MANAGER::instance().GetMap(pInfo->nMapIndex);
 
@@ -141,7 +141,7 @@ EVENTFUNC(battle_arena_event)
 					if ( SECTREE_MANAGER::instance().GetMonsterCountInMap(pInfo->nMapIndex) <= 0 )
 					{
 						pInfo->state = 6;
-						SendNoticeMap(LC_TEXT("Áß¾Ó Á¦´Ü¿¡ ¾ÇÀÇ ±â¿îÀÌ ¸ğ¿©µì´Ï´Ù."), pInfo->nMapIndex, false);
+						SendNoticeMap(LC_TEXT("ì¤‘ì•™ ì œë‹¨ì— ì•…ì˜ ê¸°ìš´ì´ ëª¨ì—¬ë“­ë‹ˆë‹¤."), pInfo->nMapIndex, false);
 					}
 					else
 					{
@@ -150,7 +150,7 @@ EVENTFUNC(battle_arena_event)
 						if ( pInfo->wait_count >= 5 )
 						{
 							pInfo->state++;
-							SendNoticeMap(LC_TEXT("¸ó½ºÅÍµéÀÌ ¹°·¯°¥ Á¶ÁüÀ» º¸ÀÔ´Ï´Ù."), pInfo->nMapIndex, false);
+							SendNoticeMap(LC_TEXT("ëª¬ìŠ¤í„°ë“¤ì´ ë¬¼ëŸ¬ê°ˆ ì¡°ì§ì„ ë³´ì…ë‹ˆë‹¤."), pInfo->nMapIndex, false);
 						}
 						else
 						{
@@ -163,8 +163,8 @@ EVENTFUNC(battle_arena_event)
 			case 4 :
 				{
 					pInfo->state++;
-					SendNoticeMap(LC_TEXT("¸ó½ºÅÍµéÀÌ ¹°·¯°¡±â ½ÃÀÛÇß½À´Ï´Ù."), pInfo->nMapIndex, false);
-					SendNoticeMap(LC_TEXT("Àá½Ã ÈÄ ¸¶À»·Î µ¹¾Æ°©´Ï´Ù."), pInfo->nMapIndex, false);
+					SendNoticeMap(LC_TEXT("ëª¬ìŠ¤í„°ë“¤ì´ ë¬¼ëŸ¬ê°€ê¸° ì‹œì‘í–ˆìŠµë‹ˆë‹¤."), pInfo->nMapIndex, false);
+					SendNoticeMap(LC_TEXT("ì ì‹œ í›„ ë§ˆì„ë¡œ ëŒì•„ê°‘ë‹ˆë‹¤."), pInfo->nMapIndex, false);
 
 					SECTREE_MANAGER::instance().PurgeMonstersInMap(pInfo->nMapIndex);
 				}
@@ -189,8 +189,8 @@ EVENTFUNC(battle_arena_event)
 					pInfo->state++;
 					pInfo->wait_count = 0;
 
-					SendNoticeMap(LC_TEXT("¸ó½ºÅÍµéÀÇ ´ëÀåÀÌ ³ªÅ¸³µ½À´Ï´Ù."), pInfo->nMapIndex, false);
-					SendNoticeMap(LC_TEXT("30ºĞ ³»·Î ±Í¸ñ·ÉÁÖ¸¦ ¹°¸®ÃÄÁÖ¼¼¿ä."), pInfo->nMapIndex, false);
+					SendNoticeMap(LC_TEXT("ëª¬ìŠ¤í„°ë“¤ì˜ ëŒ€ì¥ì´ ë‚˜íƒ€ë‚¬ìŠµë‹ˆë‹¤."), pInfo->nMapIndex, false);
+					SendNoticeMap(LC_TEXT("30ë¶„ ë‚´ë¡œ ê·€ëª©ë ¹ì£¼ë¥¼ ë¬¼ë¦¬ì³ì£¼ì„¸ìš”."), pInfo->nMapIndex, false);
 
 					CBattleArena::instance().SpawnLastBoss();
 				}
@@ -200,8 +200,8 @@ EVENTFUNC(battle_arena_event)
 				{
 					if ( SECTREE_MANAGER::instance().GetMonsterCountInMap(pInfo->nMapIndex) <= 0 )
 					{
-						SendNoticeMap(LC_TEXT("±Í¸ñ·ÉÁÖ¿Í ±×ÀÇ ºÎÇÏµéÀ» ¸ğµÎ ¹°¸®ÃÆ½À´Ï´Ù."), pInfo->nMapIndex, false);
-						SendNoticeMap(LC_TEXT("Àá½Ã ÈÄ ¸¶À»·Î µ¹¾Æ°©´Ï´Ù."), pInfo->nMapIndex, false);
+						SendNoticeMap(LC_TEXT("ê·€ëª©ë ¹ì£¼ì™€ ê·¸ì˜ ë¶€í•˜ë“¤ì„ ëª¨ë‘ ë¬¼ë¦¬ì³¤ìŠµë‹ˆë‹¤."), pInfo->nMapIndex, false);
+						SendNoticeMap(LC_TEXT("ì ì‹œ í›„ ë§ˆì„ë¡œ ëŒì•„ê°‘ë‹ˆë‹¤."), pInfo->nMapIndex, false);
 
 						pInfo->state = 5;
 
@@ -212,8 +212,8 @@ EVENTFUNC(battle_arena_event)
 
 					if ( pInfo->wait_count >= 6 )
 					{
-						SendNoticeMap(LC_TEXT("±Í¸ñ·ÉÁÖ°¡ Åğ°¢ÇÏ¿´½À´Ï´Ù."), pInfo->nMapIndex, false);
-						SendNoticeMap(LC_TEXT("Àá½Ã ÈÄ ¸¶À»·Î µ¹¾Æ°©´Ï´Ù."), pInfo->nMapIndex, false);
+						SendNoticeMap(LC_TEXT("ê·€ëª©ë ¹ì£¼ê°€ í‡´ê°í•˜ì˜€ìŠµë‹ˆë‹¤."), pInfo->nMapIndex, false);
+						SendNoticeMap(LC_TEXT("ì ì‹œ í›„ ë§ˆì„ë¡œ ëŒì•„ê°‘ë‹ˆë‹¤."), pInfo->nMapIndex, false);
 
 						SECTREE_MANAGER::instance().PurgeMonstersInMap(pInfo->nMapIndex);
 						SECTREE_MANAGER::instance().PurgeStonesInMap(pInfo->nMapIndex);
@@ -243,9 +243,9 @@ bool CBattleArena::Start(int nEmpire)
 	m_nEmpire = nEmpire;
 
 	char szBuf[1024];
-	snprintf(szBuf, sizeof(szBuf), LC_TEXT("%sÀÇ ¼ºÀ¸·Î ¸ó½ºÅÍµéÀÌ Áø±ºÇÏ°í ÀÖ½À´Ï´Ù."), EMPIRE_NAME(m_nEmpire));
+	snprintf(szBuf, sizeof(szBuf), LC_TEXT("%sì˜ ì„±ìœ¼ë¡œ ëª¬ìŠ¤í„°ë“¤ì´ ì§„êµ°í•˜ê³  ìˆìŠµë‹ˆë‹¤."), EMPIRE_NAME(m_nEmpire));
 	BroadcastNotice(szBuf);
-	BroadcastNotice(LC_TEXT("10ºĞ µÚ ¼ºÀ» °ø°İÇÒ ¿¹Á¤ÀÔ´Ï´Ù."));
+	BroadcastNotice(LC_TEXT("10ë¶„ ë’¤ ì„±ì„ ê³µê²©í•  ì˜ˆì •ì…ë‹ˆë‹¤."));
 
 	if (m_pEvent != NULL) {
 		event_cancel(&m_pEvent);

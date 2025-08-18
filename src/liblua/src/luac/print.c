@@ -1,4 +1,4 @@
-/*
+﻿/*
 ** $Id: print.c,v 1.44 2003/04/07 20:34:20 lhf Exp $
 ** print bytecodes
 ** See Copyright Notice in lua.h

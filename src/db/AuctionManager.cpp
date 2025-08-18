@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #ifdef __AUCTION__
 
 #include "DBManager.h"
@@ -135,7 +135,7 @@ void AuctionManager::LoadAuctionItem()
 	}
 	int rows;
 
-	if ((rows = mysql_num_rows(res)) <= 0)	// µ¥ÀÌÅÍ ¾øÀ½
+	if ((rows = mysql_num_rows(res)) <= 0)	// ë°ì´í„° ì—†ìŒ
 	{
 		return;
 	}
@@ -182,7 +182,7 @@ void AuctionManager::LoadAuctionInfo()
 	}
 	int rows;
 
-	if ((rows = mysql_num_rows(res)) <= 0)	// µ¥ÀÌÅÍ ¾øÀ½
+	if ((rows = mysql_num_rows(res)) <= 0)	// ë°ì´í„° ì—†ìŒ
 	{
 		return;
 	}
@@ -226,7 +226,7 @@ void AuctionManager::LoadSaleInfo()
 	}
 	int rows;
 
-	if ((rows = mysql_num_rows(res)) <= 0)	// µ¥ÀÌÅÍ ¾øÀ½
+	if ((rows = mysql_num_rows(res)) <= 0)	// ë°ì´í„° ì—†ìŒ
 	{
 		return;
 	}
@@ -269,7 +269,7 @@ void AuctionManager::LoadWishInfo()
 	}
 	int rows;
 
-	if ((rows = mysql_num_rows(res)) <= 0)	// µ¥ÀÌÅÍ ¾øÀ½
+	if ((rows = mysql_num_rows(res)) <= 0)	// ë°ì´í„° ì—†ìŒ
 	{
 		return;
 	}
@@ -311,7 +311,7 @@ void AuctionManager::LoadMyBidInfo ()
 	}
 	int rows;
 
-	if ((rows = mysql_num_rows(res)) <= 0)	// µ¥ÀÌÅÍ ¾øÀ½
+	if ((rows = mysql_num_rows(res)) <= 0)	// ë°ì´í„° ì—†ìŒ
 	{
 		return;
 	}
@@ -518,7 +518,7 @@ AuctionResult AuctionManager::Impur(DWORD purchaser_id, const char* purchaser_na
 		return AUCTION_EXPIRED;
 	}
 
-	// Áï±¸ ÇØ¹ö·ÈÀ¸¹Ç·Î, °æ¸Å´Â ³¡³µ´Ù.
+	// ì¦‰êµ¬ í•´ë²„ë ¸ìœ¼ë¯€ë¡œ, ê²½ë§¤ëŠ” ëë‚¬ë‹¤.
 	item_info->expired_time = 0;
 	item_info->bidder_id = purchaser_id;
 	item_info->set_bidder_name (purchaser_name);

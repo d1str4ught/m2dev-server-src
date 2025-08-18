@@ -1,4 +1,4 @@
-#ifndef __HEADER_QUEST_LUA__
+﻿#ifndef __HEADER_QUEST_LUA__
 #define __HEADER_QUEST_LUA__
 
 #include "quest.h"

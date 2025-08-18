@@ -1,4 +1,4 @@
-#ifndef __INC_SINGLETON_H__
+﻿#ifndef __INC_SINGLETON_H__
 #define __INC_SINGLETON_H__
 
 #include <assert.h>

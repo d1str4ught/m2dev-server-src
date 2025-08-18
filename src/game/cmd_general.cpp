@@ -1,4 +1,4 @@
-#include "stdafx.h"
+Ôªø#include "stdafx.h"
 #ifdef OS_FREEBSD
 #include <md5.h>
 #else
@@ -52,16 +52,16 @@ ACMD(do_user_horse_ride)
 
 	if (ch->IsHorseRiding() == false)
 	{
-		// ∏ª¿Ã æ∆¥— ¥Ÿ∏•≈ª∞Õ¿ª ≈∏∞Ì¿÷¥Ÿ.
+		// ÎßêÏù¥ ÏïÑÎãå Îã§Î•∏ÌÉàÍ≤ÉÏùÑ ÌÉÄÍ≥†ÏûàÎã§.
 		if (ch->GetMountVnum())
 		{
-			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("¿ÃπÃ ≈ª∞Õ¿ª ¿ÃøÎ¡ﬂ¿‘¥œ¥Ÿ."));
+			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Ïù¥ÎØ∏ ÌÉàÍ≤ÉÏùÑ Ïù¥Ïö©Ï§ëÏûÖÎãàÎã§."));
 			return;
 		}
 
 		if (ch->GetHorse() == NULL)
 		{
-			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("∏ª¿ª ∏’¿˙ º“»Ø«ÿ¡÷ººø‰."));
+			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ÎßêÏùÑ Î®ºÏ†Ä ÏÜåÌôòÌï¥Ï£ºÏÑ∏Ïöî."));
 			return;
 		}
 
@@ -78,30 +78,30 @@ ACMD(do_user_horse_back)
 	if (ch->GetHorse() != NULL)
 	{
 		ch->HorseSummon(false);
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("∏ª¿ª µπ∑¡∫∏≥¬Ω¿¥œ¥Ÿ."));
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ÎßêÏùÑ ÎèåÎ†§Î≥¥ÎÉàÏäµÎãàÎã§."));
 	}
 	else if (ch->IsHorseRiding() == true)
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("∏ªø°º≠ ∏’¿˙ ≥ª∑¡æﬂ «’¥œ¥Ÿ."));
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ÎßêÏóêÏÑú Î®ºÏ†Ä ÎÇ¥Î†§Ïïº Ìï©ÎãàÎã§."));
 	}
 	else
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("∏ª¿ª ∏’¿˙ º“»Ø«ÿ¡÷ººø‰."));
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ÎßêÏùÑ Î®ºÏ†Ä ÏÜåÌôòÌï¥Ï£ºÏÑ∏Ïöî."));
 	}
 }
 
 ACMD(do_user_horse_feed)
 {
-	// ∞≥¿ŒªÛ¡°¿ª ø¨ ªÛ≈¬ø°º≠¥¬ ∏ª ∏‘¿Ã∏¶ ¡Ÿ ºˆ æ¯¥Ÿ.
+	// Í∞úÏù∏ÏÉÅÏ†êÏùÑ Ïó∞ ÏÉÅÌÉúÏóêÏÑúÎäî Îßê Î®πÏù¥Î•º Ï§Ñ Ïàò ÏóÜÎã§.
 	if (ch->GetMyShop())
 		return;
 
 	if (ch->GetHorse() == NULL)
 	{
 		if (ch->IsHorseRiding() == false)
-			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("∏ª¿ª ∏’¿˙ º“»Ø«ÿ¡÷ººø‰."));
+			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ÎßêÏùÑ Î®ºÏ†Ä ÏÜåÌôòÌï¥Ï£ºÏÑ∏Ïöî."));
 		else
-			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("∏ª¿ª ≈∫ ªÛ≈¬ø°º≠¥¬ ∏‘¿Ã∏¶ ¡Ÿ ºˆ æ¯Ω¿¥œ¥Ÿ."));
+			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ÎßêÏùÑ ÌÉÑ ÏÉÅÌÉúÏóêÏÑúÎäî Î®πÏù¥Î•º Ï§Ñ Ïàò ÏóÜÏäµÎãàÎã§."));
 		return;
 	}
 
@@ -111,13 +111,13 @@ ACMD(do_user_horse_feed)
 	{
 		ch->RemoveSpecifyItem(dwFood, 1);
 		ch->FeedHorse();
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("∏ªø°∞‘ %s%s ¡÷æ˙Ω¿¥œ¥Ÿ."), 
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ÎßêÏóêÍ≤å %s%s Ï£ºÏóàÏäµÎãàÎã§."), 
 				ITEM_MANAGER::instance().GetTable(dwFood)->szLocaleName,
-				g_iUseLocale ? "" : under_han(ITEM_MANAGER::instance().GetTable(dwFood)->szLocaleName) ? LC_TEXT("¿ª") : LC_TEXT("∏¶"));
+				g_iUseLocale ? "" : under_han(ITEM_MANAGER::instance().GetTable(dwFood)->szLocaleName) ? LC_TEXT("ÏùÑ") : LC_TEXT("Î•º"));
 	}
 	else
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%s æ∆¿Ã≈€¿Ã « ø‰«’¥œ¥Ÿ"), ITEM_MANAGER::instance().GetTable(dwFood)->szLocaleName);
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%s ÏïÑÏù¥ÌÖúÏù¥ ÌïÑÏöîÌï©ÎãàÎã§"), ITEM_MANAGER::instance().GetTable(dwFood)->szLocaleName);
 	}
 }
 
@@ -216,7 +216,7 @@ EVENTFUNC(shutdown_event)
 	else
 	{
 		char buf[64];
-		snprintf(buf, sizeof(buf), LC_TEXT("ºÀ¥ŸøÓ¿Ã %d√  ≥≤æ“Ω¿¥œ¥Ÿ."), *pSec);
+		snprintf(buf, sizeof(buf), LC_TEXT("ÏÖßÎã§Ïö¥Ïù¥ %dÏ¥à ÎÇ®ÏïòÏäµÎãàÎã§."), *pSec);
 		SendNotice(buf);
 
 		--*pSec;
@@ -235,7 +235,7 @@ void Shutdown(int iSec)
 	CWarMapManager::instance().OnShutdown();
 
 	char buf[64];
-	snprintf(buf, sizeof(buf), LC_TEXT("%d√  »ƒ ∞‘¿”¿Ã ºÀ¥ŸøÓ µÀ¥œ¥Ÿ."), iSec);
+	snprintf(buf, sizeof(buf), LC_TEXT("%dÏ¥à ÌõÑ Í≤åÏûÑÏù¥ ÏÖßÎã§Ïö¥ Îê©ÎãàÎã§."), iSec);
 
 	SendNotice(buf);
 
@@ -324,7 +324,7 @@ EVENTFUNC(timed_event)
 	}
 	else
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%d√  ≥≤æ“Ω¿¥œ¥Ÿ."), info->left_second);
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%dÏ¥à ÎÇ®ÏïòÏäµÎãàÎã§."), info->left_second);
 		--info->left_second;
 	}
 
@@ -336,7 +336,7 @@ ACMD(do_cmd)
 	/* RECALL_DELAY
 	   if (ch->m_pkRecallEvent != NULL)
 	   {
-	   ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("√Îº“ µ«æ˙Ω¿¥œ¥Ÿ."));
+	   ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Ï∑®ÏÜå ÎêòÏóàÏäµÎãàÎã§."));
 	   event_cancel(&ch->m_pkRecallEvent);
 	   return;
 	   }
@@ -344,7 +344,7 @@ ACMD(do_cmd)
 
 	if (ch->m_pkTimedEvent)
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("√Îº“ µ«æ˙Ω¿¥œ¥Ÿ."));
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Ï∑®ÏÜå ÎêòÏóàÏäµÎãàÎã§."));
 		event_cancel(&ch->m_pkTimedEvent);
 		return;
 	}
@@ -352,15 +352,15 @@ ACMD(do_cmd)
 	switch (subcmd)
 	{
 		case SCMD_LOGOUT:
-			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("∑Œ±◊¿Œ »≠∏È¿∏∑Œ µπæ∆ ∞©¥œ¥Ÿ. ¿·Ω√∏∏ ±‚¥Ÿ∏Æººø‰."));
+			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Î°úÍ∑∏Ïù∏ ÌôîÎ©¥ÏúºÎ°ú ÎèåÏïÑ Í∞ëÎãàÎã§. Ïû†ÏãúÎßå Í∏∞Îã§Î¶¨ÏÑ∏Ïöî."));
 			break;
 
 		case SCMD_QUIT:
-			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("∞‘¿”¿ª ¡æ∑· «’¥œ¥Ÿ. ¿·Ω√∏∏ ±‚¥Ÿ∏Æººø‰."));
+			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Í≤åÏûÑÏùÑ Ï¢ÖÎ£å Ìï©ÎãàÎã§. Ïû†ÏãúÎßå Í∏∞Îã§Î¶¨ÏÑ∏Ïöî."));
 			break;
 
 		case SCMD_PHASE_SELECT:
-			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ƒ≥∏Ø≈Õ∏¶ ¿¸»Ø «’¥œ¥Ÿ. ¿·Ω√∏∏ ±‚¥Ÿ∏Æººø‰."));
+			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Ï∫êÎ¶≠ÌÑ∞Î•º Ï†ÑÌôò Ìï©ÎãàÎã§. Ïû†ÏãúÎßå Í∏∞Îã§Î¶¨ÏÑ∏Ïöî."));
 			break;
 	}
 
@@ -404,7 +404,7 @@ ACMD(do_mount)
 	   char			arg1[256];
 	   struct action_mount_param	param;
 
-	// ¿ÃπÃ ≈∏∞Ì ¿÷¿∏∏È
+	// Ïù¥ÎØ∏ ÌÉÄÍ≥† ÏûàÏúºÎ©¥
 	if (ch->GetMountingChr())
 	{
 	char arg2[256];
@@ -422,7 +422,7 @@ ACMD(do_mount)
 
 	if (distance > 600.0f)
 	{
-	ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("¡ª ¥ı ∞°±Ó¿Ã ∞°º≠ ≥ª∏Æººø‰."));
+	ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Ï¢Ä Îçî Í∞ÄÍπåÏù¥ Í∞ÄÏÑú ÎÇ¥Î¶¨ÏÑ∏Ïöî."));
 	return;
 	}
 
@@ -439,7 +439,7 @@ ACMD(do_mount)
 
 	if (!tch->IsNPC() || !tch->IsMountable())
 	{
-	ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("∞≈±‚ø°¥¬ ≈ª ºˆ æ¯æÓø‰."));
+	ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Í±∞Í∏∞ÏóêÎäî ÌÉà Ïàò ÏóÜÏñ¥Ïöî."));
 	return;
 	}
 
@@ -447,7 +447,7 @@ ACMD(do_mount)
 
 	if (distance > 600.0f)
 	{
-	ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("¡ª ¥ı ∞°±Ó¿Ã ∞°º≠ ≈∏ººø‰."));
+	ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Ï¢Ä Îçî Í∞ÄÍπåÏù¥ Í∞ÄÏÑú ÌÉÄÏÑ∏Ïöî."));
 	return;
 	}
 
@@ -495,41 +495,41 @@ ACMD(do_restart)
 		{
 			if (ch->IsHack())
 			{
-				//º∫¡ˆ ∏ ¿œ∞ÊøÏø°¥¬ √º≈© «œ¡ˆ æ ¥¬¥Ÿ.
+				//ÏÑ±ÏßÄ ÎßµÏùºÍ≤ΩÏö∞ÏóêÎäî Ï≤¥ÌÅ¨ ÌïòÏßÄ ÏïäÎäîÎã§.
 				if (false == CThreeWayWar::instance().IsSungZiMapIndex(ch->GetMapIndex()))
 				{
-					ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("æ∆¡˜ ¿ÁΩ√¿€ «“ ºˆ æ¯Ω¿¥œ¥Ÿ. (%d√  ≥≤¿Ω)"), iTimeToDead - (180 - g_nPortalLimitTime));
+					ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ÏïÑÏßÅ Ïû¨ÏãúÏûë Ìï† Ïàò ÏóÜÏäµÎãàÎã§. (%dÏ¥à ÎÇ®Ïùå)"), iTimeToDead - (180 - g_nPortalLimitTime));
 					return;
 				}
 			}
 
 			if (iTimeToDead > 170)
 			{
-				ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("æ∆¡˜ ¿ÁΩ√¿€ «“ ºˆ æ¯Ω¿¥œ¥Ÿ. (%d√  ≥≤¿Ω)"), iTimeToDead - 170);
+				ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ÏïÑÏßÅ Ïû¨ÏãúÏûë Ìï† Ïàò ÏóÜÏäµÎãàÎã§. (%dÏ¥à ÎÇ®Ïùå)"), iTimeToDead - 170);
 				return;
 			}
 		}
 	}
 
 	//PREVENT_HACK
-	//DESC : √¢∞Ì, ±≥»Ø √¢ »ƒ ∆˜≈ª¿ª ªÁøÎ«œ¥¬ πˆ±◊ø° ¿ÃøÎµ…ºˆ ¿÷æÓº≠
-	//		ƒ≈∏¿”¿ª √ﬂ∞° 
+	//DESC : Ï∞ΩÍ≥†, ÍµêÌôò Ï∞Ω ÌõÑ Ìè¨ÌÉàÏùÑ ÏÇ¨Ïö©ÌïòÎäî Î≤ÑÍ∑∏Ïóê Ïù¥Ïö©Îê†Ïàò ÏûàÏñ¥ÏÑú
+	//		Ïø®ÌÉÄÏûÑÏùÑ Ï∂îÍ∞Ä 
 	if (subcmd == SCMD_RESTART_TOWN)
 	{
 		if (ch->IsHack())
 		{
-			//±ÊµÂ∏ , º∫¡ˆ∏ ø°º≠¥¬ √º≈© «œ¡ˆ æ ¥¬¥Ÿ.
+			//Í∏∏ÎìúÎßµ, ÏÑ±ÏßÄÎßµÏóêÏÑúÎäî Ï≤¥ÌÅ¨ ÌïòÏßÄ ÏïäÎäîÎã§.
 			if ((!ch->GetWarMap() || ch->GetWarMap()->GetType() == GUILD_WAR_TYPE_FLAG) ||
 			   	false == CThreeWayWar::instance().IsSungZiMapIndex(ch->GetMapIndex()))
 			{
-				ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("æ∆¡˜ ¿ÁΩ√¿€ «“ ºˆ æ¯Ω¿¥œ¥Ÿ. (%d√  ≥≤¿Ω)"), iTimeToDead - (180 - g_nPortalLimitTime));
+				ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ÏïÑÏßÅ Ïû¨ÏãúÏûë Ìï† Ïàò ÏóÜÏäµÎãàÎã§. (%dÏ¥à ÎÇ®Ïùå)"), iTimeToDead - (180 - g_nPortalLimitTime));
 				return;
 			}
 		}
 
 		if (iTimeToDead > 173)
 		{
-			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("æ∆¡˜ ∏∂¿ªø°º≠ ¿ÁΩ√¿€ «“ ºˆ æ¯Ω¿¥œ¥Ÿ. (%d √  ≥≤¿Ω)"), iTimeToDead - 173);
+			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ÏïÑÏßÅ ÎßàÏùÑÏóêÏÑú Ïû¨ÏãúÏûë Ìï† Ïàò ÏóÜÏäµÎãàÎã§. (%d Ï¥à ÎÇ®Ïùå)"), iTimeToDead - 173);
 			return;
 		}
 	}
@@ -542,7 +542,7 @@ ACMD(do_restart)
 	ch->StartRecoveryEvent();
 
 	//FORKED_LOAD
-	//DESC: ªÔ∞≈∏Æ ¿¸≈ıΩ√ ∫Œ»∞¿ª «“∞ÊøÏ ∏ ¿« ¿‘±∏∞° æ∆¥— ªÔ∞≈∏Æ ¿¸≈ı¿« Ω√¿€¡ˆ¡°¿∏∑Œ ¿Ãµø«œ∞‘ µ»¥Ÿ.
+	//DESC: ÏÇºÍ±∞Î¶¨ Ï†ÑÌà¨Ïãú Î∂ÄÌôúÏùÑ Ìï†Í≤ΩÏö∞ ÎßµÏùò ÏûÖÍµ¨Í∞Ä ÏïÑÎãå ÏÇºÍ±∞Î¶¨ Ï†ÑÌà¨Ïùò ÏãúÏûëÏßÄÏ†êÏúºÎ°ú Ïù¥ÎèôÌïòÍ≤å ÎêúÎã§.
 	if (1 == quest::CQuestManager::instance().GetEventFlag("threeway_war"))
 	{
 		if (subcmd == SCMD_RESTART_TOWN || subcmd == SCMD_RESTART_HERE)
@@ -559,12 +559,12 @@ ACMD(do_restart)
 				return;
 			}
 
-			//º∫¡ˆ 
+			//ÏÑ±ÏßÄ 
 			if (true == CThreeWayWar::instance().IsSungZiMapIndex(ch->GetMapIndex()))
 			{
 				if (CThreeWayWar::instance().GetReviveTokenForPlayer(ch->GetPlayerID()) <= 0)
 				{
-					ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("º∫¡ˆø°º≠ ∫Œ»∞ ±‚»∏∏¶ ∏µŒ ¿“æ˙Ω¿¥œ¥Ÿ! ∏∂¿ª∑Œ ¿Ãµø«’¥œ¥Ÿ!"));
+					ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ÏÑ±ÏßÄÏóêÏÑú Î∂ÄÌôú Í∏∞ÌöåÎ•º Î™®Îëê ÏûÉÏóàÏäµÎãàÎã§! ÎßàÏùÑÎ°ú Ïù¥ÎèôÌï©ÎãàÎã§!"));
 					ch->WarpSet(EMPIRE_START_X(ch->GetEmpire()), EMPIRE_START_Y(ch->GetEmpire()));
 				}
 				else
@@ -665,7 +665,7 @@ ACMD(do_stat_minus)
 
 	if (ch->IsPolymorphed())
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("µ–∞© ¡ﬂø°¥¬ ¥…∑¬¿ª ø√∏± ºˆ æ¯Ω¿¥œ¥Ÿ."));
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ÎëîÍ∞ë Ï§ëÏóêÎäî Îä•Î†•ÏùÑ Ïò¨Î¶¥ Ïàò ÏóÜÏäµÎãàÎã§."));
 		return;
 	}
 
@@ -732,7 +732,7 @@ ACMD(do_stat)
 
 	if (ch->IsPolymorphed())
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("µ–∞© ¡ﬂø°¥¬ ¥…∑¬¿ª ø√∏± ºˆ æ¯Ω¿¥œ¥Ÿ."));
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ÎëîÍ∞ë Ï§ëÏóêÎäî Îä•Î†•ÏùÑ Ïò¨Î¶¥ Ïàò ÏóÜÏäµÎãàÎã§."));
 		return;
 	}
 
@@ -777,7 +777,7 @@ ACMD(do_pvp)
 {
 	if (ch->GetArena() != NULL || CArenaManager::instance().IsArenaMap(ch->GetMapIndex()) == true)
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("¥Î∑√¿Âø°º≠ ªÁøÎ«œΩ« ºˆ æ¯Ω¿¥œ¥Ÿ."));
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ÎåÄÎ†®Ïû•ÏóêÏÑú ÏÇ¨Ïö©ÌïòÏã§ Ïàò ÏóÜÏäµÎãàÎã§."));
 		return;
 	}
 
@@ -796,7 +796,7 @@ ACMD(do_pvp)
 
 	if (pkVictim->GetArena() != NULL)
 	{
-		pkVictim->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ªÛ¥ÎπÊ¿Ã ¥Î∑√¡ﬂ¿‘¥œ¥Ÿ."));
+		pkVictim->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ÏÉÅÎåÄÎ∞©Ïù¥ ÎåÄÎ†®Ï§ëÏûÖÎãàÎã§."));
 		return;
 	}
 
@@ -813,7 +813,7 @@ ACMD(do_guildskillup)
 
 	if (!ch->GetGuild())
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<±ÊµÂ> ±ÊµÂø° º”«ÿ¿÷¡ˆ æ Ω¿¥œ¥Ÿ."));
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<Í∏∏Îìú> Í∏∏ÎìúÏóê ÏÜçÌï¥ÏûàÏßÄ ÏïäÏäµÎãàÎã§."));
 		return;
 	}
 
@@ -827,7 +827,7 @@ ACMD(do_guildskillup)
 	}
 	else
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<±ÊµÂ> ±ÊµÂ Ω∫≈≥ ∑π∫ß¿ª ∫Ø∞Ê«“ ±««—¿Ã æ¯Ω¿¥œ¥Ÿ."));
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<Í∏∏Îìú> Í∏∏Îìú Ïä§ÌÇ¨ Î†àÎ≤®ÏùÑ Î≥ÄÍ≤ΩÌï† Í∂åÌïúÏù¥ ÏóÜÏäµÎãàÎã§."));
 	}
 }
 
@@ -874,7 +874,7 @@ ACMD(do_skillup)
 }
 
 //
-// @version	05/06/20 Bang2ni - ƒø∏«µÂ √≥∏Æ Delegate to CHARACTER class
+// @version	05/06/20 Bang2ni - Ïª§Îß®Îìú Ï≤òÎ¶¨ Delegate to CHARACTER class
 //
 ACMD(do_safebox_close)
 {
@@ -882,7 +882,7 @@ ACMD(do_safebox_close)
 }
 
 //
-// @version	05/06/20 Bang2ni - ƒø∏«µÂ √≥∏Æ Delegate to CHARACTER class
+// @version	05/06/20 Bang2ni - Ïª§Îß®Îìú Ï≤òÎ¶¨ Delegate to CHARACTER class
 //
 ACMD(do_safebox_password)
 {
@@ -900,13 +900,13 @@ ACMD(do_safebox_change_password)
 
 	if (!*arg1 || strlen(arg1)>6)
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<√¢∞Ì> ¿ﬂ∏¯µ» æœ»£∏¶ ¿‘∑¬«œºÃΩ¿¥œ¥Ÿ."));
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<Ï∞ΩÍ≥†> ÏûòÎ™ªÎêú ÏïîÌò∏Î•º ÏûÖÎ†•ÌïòÏÖ®ÏäµÎãàÎã§."));
 		return;
 	}
 
 	if (!*arg2 || strlen(arg2)>6)
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<√¢∞Ì> ¿ﬂ∏¯µ» æœ»£∏¶ ¿‘∑¬«œºÃΩ¿¥œ¥Ÿ."));
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<Ï∞ΩÍ≥†> ÏûòÎ™ªÎêú ÏïîÌò∏Î•º ÏûÖÎ†•ÌïòÏÖ®ÏäµÎãàÎã§."));
 		return;
 	}
 
@@ -919,7 +919,7 @@ ACMD(do_safebox_change_password)
 
 			if (isalpha(arg2[i]) == false)
 			{
-				ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<√¢∞Ì> ∫Òπ–π¯»£¥¬ øµπÆ¿⁄∏∏ ∞°¥…«’¥œ¥Ÿ."));
+				ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<Ï∞ΩÍ≥†> ÎπÑÎ∞ÄÎ≤àÌò∏Îäî ÏòÅÎ¨∏ÏûêÎßå Í∞ÄÎä•Ìï©ÎãàÎã§."));
 				return;
 			}
 		}
@@ -941,7 +941,7 @@ ACMD(do_mall_password)
 
 	if (!*arg1 || strlen(arg1) > 6)
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<√¢∞Ì> ¿ﬂ∏¯µ» æœ»£∏¶ ¿‘∑¬«œºÃΩ¿¥œ¥Ÿ."));
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<Ï∞ΩÍ≥†> ÏûòÎ™ªÎêú ÏïîÌò∏Î•º ÏûÖÎ†•ÌïòÏÖ®ÏäµÎãàÎã§."));
 		return;
 	}
 
@@ -949,13 +949,13 @@ ACMD(do_mall_password)
 
 	if (ch->GetMall())
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<√¢∞Ì> √¢∞Ì∞° ¿ÃπÃ ø≠∑¡¿÷Ω¿¥œ¥Ÿ."));
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<Ï∞ΩÍ≥†> Ï∞ΩÍ≥†Í∞Ä Ïù¥ÎØ∏ Ïó¥Î†§ÏûàÏäµÎãàÎã§."));
 		return;
 	}
 
-	if (iPulse - ch->GetMallLoadTime() < passes_per_sec * 10) // 10√ ø° «—π¯∏∏ ø‰√ª ∞°¥…
+	if (iPulse - ch->GetMallLoadTime() < passes_per_sec * 10) // 10Ï¥àÏóê ÌïúÎ≤àÎßå ÏöîÏ≤≠ Í∞ÄÎä•
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<√¢∞Ì> √¢∞Ì∏¶ ¥›¿∫¡ˆ 10√  æ»ø°¥¬ ø≠ ºˆ æ¯Ω¿¥œ¥Ÿ."));
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<Ï∞ΩÍ≥†> Ï∞ΩÍ≥†Î•º Îã´ÏùÄÏßÄ 10Ï¥à ÏïàÏóêÎäî Ïó¥ Ïàò ÏóÜÏäµÎãàÎã§."));
 		return;
 	}
 
@@ -986,13 +986,13 @@ ACMD(do_ungroup)
 
 	if (!CPartyManager::instance().IsEnablePCParty())
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<∆ƒ∆º> º≠πˆ πÆ¡¶∑Œ ∆ƒ∆º ∞¸∑√ √≥∏Æ∏¶ «“ ºˆ æ¯Ω¿¥œ¥Ÿ."));
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<ÌååÌã∞> ÏÑúÎ≤Ñ Î¨∏Ï†úÎ°ú ÌååÌã∞ Í¥ÄÎ†® Ï≤òÎ¶¨Î•º Ìï† Ïàò ÏóÜÏäµÎãàÎã§."));
 		return;
 	}
 
 	if (ch->GetDungeon())
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<∆ƒ∆º> ¥¯¿¸ æ»ø°º≠¥¬ ∆ƒ∆ºø°º≠ ≥™∞• ºˆ æ¯Ω¿¥œ¥Ÿ."));
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<ÌååÌã∞> ÎçòÏ†Ñ ÏïàÏóêÏÑúÎäî ÌååÌã∞ÏóêÏÑú ÎÇòÍ∞à Ïàò ÏóÜÏäµÎãàÎã§."));
 		return;
 	}
 
@@ -1005,7 +1005,7 @@ ACMD(do_ungroup)
 	}
 	else
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<∆ƒ∆º> ∆ƒ∆ºø°º≠ ≥™∞°ºÃΩ¿¥œ¥Ÿ."));
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<ÌååÌã∞> ÌååÌã∞ÏóêÏÑú ÎÇòÍ∞ÄÏÖ®ÏäµÎãàÎã§."));
 		//pParty->SendPartyRemoveOneToAll(ch);
 		pParty->Quit(ch->GetPlayerID());
 		//pParty->SendPartyRemoveAllToOne(ch);
@@ -1035,20 +1035,20 @@ ACMD(do_set_run_mode)
 
 ACMD(do_war)
 {
-	//≥ª ±ÊµÂ ¡§∫∏∏¶ æÚæÓø¿∞Ì
+	//ÎÇ¥ Í∏∏Îìú Ï†ïÎ≥¥Î•º ÏñªÏñ¥Ïò§Í≥†
 	CGuild * g = ch->GetGuild();
 
 	if (!g)
 		return;
 
-	//¿¸¿Ô¡ﬂ¿Œ¡ˆ √º≈©«—π¯!
+	//Ï†ÑÏüÅÏ§ëÏù∏ÏßÄ Ï≤¥ÌÅ¨ÌïúÎ≤à!
 	if (g->UnderAnyWar())
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<±ÊµÂ> ¿ÃπÃ ¥Ÿ∏• ¿¸¿Ôø° ¬¸¿¸ ¡ﬂ ¿‘¥œ¥Ÿ."));
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<Í∏∏Îìú> Ïù¥ÎØ∏ Îã§Î•∏ Ï†ÑÏüÅÏóê Ï∞∏Ï†Ñ Ï§ë ÏûÖÎãàÎã§."));
 		return;
 	}
 
-	//∆ƒ∂Û∏ﬁ≈Õ∏¶ µŒπË∑Œ ≥™¥©∞Ì
+	//ÌååÎùºÎ©îÌÑ∞Î•º ÎëêÎ∞∞Î°ú ÎÇòÎàÑÍ≥†
 	char arg1[256], arg2[256];
 	int type = GUILD_WAR_TYPE_FIELD;
 	two_arguments(argument, arg1, sizeof(arg1), arg2, sizeof(arg2));
@@ -1067,33 +1067,33 @@ ACMD(do_war)
 			return;
 	}
 
-	//±ÊµÂ¿« ∏∂Ω∫≈Õ æ∆¿Ãµ∏¶ æÚæÓø¬µ⁄
+	//Í∏∏ÎìúÏùò ÎßàÏä§ÌÑ∞ ÏïÑÏù¥ÎîîÎ•º ÏñªÏñ¥Ïò®Îí§
 	DWORD gm_pid = g->GetMasterPID();
 
-	//∏∂Ω∫≈Õ¿Œ¡ˆ √º≈©(±Ê¿¸¿∫ ±ÊµÂ¿Â∏∏¿Ã ∞°¥…)
+	//ÎßàÏä§ÌÑ∞Ïù∏ÏßÄ Ï≤¥ÌÅ¨(Í∏∏Ï†ÑÏùÄ Í∏∏ÎìúÏû•ÎßåÏù¥ Í∞ÄÎä•)
 	if (gm_pid != ch->GetPlayerID())
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<±ÊµÂ> ±ÊµÂ¿¸ø° ¥Î«— ±««—¿Ã æ¯Ω¿¥œ¥Ÿ."));
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<Í∏∏Îìú> Í∏∏ÎìúÏ†ÑÏóê ÎåÄÌïú Í∂åÌïúÏù¥ ÏóÜÏäµÎãàÎã§."));
 		return;
 	}
 
-	//ªÛ¥Î ±ÊµÂ∏¶ æÚæÓø¿∞Ì
+	//ÏÉÅÎåÄ Í∏∏ÎìúÎ•º ÏñªÏñ¥Ïò§Í≥†
 	CGuild * opp_g = CGuildManager::instance().FindGuildByName(arg1);
 
 	if (!opp_g)
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<±ÊµÂ> ±◊∑± ±ÊµÂ∞° æ¯Ω¿¥œ¥Ÿ."));
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<Í∏∏Îìú> Í∑∏Îü∞ Í∏∏ÎìúÍ∞Ä ÏóÜÏäµÎãàÎã§."));
 		return;
 	}
 
-	//ªÛ¥Î±ÊµÂøÕ¿« ªÛ≈¬ √º≈©
+	//ÏÉÅÎåÄÍ∏∏ÎìúÏôÄÏùò ÏÉÅÌÉú Ï≤¥ÌÅ¨
 	switch (g->GetGuildWarState(opp_g->GetID()))
 	{
 		case GUILD_WAR_NONE:
 			{
 				if (opp_g->UnderAnyWar())
 				{
-					ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<±ÊµÂ> ªÛ¥ÎπÊ ±ÊµÂ∞° ¿ÃπÃ ¿¸¿Ô ¡ﬂ ¿‘¥œ¥Ÿ."));
+					ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<Í∏∏Îìú> ÏÉÅÎåÄÎ∞© Í∏∏ÎìúÍ∞Ä Ïù¥ÎØ∏ Ï†ÑÏüÅ Ï§ë ÏûÖÎãàÎã§."));
 					return;
 				}
 
@@ -1101,13 +1101,13 @@ ACMD(do_war)
 
 				if (g->GetGuildMoney() < iWarPrice)
 				{
-					ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<±ÊµÂ> ¿¸∫Ò∞° ∫Œ¡∑«œø© ±ÊµÂ¿¸¿ª «“ ºˆ æ¯Ω¿¥œ¥Ÿ."));
+					ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<Í∏∏Îìú> Ï†ÑÎπÑÍ∞Ä Î∂ÄÏ°±ÌïòÏó¨ Í∏∏ÎìúÏ†ÑÏùÑ Ìï† Ïàò ÏóÜÏäµÎãàÎã§."));
 					return;
 				}
 
 				if (opp_g->GetGuildMoney() < iWarPrice)
 				{
-					ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<±ÊµÂ> ªÛ¥ÎπÊ ±ÊµÂ¿« ¿¸∫Ò∞° ∫Œ¡∑«œø© ±ÊµÂ¿¸¿ª «“ ºˆ æ¯Ω¿¥œ¥Ÿ."));
+					ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<Í∏∏Îìú> ÏÉÅÎåÄÎ∞© Í∏∏ÎìúÏùò Ï†ÑÎπÑÍ∞Ä Î∂ÄÏ°±ÌïòÏó¨ Í∏∏ÎìúÏ†ÑÏùÑ Ìï† Ïàò ÏóÜÏäµÎãàÎã§."));
 					return;
 				}
 			}
@@ -1115,7 +1115,7 @@ ACMD(do_war)
 
 		case GUILD_WAR_SEND_DECLARE:
 			{
-				ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("¿ÃπÃ º±¿¸∆˜∞Ì ¡ﬂ¿Œ ±ÊµÂ¿‘¥œ¥Ÿ."));
+				ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Ïù¥ÎØ∏ ÏÑ†Ï†ÑÌè¨Í≥† Ï§ëÏù∏ Í∏∏ÎìúÏûÖÎãàÎã§."));
 				return;
 			}
 			break;
@@ -1124,7 +1124,7 @@ ACMD(do_war)
 			{
 				if (opp_g->UnderAnyWar())
 				{
-					ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<±ÊµÂ> ªÛ¥ÎπÊ ±ÊµÂ∞° ¿ÃπÃ ¿¸¿Ô ¡ﬂ ¿‘¥œ¥Ÿ."));
+					ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<Í∏∏Îìú> ÏÉÅÎåÄÎ∞© Í∏∏ÎìúÍ∞Ä Ïù¥ÎØ∏ Ï†ÑÏüÅ Ï§ë ÏûÖÎãàÎã§."));
 					g->RequestRefuseWar(opp_g->GetID());
 					return;
 				}
@@ -1133,7 +1133,7 @@ ACMD(do_war)
 
 		case GUILD_WAR_RESERVE:
 			{
-				ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<±ÊµÂ> ¿ÃπÃ ¿¸¿Ô¿Ã øπæ‡µ» ±ÊµÂ ¿‘¥œ¥Ÿ."));
+				ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<Í∏∏Îìú> Ïù¥ÎØ∏ Ï†ÑÏüÅÏù¥ ÏòàÏïΩÎêú Í∏∏Îìú ÏûÖÎãàÎã§."));
 				return;
 			}
 			break;
@@ -1142,22 +1142,22 @@ ACMD(do_war)
 			return;
 
 		default:
-			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<±ÊµÂ> ¿ÃπÃ ¿¸¿Ô ¡ﬂ¿Œ ±ÊµÂ¿‘¥œ¥Ÿ."));
+			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<Í∏∏Îìú> Ïù¥ÎØ∏ Ï†ÑÏüÅ Ï§ëÏù∏ Í∏∏ÎìúÏûÖÎãàÎã§."));
 			g->RequestRefuseWar(opp_g->GetID());
 			return;
 	}
 
 	if (!g->CanStartWar(type))
 	{
-		// ±ÊµÂ¿¸¿ª «“ ºˆ ¿÷¥¬ ¡∂∞«¿ª ∏∏¡∑«œ¡ˆæ ¥¬¥Ÿ.
+		// Í∏∏ÎìúÏ†ÑÏùÑ Ìï† Ïàò ÏûàÎäî Ï°∞Í±¥ÏùÑ ÎßåÏ°±ÌïòÏßÄÏïäÎäîÎã§.
 		if (g->GetLadderPoint() == 0)
 		{
-			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<±ÊµÂ> ∑π¥ı ¡°ºˆ∞° ∏¿⁄∂Ûº≠ ±ÊµÂ¿¸¿ª «“ ºˆ æ¯Ω¿¥œ¥Ÿ."));
+			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<Í∏∏Îìú> Î†àÎçî Ï†êÏàòÍ∞Ä Î™®ÏûêÎùºÏÑú Í∏∏ÎìúÏ†ÑÏùÑ Ìï† Ïàò ÏóÜÏäµÎãàÎã§."));
 			sys_log(0, "GuildWar.StartError.NEED_LADDER_POINT");
 		}
 		else if (g->GetMemberCount() < GUILD_WAR_MIN_MEMBER_COUNT)
 		{
-			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<±ÊµÂ> ±ÊµÂ¿¸¿ª «œ±‚ ¿ß«ÿº± √÷º“«— %d∏Ì¿Ã ¿÷æÓæﬂ «’¥œ¥Ÿ."), GUILD_WAR_MIN_MEMBER_COUNT);
+			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<Í∏∏Îìú> Í∏∏ÎìúÏ†ÑÏùÑ ÌïòÍ∏∞ ÏúÑÌï¥ÏÑ† ÏµúÏÜåÌïú %dÎ™ÖÏù¥ ÏûàÏñ¥Ïïº Ìï©ÎãàÎã§."), GUILD_WAR_MIN_MEMBER_COUNT);
 			sys_log(0, "GuildWar.StartError.NEED_MINIMUM_MEMBER[%d]", GUILD_WAR_MIN_MEMBER_COUNT);
 		}
 		else
@@ -1167,13 +1167,13 @@ ACMD(do_war)
 		return;
 	}
 
-	// « µÂ¿¸ √º≈©∏∏ «œ∞Ì ºººº«— √º≈©¥¬ ªÛ¥ÎπÊ¿Ã Ω¬≥´«“∂ß «—¥Ÿ.
+	// ÌïÑÎìúÏ†Ñ Ï≤¥ÌÅ¨Îßå ÌïòÍ≥† ÏÑ∏ÏÑ∏Ìïú Ï≤¥ÌÅ¨Îäî ÏÉÅÎåÄÎ∞©Ïù¥ ÏäπÎÇôÌï†Îïå ÌïúÎã§.
 	if (!opp_g->CanStartWar(GUILD_WAR_TYPE_FIELD))
 	{
 		if (opp_g->GetLadderPoint() == 0)
-			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<±ÊµÂ> ªÛ¥ÎπÊ ±ÊµÂ¿« ∑π¥ı ¡°ºˆ∞° ∏¿⁄∂Ûº≠ ±ÊµÂ¿¸¿ª «“ ºˆ æ¯Ω¿¥œ¥Ÿ."));
+			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<Í∏∏Îìú> ÏÉÅÎåÄÎ∞© Í∏∏ÎìúÏùò Î†àÎçî Ï†êÏàòÍ∞Ä Î™®ÏûêÎùºÏÑú Í∏∏ÎìúÏ†ÑÏùÑ Ìï† Ïàò ÏóÜÏäµÎãàÎã§."));
 		else if (opp_g->GetMemberCount() < GUILD_WAR_MIN_MEMBER_COUNT)
-			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<±ÊµÂ> ªÛ¥ÎπÊ ±ÊµÂ¿« ±ÊµÂø¯ ºˆ∞° ∫Œ¡∑«œø© ±ÊµÂ¿¸¿ª «“ ºˆ æ¯Ω¿¥œ¥Ÿ."));
+			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<Í∏∏Îìú> ÏÉÅÎåÄÎ∞© Í∏∏ÎìúÏùò Í∏∏ÎìúÏõê ÏàòÍ∞Ä Î∂ÄÏ°±ÌïòÏó¨ Í∏∏ÎìúÏ†ÑÏùÑ Ìï† Ïàò ÏóÜÏäµÎãàÎã§."));
 		return;
 	}
 
@@ -1187,7 +1187,7 @@ ACMD(do_war)
 		if (pCCI != NULL)
 			break;
 
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<±ÊµÂ> ªÛ¥ÎπÊ ±ÊµÂ¿« ±ÊµÂ¿Â¿Ã ¡¢º”¡ﬂ¿Ã æ∆¥’¥œ¥Ÿ."));
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<Í∏∏Îìú> ÏÉÅÎåÄÎ∞© Í∏∏ÎìúÏùò Í∏∏ÎìúÏû•Ïù¥ Ï†ëÏÜçÏ§ëÏù¥ ÏïÑÎãôÎãàÎã§."));
 		g->RequestRefuseWar(opp_g->GetID());
 		return;
 
@@ -1203,7 +1203,7 @@ ACMD(do_war)
 		if (pCCI != NULL)
 			break;
 
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<±ÊµÂ> ªÛ¥ÎπÊ ±ÊµÂ¿« ±ÊµÂ¿Â¿Ã ¡¢º”¡ﬂ¿Ã æ∆¥’¥œ¥Ÿ."));
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<Í∏∏Îìú> ÏÉÅÎåÄÎ∞© Í∏∏ÎìúÏùò Í∏∏ÎìúÏû•Ïù¥ Ï†ëÏÜçÏ§ëÏù¥ ÏïÑÎãôÎãàÎã§."));
 		g->RequestRefuseWar(opp_g->GetID());
 		return;
 
@@ -1228,7 +1228,7 @@ ACMD(do_nowar)
 
 	if (gm_pid != ch->GetPlayerID())
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<±ÊµÂ> ±ÊµÂ¿¸ø° ¥Î«— ±««—¿Ã æ¯Ω¿¥œ¥Ÿ."));
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<Í∏∏Îìú> Í∏∏ÎìúÏ†ÑÏóê ÎåÄÌïú Í∂åÌïúÏù¥ ÏóÜÏäµÎãàÎã§."));
 		return;
 	}
 
@@ -1236,7 +1236,7 @@ ACMD(do_nowar)
 
 	if (!opp_g)
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<±ÊµÂ> ±◊∑± ±ÊµÂ∞° æ¯Ω¿¥œ¥Ÿ."));
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<Í∏∏Îìú> Í∑∏Îü∞ Í∏∏ÎìúÍ∞Ä ÏóÜÏäµÎãàÎã§."));
 		return;
 	}
 
@@ -1277,7 +1277,7 @@ ACMD(do_messenger_auth)
 {
 	if (ch->GetArena())
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("¥Î∑√¿Âø°º≠ ªÁøÎ«œΩ« ºˆ æ¯Ω¿¥œ¥Ÿ."));
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ÎåÄÎ†®Ïû•ÏóêÏÑú ÏÇ¨Ïö©ÌïòÏã§ Ïàò ÏóÜÏäµÎãàÎã§."));
 		return;
 	}
 
@@ -1297,7 +1297,7 @@ ACMD(do_messenger_auth)
 		LPCHARACTER tch = CHARACTER_MANAGER::instance().FindPC(arg2);
 
 		if (tch)
-			tch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%s ¥‘¿∏∑Œ ∫Œ≈Õ ƒ£±∏ µÓ∑œ¿ª ∞≈∫Œ ¥Á«ﬂΩ¿¥œ¥Ÿ."), ch->GetName());
+			tch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%s ÎãòÏúºÎ°ú Î∂ÄÌÑ∞ ÏπúÍµ¨ Îì±Î°ùÏùÑ Í±∞Î∂Ä ÎãπÌñàÏäµÎãàÎã§."), ch->GetName());
 	}
 
 	//MessengerManager::instance().AuthToAdd(ch->GetName(), arg2, answer == 'y' ? false : true); // DENY
@@ -1330,7 +1330,7 @@ ACMD(do_unmount)
 	}
 	else
 	{
-		ch->ChatPacket( CHAT_TYPE_INFO, LC_TEXT("¿Œ∫•≈‰∏Æ∞° ≤À ¬˜º≠ ≥ª∏± ºˆ æ¯Ω¿¥œ¥Ÿ."));
+		ch->ChatPacket( CHAT_TYPE_INFO, LC_TEXT("Ïù∏Î≤§ÌÜ†Î¶¨Í∞Ä ÍΩâ Ï∞®ÏÑú ÎÇ¥Î¶¥ Ïàò ÏóÜÏäµÎãàÎã§."));
 	}
 
 }
@@ -1384,7 +1384,7 @@ ACMD(do_view_equip)
 
 		   if (ch->GetSP() < iSPCost)
 		   {
-		   ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("¡§Ω≈∑¬¿Ã ∫Œ¡∑«œø© ¥Ÿ∏• ªÁ∂˜¿« ¿Â∫Ò∏¶ ∫º ºˆ æ¯Ω¿¥œ¥Ÿ."));
+		   ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Ï†ïÏã†Î†•Ïù¥ Î∂ÄÏ°±ÌïòÏó¨ Îã§Î•∏ ÏÇ¨ÎûåÏùò Ïû•ÎπÑÎ•º Î≥º Ïàò ÏóÜÏäµÎãàÎã§."));
 		   return;
 		   }
 		   ch->PointChange(POINT_SP, -iSPCost);
@@ -1397,13 +1397,13 @@ ACMD(do_party_request)
 {
 	if (ch->GetArena())
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("¥Î∑√¿Âø°º≠ ªÁøÎ«œΩ« ºˆ æ¯Ω¿¥œ¥Ÿ."));
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ÎåÄÎ†®Ïû•ÏóêÏÑú ÏÇ¨Ïö©ÌïòÏã§ Ïàò ÏóÜÏäµÎãàÎã§."));
 		return;
 	}
 
 	if (ch->GetParty())
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("¿ÃπÃ ∆ƒ∆ºø° º”«ÿ ¿÷¿∏π«∑Œ ∞°¿‘Ω≈√ª¿ª «“ ºˆ æ¯Ω¿¥œ¥Ÿ."));
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Ïù¥ÎØ∏ ÌååÌã∞Ïóê ÏÜçÌï¥ ÏûàÏúºÎØÄÎ°ú Í∞ÄÏûÖÏã†Ï≤≠ÏùÑ Ìï† Ïàò ÏóÜÏäµÎãàÎã§."));
 		return;
 	}
 
@@ -1461,25 +1461,25 @@ ACMD(do_monarch_warpto)
 
 	if (!CMonarch::instance().IsMonarch(ch->GetPlayerID(), ch->GetEmpire()))
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("±∫¡÷∏∏¿Ã ªÁøÎ ∞°¥…«— ±‚¥…¿‘¥œ¥Ÿ"));
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Íµ∞Ï£ºÎßåÏù¥ ÏÇ¨Ïö© Í∞ÄÎä•Ìïú Í∏∞Îä•ÏûÖÎãàÎã§"));
 		return;
 	}
 	
-	//±∫¡÷ ƒ≈∏¿” ∞ÀªÁ
+	//Íµ∞Ï£º Ïø®ÌÉÄÏûÑ Í≤ÄÏÇ¨
 	if (!ch->IsMCOK(CHARACTER::MI_WARP))
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%d √ ∞£ ƒ≈∏¿”¿Ã ¿˚øÎ¡ﬂ¿‘¥œ¥Ÿ."), ch->GetMCLTime(CHARACTER::MI_WARP));
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%d Ï¥àÍ∞Ñ Ïø®ÌÉÄÏûÑÏù¥ Ï†ÅÏö©Ï§ëÏûÖÎãàÎã§."), ch->GetMCLTime(CHARACTER::MI_WARP));
 		return;
 	}
 
-	//±∫¡÷ ∏˜ º“»Ø ∫ÒøÎ 
+	//Íµ∞Ï£º Î™π ÏÜåÌôò ÎπÑÏö© 
 	const int WarpPrice = 10000;
 	
-	//±∫¡÷ ±π∞Ì ∞ÀªÁ 
+	//Íµ∞Ï£º Íµ≠Í≥† Í≤ÄÏÇ¨ 
 	if (!CMonarch::instance().IsMoneyOk(WarpPrice, ch->GetEmpire()))
 	{
 		int NationMoney = CMonarch::instance().GetMoney(ch->GetEmpire());
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("±π∞Ìø° µ∑¿Ã ∫Œ¡∑«’¥œ¥Ÿ. «ˆ¿Á : %u « ø‰±›æ◊ : %u"), NationMoney, WarpPrice);
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Íµ≠Í≥†Ïóê ÎèàÏù¥ Î∂ÄÏ°±Ìï©ÎãàÎã§. ÌòÑÏû¨ : %u ÌïÑÏöîÍ∏àÏï° : %u"), NationMoney, WarpPrice);
 		return;	
 	}
 
@@ -1490,7 +1490,7 @@ ACMD(do_monarch_warpto)
 
 	if (!*arg1)
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ªÁøÎπ˝: warpto <character name>"));
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ÏÇ¨Ïö©Î≤ï: warpto <character name>"));
 		return;
 	}
 
@@ -1504,18 +1504,18 @@ ACMD(do_monarch_warpto)
 		{
 			if (pkCCI->bEmpire != ch->GetEmpire())
 			{
-				ch->ChatPacket (CHAT_TYPE_INFO, LC_TEXT("≈∏¡¶±π ¿Ø¿˙ø°∞‘¥¬ ¿Ãµø«“ºˆ æ¯Ω¿¥œ¥Ÿ"));
+				ch->ChatPacket (CHAT_TYPE_INFO, LC_TEXT("ÌÉÄÏ†úÍµ≠ Ïú†Ï†ÄÏóêÍ≤åÎäî Ïù¥ÎèôÌï†Ïàò ÏóÜÏäµÎãàÎã§"));
 				return;
 			}
 
 			if (pkCCI->bChannel != g_bChannel)
 			{
-				ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("«ÿ¥Á ¿Ø¿˙¥¬ %d √§≥Œø° ¿÷Ω¿¥œ¥Ÿ. («ˆ¿Á √§≥Œ %d)"), pkCCI->bChannel, g_bChannel);
+				ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Ìï¥Îãπ Ïú†Ï†ÄÎäî %d Ï±ÑÎÑêÏóê ÏûàÏäµÎãàÎã§. (ÌòÑÏû¨ Ï±ÑÎÑê %d)"), pkCCI->bChannel, g_bChannel);
 				return;
 			}
 			if (!IsMonarchWarpZone(pkCCI->lMapIndex))
 			{
-				ch->ChatPacket (CHAT_TYPE_INFO, LC_TEXT("«ÿ¥Á ¡ˆø™¿∏∑Œ ¿Ãµø«“ ºˆ æ¯Ω¿¥œ¥Ÿ."));
+				ch->ChatPacket (CHAT_TYPE_INFO, LC_TEXT("Ìï¥Îãπ ÏßÄÏó≠ÏúºÎ°ú Ïù¥ÎèôÌï† Ïàò ÏóÜÏäµÎãàÎã§."));
 				return;
 			}
 
@@ -1526,13 +1526,13 @@ ACMD(do_monarch_warpto)
 			else
 			{
 				//ch->ChatPacket(CHAT_TYPE_INFO, "You warp to (%d, %d)", pos.x, pos.y);
-				ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%s ø°∞‘∑Œ ¿Ãµø«’¥œ¥Ÿ"), arg1);
+				ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%s ÏóêÍ≤åÎ°ú Ïù¥ÎèôÌï©ÎãàÎã§"), arg1);
 				ch->WarpSet(pos.x, pos.y);
 				
-				//±∫¡÷ µ∑ ªË∞®	
+				//Íµ∞Ï£º Îèà ÏÇ≠Í∞ê	
 				CMonarch::instance().SendtoDBDecMoney(WarpPrice, ch->GetEmpire(), ch);
 
-				//ƒ≈∏¿” √ ±‚»≠ 
+				//Ïø®ÌÉÄÏûÑ Ï¥àÍ∏∞Ìôî 
 				ch->SetMC(CHARACTER::MI_WARP);
 			}
 		}
@@ -1547,26 +1547,26 @@ ACMD(do_monarch_warpto)
 	{
 		if (tch->GetEmpire() != ch->GetEmpire())
 		{
-			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("≈∏¡¶±π ¿Ø¿˙ø°∞‘¥¬ ¿Ãµø«“ºˆ æ¯Ω¿¥œ¥Ÿ"));
+			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ÌÉÄÏ†úÍµ≠ Ïú†Ï†ÄÏóêÍ≤åÎäî Ïù¥ÎèôÌï†Ïàò ÏóÜÏäµÎãàÎã§"));
 			return;
 		}
 		if (!IsMonarchWarpZone(tch->GetMapIndex()))
 		{
-			ch->ChatPacket (CHAT_TYPE_INFO, LC_TEXT("«ÿ¥Á ¡ˆø™¿∏∑Œ ¿Ãµø«“ ºˆ æ¯Ω¿¥œ¥Ÿ."));
+			ch->ChatPacket (CHAT_TYPE_INFO, LC_TEXT("Ìï¥Îãπ ÏßÄÏó≠ÏúºÎ°ú Ïù¥ÎèôÌï† Ïàò ÏóÜÏäµÎãàÎã§."));
 			return;
 		}
 		x = tch->GetX();
 		y = tch->GetY();
 	}
 
-	ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%s ø°∞‘∑Œ ¿Ãµø«’¥œ¥Ÿ"), arg1);
+	ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%s ÏóêÍ≤åÎ°ú Ïù¥ÎèôÌï©ÎãàÎã§"), arg1);
 	ch->WarpSet(x, y);
 	ch->Stop();
 
-	//±∫¡÷ µ∑ ªË∞®	
+	//Íµ∞Ï£º Îèà ÏÇ≠Í∞ê	
 	CMonarch::instance().SendtoDBDecMoney(WarpPrice, ch->GetEmpire(), ch);
 
-	//ƒ≈∏¿” √ ±‚»≠ 
+	//Ïø®ÌÉÄÏûÑ Ï¥àÍ∏∞Ìôî 
 	ch->SetMC(CHARACTER::MI_WARP);
 }
 
@@ -1580,31 +1580,31 @@ ACMD(do_monarch_transfer)
 
 	if (!*arg1)
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ªÁøÎπ˝: transfer <name>"));
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ÏÇ¨Ïö©Î≤ï: transfer <name>"));
 		return;
 	}
 	
 	if (!CMonarch::instance().IsMonarch(ch->GetPlayerID(), ch->GetEmpire()))
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("±∫¡÷∏∏¿Ã ªÁøÎ ∞°¥…«— ±‚¥…¿‘¥œ¥Ÿ"));
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Íµ∞Ï£ºÎßåÏù¥ ÏÇ¨Ïö© Í∞ÄÎä•Ìïú Í∏∞Îä•ÏûÖÎãàÎã§"));
 		return;
 	}
 	
-	//±∫¡÷ ƒ≈∏¿” ∞ÀªÁ
+	//Íµ∞Ï£º Ïø®ÌÉÄÏûÑ Í≤ÄÏÇ¨
 	if (!ch->IsMCOK(CHARACTER::MI_TRANSFER))
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%d √ ∞£ ƒ≈∏¿”¿Ã ¿˚øÎ¡ﬂ¿‘¥œ¥Ÿ."), ch->GetMCLTime(CHARACTER::MI_TRANSFER));	
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%d Ï¥àÍ∞Ñ Ïø®ÌÉÄÏûÑÏù¥ Ï†ÅÏö©Ï§ëÏûÖÎãàÎã§."), ch->GetMCLTime(CHARACTER::MI_TRANSFER));	
 		return;
 	}
 
-	//±∫¡÷ øˆ«¡ ∫ÒøÎ 
+	//Íµ∞Ï£º ÏõåÌîÑ ÎπÑÏö© 
 	const int WarpPrice = 10000;
 
-	//±∫¡÷ ±π∞Ì ∞ÀªÁ 
+	//Íµ∞Ï£º Íµ≠Í≥† Í≤ÄÏÇ¨ 
 	if (!CMonarch::instance().IsMoneyOk(WarpPrice, ch->GetEmpire()))
 	{
 		int NationMoney = CMonarch::instance().GetMoney(ch->GetEmpire());
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("±π∞Ìø° µ∑¿Ã ∫Œ¡∑«’¥œ¥Ÿ. «ˆ¿Á : %u « ø‰±›æ◊ : %u"), NationMoney, WarpPrice);
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Íµ≠Í≥†Ïóê ÎèàÏù¥ Î∂ÄÏ°±Ìï©ÎãàÎã§. ÌòÑÏû¨ : %u ÌïÑÏöîÍ∏àÏï° : %u"), NationMoney, WarpPrice);
 		return;	
 	}
 
@@ -1619,22 +1619,22 @@ ACMD(do_monarch_transfer)
 		{
 			if (pkCCI->bEmpire != ch->GetEmpire())
 			{
-				ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("¥Ÿ∏• ¡¶±π ¿Ø¿˙¥¬ º“»Ø«“ ºˆ æ¯Ω¿¥œ¥Ÿ."));
+				ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Îã§Î•∏ Ï†úÍµ≠ Ïú†Ï†ÄÎäî ÏÜåÌôòÌï† Ïàò ÏóÜÏäµÎãàÎã§."));
 				return;
 			}
 			if (pkCCI->bChannel != g_bChannel)
 			{
-				ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%s ¥‘¿∫ %d √§≥Œø° ¡¢º” ¡ﬂ ¿‘¥œ¥Ÿ. («ˆ¿Á √§≥Œ: %d)"), arg1, pkCCI->bChannel, g_bChannel);
+				ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%s ÎãòÏùÄ %d Ï±ÑÎÑêÏóê Ï†ëÏÜç Ï§ë ÏûÖÎãàÎã§. (ÌòÑÏû¨ Ï±ÑÎÑê: %d)"), arg1, pkCCI->bChannel, g_bChannel);
 				return;
 			}
 			if (!IsMonarchWarpZone(pkCCI->lMapIndex))
 			{
-				ch->ChatPacket (CHAT_TYPE_INFO, LC_TEXT("«ÿ¥Á ¡ˆø™¿∏∑Œ ¿Ãµø«“ ºˆ æ¯Ω¿¥œ¥Ÿ."));
+				ch->ChatPacket (CHAT_TYPE_INFO, LC_TEXT("Ìï¥Îãπ ÏßÄÏó≠ÏúºÎ°ú Ïù¥ÎèôÌï† Ïàò ÏóÜÏäµÎãàÎã§."));
 				return;
 			}
 			if (!IsMonarchWarpZone(ch->GetMapIndex()))
 			{
-				ch->ChatPacket (CHAT_TYPE_INFO, LC_TEXT("«ÿ¥Á ¡ˆø™¿∏∑Œ º“»Ø«“ ºˆ æ¯Ω¿¥œ¥Ÿ."));
+				ch->ChatPacket (CHAT_TYPE_INFO, LC_TEXT("Ìï¥Îãπ ÏßÄÏó≠ÏúºÎ°ú ÏÜåÌôòÌï† Ïàò ÏóÜÏäµÎãàÎã§."));
 				return;
 			}
 
@@ -1646,16 +1646,16 @@ ACMD(do_monarch_transfer)
 			pgg.lY = ch->GetY();
 
 			P2P_MANAGER::instance().Send(&pgg, sizeof(TPacketGGTransfer));
-			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%s ¥‘¿ª º“»Ø«œø¥Ω¿¥œ¥Ÿ."), arg1);
+			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%s ÎãòÏùÑ ÏÜåÌôòÌïòÏòÄÏäµÎãàÎã§."), arg1);
 			
-			//±∫¡÷ µ∑ ªË∞®	
+			//Íµ∞Ï£º Îèà ÏÇ≠Í∞ê	
 			CMonarch::instance().SendtoDBDecMoney(WarpPrice, ch->GetEmpire(), ch);
-			//ƒ≈∏¿” √ ±‚»≠ 
+			//Ïø®ÌÉÄÏûÑ Ï¥àÍ∏∞Ìôî 
 			ch->SetMC(CHARACTER::MI_TRANSFER);
 		}
 		else
 		{
-			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("¿‘∑¬«œΩ≈ ¿Ã∏ß¿ª ∞°¡¯ ªÁøÎ¿⁄∞° æ¯Ω¿¥œ¥Ÿ."));
+			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ÏûÖÎ†•ÌïòÏã† Ïù¥Î¶ÑÏùÑ Í∞ÄÏßÑ ÏÇ¨Ïö©ÏûêÍ∞Ä ÏóÜÏäµÎãàÎã§."));
 		}
 
 		return;
@@ -1664,32 +1664,32 @@ ACMD(do_monarch_transfer)
 
 	if (ch == tch)
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("¿⁄Ω≈¿ª º“»Ø«“ ºˆ æ¯Ω¿¥œ¥Ÿ."));
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ÏûêÏã†ÏùÑ ÏÜåÌôòÌï† Ïàò ÏóÜÏäµÎãàÎã§."));
 		return;
 	}
 
 	if (tch->GetEmpire() != ch->GetEmpire())
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("¥Ÿ∏• ¡¶±π ¿Ø¿˙¥¬ º“»Ø«“ ºˆ æ¯Ω¿¥œ¥Ÿ."));
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Îã§Î•∏ Ï†úÍµ≠ Ïú†Ï†ÄÎäî ÏÜåÌôòÌï† Ïàò ÏóÜÏäµÎãàÎã§."));
 		return;
 	}
 	if (!IsMonarchWarpZone(tch->GetMapIndex()))
 	{
-		ch->ChatPacket (CHAT_TYPE_INFO, LC_TEXT("«ÿ¥Á ¡ˆø™¿∏∑Œ ¿Ãµø«“ ºˆ æ¯Ω¿¥œ¥Ÿ."));
+		ch->ChatPacket (CHAT_TYPE_INFO, LC_TEXT("Ìï¥Îãπ ÏßÄÏó≠ÏúºÎ°ú Ïù¥ÎèôÌï† Ïàò ÏóÜÏäµÎãàÎã§."));
 		return;
 	}
 	if (!IsMonarchWarpZone(ch->GetMapIndex()))
 	{
-		ch->ChatPacket (CHAT_TYPE_INFO, LC_TEXT("«ÿ¥Á ¡ˆø™¿∏∑Œ º“»Ø«“ ºˆ æ¯Ω¿¥œ¥Ÿ."));
+		ch->ChatPacket (CHAT_TYPE_INFO, LC_TEXT("Ìï¥Îãπ ÏßÄÏó≠ÏúºÎ°ú ÏÜåÌôòÌï† Ïàò ÏóÜÏäµÎãàÎã§."));
 		return;
 	}
 
 	//tch->Show(ch->GetMapIndex(), ch->GetX(), ch->GetY(), ch->GetZ());
 	tch->WarpSet(ch->GetX(), ch->GetY(), ch->GetMapIndex());
 	
-	//±∫¡÷ µ∑ ªË∞®	
+	//Íµ∞Ï£º Îèà ÏÇ≠Í∞ê	
 	CMonarch::instance().SendtoDBDecMoney(WarpPrice, ch->GetEmpire(), ch);
-	//ƒ≈∏¿” √ ±‚»≠ 
+	//Ïø®ÌÉÄÏûÑ Ï¥àÍ∏∞Ìôî 
 	ch->SetMC(CHARACTER::MI_TRANSFER);
 }
 
@@ -1697,24 +1697,24 @@ ACMD(do_monarch_info)
 {
 	if (CMonarch::instance().IsMonarch(ch->GetPlayerID(), ch->GetEmpire()))	
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("≥™¿« ±∫¡÷ ¡§∫∏"));
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ÎÇòÏùò Íµ∞Ï£º Ï†ïÎ≥¥"));
 		TMonarchInfo * p = CMonarch::instance().GetMonarch();
 		for (int n = 1; n < 4; ++n)
 		{
 			if (n == ch->GetEmpire())
-				ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("[%s±∫¡÷] : %s  ∫∏¿Ø±›æ◊ %lld "), EMPIRE_NAME(n), p->name[n], p->money[n]);
+				ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("[%sÍµ∞Ï£º] : %s  Î≥¥Ïú†Í∏àÏï° %lld "), EMPIRE_NAME(n), p->name[n], p->money[n]);
 			else
-				ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("[%s±∫¡÷] : %s  "), EMPIRE_NAME(n), p->name[n]);
+				ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("[%sÍµ∞Ï£º] : %s  "), EMPIRE_NAME(n), p->name[n]);
 				
 		}
 	}
 	else
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("±∫¡÷ ¡§∫∏"));
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Íµ∞Ï£º Ï†ïÎ≥¥"));
 		TMonarchInfo * p = CMonarch::instance().GetMonarch();
 		for (int n = 1; n < 4; ++n)
 		{
-			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("[%s±∫¡÷] : %s  "), EMPIRE_NAME(n), p->name[n]);
+			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("[%sÍµ∞Ï£º] : %s  "), EMPIRE_NAME(n), p->name[n]);
 				
 		}
 	}
@@ -1779,60 +1779,60 @@ ACMD(do_monarch_tax)
 		return;
 	}
 
-	// ±∫¡÷ ∞ÀªÁ	
+	// Íµ∞Ï£º Í≤ÄÏÇ¨	
 	if (!ch->IsMonarch())
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("±∫¡÷∏∏¿Ã ªÁøÎ«“ºˆ ¿÷¥¬ ±‚¥…¿‘¥œ¥Ÿ"));
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Íµ∞Ï£ºÎßåÏù¥ ÏÇ¨Ïö©Ìï†Ïàò ÏûàÎäî Í∏∞Îä•ÏûÖÎãàÎã§"));
 		return;
 	}
 
-	// ºº±›º≥¡§ 
+	// ÏÑ∏Í∏àÏÑ§Ï†ï 
 	int tax = 0;
 	str_to_number(tax,  arg1);
 
 	if (tax < 1 || tax > 50)
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("1-50 ªÁ¿Ã¿« ºˆƒ°∏¶ º±≈√«ÿ¡÷ººø‰"));
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("1-50 ÏÇ¨Ïù¥Ïùò ÏàòÏπòÎ•º ÏÑ†ÌÉùÌï¥Ï£ºÏÑ∏Ïöî"));
 
 	quest::CQuestManager::instance().SetEventFlag("trade_tax", tax); 
 
-	// ±∫¡÷ø°∞‘ ∏ﬁºº¡ˆ «œ≥™
-	ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ºº±›¿Ã %d %∑Œ º≥¡§µ«æ˙Ω¿¥œ¥Ÿ"));
+	// Íµ∞Ï£ºÏóêÍ≤å Î©îÏÑ∏ÏßÄ ÌïòÎÇò
+	ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ÏÑ∏Í∏àÏù¥ %d %Î°ú ÏÑ§Ï†ïÎêòÏóàÏäµÎãàÎã§"));
 
-	// ∞¯¡ˆ 
+	// Í≥µÏßÄ 
 	char szMsg[1024];	
 
-	snprintf(szMsg, sizeof(szMsg), "±∫¡÷¿« ∏Ì¿∏∑Œ ºº±›¿Ã %d %% ∑Œ ∫Ø∞Êµ«æ˙Ω¿¥œ¥Ÿ", tax);
+	snprintf(szMsg, sizeof(szMsg), "Íµ∞Ï£ºÏùò Î™ÖÏúºÎ°ú ÏÑ∏Í∏àÏù¥ %d %% Î°ú Î≥ÄÍ≤ΩÎêòÏóàÏäµÎãàÎã§", tax);
 	BroadcastNotice(szMsg);
 
-	snprintf(szMsg, sizeof(szMsg), "æ’¿∏∑Œ¥¬ ∞≈∑° ±›æ◊¿« %d %% ∞° ±π∞Ì∑Œ µÈæÓ∞°∞‘µÀ¥œ¥Ÿ.", tax);
+	snprintf(szMsg, sizeof(szMsg), "ÏïûÏúºÎ°úÎäî Í±∞Îûò Í∏àÏï°Ïùò %d %% Í∞Ä Íµ≠Í≥†Î°ú Îì§Ïñ¥Í∞ÄÍ≤åÎê©ÎãàÎã§.", tax);
 	BroadcastNotice(szMsg);
 
-	// ƒ≈∏¿” √ ±‚»≠ 
+	// Ïø®ÌÉÄÏûÑ Ï¥àÍ∏∞Ìôî 
 	ch->SetMC(CHARACTER::MI_TAX); 
 }
 
 static const DWORD cs_dwMonarchMobVnums[] =
 {
-	191, //	ªÍ∞ﬂΩ≈
-	192, //	¿˙Ω≈
-	193, //	øıΩ≈
-	194, //	»£Ω≈
-	391, //	πÃ¡§
-	392, //	¿∫¡§
-	393, //	ºº∂˚
-	394, //	¡¯»Ò
-	491, //	∏Õ»Ø
-	492, //	∫∏øÏ
-	493, //	±∏∆–
-	494, //	√ﬂ»Á
-	591, //	∫Ò∑˘¥‹¥Î¿Â
-	691, //	øı±Õ ¡∑¿Â
-	791, //	π–±≥±≥¡÷
-	1304, // ¥©∑∑π¸±Õ
-	1901, // ±∏πÃ»£
-	2091, // ø©ø’∞≈πÃ
-	2191, // ∞≈¥ÎªÁ∏∑∞≈∫œ
-	2206, // »≠ø∞ø’i
+	191, //	ÏÇ∞Í≤¨Ïã†
+	192, //	Ï†ÄÏã†
+	193, //	ÏõÖÏã†
+	194, //	Ìò∏Ïã†
+	391, //	ÎØ∏Ï†ï
+	392, //	ÏùÄÏ†ï
+	393, //	ÏÑ∏Îûë
+	394, //	ÏßÑÌù¨
+	491, //	ÎßπÌôò
+	492, //	Î≥¥Ïö∞
+	493, //	Íµ¨Ìå®
+	494, //	Ï∂îÌùî
+	591, //	ÎπÑÎ•òÎã®ÎåÄÏû•
+	691, //	ÏõÖÍ∑Ä Ï°±Ïû•
+	791, //	Î∞ÄÍµêÍµêÏ£º
+	1304, // ÎàÑÎ†ÅÎ≤îÍ∑Ä
+	1901, // Íµ¨ÎØ∏Ìò∏
+	2091, // Ïó¨ÏôïÍ±∞ÎØ∏
+	2191, // Í±∞ÎåÄÏÇ¨ÎßâÍ±∞Î∂Å
+	2206, // ÌôîÏóºÏôïi
 	0,
 };
 
@@ -1845,7 +1845,7 @@ ACMD(do_monarch_mob)
 
 	if (!ch->IsMonarch())
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("±∫¡÷∏∏¿Ã ªÁøÎ«“ºˆ ¿÷¥¬ ±‚¥…¿‘¥œ¥Ÿ"));
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Íµ∞Ï£ºÎßåÏù¥ ÏÇ¨Ïö©Ìï†Ïàò ÏûàÎäî Í∏∞Îä•ÏûÖÎãàÎã§"));
 		return;
 	}
 	
@@ -1862,26 +1862,26 @@ ACMD(do_monarch_mob)
 	{
 		if (mapEmpire != pcEmpire && mapEmpire != 0)
 		{
-			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("¿⁄±π øµ≈‰ø°º≠∏∏ ªÁøÎ«“ ºˆ ¿÷¥¬ ±‚¥…¿‘¥œ¥Ÿ"));
+			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ÏûêÍµ≠ ÏòÅÌÜ†ÏóêÏÑúÎßå ÏÇ¨Ïö©Ìï† Ïàò ÏûàÎäî Í∏∞Îä•ÏûÖÎãàÎã§"));
 			return;
 		}
 	}
 
-	// ±∫¡÷ ∏˜ º“»Ø ∫ÒøÎ 
+	// Íµ∞Ï£º Î™π ÏÜåÌôò ÎπÑÏö© 
 	const int SummonPrice = 5000000;
 
-	// ±∫¡÷ ƒ≈∏¿” ∞ÀªÁ
+	// Íµ∞Ï£º Ïø®ÌÉÄÏûÑ Í≤ÄÏÇ¨
 	if (!ch->IsMCOK(CHARACTER::MI_SUMMON))
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%d √ ∞£ ƒ≈∏¿”¿Ã ¿˚øÎ¡ﬂ¿‘¥œ¥Ÿ."), ch->GetMCLTime(CHARACTER::MI_SUMMON));	
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%d Ï¥àÍ∞Ñ Ïø®ÌÉÄÏûÑÏù¥ Ï†ÅÏö©Ï§ëÏûÖÎãàÎã§."), ch->GetMCLTime(CHARACTER::MI_SUMMON));	
 		return;
 	}
 	
-	// ±∫¡÷ ±π∞Ì ∞ÀªÁ 
+	// Íµ∞Ï£º Íµ≠Í≥† Í≤ÄÏÇ¨ 
 	if (!CMonarch::instance().IsMoneyOk(SummonPrice, ch->GetEmpire()))
 	{
 		int NationMoney = CMonarch::instance().GetMoney(ch->GetEmpire());
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("±π∞Ìø° µ∑¿Ã ∫Œ¡∑«’¥œ¥Ÿ. «ˆ¿Á : %u « ø‰±›æ◊ : %u"), NationMoney, SummonPrice);
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Íµ≠Í≥†Ïóê ÎèàÏù¥ Î∂ÄÏ°±Ìï©ÎãàÎã§. ÌòÑÏû¨ : %u ÌïÑÏöîÍ∏àÏï° : %u"), NationMoney, SummonPrice);
 		return;	
 	}
 
@@ -1905,14 +1905,14 @@ ACMD(do_monarch_mob)
 
 	DWORD count;
 
-	// º“»Ø ∞°¥… ∏˜ ∞ÀªÁ
+	// ÏÜåÌôò Í∞ÄÎä• Î™π Í≤ÄÏÇ¨
 	for (count = 0; cs_dwMonarchMobVnums[count] != 0; ++count)
 		if (cs_dwMonarchMobVnums[count] == vnum)
 			break;
 
 	if (0 == cs_dwMonarchMobVnums[count])
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("º“»Ø«“ºˆ æ¯¥¬ ∏ÛΩ∫≈Õ ¿‘¥œ¥Ÿ. º“»Ø∞°¥…«— ∏ÛΩ∫≈Õ¥¬ »®∆‰¿Ã¡ˆ∏¶ ¬¸¡∂«œººø‰"));
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ÏÜåÌôòÌï†Ïàò ÏóÜÎäî Î™¨Ïä§ÌÑ∞ ÏûÖÎãàÎã§. ÏÜåÌôòÍ∞ÄÎä•Ìïú Î™¨Ïä§ÌÑ∞Îäî ÌôàÌéòÏù¥ÏßÄÎ•º Ï∞∏Ï°∞ÌïòÏÑ∏Ïöî"));
 		return;
 	}
 
@@ -1928,10 +1928,10 @@ ACMD(do_monarch_mob)
 
 	if (tch)
 	{
-		// ±∫¡÷ µ∑ ªË∞®	
+		// Íµ∞Ï£º Îèà ÏÇ≠Í∞ê	
 		CMonarch::instance().SendtoDBDecMoney(SummonPrice, ch->GetEmpire(), ch);
 
-		// ƒ≈∏¿” √ ±‚»≠ 
+		// Ïø®ÌÉÄÏûÑ Ï¥àÍ∏∞Ìôî 
 		ch->SetMC(CHARACTER::MI_SUMMON); 
 	}
 }
@@ -1940,92 +1940,92 @@ static const char* FN_point_string(int apply_number)
 {
 	switch (apply_number)
 	{
-		case POINT_MAX_HP:	return LC_TEXT("√÷¥Î ª˝∏Ì∑¬ +%d");
-		case POINT_MAX_SP:	return LC_TEXT("√÷¥Î ¡§Ω≈∑¬ +%d");
-		case POINT_HT:		return LC_TEXT("√º∑¬ +%d");
-		case POINT_IQ:		return LC_TEXT("¡ˆ¥… +%d");
-		case POINT_ST:		return LC_TEXT("±Ÿ∑¬ +%d");
-		case POINT_DX:		return LC_TEXT("πŒ√∏ +%d");
-		case POINT_ATT_SPEED:	return LC_TEXT("∞¯∞›º”µµ +%d");
-		case POINT_MOV_SPEED:	return LC_TEXT("¿Ãµøº”µµ %d");
-		case POINT_CASTING_SPEED:	return LC_TEXT("ƒ≈∏¿” -%d");
-		case POINT_HP_REGEN:	return LC_TEXT("ª˝∏Ì∑¬ »∏∫π +%d");
-		case POINT_SP_REGEN:	return LC_TEXT("¡§Ω≈∑¬ »∏∫π +%d");
-		case POINT_POISON_PCT:	return LC_TEXT("µ∂∞¯∞› %d");
-		case POINT_STUN_PCT:	return LC_TEXT("Ω∫≈œ +%d");
-		case POINT_SLOW_PCT:	return LC_TEXT("ΩΩ∑ŒøÏ +%d");
-		case POINT_CRITICAL_PCT:	return LC_TEXT("%d%% »Æ∑¸∑Œ ƒ°∏Ì≈∏ ∞¯∞›");
-		case POINT_RESIST_CRITICAL:	return LC_TEXT("ªÛ¥Î¿« ƒ°∏Ì≈∏ »Æ∑¸ %d%% ∞®º“");
-		case POINT_PENETRATE_PCT:	return LC_TEXT("%d%% »Æ∑¸∑Œ ∞¸≈Î ∞¯∞›");
-		case POINT_RESIST_PENETRATE: return LC_TEXT("ªÛ¥Î¿« ∞¸≈Î ∞¯∞› »Æ∑¸ %d%% ∞®º“");
-		case POINT_ATTBONUS_HUMAN:	return LC_TEXT("¿Œ∞£∑˘ ∏ÛΩ∫≈Õ ≈∏∞›ƒ° +%d%%");
-		case POINT_ATTBONUS_ANIMAL:	return LC_TEXT("µøπ∞∑˘ ∏ÛΩ∫≈Õ ≈∏∞›ƒ° +%d%%");
-		case POINT_ATTBONUS_ORC:	return LC_TEXT("øı±Õ¡∑ ≈∏∞›ƒ° +%d%%");
-		case POINT_ATTBONUS_MILGYO:	return LC_TEXT("π–±≥∑˘ ≈∏∞›ƒ° +%d%%");
-		case POINT_ATTBONUS_UNDEAD:	return LC_TEXT("Ω√√º∑˘ ≈∏∞›ƒ° +%d%%");
-		case POINT_ATTBONUS_DEVIL:	return LC_TEXT("æ«∏∂∑˘ ≈∏∞›ƒ° +%d%%");
-		case POINT_STEAL_HP:		return LC_TEXT("≈∏∞›ƒ° %d%% ∏¶ ª˝∏Ì∑¬¿∏∑Œ »Ìºˆ");
-		case POINT_STEAL_SP:		return LC_TEXT("≈∏∑¬ƒ° %d%% ∏¶ ¡§Ω≈∑¬¿∏∑Œ »Ìºˆ");
-		case POINT_MANA_BURN_PCT:	return LC_TEXT("%d%% »Æ∑¸∑Œ ≈∏∞›Ω√ ªÛ¥Î ¿¸Ω≈∑¬ º“∏");
-		case POINT_DAMAGE_SP_RECOVER:	return LC_TEXT("%d%% »Æ∑¸∑Œ «««ÿΩ√ ¡§Ω≈∑¬ »∏∫π");
-		case POINT_BLOCK:			return LC_TEXT("π∞∏Æ≈∏∞›Ω√ ∫Ì∑∞ »Æ∑¸ %d%%");
-		case POINT_DODGE:			return LC_TEXT("»∞ ∞¯∞› »∏«« »Æ∑¸ %d%%");
-		case POINT_RESIST_SWORD:	return LC_TEXT("«—º’∞À πÊæÓ %d%%");
-		case POINT_RESIST_TWOHAND:	return LC_TEXT("æÁº’∞À πÊæÓ %d%%");
-		case POINT_RESIST_DAGGER:	return LC_TEXT("µŒº’∞À πÊæÓ %d%%");
-		case POINT_RESIST_BELL:		return LC_TEXT("πÊøÔ πÊæÓ %d%%");
-		case POINT_RESIST_FAN:		return LC_TEXT("∫Œ√§ πÊæÓ %d%%");
-		case POINT_RESIST_BOW:		return LC_TEXT("»∞∞¯∞› ¿˙«◊ %d%%");
-		case POINT_RESIST_FIRE:		return LC_TEXT("»≠ø∞ ¿˙«◊ %d%%");
-		case POINT_RESIST_ELEC:		return LC_TEXT("¿¸±‚ ¿˙«◊ %d%%");
-		case POINT_RESIST_MAGIC:	return LC_TEXT("∏∂π˝ ¿˙«◊ %d%%");
-		case POINT_RESIST_WIND:		return LC_TEXT("πŸ∂˜ ¿˙«◊ %d%%");
-		case POINT_RESIST_ICE:		return LC_TEXT("≥√±‚ ¿˙«◊ %d%%");
-		case POINT_RESIST_EARTH:	return LC_TEXT("¥Î¡ˆ ¿˙«◊ %d%%");
-		case POINT_RESIST_DARK:		return LC_TEXT("æÓµ“ ¿˙«◊ %d%%");
-		case POINT_REFLECT_MELEE:	return LC_TEXT("¡˜¡¢ ≈∏∞›ƒ° π›ªÁ »Æ∑¸ : %d%%");
-		case POINT_REFLECT_CURSE:	return LC_TEXT("¿˙¡÷ µ«µπ∏Æ±‚ »Æ∑¸ %d%%");
-		case POINT_POISON_REDUCE:	return LC_TEXT("µ∂ ¿˙«◊ %d%%");
-		case POINT_KILL_SP_RECOVER:	return LC_TEXT("%d%% »Æ∑¸∑Œ ¿˚≈ƒ°Ω√ ¡§Ω≈∑¬ »∏∫π");
-		case POINT_EXP_DOUBLE_BONUS:	return LC_TEXT("%d%% »Æ∑¸∑Œ ¿˚≈ƒ°Ω√ ∞Ê«Ëƒ° √ﬂ∞° ªÛΩ¬");
-		case POINT_GOLD_DOUBLE_BONUS:	return LC_TEXT("%d%% »Æ∑¸∑Œ ¿˚≈ƒ°Ω√ µ∑ 2πË µÂ∑”");
-		case POINT_ITEM_DROP_BONUS:	return LC_TEXT("%d%% »Æ∑¸∑Œ ¿˚≈ƒ°Ω√ æ∆¿Ã≈€ 2πË µÂ∑”");
-		case POINT_POTION_BONUS:	return LC_TEXT("π∞æ‡ ªÁøÎΩ√ %d%% º∫¥… ¡ı∞°");
-		case POINT_KILL_HP_RECOVERY:	return LC_TEXT("%d%% »Æ∑¸∑Œ ¿˚≈ƒ°Ω√ ª˝∏Ì∑¬ »∏∫π");
-//		case POINT_IMMUNE_STUN:	return LC_TEXT("±‚¿˝«œ¡ˆ æ ¿Ω %d%%");
-//		case POINT_IMMUNE_SLOW:	return LC_TEXT("¥¿∑¡¡ˆ¡ˆ æ ¿Ω %d%%");
-//		case POINT_IMMUNE_FALL:	return LC_TEXT("≥—æÓ¡ˆ¡ˆ æ ¿Ω %d%%");
+		case POINT_MAX_HP:	return LC_TEXT("ÏµúÎåÄ ÏÉùÎ™ÖÎ†• +%d");
+		case POINT_MAX_SP:	return LC_TEXT("ÏµúÎåÄ Ï†ïÏã†Î†• +%d");
+		case POINT_HT:		return LC_TEXT("Ï≤¥Î†• +%d");
+		case POINT_IQ:		return LC_TEXT("ÏßÄÎä• +%d");
+		case POINT_ST:		return LC_TEXT("Í∑ºÎ†• +%d");
+		case POINT_DX:		return LC_TEXT("ÎØºÏ≤© +%d");
+		case POINT_ATT_SPEED:	return LC_TEXT("Í≥µÍ≤©ÏÜçÎèÑ +%d");
+		case POINT_MOV_SPEED:	return LC_TEXT("Ïù¥ÎèôÏÜçÎèÑ %d");
+		case POINT_CASTING_SPEED:	return LC_TEXT("Ïø®ÌÉÄÏûÑ -%d");
+		case POINT_HP_REGEN:	return LC_TEXT("ÏÉùÎ™ÖÎ†• ÌöåÎ≥µ +%d");
+		case POINT_SP_REGEN:	return LC_TEXT("Ï†ïÏã†Î†• ÌöåÎ≥µ +%d");
+		case POINT_POISON_PCT:	return LC_TEXT("ÎèÖÍ≥µÍ≤© %d");
+		case POINT_STUN_PCT:	return LC_TEXT("Ïä§ÌÑ¥ +%d");
+		case POINT_SLOW_PCT:	return LC_TEXT("Ïä¨Î°úÏö∞ +%d");
+		case POINT_CRITICAL_PCT:	return LC_TEXT("%d%% ÌôïÎ•†Î°ú ÏπòÎ™ÖÌÉÄ Í≥µÍ≤©");
+		case POINT_RESIST_CRITICAL:	return LC_TEXT("ÏÉÅÎåÄÏùò ÏπòÎ™ÖÌÉÄ ÌôïÎ•† %d%% Í∞êÏÜå");
+		case POINT_PENETRATE_PCT:	return LC_TEXT("%d%% ÌôïÎ•†Î°ú Í¥ÄÌÜµ Í≥µÍ≤©");
+		case POINT_RESIST_PENETRATE: return LC_TEXT("ÏÉÅÎåÄÏùò Í¥ÄÌÜµ Í≥µÍ≤© ÌôïÎ•† %d%% Í∞êÏÜå");
+		case POINT_ATTBONUS_HUMAN:	return LC_TEXT("Ïù∏Í∞ÑÎ•ò Î™¨Ïä§ÌÑ∞ ÌÉÄÍ≤©Ïπò +%d%%");
+		case POINT_ATTBONUS_ANIMAL:	return LC_TEXT("ÎèôÎ¨ºÎ•ò Î™¨Ïä§ÌÑ∞ ÌÉÄÍ≤©Ïπò +%d%%");
+		case POINT_ATTBONUS_ORC:	return LC_TEXT("ÏõÖÍ∑ÄÏ°± ÌÉÄÍ≤©Ïπò +%d%%");
+		case POINT_ATTBONUS_MILGYO:	return LC_TEXT("Î∞ÄÍµêÎ•ò ÌÉÄÍ≤©Ïπò +%d%%");
+		case POINT_ATTBONUS_UNDEAD:	return LC_TEXT("ÏãúÏ≤¥Î•ò ÌÉÄÍ≤©Ïπò +%d%%");
+		case POINT_ATTBONUS_DEVIL:	return LC_TEXT("ÏïÖÎßàÎ•ò ÌÉÄÍ≤©Ïπò +%d%%");
+		case POINT_STEAL_HP:		return LC_TEXT("ÌÉÄÍ≤©Ïπò %d%% Î•º ÏÉùÎ™ÖÎ†•ÏúºÎ°ú Ìù°Ïàò");
+		case POINT_STEAL_SP:		return LC_TEXT("ÌÉÄÎ†•Ïπò %d%% Î•º Ï†ïÏã†Î†•ÏúºÎ°ú Ìù°Ïàò");
+		case POINT_MANA_BURN_PCT:	return LC_TEXT("%d%% ÌôïÎ•†Î°ú ÌÉÄÍ≤©Ïãú ÏÉÅÎåÄ Ï†ÑÏã†Î†• ÏÜåÎ™®");
+		case POINT_DAMAGE_SP_RECOVER:	return LC_TEXT("%d%% ÌôïÎ•†Î°ú ÌîºÌï¥Ïãú Ï†ïÏã†Î†• ÌöåÎ≥µ");
+		case POINT_BLOCK:			return LC_TEXT("Î¨ºÎ¶¨ÌÉÄÍ≤©Ïãú Î∏îÎü≠ ÌôïÎ•† %d%%");
+		case POINT_DODGE:			return LC_TEXT("Ìôú Í≥µÍ≤© ÌöåÌîº ÌôïÎ•† %d%%");
+		case POINT_RESIST_SWORD:	return LC_TEXT("ÌïúÏÜêÍ≤Ä Î∞©Ïñ¥ %d%%");
+		case POINT_RESIST_TWOHAND:	return LC_TEXT("ÏñëÏÜêÍ≤Ä Î∞©Ïñ¥ %d%%");
+		case POINT_RESIST_DAGGER:	return LC_TEXT("ÎëêÏÜêÍ≤Ä Î∞©Ïñ¥ %d%%");
+		case POINT_RESIST_BELL:		return LC_TEXT("Î∞©Ïö∏ Î∞©Ïñ¥ %d%%");
+		case POINT_RESIST_FAN:		return LC_TEXT("Î∂ÄÏ±Ñ Î∞©Ïñ¥ %d%%");
+		case POINT_RESIST_BOW:		return LC_TEXT("ÌôúÍ≥µÍ≤© Ï†ÄÌï≠ %d%%");
+		case POINT_RESIST_FIRE:		return LC_TEXT("ÌôîÏóº Ï†ÄÌï≠ %d%%");
+		case POINT_RESIST_ELEC:		return LC_TEXT("Ï†ÑÍ∏∞ Ï†ÄÌï≠ %d%%");
+		case POINT_RESIST_MAGIC:	return LC_TEXT("ÎßàÎ≤ï Ï†ÄÌï≠ %d%%");
+		case POINT_RESIST_WIND:		return LC_TEXT("Î∞îÎûå Ï†ÄÌï≠ %d%%");
+		case POINT_RESIST_ICE:		return LC_TEXT("ÎÉâÍ∏∞ Ï†ÄÌï≠ %d%%");
+		case POINT_RESIST_EARTH:	return LC_TEXT("ÎåÄÏßÄ Ï†ÄÌï≠ %d%%");
+		case POINT_RESIST_DARK:		return LC_TEXT("Ïñ¥Îë† Ï†ÄÌï≠ %d%%");
+		case POINT_REFLECT_MELEE:	return LC_TEXT("ÏßÅÏ†ë ÌÉÄÍ≤©Ïπò Î∞òÏÇ¨ ÌôïÎ•† : %d%%");
+		case POINT_REFLECT_CURSE:	return LC_TEXT("Ï†ÄÏ£º ÎêòÎèåÎ¶¨Í∏∞ ÌôïÎ•† %d%%");
+		case POINT_POISON_REDUCE:	return LC_TEXT("ÎèÖ Ï†ÄÌï≠ %d%%");
+		case POINT_KILL_SP_RECOVER:	return LC_TEXT("%d%% ÌôïÎ•†Î°ú Ï†ÅÌá¥ÏπòÏãú Ï†ïÏã†Î†• ÌöåÎ≥µ");
+		case POINT_EXP_DOUBLE_BONUS:	return LC_TEXT("%d%% ÌôïÎ•†Î°ú Ï†ÅÌá¥ÏπòÏãú Í≤ΩÌóòÏπò Ï∂îÍ∞Ä ÏÉÅÏäπ");
+		case POINT_GOLD_DOUBLE_BONUS:	return LC_TEXT("%d%% ÌôïÎ•†Î°ú Ï†ÅÌá¥ÏπòÏãú Îèà 2Î∞∞ ÎìúÎ°≠");
+		case POINT_ITEM_DROP_BONUS:	return LC_TEXT("%d%% ÌôïÎ•†Î°ú Ï†ÅÌá¥ÏπòÏãú ÏïÑÏù¥ÌÖú 2Î∞∞ ÎìúÎ°≠");
+		case POINT_POTION_BONUS:	return LC_TEXT("Î¨ºÏïΩ ÏÇ¨Ïö©Ïãú %d%% ÏÑ±Îä• Ï¶ùÍ∞Ä");
+		case POINT_KILL_HP_RECOVERY:	return LC_TEXT("%d%% ÌôïÎ•†Î°ú Ï†ÅÌá¥ÏπòÏãú ÏÉùÎ™ÖÎ†• ÌöåÎ≥µ");
+//		case POINT_IMMUNE_STUN:	return LC_TEXT("Í∏∞Ï†àÌïòÏßÄ ÏïäÏùå %d%%");
+//		case POINT_IMMUNE_SLOW:	return LC_TEXT("ÎäêÎ†§ÏßÄÏßÄ ÏïäÏùå %d%%");
+//		case POINT_IMMUNE_FALL:	return LC_TEXT("ÎÑòÏñ¥ÏßÄÏßÄ ÏïäÏùå %d%%");
 //		case POINT_SKILL:	return LC_TEXT("");
 //		case POINT_BOW_DISTANCE:	return LC_TEXT("");
-		case POINT_ATT_GRADE_BONUS:	return LC_TEXT("∞¯∞›∑¬ +%d");
-		case POINT_DEF_GRADE_BONUS:	return LC_TEXT("πÊæÓ∑¬ +%d");
-		case POINT_MAGIC_ATT_GRADE:	return LC_TEXT("∏∂π˝ ∞¯∞›∑¬ +%d");
-		case POINT_MAGIC_DEF_GRADE:	return LC_TEXT("∏∂π˝ πÊæÓ∑¬ +%d");
+		case POINT_ATT_GRADE_BONUS:	return LC_TEXT("Í≥µÍ≤©Î†• +%d");
+		case POINT_DEF_GRADE_BONUS:	return LC_TEXT("Î∞©Ïñ¥Î†• +%d");
+		case POINT_MAGIC_ATT_GRADE:	return LC_TEXT("ÎßàÎ≤ï Í≥µÍ≤©Î†• +%d");
+		case POINT_MAGIC_DEF_GRADE:	return LC_TEXT("ÎßàÎ≤ï Î∞©Ïñ¥Î†• +%d");
 //		case POINT_CURSE_PCT:	return LC_TEXT("");
-		case POINT_MAX_STAMINA:	return LC_TEXT("√÷¥Î ¡ˆ±∏∑¬ +%d");
-		case POINT_ATTBONUS_WARRIOR:	return LC_TEXT("π´ªÁø°∞‘ ∞≠«‘ +%d%%");
-		case POINT_ATTBONUS_ASSASSIN:	return LC_TEXT("¿⁄∞¥ø°∞‘ ∞≠«‘ +%d%%");
-		case POINT_ATTBONUS_SURA:		return LC_TEXT("ºˆ∂Ûø°∞‘ ∞≠«‘ +%d%%");
-		case POINT_ATTBONUS_SHAMAN:		return LC_TEXT("π´¥Áø°∞‘ ∞≠«‘ +%d%%");
-		case POINT_ATTBONUS_MONSTER:	return LC_TEXT("∏ÛΩ∫≈Õø°∞‘ ∞≠«‘ +%d%%");
-		case POINT_MALL_ATTBONUS:		return LC_TEXT("∞¯∞›∑¬ +%d%%");
-		case POINT_MALL_DEFBONUS:		return LC_TEXT("πÊæÓ∑¬ +%d%%");
-		case POINT_MALL_EXPBONUS:		return LC_TEXT("∞Ê«Ëƒ° %d%%");
-		case POINT_MALL_ITEMBONUS:		return LC_TEXT("æ∆¿Ã≈€ µÂ∑”¿≤ %.1fπË");
-		case POINT_MALL_GOLDBONUS:		return LC_TEXT("µ∑ µÂ∑”¿≤ %.1fπË");
-		case POINT_MAX_HP_PCT:			return LC_TEXT("√÷¥Î ª˝∏Ì∑¬ +%d%%");
-		case POINT_MAX_SP_PCT:			return LC_TEXT("√÷¥Î ¡§Ω≈∑¬ +%d%%");
-		case POINT_SKILL_DAMAGE_BONUS:	return LC_TEXT("Ω∫≈≥ µ•πÃ¡ˆ %d%%");
-		case POINT_NORMAL_HIT_DAMAGE_BONUS:	return LC_TEXT("∆Ú≈∏ µ•πÃ¡ˆ %d%%");
-		case POINT_SKILL_DEFEND_BONUS:		return LC_TEXT("Ω∫≈≥ µ•πÃ¡ˆ ¿˙«◊ %d%%");
-		case POINT_NORMAL_HIT_DEFEND_BONUS:	return LC_TEXT("∆Ú≈∏ µ•πÃ¡ˆ ¿˙«◊ %d%%");
+		case POINT_MAX_STAMINA:	return LC_TEXT("ÏµúÎåÄ ÏßÄÍµ¨Î†• +%d");
+		case POINT_ATTBONUS_WARRIOR:	return LC_TEXT("Î¨¥ÏÇ¨ÏóêÍ≤å Í∞ïÌï® +%d%%");
+		case POINT_ATTBONUS_ASSASSIN:	return LC_TEXT("ÏûêÍ∞ùÏóêÍ≤å Í∞ïÌï® +%d%%");
+		case POINT_ATTBONUS_SURA:		return LC_TEXT("ÏàòÎùºÏóêÍ≤å Í∞ïÌï® +%d%%");
+		case POINT_ATTBONUS_SHAMAN:		return LC_TEXT("Î¨¥ÎãπÏóêÍ≤å Í∞ïÌï® +%d%%");
+		case POINT_ATTBONUS_MONSTER:	return LC_TEXT("Î™¨Ïä§ÌÑ∞ÏóêÍ≤å Í∞ïÌï® +%d%%");
+		case POINT_MALL_ATTBONUS:		return LC_TEXT("Í≥µÍ≤©Î†• +%d%%");
+		case POINT_MALL_DEFBONUS:		return LC_TEXT("Î∞©Ïñ¥Î†• +%d%%");
+		case POINT_MALL_EXPBONUS:		return LC_TEXT("Í≤ΩÌóòÏπò %d%%");
+		case POINT_MALL_ITEMBONUS:		return LC_TEXT("ÏïÑÏù¥ÌÖú ÎìúÎ°≠Ïú® %.1fÎ∞∞");
+		case POINT_MALL_GOLDBONUS:		return LC_TEXT("Îèà ÎìúÎ°≠Ïú® %.1fÎ∞∞");
+		case POINT_MAX_HP_PCT:			return LC_TEXT("ÏµúÎåÄ ÏÉùÎ™ÖÎ†• +%d%%");
+		case POINT_MAX_SP_PCT:			return LC_TEXT("ÏµúÎåÄ Ï†ïÏã†Î†• +%d%%");
+		case POINT_SKILL_DAMAGE_BONUS:	return LC_TEXT("Ïä§ÌÇ¨ Îç∞ÎØ∏ÏßÄ %d%%");
+		case POINT_NORMAL_HIT_DAMAGE_BONUS:	return LC_TEXT("ÌèâÌÉÄ Îç∞ÎØ∏ÏßÄ %d%%");
+		case POINT_SKILL_DEFEND_BONUS:		return LC_TEXT("Ïä§ÌÇ¨ Îç∞ÎØ∏ÏßÄ Ï†ÄÌï≠ %d%%");
+		case POINT_NORMAL_HIT_DEFEND_BONUS:	return LC_TEXT("ÌèâÌÉÄ Îç∞ÎØ∏ÏßÄ Ï†ÄÌï≠ %d%%");
 //		case POINT_PC_BANG_EXP_BONUS:	return LC_TEXT("");
 //		case POINT_PC_BANG_DROP_BONUS:	return LC_TEXT("");
 //		case POINT_EXTRACT_HP_PCT:	return LC_TEXT("");
-		case POINT_RESIST_WARRIOR:	return LC_TEXT("π´ªÁ∞¯∞›ø° %d%% ¿˙«◊");
-		case POINT_RESIST_ASSASSIN:	return LC_TEXT("¿⁄∞¥∞¯∞›ø° %d%% ¿˙«◊");
-		case POINT_RESIST_SURA:		return LC_TEXT("ºˆ∂Û∞¯∞›ø° %d%% ¿˙«◊");
-		case POINT_RESIST_SHAMAN:	return LC_TEXT("π´¥Á∞¯∞›ø° %d%% ¿˙«◊");
+		case POINT_RESIST_WARRIOR:	return LC_TEXT("Î¨¥ÏÇ¨Í≥µÍ≤©Ïóê %d%% Ï†ÄÌï≠");
+		case POINT_RESIST_ASSASSIN:	return LC_TEXT("ÏûêÍ∞ùÍ≥µÍ≤©Ïóê %d%% Ï†ÄÌï≠");
+		case POINT_RESIST_SURA:		return LC_TEXT("ÏàòÎùºÍ≥µÍ≤©Ïóê %d%% Ï†ÄÌï≠");
+		case POINT_RESIST_SHAMAN:	return LC_TEXT("Î¨¥ÎãπÍ≥µÍ≤©Ïóê %d%% Ï†ÄÌï≠");
 		default:					return NULL;
 	}
 }
@@ -2063,7 +2063,7 @@ static bool FN_hair_affect_string(LPCHARACTER ch, char *buf, size_t bufsiz)
 	mon		= ltm.tm_mon + 1;
 	day		= ltm.tm_mday;
 
-	snprintf(buf + offset, bufsiz - offset, LC_TEXT(" (∏∏∑·¿œ : %d≥‚ %dø˘ %d¿œ)"), year, mon, day);
+	snprintf(buf + offset, bufsiz - offset, LC_TEXT(" (ÎßåÎ£åÏùº : %dÎÖÑ %dÏõî %dÏùº)"), year, mon, day);
 
 	return true;
 }
@@ -2198,11 +2198,11 @@ ACMD(do_cube)
 	const std::string& strArg1 = std::string(arg1);
 
 	// r_info (request information)
-	// /cube r_info     ==> (Client -> Server) «ˆ¿Á NPC∞° ∏∏µÈ ºˆ ¿÷¥¬ ∑πΩ√«« ø‰√ª
+	// /cube r_info     ==> (Client -> Server) ÌòÑÏû¨ NPCÍ∞Ä ÎßåÎì§ Ïàò ÏûàÎäî Î†àÏãúÌîº ÏöîÏ≤≠
 	//					    (Server -> Client) /cube r_list npcVNUM resultCOUNT 123,1/125,1/128,1/130,5
 	//
-	// /cube r_info 3   ==> (Client -> Server) «ˆ¿Á NPC∞° ∏∏µÈºˆ ¿÷¥¬ ∑πΩ√«« ¡ﬂ 3π¯¬∞ æ∆¿Ã≈€¿ª ∏∏µÂ¥¬ µ• « ø‰«— ¡§∫∏∏¶ ø‰√ª
-	// /cube r_info 3 5 ==> (Client -> Server) «ˆ¿Á NPC∞° ∏∏µÈºˆ ¿÷¥¬ ∑πΩ√«« ¡ﬂ 3π¯¬∞ æ∆¿Ã≈€∫Œ≈Õ ¿Ã»ƒ 5∞≥¿« æ∆¿Ã≈€¿ª ∏∏µÂ¥¬ µ• « ø‰«— ¿Á∑· ¡§∫∏∏¶ ø‰√ª
+	// /cube r_info 3   ==> (Client -> Server) ÌòÑÏû¨ NPCÍ∞Ä ÎßåÎì§Ïàò ÏûàÎäî Î†àÏãúÌîº Ï§ë 3Î≤àÏß∏ ÏïÑÏù¥ÌÖúÏùÑ ÎßåÎìúÎäî Îç∞ ÌïÑÏöîÌïú Ï†ïÎ≥¥Î•º ÏöîÏ≤≠
+	// /cube r_info 3 5 ==> (Client -> Server) ÌòÑÏû¨ NPCÍ∞Ä ÎßåÎì§Ïàò ÏûàÎäî Î†àÏãúÌîº Ï§ë 3Î≤àÏß∏ ÏïÑÏù¥ÌÖúÎ∂ÄÌÑ∞ Ïù¥ÌõÑ 5Í∞úÏùò ÏïÑÏù¥ÌÖúÏùÑ ÎßåÎìúÎäî Îç∞ ÌïÑÏöîÌïú Ïû¨Î£å Ï†ïÎ≥¥Î•º ÏöîÏ≤≠
 	//					   (Server -> Client) /cube m_info startIndex count 125,1|126,2|127,2|123,5&555,5&555,4/120000@125,1|126,2|127,2|123,5&555,5&555,4/120000
 	//
 	if (strArg1 == "r_info")
@@ -2291,7 +2291,7 @@ ACMD(do_in_game_mall)
 		return;
 	}
 
-	// §–_§– ƒËµµº≠πˆ æ∆¿Ã≈€∏Ù URL «œµÂƒ⁄µ˘ √ﬂ∞°
+	// „Ö†_„Ö† ÏæåÎèÑÏÑúÎ≤Ñ ÏïÑÏù¥ÌÖúÎ™∞ URL ÌïòÎìúÏΩîÎî© Ï∂îÍ∞Ä
 	if (true == LC_IsWE_Korea())
 	{
 		ch->ChatPacket(CHAT_TYPE_COMMAND, "mall http://metin2.co.kr/50_we_mall/mall/login.htm");
@@ -2388,7 +2388,7 @@ ACMD(do_in_game_mall)
 	}
 }
 
-// ¡÷ªÁ¿ß
+// Ï£ºÏÇ¨ÏúÑ
 ACMD(do_dice) 
 {
 	char arg1[256], arg2[256];
@@ -2413,9 +2413,9 @@ ACMD(do_dice)
 	int n = number(start, end);
 	
 	if (ch->GetParty())
-		ch->GetParty()->ChatPacketToAllMember(CHAT_TYPE_INFO, LC_TEXT("%s¥‘¿Ã ¡÷ªÁ¿ß∏¶ ±º∑¡ %d∞° ≥™ø‘Ω¿¥œ¥Ÿ. (%d-%d)"), ch->GetName(), n, start, end);
+		ch->GetParty()->ChatPacketToAllMember(CHAT_TYPE_INFO, LC_TEXT("%sÎãòÏù¥ Ï£ºÏÇ¨ÏúÑÎ•º Íµ¥Î†§ %dÍ∞Ä ÎÇòÏôîÏäµÎãàÎã§. (%d-%d)"), ch->GetName(), n, start, end);
 	else
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("¥ÁΩ≈¿Ã ¡÷ªÁ¿ß∏¶ ±º∑¡ %d∞° ≥™ø‘Ω¿¥œ¥Ÿ. (%d-%d)"), n, start, end);
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ÎãπÏã†Ïù¥ Ï£ºÏÇ¨ÏúÑÎ•º Íµ¥Î†§ %dÍ∞Ä ÎÇòÏôîÏäµÎãàÎã§. (%d-%d)"), n, start, end);
 }
 
 ACMD(do_click_mall)
@@ -2429,7 +2429,7 @@ ACMD(do_ride)
     if (ch->IsDead() || ch->IsStun())
 	return;
 
-    // ≥ª∏Æ±‚
+    // ÎÇ¥Î¶¨Í∏∞
     {
 	if (ch->IsHorseRiding())
 	{
@@ -2446,7 +2446,7 @@ ACMD(do_ride)
 	}
     }
 
-    // ≈∏±‚
+    // ÌÉÄÍ∏∞
     {
 	if (ch->GetHorse() != NULL)
 	{
@@ -2461,7 +2461,7 @@ ACMD(do_ride)
 	    if (NULL == item)
 		continue;
 
-	    // ¿Ø¥œ≈© ≈ª∞Õ æ∆¿Ã≈€
+	    // Ïú†ÎãàÌÅ¨ ÌÉàÍ≤É ÏïÑÏù¥ÌÖú
 		if (item->IsRideItem())
 		{
 			if (NULL==ch->GetWear(WEAR_UNIQUE1) || NULL==ch->GetWear(WEAR_UNIQUE2))
@@ -2473,20 +2473,20 @@ ACMD(do_ride)
 			}
 		}
 
-	    // ¿œπ› ≈ª∞Õ æ∆¿Ã≈€
-	    // TODO : ≈ª∞ÕøÎ SubType √ﬂ∞°
+	    // ÏùºÎ∞ò ÌÉàÍ≤É ÏïÑÏù¥ÌÖú
+	    // TODO : ÌÉàÍ≤ÉÏö© SubType Ï∂îÍ∞Ä
 	    switch (item->GetVnum())
 	    {
-		case 71114:	// ¿˙Ω≈¿ÃøÎ±«
-		case 71116:	// ªÍ∞ﬂΩ≈¿ÃøÎ±«
-		case 71118:	// ≈ı¡ˆπ¸¿ÃøÎ±«
-		case 71120:	// ªÁ¿⁄ø’¿ÃøÎ±«
+		case 71114:	// Ï†ÄÏã†Ïù¥Ïö©Í∂å
+		case 71116:	// ÏÇ∞Í≤¨Ïã†Ïù¥Ïö©Í∂å
+		case 71118:	// Ìà¨ÏßÄÎ≤îÏù¥Ïö©Í∂å
+		case 71120:	// ÏÇ¨ÏûêÏôïÏù¥Ïö©Í∂å
 		    dev_log(LOG_DEB0, "[DO_RIDE] USE QUEST ITEM");
 		    ch->UseItem(TItemPos (INVENTORY, i));
 		    return;
 	    }
 
-		// GF mantis #113524, 52001~52090 π¯ ≈ª∞Õ
+		// GF mantis #113524, 52001~52090 Î≤à ÌÉàÍ≤É
 		if( (item->GetVnum() > 52000) && (item->GetVnum() < 52091) )	{
 			dev_log(LOG_DEB0, "[DO_RIDE] USE QUEST ITEM");
 			ch->UseItem(TItemPos (INVENTORY, i));
@@ -2496,8 +2496,8 @@ ACMD(do_ride)
     }
 
 
-    // ≈∏∞≈≥™ ≥ª∏± ºˆ æ¯¿ª∂ß
-    ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("∏ª¿ª ∏’¿˙ º“»Ø«ÿ¡÷ººø‰."));
+    // ÌÉÄÍ±∞ÎÇò ÎÇ¥Î¶¥ Ïàò ÏóÜÏùÑÎïå
+    ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ÎßêÏùÑ Î®ºÏ†Ä ÏÜåÌôòÌï¥Ï£ºÏÑ∏Ïöî."));
 }
 
 #ifdef __AUCTION__
@@ -2567,7 +2567,7 @@ ACMD(do_enroll_sale)
 }
 
 // temp_auction
-// packet¿∏∑Œ ≈ÎΩ≈«œ∞‘ «œ∞Ì, ¿Ã∞« ªË¡¶«ÿæﬂ«—¥Ÿ.
+// packetÏúºÎ°ú ÌÜµÏã†ÌïòÍ≤å ÌïòÍ≥†, Ïù¥Í±¥ ÏÇ≠Ï†úÌï¥ÏïºÌïúÎã§.
 ACMD(do_get_auction_list)
 {
 	char arg1[256];

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 void thecore_find_best_memcpy();
 

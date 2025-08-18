@@ -1,4 +1,4 @@
-
+ï»¿
 #include "stdafx.h"
 #include "config.h"
 #include "char.h"
@@ -9,12 +9,12 @@
 
 /*
    Return Value
-		0 : ¾Ë ¼ö ¾ø´Â ¿¡·¯ or Äõ¸® ¿¡·¯
-		1 : µ¿ÀÏÇÑ Á¦±¹À¸·Î ¹Ù²Ù·Á°íÇÔ
-		2 : ±æµå °¡ÀÔÇÑ Ä³¸¯ÅÍ°¡ ÀÖÀ½
-		3 : °áÈ¥ÇÑ Ä³¸¯ÅÍ°¡ ÀÖÀ½
+		0 : ì•Œ ìˆ˜ ì—†ëŠ” ì—ëŸ¬ or ì¿¼ë¦¬ ì—ëŸ¬
+		1 : ë™ì¼í•œ ì œêµ­ìœ¼ë¡œ ë°”ê¾¸ë ¤ê³ í•¨
+		2 : ê¸¸ë“œ ê°€ì…í•œ ìºë¦­í„°ê°€ ìˆìŒ
+		3 : ê²°í˜¼í•œ ìºë¦­í„°ê°€ ìˆìŒ
 
-		999 : Á¦±¹ ÀÌµ¿ ¼º°ø
+		999 : ì œêµ­ ì´ë™ ì„±ê³µ
 */
 int CHARACTER::ChangeEmpire(BYTE empire)
 {
@@ -27,7 +27,7 @@ int CHARACTER::ChangeEmpire(BYTE empire)
 	memset(dwPID, 0, sizeof(dwPID));
 
 	{
-		// 1. ³» °èÁ¤ÀÇ ¸ğµç pid¸¦ ¾ò¾î ¿Â´Ù
+		// 1. ë‚´ ê³„ì •ì˜ ëª¨ë“  pidë¥¼ ì–»ì–´ ì˜¨ë‹¤
 		snprintf(szQuery, sizeof(szQuery), 
 				"SELECT id, pid1, pid2, pid3, pid4 FROM player_index%s WHERE pid1=%u OR pid2=%u OR pid3=%u OR pid4=%u AND empire=%u", 
 				get_table_postfix(), GetPlayerID(), GetPlayerID(), GetPlayerID(), GetPlayerID(), GetEmpire());
@@ -51,8 +51,8 @@ int CHARACTER::ChangeEmpire(BYTE empire)
 	const int loop = 4;
 
 	{
-		// 2. °¢ Ä³¸¯ÅÍÀÇ ±æµå Á¤º¸¸¦ ¾ò¾î¿Â´Ù.
-		//   ÇÑ Ä³¸¯ÅÍ¶óµµ ±æµå¿¡ °¡ÀÔ µÇ¾î ÀÖ´Ù¸é, Á¦±¹ ÀÌµ¿À» ÇÒ ¼ö ¾ø´Ù.
+		// 2. ê° ìºë¦­í„°ì˜ ê¸¸ë“œ ì •ë³´ë¥¼ ì–»ì–´ì˜¨ë‹¤.
+		//   í•œ ìºë¦­í„°ë¼ë„ ê¸¸ë“œì— ê°€ì… ë˜ì–´ ìˆë‹¤ë©´, ì œêµ­ ì´ë™ì„ í•  ìˆ˜ ì—†ë‹¤.
 		DWORD dwGuildID[4];
 		CGuild * pGuild[4];
 		SQLMsg * pMsg = NULL;
@@ -91,8 +91,8 @@ int CHARACTER::ChangeEmpire(BYTE empire)
 	}
 
 	{
-		// 3. °¢ Ä³¸¯ÅÍÀÇ °áÈ¥ Á¤º¸¸¦ ¾ò¾î¿Â´Ù.
-		//   ÇÑ Ä³¸¯ÅÍ¶óµµ °áÈ¥ »óÅÂ¶ó¸é Á¦±¹ ÀÌµ¿À» ÇÒ ¼ö ¾ø´Ù.
+		// 3. ê° ìºë¦­í„°ì˜ ê²°í˜¼ ì •ë³´ë¥¼ ì–»ì–´ì˜¨ë‹¤.
+		//   í•œ ìºë¦­í„°ë¼ë„ ê²°í˜¼ ìƒíƒœë¼ë©´ ì œêµ­ ì´ë™ì„ í•  ìˆ˜ ì—†ë‹¤.
 		for (int i = 0; i < loop; ++i)
 		{
 			if (marriage::CManager::instance().IsEngagedOrMarried(dwPID[i]) == true)
@@ -101,7 +101,7 @@ int CHARACTER::ChangeEmpire(BYTE empire)
 	}
 	
 	{
-		// 4. dbÀÇ Á¦±¹ Á¤º¸¸¦ ¾÷µ¥ÀÌÆ® ÇÑ´Ù.
+		// 4. dbì˜ ì œêµ­ ì •ë³´ë¥¼ ì—…ë°ì´íŠ¸ í•œë‹¤.
 		snprintf(szQuery, sizeof(szQuery), "UPDATE player_index%s SET empire=%u WHERE pid1=%u OR pid2=%u OR pid3=%u OR pid4=%u AND empire=%u", 
 				get_table_postfix(), empire, GetPlayerID(), GetPlayerID(), GetPlayerID(), GetPlayerID(), GetEmpire());
 
@@ -109,7 +109,7 @@ int CHARACTER::ChangeEmpire(BYTE empire)
 
 		if (msg->Get()->uiAffectedRows > 0)
 		{
-			// 5. Á¦±¹ º¯°æ ÀÌ·ÂÀ» Ãß°¡ÇÑ´Ù.
+			// 5. ì œêµ­ ë³€ê²½ ì´ë ¥ì„ ì¶”ê°€í•œë‹¤.
 			SetChangeEmpireCount();
 
 			return 999;

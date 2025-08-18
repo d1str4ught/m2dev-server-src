@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "../../common/stl.h"
 #include "constants.h"
 #include "packet_info.h"

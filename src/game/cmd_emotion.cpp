@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "utils.h"
 #include "char.h"
 #include "char_manager.h"
@@ -23,65 +23,65 @@ struct emotion_type_s
 	long	flag;
 	float	extra_delay;
 } emotion_types[] = {
-	{ "Å°½º",	"french_kiss",	NEED_PC | OTHER_SEX_ONLY | BOTH_DISARM,		2.0f },
-	{ "»Ç»Ç",	"kiss",		NEED_PC | OTHER_SEX_ONLY | BOTH_DISARM,		1.5f },
-	{ "µû±Í",	"slap",		NEED_PC | SELF_DISARM,				1.5f },
-	{ "¹Ú¼ö",	"clap",		0,						1.0f },
-	{ "¿Í",		"cheer1",	0,						1.0f },
-	{ "¸¸¼¼",	"cheer2",	0,						1.0f },
+	{ "í‚¤ìŠ¤",	"french_kiss",	NEED_PC | OTHER_SEX_ONLY | BOTH_DISARM,		2.0f },
+	{ "ë½€ë½€",	"kiss",		NEED_PC | OTHER_SEX_ONLY | BOTH_DISARM,		1.5f },
+	{ "ë”°ê·€",	"slap",		NEED_PC | SELF_DISARM,				1.5f },
+	{ "ë°•ìˆ˜",	"clap",		0,						1.0f },
+	{ "ì™€",		"cheer1",	0,						1.0f },
+	{ "ë§Œì„¸",	"cheer2",	0,						1.0f },
 	
 	// DANCE
-	{ "´í½º1",	"dance1",	0,						1.0f },
-	{ "´í½º2",	"dance2",	0,						1.0f },
-	{ "´í½º3",	"dance3",	0,						1.0f },
-	{ "´í½º4",	"dance4",	0,						1.0f },
-	{ "´í½º5",	"dance5",	0,						1.0f },
-	{ "´í½º6",	"dance6",	0,						1.0f },
+	{ "ëŒ„ìŠ¤1",	"dance1",	0,						1.0f },
+	{ "ëŒ„ìŠ¤2",	"dance2",	0,						1.0f },
+	{ "ëŒ„ìŠ¤3",	"dance3",	0,						1.0f },
+	{ "ëŒ„ìŠ¤4",	"dance4",	0,						1.0f },
+	{ "ëŒ„ìŠ¤5",	"dance5",	0,						1.0f },
+	{ "ëŒ„ìŠ¤6",	"dance6",	0,						1.0f },
 	// END_OF_DANCE
-	{ "ÃàÇÏ",	"congratulation",	0,				1.0f	},
-	{ "¿ë¼­",	"forgive",			0,				1.0f	},
-	{ "È­³²",	"angry",			0,				1.0f	},
-	{ "À¯È¤",	"attractive",		0,				1.0f	},
-	{ "½½ÇÄ",	"sad",				0,				1.0f	},
-	{ "ºê²ô",	"shy",				0,				1.0f	},
-	{ "ÀÀ¿ø",	"cheerup",			0,				1.0f	},
-	{ "ÁúÅõ",	"banter",			0,				1.0f	},
-	{ "±â»İ",	"joy",				0,				1.0f	},
+	{ "ì¶•í•˜",	"congratulation",	0,				1.0f	},
+	{ "ìš©ì„œ",	"forgive",			0,				1.0f	},
+	{ "í™”ë‚¨",	"angry",			0,				1.0f	},
+	{ "ìœ í˜¹",	"attractive",		0,				1.0f	},
+	{ "ìŠ¬í””",	"sad",				0,				1.0f	},
+	{ "ë¸Œë„",	"shy",				0,				1.0f	},
+	{ "ì‘ì›",	"cheerup",			0,				1.0f	},
+	{ "ì§ˆíˆ¬",	"banter",			0,				1.0f	},
+	{ "ê¸°ì¨",	"joy",				0,				1.0f	},
 	{ "\n",	"\n",		0,						0.0f },
 	/*
-	//{ "Å°½º",		NEED_PC | OTHER_SEX_ONLY | BOTH_DISARM,		MOTION_ACTION_FRENCH_KISS,	 1.0f },
-	{ "»Ç»Ç",		NEED_PC | OTHER_SEX_ONLY | BOTH_DISARM,		MOTION_ACTION_KISS,		 1.0f },
-	{ "²¸¾È±â",		NEED_PC | OTHER_SEX_ONLY | BOTH_DISARM,		MOTION_ACTION_SHORT_HUG,	 1.0f },
-	{ "Æ÷¿Ë",		NEED_PC | OTHER_SEX_ONLY | BOTH_DISARM,		MOTION_ACTION_LONG_HUG,		 1.0f },
-	{ "¾î±úµ¿¹«",	NEED_PC | SELF_DISARM,				MOTION_ACTION_PUT_ARMS_SHOULDER, 0.0f },
-	{ "ÆÈÂ¯",		NEED_PC	| WOMAN_ONLY | SELF_DISARM,		MOTION_ACTION_FOLD_ARM,		 0.0f },
-	{ "µû±Í",		NEED_PC | SELF_DISARM,				MOTION_ACTION_SLAP,		 1.5f },
+	//{ "í‚¤ìŠ¤",		NEED_PC | OTHER_SEX_ONLY | BOTH_DISARM,		MOTION_ACTION_FRENCH_KISS,	 1.0f },
+	{ "ë½€ë½€",		NEED_PC | OTHER_SEX_ONLY | BOTH_DISARM,		MOTION_ACTION_KISS,		 1.0f },
+	{ "ê»´ì•ˆê¸°",		NEED_PC | OTHER_SEX_ONLY | BOTH_DISARM,		MOTION_ACTION_SHORT_HUG,	 1.0f },
+	{ "í¬ì˜¹",		NEED_PC | OTHER_SEX_ONLY | BOTH_DISARM,		MOTION_ACTION_LONG_HUG,		 1.0f },
+	{ "ì–´ê¹¨ë™ë¬´",	NEED_PC | SELF_DISARM,				MOTION_ACTION_PUT_ARMS_SHOULDER, 0.0f },
+	{ "íŒ”ì§±",		NEED_PC	| WOMAN_ONLY | SELF_DISARM,		MOTION_ACTION_FOLD_ARM,		 0.0f },
+	{ "ë”°ê·€",		NEED_PC | SELF_DISARM,				MOTION_ACTION_SLAP,		 1.5f },
 
-	{ "ÈÖÆÄ¶÷",		0,						MOTION_ACTION_CHEER_01,		 0.0f },
-	{ "¸¸¼¼",		0,						MOTION_ACTION_CHEER_02,		 0.0f },
-	{ "¹Ú¼ö",		0,						MOTION_ACTION_CHEER_03,		 0.0f },
+	{ "íœ˜íŒŒëŒ",		0,						MOTION_ACTION_CHEER_01,		 0.0f },
+	{ "ë§Œì„¸",		0,						MOTION_ACTION_CHEER_02,		 0.0f },
+	{ "ë°•ìˆ˜",		0,						MOTION_ACTION_CHEER_03,		 0.0f },
 
-	{ "È£È£",		0,						MOTION_ACTION_LAUGH_01,		 0.0f },
-	{ "Å±Å±",		0,						MOTION_ACTION_LAUGH_02,		 0.0f },
-	{ "¿ìÇÏÇÏ",		0,						MOTION_ACTION_LAUGH_03,		 0.0f },
+	{ "í˜¸í˜¸",		0,						MOTION_ACTION_LAUGH_01,		 0.0f },
+	{ "í‚¥í‚¥",		0,						MOTION_ACTION_LAUGH_02,		 0.0f },
+	{ "ìš°í•˜í•˜",		0,						MOTION_ACTION_LAUGH_03,		 0.0f },
 
-	{ "¾û¾û",		0,						MOTION_ACTION_CRY_01,		 0.0f },
-	{ "ÈæÈæ",		0,						MOTION_ACTION_CRY_02,		 0.0f },
+	{ "ì—‰ì—‰",		0,						MOTION_ACTION_CRY_01,		 0.0f },
+	{ "í‘í‘",		0,						MOTION_ACTION_CRY_02,		 0.0f },
 
-	{ "ÀÎ»ç",		0,						MOTION_ACTION_GREETING_01,	0.0f },
-	{ "¹ÙÀÌ",		0,						MOTION_ACTION_GREETING_02,	0.0f },
-	{ "Á¤ÁßÀÎ»ç",	0,						MOTION_ACTION_GREETING_03,	0.0f },
+	{ "ì¸ì‚¬",		0,						MOTION_ACTION_GREETING_01,	0.0f },
+	{ "ë°”ì´",		0,						MOTION_ACTION_GREETING_02,	0.0f },
+	{ "ì •ì¤‘ì¸ì‚¬",	0,						MOTION_ACTION_GREETING_03,	0.0f },
 
-	{ "ºñ³­",		0,						MOTION_ACTION_INSULT_01,	0.0f },
-	{ "¸ğ¿å",		SELF_DISARM,					MOTION_ACTION_INSULT_02,	0.0f },
-	{ "¿ìÀ¡",		0,						MOTION_ACTION_INSULT_03,	0.0f },
+	{ "ë¹„ë‚œ",		0,						MOTION_ACTION_INSULT_01,	0.0f },
+	{ "ëª¨ìš•",		SELF_DISARM,					MOTION_ACTION_INSULT_02,	0.0f },
+	{ "ìš°ì›©",		0,						MOTION_ACTION_INSULT_03,	0.0f },
 
-	{ "°¼¿ì¶×",		0,						MOTION_ACTION_ETC_01,		0.0f },
-	{ "²ô´ö²ô´ö",	0,						MOTION_ACTION_ETC_02,		0.0f },
-	{ "µµ¸®µµ¸®",	0,						MOTION_ACTION_ETC_03,		0.0f },
-	{ "±ÜÀû±ÜÀû",	0,						MOTION_ACTION_ETC_04,		0.0f },
-	{ "Æ¡",		0,						MOTION_ACTION_ETC_05,		0.0f },
-	{ "»×",		0,						MOTION_ACTION_ETC_06,		0.0f },
+	{ "ê°¸ìš°ëš±",		0,						MOTION_ACTION_ETC_01,		0.0f },
+	{ "ë„ë•ë„ë•",	0,						MOTION_ACTION_ETC_02,		0.0f },
+	{ "ë„ë¦¬ë„ë¦¬",	0,						MOTION_ACTION_ETC_03,		0.0f },
+	{ "ê¸ì ê¸ì ",	0,						MOTION_ACTION_ETC_04,		0.0f },
+	{ "í‰¤",		0,						MOTION_ACTION_ETC_05,		0.0f },
+	{ "ë¿¡",		0,						MOTION_ACTION_ETC_06,		0.0f },
 	 */
 };
 
@@ -92,7 +92,7 @@ ACMD(do_emotion_allow)
 {
 	if ( ch->GetArena() )
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("´ë·ÃÀå¿¡¼­ »ç¿ëÇÏ½Ç ¼ö ¾ø½À´Ï´Ù."));
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ëŒ€ë ¨ì¥ì—ì„œ ì‚¬ìš©í•˜ì‹¤ ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 		return;
 	}
 
@@ -108,11 +108,11 @@ ACMD(do_emotion_allow)
 
 bool CHARACTER_CanEmotion(CHARACTER& rch)
 {
-	// °áÈ¥½Ä ¸Ê¿¡¼­´Â »ç¿ëÇÒ ¼ö ÀÖ´Ù.
+	// ê²°í˜¼ì‹ ë§µì—ì„œëŠ” ì‚¬ìš©í•  ìˆ˜ ìˆë‹¤.
 	if (marriage::WeddingManager::instance().IsWeddingMap(rch.GetMapIndex()))
 		return true;
 
-	// ¿­Á¤ÀÇ °¡¸é Âø¿ë½Ã »ç¿ëÇÒ ¼ö ÀÖ´Ù.
+	// ì—´ì •ì˜ ê°€ë©´ ì°©ìš©ì‹œ ì‚¬ìš©í•  ìˆ˜ ìˆë‹¤.
 	if (rch.IsEquipUniqueItem(UNIQUE_ITEM_EMOTION_MASK))
 		return true;
 
@@ -128,7 +128,7 @@ ACMD(do_emotion)
 	{
 		if (ch->IsRiding())
 		{
-			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("¸»À» Åº »óÅÂ¿¡¼­ °¨Á¤Ç¥ÇöÀ» ÇÒ ¼ö ¾ø½À´Ï´Ù."));
+			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ë§ì„ íƒ„ ìƒíƒœì—ì„œ ê°ì •í‘œí˜„ì„ í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 			return;
 		}
 	}
@@ -150,13 +150,13 @@ ACMD(do_emotion)
 
 	if (!CHARACTER_CanEmotion(*ch))
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("¿­Á¤ÀÇ °¡¸éÀ» Âø¿ë½Ã¿¡¸¸ ÇÒ ¼ö ÀÖ½À´Ï´Ù."));
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì—´ì •ì˜ ê°€ë©´ì„ ì°©ìš©ì‹œì—ë§Œ í•  ìˆ˜ ìˆìŠµë‹ˆë‹¤."));
 		return;
 	}
 
 	if (IS_SET(emotion_types[i].flag, WOMAN_ONLY) && SEX_MALE==GET_SEX(ch))
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("¿©ÀÚ¸¸ ÇÒ ¼ö ÀÖ½À´Ï´Ù."));
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì—¬ìë§Œ í•  ìˆ˜ ìˆìŠµë‹ˆë‹¤."));
 		return;
 	}
 
@@ -172,7 +172,7 @@ ACMD(do_emotion)
 	{
 		if (!victim)
 		{
-			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("±×·± »ç¶÷ÀÌ ¾ø½À´Ï´Ù."));
+			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ê·¸ëŸ° ì‚¬ëŒì´ ì—†ìŠµë‹ˆë‹¤."));
 			return;
 		}
 	}
@@ -184,7 +184,7 @@ ACMD(do_emotion)
 
 		if (victim->IsRiding())
 		{
-			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("¸»À» Åº »ó´ë¿Í °¨Á¤Ç¥ÇöÀ» ÇÒ ¼ö ¾ø½À´Ï´Ù."));
+			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ë§ì„ íƒ„ ìƒëŒ€ì™€ ê°ì •í‘œí˜„ì„ í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
 			return;
 		}
 
@@ -192,13 +192,13 @@ ACMD(do_emotion)
 
 		if (distance < 10)
 		{
-			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("³Ê¹« °¡±îÀÌ ÀÖ½À´Ï´Ù."));
+			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ë„ˆë¬´ ê°€ê¹Œì´ ìˆìŠµë‹ˆë‹¤."));
 			return;
 		}
 
 		if (distance > 500)
 		{
-			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("³Ê¹« ¸Ö¸® ÀÖ½À´Ï´Ù"));
+			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ë„ˆë¬´ ë©€ë¦¬ ìˆìŠµë‹ˆë‹¤"));
 			return;
 		}
 
@@ -206,7 +206,7 @@ ACMD(do_emotion)
 		{
 			if (GET_SEX(ch)==GET_SEX(victim))
 			{
-				ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ÀÌ¼º°£¿¡¸¸ ÇÒ ¼ö ÀÖ½À´Ï´Ù."));
+				ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì´ì„±ê°„ì—ë§Œ í•  ìˆ˜ ìˆìŠµë‹ˆë‹¤."));
 				return;
 			}
 		}
@@ -223,13 +223,13 @@ ACMD(do_emotion)
 
 					if (0 == other || other != victim->GetPlayerID())
 					{
-						ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ÀÌ Çàµ¿Àº »óÈ£µ¿ÀÇ ÇÏ¿¡ °¡´É ÇÕ´Ï´Ù."));
+						ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì´ í–‰ë™ì€ ìƒí˜¸ë™ì˜ í•˜ì— ê°€ëŠ¥ í•©ë‹ˆë‹¤."));
 						return;
 					}
 				}
 				else
 				{
-					ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ÀÌ Çàµ¿Àº »óÈ£µ¿ÀÇ ÇÏ¿¡ °¡´É ÇÕ´Ï´Ù."));
+					ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ì´ í–‰ë™ì€ ìƒí˜¸ë™ì˜ í•˜ì— ê°€ëŠ¥ í•©ë‹ˆë‹¤."));
 					return;
 				}
 			}
@@ -246,7 +246,7 @@ ACMD(do_emotion)
 	if (len < 0 || len >= (int) sizeof(chatbuf))
 		len = sizeof(chatbuf) - 1;
 
-	++len;  // \0 ¹®ÀÚ Æ÷ÇÔ
+	++len;  // \0 ë¬¸ì í¬í•¨
 
 	TPacketGCChat pack_chat;
 	pack_chat.header = HEADER_GC_CHAT;

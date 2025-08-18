@@ -1,4 +1,4 @@
-#ifndef __INC_DB_MATRIXCARD_H__
+﻿#ifndef __INC_DB_MATRIXCARD_H__
 #define __INC_DB_MATRIXCARD_H__
 
 extern bool MatrixCardCheck(const char * src, const char * answer, unsigned long rows, unsigned cols);

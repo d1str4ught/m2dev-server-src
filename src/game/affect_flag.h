@@ -1,4 +1,4 @@
-#ifndef __INC_METIN_II_AFFECT_FLAG_H__
+﻿#ifndef __INC_METIN_II_AFFECT_FLAG_H__
 #define __INC_METIN_II_AFFECT_FLAG_H__
 
 #ifndef IS_SET

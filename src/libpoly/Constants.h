@@ -1,4 +1,4 @@
-#define MAXVALUE        0
+﻿#define MAXVALUE        0
 #define NONE            MAXVALUE
 #define ROOT            MAXVALUE + 1
 #define MUL             MAXVALUE + 2

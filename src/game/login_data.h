@@ -1,4 +1,4 @@
-#ifndef __INC_METIN_II_LOGIN_DATA_H__
+﻿#ifndef __INC_METIN_II_LOGIN_DATA_H__
 #define __INC_METIN_II_LOGIN_DATA_H__
 
 class CLoginData

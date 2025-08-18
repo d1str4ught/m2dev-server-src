@@ -1,4 +1,4 @@
-#ifndef __WEDDING_H
+﻿#ifndef __WEDDING_H
 #define __WEDDING_H
 
 #include "marriage.h"

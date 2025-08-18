@@ -1,4 +1,4 @@
-#ifndef __METIN2_SERVER_QUEST_H__
+﻿#ifndef __METIN2_SERVER_QUEST_H__
 #define __METIN2_SERVER_QUEST_H__
 
 #define INDUCTION_LEVEL3	(1 << 0)

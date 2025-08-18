@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #define SAFE_FREE(p)		{ if (p) { free( (void *) p);		(p) = NULL;  } }
 #define SAFE_DELETE(p)		{ if (p) { delete (p);			(p) = NULL;  } }

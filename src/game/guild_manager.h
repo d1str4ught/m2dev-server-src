@@ -1,4 +1,4 @@
-#ifndef __GUILD_MANAGER_H
+﻿#ifndef __GUILD_MANAGER_H
 #define __GUILD_MANAGER_H
 
 class CGuild;

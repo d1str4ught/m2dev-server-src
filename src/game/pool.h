@@ -1,4 +1,4 @@
-#ifndef __INC_METIN_II_GAME_POOL_H__
+﻿#ifndef __INC_METIN_II_GAME_POOL_H__
 #define __INC_METIN_II_GAME_POOL_H__
 
 // Neither error-checking nor watermarking here.

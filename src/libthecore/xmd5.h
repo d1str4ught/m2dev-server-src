@@ -1,4 +1,4 @@
-#ifndef OS_FREEBSD
+﻿#ifndef OS_FREEBSD
 
 /*
  * luau (Lib Update/Auto-Update): Simple Update Library

@@ -1,4 +1,4 @@
-#ifndef __POLY_POLY_H__
+﻿#ifndef __POLY_POLY_H__
 #define __POLY_POLY_H__
 
 #include "SymTable.h"

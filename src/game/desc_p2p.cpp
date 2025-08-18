@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "desc_p2p.h"
 #include "protocol.h"
 #include "p2p.h"

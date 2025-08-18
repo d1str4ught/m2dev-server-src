@@ -1,4 +1,4 @@
-
+ï»¿
 #include "stdafx.h"
 #include "Cache.h"
 
@@ -29,12 +29,12 @@ CItemCache::~CItemCache()
 {
 }
 
-// ÀÌ°Å ÀÌ»óÇÑµ¥...
-// Delete¸¦ ÇßÀ¸¸é, Cacheµµ ÇØÁ¦ÇØ¾ß ÇÏ´Â°Í ¾Æ´Ñ°¡???
-// ±Ùµ¥ Cache¸¦ ÇØÁ¦ÇÏ´Â ºÎºĞÀÌ ¾ø¾î.
-// ¸ø Ã£Àº °Ç°¡?
-// ÀÌ·¸°Ô ÇØ³õÀ¸¸é, °è¼Ó ½Ã°£ÀÌ µÉ ¶§¸¶´Ù ¾ÆÀÌÅÛÀ» °è¼Ó Áö¿ö...
-// ÀÌ¹Ì »ç¶óÁø ¾ÆÀÌÅÛÀÎµ¥... È®ÀÎ»ç»ì??????
+// ì´ê±° ì´ìƒí•œë°...
+// Deleteë¥¼ í–ˆìœ¼ë©´, Cacheë„ í•´ì œí•´ì•¼ í•˜ëŠ”ê²ƒ ì•„ë‹Œê°€???
+// ê·¼ë° Cacheë¥¼ í•´ì œí•˜ëŠ” ë¶€ë¶„ì´ ì—†ì–´.
+// ëª» ì°¾ì€ ê±´ê°€?
+// ì´ë ‡ê²Œ í•´ë†“ìœ¼ë©´, ê³„ì† ì‹œê°„ì´ ë  ë•Œë§ˆë‹¤ ì•„ì´í…œì„ ê³„ì† ì§€ì›Œ...
+// ì´ë¯¸ ì‚¬ë¼ì§„ ì•„ì´í…œì¸ë°... í™•ì¸ì‚¬ì‚´??????
 // fixme
 // by rtsummit
 void CItemCache::Delete()
@@ -53,12 +53,12 @@ void CItemCache::Delete()
 	OnFlush();
 	
 	//m_bNeedQuery = false;
-	//m_lastUpdateTime = time(0) - m_expireTime; // ¹Ù·Î Å¸ÀÓ¾Æ¿ô µÇµµ·Ï ÇÏÀÚ.
+	//m_lastUpdateTime = time(0) - m_expireTime; // ë°”ë¡œ íƒ€ì„ì•„ì›ƒ ë˜ë„ë¡ í•˜ì.
 }
 
 void CItemCache::OnFlush()
 {
-	if (m_data.vnum == 0) // vnumÀÌ 0ÀÌ¸é »èÁ¦ÇÏ¶ó°í Ç¥½ÃµÈ °ÍÀÌ´Ù.
+	if (m_data.vnum == 0) // vnumì´ 0ì´ë©´ ì‚­ì œí•˜ë¼ê³  í‘œì‹œëœ ê²ƒì´ë‹¤.
 	{
 		char szQuery[QUERY_MAX_LEN];
 		snprintf(szQuery, sizeof(szQuery), "DELETE FROM item%s WHERE id=%u", GetTablePostfix(), m_data.id);
@@ -190,7 +190,7 @@ CItemPriceListTableCache::CItemPriceListTableCache()
 void CItemPriceListTableCache::UpdateList(const TItemPriceListTable* pUpdateList)
 {
 	//
-	// ÀÌ¹Ì Ä³½ÌµÈ ¾ÆÀÌÅÛ°ú Áßº¹µÈ ¾ÆÀÌÅÛÀ» Ã£°í Áßº¹µÇÁö ¾Ê´Â ÀÌÀü Á¤º¸´Â tmpvec ¿¡ ³Ö´Â´Ù.
+	// ì´ë¯¸ ìºì‹±ëœ ì•„ì´í…œê³¼ ì¤‘ë³µëœ ì•„ì´í…œì„ ì°¾ê³  ì¤‘ë³µë˜ì§€ ì•ŠëŠ” ì´ì „ ì •ë³´ëŠ” tmpvec ì— ë„£ëŠ”ë‹¤.
 	//
 
 	std::vector<TItemPriceInfo> tmpvec;
@@ -206,7 +206,7 @@ void CItemPriceListTableCache::UpdateList(const TItemPriceListTable* pUpdateList
 	}
 
 	//
-	// pUpdateList ¸¦ m_data ¿¡ º¹»çÇÏ°í ³²Àº °ø°£À» tmpvec ÀÇ ¾Õ¿¡¼­ ºÎÅÍ ³²Àº ¸¸Å­ º¹»çÇÑ´Ù.
+	// pUpdateList ë¥¼ m_data ì— ë³µì‚¬í•˜ê³  ë‚¨ì€ ê³µê°„ì„ tmpvec ì˜ ì•ì—ì„œ ë¶€í„° ë‚¨ì€ ë§Œí¼ ë³µì‚¬í•œë‹¤.
 	// 
 
 	if (pUpdateList->byCount > SHOP_PRICELIST_MAX_NUM)
@@ -219,7 +219,7 @@ void CItemPriceListTableCache::UpdateList(const TItemPriceListTable* pUpdateList
 
 	thecore_memcpy(m_data.aPriceInfo, pUpdateList->aPriceInfo, sizeof(TItemPriceInfo) * pUpdateList->byCount);
 
-	int nDeletedNum;	// »èÁ¦µÈ °¡°İÁ¤º¸ÀÇ °¹¼ö
+	int nDeletedNum;	// ì‚­ì œëœ ê°€ê²©ì •ë³´ì˜ ê°¯ìˆ˜
 
 	if (pUpdateList->byCount < SHOP_PRICELIST_MAX_NUM)
 	{
@@ -248,14 +248,14 @@ void CItemPriceListTableCache::OnFlush()
 	char szQuery[QUERY_MAX_LEN];
 
 	//
-	// ÀÌ Ä³½ÃÀÇ ¼ÒÀ¯ÀÚ¿¡ ´ëÇÑ ±âÁ¸¿¡ DB ¿¡ ÀúÀåµÈ ¾ÆÀÌÅÛ °¡°İÁ¤º¸¸¦ ¸ğµÎ »èÁ¦ÇÑ´Ù.
+	// ì´ ìºì‹œì˜ ì†Œìœ ìì— ëŒ€í•œ ê¸°ì¡´ì— DB ì— ì €ì¥ëœ ì•„ì´í…œ ê°€ê²©ì •ë³´ë¥¼ ëª¨ë‘ ì‚­ì œí•œë‹¤.
 	//
 
 	snprintf(szQuery, sizeof(szQuery), "DELETE FROM myshop_pricelist%s WHERE owner_id = %u", GetTablePostfix(), m_data.dwOwnerID);
 	CDBManager::instance().ReturnQuery(szQuery, QID_ITEMPRICE_DESTROY, 0, NULL);
 
 	//
-	// Ä³½ÃÀÇ ³»¿ëÀ» ¸ğµÎ DB ¿¡ ¾´´Ù.
+	// ìºì‹œì˜ ë‚´ìš©ì„ ëª¨ë‘ DB ì— ì“´ë‹¤.
 	//
 
 	for (int idx = 0; idx < m_data.byCount; ++idx)

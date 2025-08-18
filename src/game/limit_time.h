@@ -1,4 +1,4 @@
-#ifndef __LIMIT_TIME__
+﻿#ifndef __LIMIT_TIME__
 #define __LIMIT_TIME__
 
 // #define ENABLE_LIMIT_TIME

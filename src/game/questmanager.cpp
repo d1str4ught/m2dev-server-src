@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include <fstream>
 #include "constants.h"
 #include "buffer_manager.h"
@@ -57,29 +57,29 @@ namespace quest
 
 		m_pSelectedDungeon = NULL;
 
-		m_mapEventName.insert(TEventNameMap::value_type("click", QUEST_CLICK_EVENT));		// NPC¸¦ Å¬¸¯
-		m_mapEventName.insert(TEventNameMap::value_type("kill", QUEST_KILL_EVENT));		// MobÀ» »ç³É
-		m_mapEventName.insert(TEventNameMap::value_type("timer", QUEST_TIMER_EVENT));		// ¹Ì¸® ÁöÁ¤ÇØµÐ ½Ã°£ÀÌ Áö³²
-		m_mapEventName.insert(TEventNameMap::value_type("levelup", QUEST_LEVELUP_EVENT));	// ·¹º§¾÷À» ÇÔ
-		m_mapEventName.insert(TEventNameMap::value_type("login", QUEST_LOGIN_EVENT));		// ·Î±×ÀÎ ½Ã
-		m_mapEventName.insert(TEventNameMap::value_type("logout", QUEST_LOGOUT_EVENT));		// ·Î±×¾Æ¿ô ½Ã
-		m_mapEventName.insert(TEventNameMap::value_type("button", QUEST_BUTTON_EVENT));		// Äù½ºÆ® ¹öÆ°À» ´©¸§
-		m_mapEventName.insert(TEventNameMap::value_type("info", QUEST_INFO_EVENT));		// Äù½ºÆ® Á¤º¸Ã¢À» ¿°
-		m_mapEventName.insert(TEventNameMap::value_type("chat", QUEST_CHAT_EVENT));		// Æ¯Á¤ Å°¿öµå·Î ´ëÈ­¸¦ ÇÔ
-		m_mapEventName.insert(TEventNameMap::value_type("in", QUEST_ATTR_IN_EVENT));		// ¸ÊÀÇ Æ¯Á¤ ¼Ó¼º¿¡ µé¾î°¨
-		m_mapEventName.insert(TEventNameMap::value_type("out", QUEST_ATTR_OUT_EVENT));		// ¸ÊÀÇ Æ¯Á¤ ¼Ó¼º¿¡¼­ ³ª¿È
-		m_mapEventName.insert(TEventNameMap::value_type("use", QUEST_ITEM_USE_EVENT));		// Äù½ºÆ® ¾ÆÀÌÅÛÀ» »ç¿ë
-		m_mapEventName.insert(TEventNameMap::value_type("server_timer", QUEST_SERVER_TIMER_EVENT));	// ¼­¹ö Å¸ÀÌ¸Ó (¾ÆÁ÷ Å×½ºÆ® ¾ÈµÆÀ½)
-		m_mapEventName.insert(TEventNameMap::value_type("enter", QUEST_ENTER_STATE_EVENT));	// ÇöÀç ½ºÅ×ÀÌÆ®°¡ µÊ
-		m_mapEventName.insert(TEventNameMap::value_type("leave", QUEST_LEAVE_STATE_EVENT));	// ÇöÀç ½ºÅ×ÀÌÆ®¿¡¼­ ´Ù¸¥ ½ºÅ×ÀÌÆ®·Î ¹Ù²ñ
-		m_mapEventName.insert(TEventNameMap::value_type("letter", QUEST_LETTER_EVENT));		// ·Î±ä ÇÏ°Å³ª ½ºÅ×ÀÌÆ®°¡ ¹Ù²¸ »õ·Î Á¤º¸¸¦ ¼¼ÆÃÇØÁà¾ßÇÔ
-		m_mapEventName.insert(TEventNameMap::value_type("take", QUEST_ITEM_TAKE_EVENT));	// ¾ÆÀÌÅÛÀ» ¹ÞÀ½
-		m_mapEventName.insert(TEventNameMap::value_type("target", QUEST_TARGET_EVENT));		// Å¸°Ù
-		m_mapEventName.insert(TEventNameMap::value_type("party_kill", QUEST_PARTY_KILL_EVENT));	// ÆÄÆ¼ ¸â¹ö°¡ ¸ó½ºÅÍ¸¦ »ç³É (¸®´õ¿¡°Ô ¿È)
+		m_mapEventName.insert(TEventNameMap::value_type("click", QUEST_CLICK_EVENT));		// NPCë¥¼ í´ë¦­
+		m_mapEventName.insert(TEventNameMap::value_type("kill", QUEST_KILL_EVENT));		// Mobì„ ì‚¬ëƒ¥
+		m_mapEventName.insert(TEventNameMap::value_type("timer", QUEST_TIMER_EVENT));		// ë¯¸ë¦¬ ì§€ì •í•´ë‘” ì‹œê°„ì´ ì§€ë‚¨
+		m_mapEventName.insert(TEventNameMap::value_type("levelup", QUEST_LEVELUP_EVENT));	// ë ˆë²¨ì—…ì„ í•¨
+		m_mapEventName.insert(TEventNameMap::value_type("login", QUEST_LOGIN_EVENT));		// ë¡œê·¸ì¸ ì‹œ
+		m_mapEventName.insert(TEventNameMap::value_type("logout", QUEST_LOGOUT_EVENT));		// ë¡œê·¸ì•„ì›ƒ ì‹œ
+		m_mapEventName.insert(TEventNameMap::value_type("button", QUEST_BUTTON_EVENT));		// í€˜ìŠ¤íŠ¸ ë²„íŠ¼ì„ ëˆ„ë¦„
+		m_mapEventName.insert(TEventNameMap::value_type("info", QUEST_INFO_EVENT));		// í€˜ìŠ¤íŠ¸ ì •ë³´ì°½ì„ ì—¼
+		m_mapEventName.insert(TEventNameMap::value_type("chat", QUEST_CHAT_EVENT));		// íŠ¹ì • í‚¤ì›Œë“œë¡œ ëŒ€í™”ë¥¼ í•¨
+		m_mapEventName.insert(TEventNameMap::value_type("in", QUEST_ATTR_IN_EVENT));		// ë§µì˜ íŠ¹ì • ì†ì„±ì— ë“¤ì–´ê°
+		m_mapEventName.insert(TEventNameMap::value_type("out", QUEST_ATTR_OUT_EVENT));		// ë§µì˜ íŠ¹ì • ì†ì„±ì—ì„œ ë‚˜ì˜´
+		m_mapEventName.insert(TEventNameMap::value_type("use", QUEST_ITEM_USE_EVENT));		// í€˜ìŠ¤íŠ¸ ì•„ì´í…œì„ ì‚¬ìš©
+		m_mapEventName.insert(TEventNameMap::value_type("server_timer", QUEST_SERVER_TIMER_EVENT));	// ì„œë²„ íƒ€ì´ë¨¸ (ì•„ì§ í…ŒìŠ¤íŠ¸ ì•ˆëìŒ)
+		m_mapEventName.insert(TEventNameMap::value_type("enter", QUEST_ENTER_STATE_EVENT));	// í˜„ìž¬ ìŠ¤í…Œì´íŠ¸ê°€ ë¨
+		m_mapEventName.insert(TEventNameMap::value_type("leave", QUEST_LEAVE_STATE_EVENT));	// í˜„ìž¬ ìŠ¤í…Œì´íŠ¸ì—ì„œ ë‹¤ë¥¸ ìŠ¤í…Œì´íŠ¸ë¡œ ë°”ë€œ
+		m_mapEventName.insert(TEventNameMap::value_type("letter", QUEST_LETTER_EVENT));		// ë¡œê¸´ í•˜ê±°ë‚˜ ìŠ¤í…Œì´íŠ¸ê°€ ë°”ê»´ ìƒˆë¡œ ì •ë³´ë¥¼ ì„¸íŒ…í•´ì¤˜ì•¼í•¨
+		m_mapEventName.insert(TEventNameMap::value_type("take", QUEST_ITEM_TAKE_EVENT));	// ì•„ì´í…œì„ ë°›ìŒ
+		m_mapEventName.insert(TEventNameMap::value_type("target", QUEST_TARGET_EVENT));		// íƒ€ê²Ÿ
+		m_mapEventName.insert(TEventNameMap::value_type("party_kill", QUEST_PARTY_KILL_EVENT));	// íŒŒí‹° ë©¤ë²„ê°€ ëª¬ìŠ¤í„°ë¥¼ ì‚¬ëƒ¥ (ë¦¬ë”ì—ê²Œ ì˜´)
 		m_mapEventName.insert(TEventNameMap::value_type("unmount", QUEST_UNMOUNT_EVENT));
-		m_mapEventName.insert(TEventNameMap::value_type("pick", QUEST_ITEM_PICK_EVENT));	// ¶³¾îÁ®ÀÖ´Â ¾ÆÀÌÅÛÀ» ½ÀµæÇÔ.
-		m_mapEventName.insert(TEventNameMap::value_type("sig_use", QUEST_SIG_USE_EVENT));		// Special item group¿¡ ¼ÓÇÑ ¾ÆÀÌÅÛÀ» »ç¿ëÇÔ.
-		m_mapEventName.insert(TEventNameMap::value_type("item_informer", QUEST_ITEM_INFORMER_EVENT));	// µ¶ÀÏ¼±¹°±â´ÉÅ×½ºÆ®
+		m_mapEventName.insert(TEventNameMap::value_type("pick", QUEST_ITEM_PICK_EVENT));	// ë–¨ì–´ì ¸ìžˆëŠ” ì•„ì´í…œì„ ìŠµë“í•¨.
+		m_mapEventName.insert(TEventNameMap::value_type("sig_use", QUEST_SIG_USE_EVENT));		// Special item groupì— ì†í•œ ì•„ì´í…œì„ ì‚¬ìš©í•¨.
+		m_mapEventName.insert(TEventNameMap::value_type("item_informer", QUEST_ITEM_INFORMER_EVENT));	// ë…ì¼ì„ ë¬¼ê¸°ëŠ¥í…ŒìŠ¤íŠ¸
 
 		m_bNoSend = false;
 
@@ -255,9 +255,9 @@ namespace quest
 
 			if (!pPC->GetRunningQuestState()->chat_scripts.empty())
 			{
-				// Ã¤ÆÃ ÀÌº¥Æ®ÀÎ °æ¿ì
-				// ÇöÀç Äù½ºÆ®´Â ¾î´À Äù½ºÆ®¸¦ ½ÇÇàÇÒ °ÍÀÎ°¡¸¦ °í¸£´Â Äù½ºÆ® ÀÌ¹Ç·Î
-				// ³¡³»°í ¼±ÅÃµÈ Äù½ºÆ®¸¦ ½ÇÇàÇÑ´Ù.
+				// ì±„íŒ… ì´ë²¤íŠ¸ì¸ ê²½ìš°
+				// í˜„ìž¬ í€˜ìŠ¤íŠ¸ëŠ” ì–´ëŠ í€˜ìŠ¤íŠ¸ë¥¼ ì‹¤í–‰í•  ê²ƒì¸ê°€ë¥¼ ê³ ë¥´ëŠ” í€˜ìŠ¤íŠ¸ ì´ë¯€ë¡œ
+				// ëë‚´ê³  ì„ íƒëœ í€˜ìŠ¤íŠ¸ë¥¼ ì‹¤í–‰í•œë‹¤.
 				QuestState& old_qs = *pPC->GetRunningQuestState();
 				CloseState(old_qs);
 
@@ -370,7 +370,7 @@ namespace quest
 			pPC->CancelRunning();
 		}
 
-		// Áö¿ì±â Àü¿¡ ·Î±×¾Æ¿ô ÇÑ´Ù.
+		// ì§€ìš°ê¸° ì „ì— ë¡œê·¸ì•„ì›ƒ í•œë‹¤.
 		Logout(ch->GetPlayerID());
 
 		if (ch == m_pCurrentCharacter)
@@ -382,7 +382,7 @@ namespace quest
 
 	///////////////////////////////////////////////////////////////////////////////////////////
 	//
-	// Quest Event °ü·Ã
+	// Quest Event ê´€ë ¨
 	//
 	///////////////////////////////////////////////////////////////////////////////////////////
 	void CQuestManager::Login(unsigned int pc, const char * c_pszQuest)
@@ -429,9 +429,9 @@ namespace quest
 			if (!CheckQuestLoaded(pPC))
 				return;
 
-			/* [hyo] ¸÷ kill½Ã Áßº¹ Ä«¿îÆÃ ÀÌ½´ °ü·ÃÇÑ ¼öÁ¤»çÇ×
-			   quest script¿¡ when 171.kill begin ... µîÀÇ ÄÚµå·Î ÀÎÇÏ¿© ½ºÅ©¸³Æ®°¡ Ã³¸®µÇ¾ú´õ¶óµµ
-			   ¹Ù·Î returnÇÏÁö ¾Ê°í ´Ù¸¥ °Ë»çµµ ¼öÇàÇÏµµ·Ï º¯°æÇÔ. (2011/07/21)
+			/* [hyo] ëª¹ killì‹œ ì¤‘ë³µ ì¹´ìš´íŒ… ì´ìŠˆ ê´€ë ¨í•œ ìˆ˜ì •ì‚¬í•­
+			   quest scriptì— when 171.kill begin ... ë“±ì˜ ì½”ë“œë¡œ ì¸í•˜ì—¬ ìŠ¤í¬ë¦½íŠ¸ê°€ ì²˜ë¦¬ë˜ì—ˆë”ë¼ë„
+			   ë°”ë¡œ returní•˜ì§€ ì•Šê³  ë‹¤ë¥¸ ê²€ì‚¬ë„ ìˆ˜í–‰í•˜ë„ë¡ ë³€ê²½í•¨. (2011/07/21)
 			*/   
 			// call script
 			
@@ -585,7 +585,7 @@ namespace quest
 				LPCHARACTER ch = CHARACTER_MANAGER::instance().FindByPID(pc);
 
 				if (ch)
-					ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Äù½ºÆ®¸¦ ·ÎµåÇÏ´Â ÁßÀÔ´Ï´Ù. Àá½Ã¸¸ ±â´Ù·Á ÁÖ½Ê½Ã¿À."));
+					ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("í€˜ìŠ¤íŠ¸ë¥¼ ë¡œë“œí•˜ëŠ” ì¤‘ìž…ë‹ˆë‹¤. ìž ì‹œë§Œ ê¸°ë‹¤ë ¤ ì£¼ì‹­ì‹œì˜¤."));
 
 				return;
 			}
@@ -610,7 +610,7 @@ namespace quest
 				LPCHARACTER ch = CHARACTER_MANAGER::instance().FindByPID(pc);
 				if (ch)
 				{
-					ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Äù½ºÆ®¸¦ ·ÎµåÇÏ´Â ÁßÀÔ´Ï´Ù. Àá½Ã¸¸ ±â´Ù·Á ÁÖ½Ê½Ã¿À."));
+					ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("í€˜ìŠ¤íŠ¸ë¥¼ ë¡œë“œí•˜ëŠ” ì¤‘ìž…ë‹ˆë‹¤. ìž ì‹œë§Œ ê¸°ë‹¤ë ¤ ì£¼ì‹­ì‹œì˜¤."));
 				}
 				return;
 			}
@@ -635,7 +635,7 @@ namespace quest
 				LPCHARACTER ch = CHARACTER_MANAGER::instance().FindByPID(pc);
 				if (ch)
 				{
-					ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Äù½ºÆ®¸¦ ·ÎµåÇÏ´Â ÁßÀÔ´Ï´Ù. Àá½Ã¸¸ ±â´Ù·Á ÁÖ½Ê½Ã¿À."));
+					ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("í€˜ìŠ¤íŠ¸ë¥¼ ë¡œë“œí•˜ëŠ” ì¤‘ìž…ë‹ˆë‹¤. ìž ì‹œë§Œ ê¸°ë‹¤ë ¤ ì£¼ì‹­ì‹œì˜¤."));
 				}
 				return false;
 			}
@@ -663,7 +663,7 @@ namespace quest
 				LPCHARACTER ch = CHARACTER_MANAGER::instance().FindByPID(pc);
 				if (ch)
 				{
-					ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Äù½ºÆ®¸¦ ·ÎµåÇÏ´Â ÁßÀÔ´Ï´Ù. Àá½Ã¸¸ ±â´Ù·Á ÁÖ½Ê½Ã¿À."));
+					ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("í€˜ìŠ¤íŠ¸ë¥¼ ë¡œë“œí•˜ëŠ” ì¤‘ìž…ë‹ˆë‹¤. ìž ì‹œë§Œ ê¸°ë‹¤ë ¤ ì£¼ì‹­ì‹œì˜¤."));
 				}
 				return false;
 			}
@@ -694,7 +694,7 @@ namespace quest
 		}
 	}
 
-	// Speical Item Group¿¡ Á¤ÀÇµÈ Group Use
+	// Speical Item Groupì— ì •ì˜ëœ Group Use
 	bool CQuestManager::SIGUse(unsigned int pc, DWORD sig_vnum, LPITEM item, bool bReceiveAll)
 	{
 		if (test_server)
@@ -707,7 +707,7 @@ namespace quest
 				LPCHARACTER ch = CHARACTER_MANAGER::instance().FindByPID(pc);
 				if (ch)
 				{
-					ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Äù½ºÆ®¸¦ ·ÎµåÇÏ´Â ÁßÀÔ´Ï´Ù. Àá½Ã¸¸ ±â´Ù·Á ÁÖ½Ê½Ã¿À."));
+					ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("í€˜ìŠ¤íŠ¸ë¥¼ ë¡œë“œí•˜ëŠ” ì¤‘ìž…ë‹ˆë‹¤. ìž ì‹œë§Œ ê¸°ë‹¤ë ¤ ì£¼ì‹­ì‹œì˜¤."));
 				}
 				return false;
 			}
@@ -761,7 +761,7 @@ namespace quest
 				LPCHARACTER ch = CHARACTER_MANAGER::instance().FindByPID(pc);
 
 				if (ch)
-					ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Äù½ºÆ®¸¦ ·ÎµåÇÏ´Â ÁßÀÔ´Ï´Ù. Àá½Ã¸¸ ±â´Ù·Á ÁÖ½Ê½Ã¿À."));
+					ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("í€˜ìŠ¤íŠ¸ë¥¼ ë¡œë“œí•˜ëŠ” ì¤‘ìž…ë‹ˆë‹¤. ìž ì‹œë§Œ ê¸°ë‹¤ë ¤ ì£¼ì‹­ì‹œì˜¤."));
 
 				return false;
 			}
@@ -842,7 +842,7 @@ namespace quest
 		else
 			sys_err("QUEST no such pc id : %d", pc);
 	}
-	//µ¶ÀÏ ¼±¹° ±â´É Å×½ºÆ®
+	//ë…ì¼ ì„ ë¬¼ ê¸°ëŠ¥ í…ŒìŠ¤íŠ¸
 	void CQuestManager::ItemInformer(unsigned int pc,unsigned int vnum)
 	{
 		
@@ -852,7 +852,7 @@ namespace quest
 		m_mapNPC[QUEST_NO_NPC].OnItemInformer(*pPC,vnum);
 	}
 	///////////////////////////////////////////////////////////////////////////////////////////
-	// END OF Äù½ºÆ® ÀÌº¥Æ® Ã³¸®
+	// END OF í€˜ìŠ¤íŠ¸ ì´ë²¤íŠ¸ ì²˜ë¦¬
 	///////////////////////////////////////////////////////////////////////////////////////////
 
 	///////////////////////////////////////////////////////////////////////////////////////////
@@ -1277,19 +1277,19 @@ namespace quest
 					continue;
 				if (value)
 				{
-					// ¹ã
+					// ë°¤
 					ch->ChatPacket(CHAT_TYPE_COMMAND, "DayMode dark");
 				}
 				else
 				{
-					// ³·
+					// ë‚®
 					ch->ChatPacket(CHAT_TYPE_COMMAND, "DayMode light");
 				}
 			}
 
 			if (value && !prev_value)
 			{
-				// ¾øÀ¸¸é ¸¸µé¾îÁØ´Ù
+				// ì—†ìœ¼ë©´ ë§Œë“¤ì–´ì¤€ë‹¤
 				struct SNPCSellFireworkPosition
 				{
 					long lMapIndex;
@@ -1325,7 +1325,7 @@ namespace quest
 			}
 			else if (!value && prev_value)
 			{
-				// ÀÖÀ¸¸é Áö¿öÁØ´Ù
+				// ìžˆìœ¼ë©´ ì§€ì›Œì¤€ë‹¤
 				CharacterVectorInteractor i;
 
 				if (CHARACTER_MANAGER::instance().GetCharactersByRaceNum(xmas::MOB_XMAS_FIRWORK_SELLER_VNUM, i))
@@ -1414,7 +1414,7 @@ namespace quest
 		}
 		else if (name == "new_xmas_event")
 		{
-			// 20126 new»êÅ¸.
+			// 20126 newì‚°íƒ€.
 			static DWORD new_santa = 20126;
 			if (value != 0)
 			{
@@ -1553,12 +1553,12 @@ namespace quest
 
 	bool CQuestManager::ExecuteQuestScript(PC& pc, const string& quest_name, const int state, const char* code, const int code_size, vector<AArgScript*>* pChatScripts, bool bUseCache)
 	{
-		// ½ÇÇà°ø°£À» »ý¼º
+		// ì‹¤í–‰ê³µê°„ì„ ìƒì„±
 		QuestState qs = CQuestManager::instance().OpenState(quest_name, state);
 		if (pChatScripts)
 			qs.chat_scripts.swap(*pChatScripts);
 
-		// ÄÚµå¸¦ ÀÐ¾îµéÀÓ
+		// ì½”ë“œë¥¼ ì½ì–´ë“¤ìž„
 		if (bUseCache)
 		{
 			lua_getglobal(qs.co, "__codecache");
@@ -1597,10 +1597,10 @@ namespace quest
 		else
 			luaL_loadbuffer(qs.co, code, code_size, quest_name.c_str());
 
-		// ÇÃ·¹ÀÌ¾î¿Í ¿¬°á
+		// í”Œë ˆì´ì–´ì™€ ì—°ê²°
 		pc.SetQuest(quest_name, qs);
 
-		// ½ÇÇà
+		// ì‹¤í–‰
 		QuestState& rqs = *pc.GetRunningQuestState();
 		if (!CQuestManager::instance().RunState(rqs))
 		{
@@ -1789,7 +1789,7 @@ namespace quest
 				LPCHARACTER ch = CHARACTER_MANAGER::instance().FindByPID(pc);
 				if (ch)
 				{
-					ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Äù½ºÆ®¸¦ ·ÎµåÇÏ´Â ÁßÀÔ´Ï´Ù. Àá½Ã¸¸ ±â´Ù·Á ÁÖ½Ê½Ã¿À."));
+					ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("í€˜ìŠ¤íŠ¸ë¥¼ ë¡œë“œí•˜ëŠ” ì¤‘ìž…ë‹ˆë‹¤. ìž ì‹œë§Œ ê¸°ë‹¤ë ¤ ì£¼ì‹­ì‹œì˜¤."));
 				}
 				return false;
 			}

@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "../../common/tables.h"
 #include "item.h"
 #include "char.h"
@@ -39,8 +39,8 @@ void CBuffOnAttributes::RemoveBuffFromItem(LPITEM pItem)
 		{
 			TPlayerItemAttribute attr = pItem->GetAttribute(j);
 			TMapAttr::iterator it = m_map_additional_attrs.find(attr.bType);
-			// m_map_additional_attrs¿¡¼­ ÇØ´ç attribute type¿¡ ´ëÇÑ °ªÀ» Á¦°ÅÇÏ°í,
-			// º¯°æµÈ °ªÀÇ (m_bBuffValue)%¸¸Å­ÀÇ ¹öÇÁ È¿°ú °¨¼Ò
+			// m_map_additional_attrsì—ì„œ í•´ë‹¹ attribute typeì— ëŒ€í•œ ê°’ì„ ì œê±°í•˜ê³ ,
+			// ë³€ê²½ëœ ê°’ì˜ (m_bBuffValue)%ë§Œí¼ì˜ ë²„í”„ íš¨ê³¼ ê°ì†Œ
 			if (it != m_map_additional_attrs.end())
 			{
 				int& sum_of_attr_value = it->second;
@@ -76,15 +76,15 @@ void CBuffOnAttributes::AddBuffFromItem(LPITEM pItem)
 			TPlayerItemAttribute attr = pItem->GetAttribute(j);
 			TMapAttr::iterator it = m_map_additional_attrs.find(attr.bType);
 			
-			// m_map_additional_attrs¿¡¼­ ÇØ´ç attribute type¿¡ ´ëÇÑ °ªÀÌ ¾ø´Ù¸é Ãß°¡.
-			// Ãß°¡µÈ °ªÀÇ (m_bBuffValue)%¸¸Å­ÀÇ ¹öÇÁ È¿°ú Ãß°¡
+			// m_map_additional_attrsì—ì„œ í•´ë‹¹ attribute typeì— ëŒ€í•œ ê°’ì´ ì—†ë‹¤ë©´ ì¶”ê°€.
+			// ì¶”ê°€ëœ ê°’ì˜ (m_bBuffValue)%ë§Œí¼ì˜ ë²„í”„ íš¨ê³¼ ì¶”ê°€
 			if (it == m_map_additional_attrs.end())
 			{
 				m_pBuffOwner->ApplyPoint(attr.bType, attr.sValue * m_bBuffValue / 100);
 				m_map_additional_attrs.insert(TMapAttr::value_type(attr.bType, attr.sValue));
 			}
-			// m_map_additional_attrs¿¡¼­ ÇØ´ç attribute type¿¡ ´ëÇÑ °ªÀÌ ÀÖ´Ù¸é, ±× °ªÀ» Áõ°¡½ÃÅ°°í,
-			// º¯°æµÈ °ªÀÇ (m_bBuffValue)%¸¸Å­ÀÇ ¹öÇÁ È¿°ú Ãß°¡
+			// m_map_additional_attrsì—ì„œ í•´ë‹¹ attribute typeì— ëŒ€í•œ ê°’ì´ ìžˆë‹¤ë©´, ê·¸ ê°’ì„ ì¦ê°€ì‹œí‚¤ê³ ,
+			// ë³€ê²½ëœ ê°’ì˜ (m_bBuffValue)%ë§Œí¼ì˜ ë²„í”„ íš¨ê³¼ ì¶”ê°€
 			else
 			{
 				int& sum_of_attr_value = it->second;
@@ -105,8 +105,8 @@ void CBuffOnAttributes::ChangeBuffValue(BYTE bNewValue)
 		Off();
 	else
 	{
-		// ±âÁ¸¿¡, m_map_additional_attrsÀÇ °ªÀÇ (m_bBuffValue)%¸¸Å­ÀÌ ¹öÇÁ·Î µé¾î°¡ ÀÖ¾úÀ¸¹Ç·Î,
-		// (bNewValue)%¸¸Å­À¸·Î °ªÀ» º¯°æÇÔ.
+		// ê¸°ì¡´ì—, m_map_additional_attrsì˜ ê°’ì˜ (m_bBuffValue)%ë§Œí¼ì´ ë²„í”„ë¡œ ë“¤ì–´ê°€ ìžˆì—ˆìœ¼ë¯€ë¡œ,
+		// (bNewValue)%ë§Œí¼ìœ¼ë¡œ ê°’ì„ ë³€ê²½í•¨.
 		for (TMapAttr::iterator it = m_map_additional_attrs.begin(); it != m_map_additional_attrs.end(); it++)
 		{
 			int& sum_of_attr_value = it->second;

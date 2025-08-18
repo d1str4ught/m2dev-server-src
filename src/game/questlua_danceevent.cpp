@@ -1,4 +1,4 @@
-
+﻿
 #include "stdafx.h"
 #include "questmanager.h"
 #include "sectree_manager.h"

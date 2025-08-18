@@ -1,4 +1,4 @@
-#ifndef __INC_METIN_II_SERVER_LOGINSIM__
+﻿#ifndef __INC_METIN_II_SERVER_LOGINSIM__
 #define __INC_METIN_II_SERVER_LOGINSIM__
 
 #include "desc_client.h"

@@ -1,4 +1,4 @@
-#include "Symbol.h"
+﻿#include "Symbol.h"
 
 CSymbol::CSymbol()
 {

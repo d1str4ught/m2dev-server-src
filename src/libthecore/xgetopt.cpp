@@ -1,4 +1,4 @@
-// XGetopt.cpp  Version 1.2
+﻿// XGetopt.cpp  Version 1.2
 //
 // Author:  Hans Dietrich
 //          hdietrich2@hotmail.com

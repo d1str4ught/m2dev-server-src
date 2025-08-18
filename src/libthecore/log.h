@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 int		log_init(void);
 void	log_destroy(void);

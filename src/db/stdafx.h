@@ -1,4 +1,4 @@
-#ifndef __INC_METiN_II_DBSERV_STDAFX_H__
+﻿#ifndef __INC_METiN_II_DBSERV_STDAFX_H__
 #define __INC_METiN_II_DBSERV_STDAFX_H__
 
 #include "../../libthecore/include/stdafx.h"

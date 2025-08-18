@@ -1,4 +1,4 @@
-#ifndef __INC_CLIENTPACKAGE_CRYPTINFO_H
+﻿#ifndef __INC_CLIENTPACKAGE_CRYPTINFO_H
 #define __INC_CLIENTPACKAGE_CRYPTINFO_H
 
 #include <unordered_map>

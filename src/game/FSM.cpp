@@ -1,4 +1,4 @@
-// Local Includes
+﻿// Local Includes
 
 #include <cassert>
 #include <cstdlib>

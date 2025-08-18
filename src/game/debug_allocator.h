@@ -1,4 +1,4 @@
-#ifndef _DEBUG_ALLOCATOR_H_
+﻿#ifndef _DEBUG_ALLOCATOR_H_
 #define _DEBUG_ALLOCATOR_H_
 
 #include <cstdlib>

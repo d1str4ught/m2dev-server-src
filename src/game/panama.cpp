@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "desc.h"
 #include "packet.h"
 
@@ -84,7 +84,7 @@ void SendPanamaList(LPDESC d)
 		DWORD* ivs = (DWORD*)pack.abIV;
 		for (int i = 0; i != 32 / sizeof(DWORD); i++)
 		{
-			ivs[i] ^= d->GetPanamaKey() + i * 16777619;	// ´õºí¿öµå´ÜÀ§·Î º¯ÇüµÈ ÆÄ³ª¸¶ Å°¸¦ XOR ÇØÁØ´Ù
+			ivs[i] ^= d->GetPanamaKey() + i * 16777619;	// ë”ë¸”ì›Œë“œë‹¨ìœ„ë¡œ ë³€í˜•ëœ íŒŒë‚˜ë§ˆ í‚¤ë¥¼ XOR í•´ì¤€ë‹¤
 		}
 		++it;
 

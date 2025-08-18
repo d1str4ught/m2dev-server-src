@@ -1,4 +1,4 @@
-
+﻿
 struct FSkillBreath
 {
 	EJobs Set1;

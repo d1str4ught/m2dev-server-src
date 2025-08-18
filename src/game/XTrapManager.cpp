@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -142,7 +142,7 @@ bool CXTrapManager::LoadXTrapModule()
 	//start server module
 	m_pImpl->XTrap_S_Start( 600, CSFILE_NUM, g_XTrap_ClientMap, NULL ); 
 
-	//NOTE : ÀÏ´Ü XProtect¸ðµâ¿¡ ¹ö±×°¡ ÀÖ¾î¼­ ÄÚµå¿µ¿ª Ã¼Å©¸¦ ²ö´Ù.
+	//NOTE : ì¼ë‹¨ XProtectëª¨ë“ˆì— ë²„ê·¸ê°€ ìžˆì–´ì„œ ì½”ë“œì˜ì—­ ì²´í¬ë¥¼ ëˆë‹¤.
 	m_pImpl->XTrap_S_SetActiveCode( XTRAP_ACTIVE_CODE_THEMIDA );
 
 	//setup signal

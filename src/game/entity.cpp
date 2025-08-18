@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "char.h"
 #include "desc.h"
 #include "sectree_manager.h"
@@ -97,7 +97,7 @@ void CEntity::PacketView(const void * data, int bytes, LPENTITY except)
 
 	FuncPacketView f(data, bytes, except);
 
-	// ¿ÉÀú¹ö »óÅÂ¿¡¼± ³» ÆĞÅ¶Àº ³ª¸¸ ¹Ş´Â´Ù.
+	// ì˜µì €ë²„ ìƒíƒœì—ì„  ë‚´ íŒ¨í‚·ì€ ë‚˜ë§Œ ë°›ëŠ”ë‹¤.
 	if (!m_bIsObserver)
 		for_each(m_map_view.begin(), m_map_view.end(), f);
 

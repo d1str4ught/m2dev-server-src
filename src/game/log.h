@@ -1,4 +1,4 @@
-#ifndef __INC_LOG_MANAGER_H__
+﻿#ifndef __INC_LOG_MANAGER_H__
 #define __INC_LOG_MANAGER_H__
 
 #include "../../libsql/AsyncSQL.h"

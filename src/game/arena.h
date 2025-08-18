@@ -1,4 +1,4 @@
-#ifndef __CLASS_ARENA_MANAGER__
+﻿#ifndef __CLASS_ARENA_MANAGER__
 #define __CLASS_ARENA_MANAGER__
 
 #include <lua.h>

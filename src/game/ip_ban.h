@@ -1,4 +1,4 @@
-#ifndef __INC_METIN_II_GAME_BAN_IP_H__
+﻿#ifndef __INC_METIN_II_GAME_BAN_IP_H__
 #define __INC_METIN_II_GAME_BAN_IP_H__
 
 extern bool LoadBanIP(const char * filename);

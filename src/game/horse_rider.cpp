@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "constants.h"
 #include "utils.h"
 #include "horse_rider.h"
@@ -14,10 +14,10 @@ const int HORSE_STAMINA_REGEN_INTERVAL = 12 * 60;
 
 THorseStat c_aHorseStat[HORSE_MAX_LEVEL+1] =
 /*
-   int iMinLevel;	// Å¾½ÂÇÒ ¼ö ÀÖ´Â ÃÖ¼Ò ·¹º§
+   int iMinLevel;	// íƒ‘ìŠ¹í•  ìˆ˜ ìžˆëŠ” ìµœì†Œ ë ˆë²¨
    int iNPCRace;
-   int iMaxHealth;	// ¸»ÀÇ ÃÖ´ë Ã¼·Â
-   int iMaxStamina;	// ¸»ÀÇ ÃÖ´ë ½ºÅ×¹Ì³Ê
+   int iMaxHealth;	// ë§ì˜ ìµœëŒ€ ì²´ë ¥
+   int iMaxStamina;	// ë§ì˜ ìµœëŒ€ ìŠ¤í…Œë¯¸ë„ˆ
    int iST;
    int iDX;
    int iHT;
@@ -29,7 +29,7 @@ THorseStat c_aHorseStat[HORSE_MAX_LEVEL+1] =
  */
 {
 	{  0,	0,	1,	1,	0,	0,	0,	0,	0,	0,	0,	0  },
-	{ 25,	20101,	3,	4,	26,	35,	18,	9,	54,	43,	64,	32 },	// 1 (ÃÊ±Þ)
+	{ 25,	20101,	3,	4,	26,	35,	18,	9,	54,	43,	64,	32 },	// 1 (ì´ˆê¸‰)
 	{ 25,	20101,	4,	4,	27,	36,	18,	9,	55,	44,	66,	33 },
 	{ 25,	20101,	5,	5,	28,	38,	19,	9,	56,	44,	67,	33 },
 	{ 25,	20101,	7,	5,	29,	39,	19,	10,	57,	45,	68,	34 },
@@ -39,7 +39,7 @@ THorseStat c_aHorseStat[HORSE_MAX_LEVEL+1] =
 	{ 25,	20101,	12,	7,	33,	44,	22,	11,	61,	48,	73,	36 },
 	{ 25,	20101,	13,	8,	34,	45,	22,	11,	62,	49,	74,	37 },
 	{ 25,	20101,	15,	10,	35,	46,	23,	12,	63,	50,	75,	37 },
-	{ 35,	20104,	18,	30,	40,	53,	27,	13,	69,	55,	82,	41 },	// 11 (Áß±Þ)
+	{ 35,	20104,	18,	30,	40,	53,	27,	13,	69,	55,	82,	41 },	// 11 (ì¤‘ê¸‰)
 	{ 35,	20104,	19,	35,	41,	54,	27,	14,	70,	56,	84,	42 },
 	{ 35,	20104,	21,	40,	42,	56,	28,	14,	71,	56,	85,	42 },
 	{ 35,	20104,	22,	50,	43,	57,	28,	14,	72,	57,	86,	43 },
@@ -49,7 +49,7 @@ THorseStat c_aHorseStat[HORSE_MAX_LEVEL+1] =
 	{ 35,	20104,	28,	70,	46,	62,	31,	15,	76,	60,	91,	45 },
 	{ 35,	20104,	30,	80,	47,	63,	31,	16,	77,	61,	92,	46 },
 	{ 35,	20104,	32,	100,	48,	64,	32,	16,	78,	62,	93,	46 },
-	{ 50,	20107,	35,	120,	53,	71,	36,	18,	84,	67,	100,	50 },	// 21 (°í±Þ)
+	{ 50,	20107,	35,	120,	53,	71,	36,	18,	84,	67,	100,	50 },	// 21 (ê³ ê¸‰)
 	{ 50,	20107,	36,	125,	55,	74,	37,	18,	86,	68,	103,	51 },
 	{ 50,	20107,	37,	130,	57,	76,	38,	19,	88,	70,	105,	52 },
 	{ 50,	20107,	38,	135,	59,	78,	39,	20,	90,	72,	108,	54 },
@@ -117,7 +117,7 @@ bool CHorseRider::ReviveHorse()
 	m_Horse.sHealth = c_aHorseStat[level].iMaxHealth;
 	m_Horse.sStamina = c_aHorseStat[level].iMaxStamina;
 
-	// 2005.03.24.ipkn.¸» »ì¸°ÈÄ ´Ù½Ã Á×´Â Çö»ó ¼öÁ¤
+	// 2005.03.24.ipkn.ë§ ì‚´ë¦°í›„ ë‹¤ì‹œ ì£½ëŠ” í˜„ìƒ ìˆ˜ì •
 	ResetHorseHealthDropTime();
 
 	StartStaminaRegenEvent();
@@ -138,11 +138,11 @@ short CHorseRider::GetHorseMaxStamina()
 
 void CHorseRider::FeedHorse()
 {
-	// ¸»À» °¡Áö°í »ì¾ÆÀÖÀ»¶§¸¸
+	// ë§ì„ ê°€ì§€ê³  ì‚´ì•„ìžˆì„ë•Œë§Œ
 	if (GetHorseLevel() > 0 && GetHorseHealth() > 0)
 	{
 		UpdateHorseHealth(+1);
-		// 20050324. ipkn ¸» ¸Ô¿´À»¶§µµ Ã¼·Â °¨¼Ò µô·¹ÀÌ¸¦ ´Ã¸°´Ù.
+		// 20050324. ipkn ë§ ë¨¹ì˜€ì„ë•Œë„ ì²´ë ¥ ê°ì†Œ ë”œë ˆì´ë¥¼ ëŠ˜ë¦°ë‹¤.
 		ResetHorseHealthDropTime();
 	}
 }
@@ -159,7 +159,7 @@ void CHorseRider::UpdateHorseDataByLogoff(DWORD dwLogoffTime)
 		return;
 
 	if (dwLogoffTime >= 12 * 60)
-		UpdateHorseStamina(dwLogoffTime / 12 / 60, false); // ·Î±×¿ÀÇÁ 12ºÐ´ç 1¾¿ È¸º¹
+		UpdateHorseStamina(dwLogoffTime / 12 / 60, false); // ë¡œê·¸ì˜¤í”„ 12ë¶„ë‹¹ 1ì”© íšŒë³µ
 }
 
 void CHorseRider::UpdateHorseStamina(int iStamina, bool bSend)

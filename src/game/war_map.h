@@ -1,4 +1,4 @@
-#ifndef __GUILD_WAR_MAP_MANAGER_H
+ï»¿#ifndef __GUILD_WAR_MAP_MANAGER_H
 #define __GUILD_WAR_MAP_MANAGER_H
 
 #include "constants.h"
@@ -68,7 +68,7 @@ class CWarMap
 		DWORD	GetWinnerGuild();
 		void	UsePotion(LPCHARACTER ch, LPITEM item);
 
-		void	Draw();	// °­Á¦ ¹«½ÂºÎ Ã³¸®
+		void	Draw();	// ê°•ì œ ë¬´ìŠ¹ë¶€ ì²˜ë¦¬
 		void	Timeout();
 		void	CheckWarEnd();
 		bool	SetEnded();
@@ -125,8 +125,8 @@ class CWarMap
 
 			void Initialize();
 
-			int GetAccumulatedJoinerCount(); // ´©ÀûµÈ Âü°¡ÀÚ ¼ö
-			int GetCurJointerCount(); // ÇöÀç Âü°¡ÀÚ ¼ö
+			int GetAccumulatedJoinerCount(); // ëˆ„ì ëœ ì°¸ê°€ì ìˆ˜
+			int GetCurJointerCount(); // í˜„ì¬ ì°¸ê°€ì ìˆ˜
 
 			void AppendMember(LPCHARACTER ch);
 			void RemoveMember(LPCHARACTER ch);

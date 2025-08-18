@@ -1,4 +1,4 @@
-#ifndef __INC_METIN_II_GAME_EXCHANGE_H__
+ο»Ώ#ifndef __INC_METIN_II_GAME_EXCHANGE_H__
 #define __INC_METIN_II_GAME_EXCHANGE_H__
 
 class CGrid;
@@ -35,7 +35,7 @@ class CExchange
 		bool		CheckSpace();
 
 	private:
-		CExchange *	m_pCompany;	// »σ΄λΉζΐΗ CExchange ΖχΐΞΕΝ
+		CExchange *	m_pCompany;	// μƒλ€λ°©μ CExchange ν¬μΈν„°
 
 		LPCHARACTER	m_pOwner;
 

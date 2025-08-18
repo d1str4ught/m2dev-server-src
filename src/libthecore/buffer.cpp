@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 
 static LPBUFFER normalized_buffer_pool[32] = { NULL, };
 

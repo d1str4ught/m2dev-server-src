@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "constants.h"
 #include "config.h"
 #include "input.h"
@@ -71,7 +71,7 @@ void CInputUDP::Handshake(LPDESC pDesc, const char * c_pData)
 
 void CInputUDP::StateChecker(const char * c_pData)
 {
-	// NOTE : TCP ¿¬°á·Î ¹Ù²Ù¸é¼­ »ç¿ë X
+	// NOTE : TCP ì—°ê²°ë¡œ ë°”ê¾¸ë©´ì„œ ì‚¬ìš© X
 	/*
 	struct ServerStateChecker_RequestPacket * p = (struct ServerStateChecker_RequestPacket *) c_pData;
 	ServerStateChecker_ResponsePacket rp;

@@ -1,4 +1,4 @@
-#ifndef __CIPHER_H__
+﻿#ifndef __CIPHER_H__
 #define __CIPHER_H__
 
 #ifdef _IMPROVED_PACKET_ENCRYPTION_

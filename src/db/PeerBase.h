@@ -1,4 +1,4 @@
-// vim: ts=8 sw=4
+﻿// vim: ts=8 sw=4
 #ifndef __INC_PEERBASE_H__
 #define __INC_PEERBASE_H__
 

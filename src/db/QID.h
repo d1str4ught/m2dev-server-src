@@ -1,8 +1,8 @@
-#ifndef __INC_METIN_II_DB_QID_H__
+Ôªø#ifndef __INC_METIN_II_DB_QID_H__
 #define __INC_METIN_II_DB_QID_H__
 
 /**
- * @version	05/06/10 Bang2ni - æ∆¿Ã≈€ ∞°∞›¡§∫∏ ƒı∏Æ √ﬂ∞°(QID_ITEMPRICE_XXX)
+ * @version	05/06/10 Bang2ni - ÏïÑÏù¥ÌÖú Í∞ÄÍ≤©Ï†ïÎ≥¥ ÏøºÎ¶¨ Ï∂îÍ∞Ä(QID_ITEMPRICE_XXX)
  */
 enum QID
 {
@@ -29,10 +29,10 @@ enum QID
     QID_GUILD_RANKING,			// 20
 
 	// MYSHOP_PRICE_LIST
-    QID_ITEMPRICE_SAVE,			///< 21, æ∆¿Ã≈€ ∞°∞›¡§∫∏ ¿˙¿Â ƒı∏Æ
-    QID_ITEMPRICE_DESTROY,		///< 22, æ∆¿Ã≈€ ∞°∞›¡§∫∏ ªË¡¶ ƒı∏Æ
-    QID_ITEMPRICE_LOAD_FOR_UPDATE,	///< 23, ∞°∞›¡§∫∏ æ˜µ•¿Ã∆Æ∏¶ ¿ß«— æ∆¿Ã≈€ ∞°∞›¡§∫∏ ∑ŒµÂ ƒı∏Æ
-    QID_ITEMPRICE_LOAD,			///< 24, æ∆¿Ã≈€ ∞°∞›¡§∫∏ ∑ŒµÂ ƒı∏Æ
+    QID_ITEMPRICE_SAVE,			///< 21, ÏïÑÏù¥ÌÖú Í∞ÄÍ≤©Ï†ïÎ≥¥ Ï†ÄÏû• ÏøºÎ¶¨
+    QID_ITEMPRICE_DESTROY,		///< 22, ÏïÑÏù¥ÌÖú Í∞ÄÍ≤©Ï†ïÎ≥¥ ÏÇ≠Ï†ú ÏøºÎ¶¨
+    QID_ITEMPRICE_LOAD_FOR_UPDATE,	///< 23, Í∞ÄÍ≤©Ï†ïÎ≥¥ ÏóÖÎç∞Ïù¥Ìä∏Î•º ÏúÑÌïú ÏïÑÏù¥ÌÖú Í∞ÄÍ≤©Ï†ïÎ≥¥ Î°úÎìú ÏøºÎ¶¨
+    QID_ITEMPRICE_LOAD,			///< 24, ÏïÑÏù¥ÌÖú Í∞ÄÍ≤©Ï†ïÎ≥¥ Î°úÎìú ÏøºÎ¶¨
 	// END_OF_MYSHOP_PRICE_LIST
 };
 

@@ -1,12 +1,12 @@
-#ifndef __INC_REFINE_H
+ï»¿#ifndef __INC_REFINE_H
 #define __INC_REFINE_H
 
 #include "constants.h"
 
 enum
 {
-	BLACKSMITH_MOB = 20016, // È®·ü °³·®
-	ALCHEMIST_MOB = 20001, // 100% °³·® ¼º°ø 
+	BLACKSMITH_MOB = 20016, // í™•ë¥  ê°œëŸ‰
+	ALCHEMIST_MOB = 20001, // 100% ê°œëŸ‰ ì„±ê³µ 
 
 	BLACKSMITH_WEAPON_MOB = 20044,
 	BLACKSMITH_ARMOR_MOB = 20045,

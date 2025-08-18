@@ -1,2 +1,2 @@
-#pragma once
+﻿#pragma once
 extern unsigned KStbl[2350];

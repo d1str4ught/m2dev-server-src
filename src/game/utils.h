@@ -1,4 +1,4 @@
-
+﻿
 #ifndef __INC_METIN_II_UTILS_H__
 #define __INC_METIN_II_UTILS_H__
 

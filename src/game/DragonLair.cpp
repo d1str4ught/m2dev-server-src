@@ -1,4 +1,4 @@
-
+ï»¿
 #include "stdafx.h"
 
 #include "DragonLair.h"
@@ -91,7 +91,7 @@ EVENTFUNC( DragonLair_Collapse_Event )
 	if (0 == pInfo->step)
 	{
 		char buf[512];
-		snprintf(buf, 512, LC_TEXT("¿ë°¡¸®°¡ %d ÃÊ¸¸¿¡ Á×¾î½áÈ¿¤Ð¤Ð"), pInfo->pLair->GetEstimatedTime());
+		snprintf(buf, 512, LC_TEXT("ìš©ê°€ë¦¬ê°€ %d ì´ˆë§Œì— ì£½ì–´ì¨íš¨ã… ã… "), pInfo->pLair->GetEstimatedTime());
 		SendNoticeMap(buf, pInfo->InstanceMapIndex, true);
 
 		pInfo->step++;
@@ -146,7 +146,7 @@ DWORD CDragonLair::GetEstimatedTime() const
 
 void CDragonLair::OnDragonDead(LPCHARACTER pDragon)
 {
-	sys_log(0, "DragonLair: µµ¶ó°ïÀÌ Á×¾î½áÈ¿");
+	sys_log(0, "DragonLair: ë„ë¼ê³¤ì´ ì£½ì–´ì¨íš¨");
 
 	LogManager::instance().DragonSlayLog(  GuildID_, pDragon->GetMobTable().dwVnum, StartTime_, get_global_time() );
 }
@@ -239,7 +239,7 @@ void CDragonLairManager::OnDragonDead(LPCHARACTER pDragon, DWORD KillerGuildID)
 
 	iter->second->OnDragonDead( pDragon );
 
-	// ¾Öµé ´Ù ÁýÀ¸·Î º¸³»°í ¸Ê ¾ø¾Ö±â
+	// ì• ë“¤ ë‹¤ ì§‘ìœ¼ë¡œ ë³´ë‚´ê³  ë§µ ì—†ì• ê¸°
 
 	tag_DragonLair_Collapse_EventInfo* info;
 	info = AllocEventInfo<tag_DragonLair_Collapse_EventInfo>();

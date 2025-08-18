@@ -1,4 +1,4 @@
-/*
+﻿/*
 ** $Id: lua.c,v 1.122 2003/04/03 13:34:42 roberto Exp $
 ** Lua stand-alone interpreter
 ** See Copyright Notice in lua.h

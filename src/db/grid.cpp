@@ -1,4 +1,4 @@
-#include <string.h>
+ï»¿#include <string.h>
 #include <stdio.h>
 #include "../../libthecore/include/memcpy.h"
 #include "../../common/stl.h"
@@ -29,7 +29,7 @@ void CGrid::Clear()
 
 int CGrid::FindBlank(int w, int h)
 {
-	// Å©±â°¡ ´õ Å©´Ù¸é È®ÀÎÇÒ ÇÊ¿ä ¾øÀÌ ±×³É ¸®ÅÏ
+	// í¬ê¸°ê°€ ë” í¬ë‹¤ë©´ í™•ì¸í•  í•„ìš” ì—†ì´ ê·¸ëƒ¥ ë¦¬í„´
 	if (w > m_iWidth || h > m_iHeight)
 		return -1;
 
@@ -87,7 +87,7 @@ bool CGrid::IsEmpty(int iPos, int w, int h)
 {
 	int iRow = iPos / m_iWidth;
 
-	// Grid ¾ÈÂÊÀÎ°¡¸¦ ¸ÕÀú °Ë»ç
+	// Grid ì•ˆìª½ì¸ê°€ë¥¼ ë¨¼ì € ê²€ì‚¬
 	if (iRow + h > m_iHeight)
 		return false;
 

@@ -1,10 +1,10 @@
-#ifndef __INC_METIN_II_MOB_MANAGER_H__
+ï»¿#ifndef __INC_METIN_II_MOB_MANAGER_H__
 #define __INC_METIN_II_MOB_MANAGER_H__
 
 typedef struct SMobSplashAttackInfo
 {
-	DWORD	dwTiming; // ½ºÅ³ »ç¿ë ÈÄ ½ÇÁ¦·Î µ¥¹ÌÁö ¸ÔÈú¶§±îÁö ±â´Ù¸®´Â ½Ã°£ (ms)
-	DWORD	dwHitDistance; // ½ºÅ³ »ç¿ë½Ã ½ÇÁ¦·Î ½ºÅ³ °è»êÀÌ µÇ´Â °Å¸® (Àü¹æ ¸îcm)
+	DWORD	dwTiming; // ìŠ¤í‚¬ ì‚¬ìš© í›„ ì‹¤ì œë¡œ ë°ë¯¸ì§€ ë¨¹íë•Œê¹Œì§€ ê¸°ë‹¤ë¦¬ëŠ” ì‹œê°„ (ms)
+	DWORD	dwHitDistance; // ìŠ¤í‚¬ ì‚¬ìš©ì‹œ ì‹¤ì œë¡œ ìŠ¤í‚¬ ê³„ì‚°ì´ ë˜ëŠ” ê±°ë¦¬ (ì „ë°© ëª‡cm)
 
 	SMobSplashAttackInfo(DWORD dwTiming, DWORD dwHitDistance)
 		: dwTiming(dwTiming)
@@ -37,8 +37,8 @@ class CMobInstance
 	public:
 		CMobInstance();
 
-		PIXEL_POSITION	m_posLastAttacked;	// ¸¶Áö¸· ¸ÂÀº À§Ä¡
-		DWORD		m_dwLastAttackedTime;	// ¸¶Áö¸· ¸ÂÀº ½Ã°£
+		PIXEL_POSITION	m_posLastAttacked;	// ë§ˆì§€ë§‰ ë§ì€ ìœ„ì¹˜
+		DWORD		m_dwLastAttackedTime;	// ë§ˆì§€ë§‰ ë§ì€ ì‹œê°„
 		DWORD		m_dwLastWarpTime;
 
 		bool m_IsBerserk;

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #ifdef OS_WINDOWS
 #define isdigit iswdigit

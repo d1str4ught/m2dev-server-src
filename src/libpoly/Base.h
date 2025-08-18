@@ -1,4 +1,4 @@
-#ifndef __POLY_BASE_H__
+﻿#ifndef __POLY_BASE_H__
 #define __POLY_BASE_H__
 
 #define MID_UNKNOWN		0

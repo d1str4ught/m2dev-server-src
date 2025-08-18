@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "../../libgame/include/grid.h"
 #include "constants.h"
 #include "safebox.h"
@@ -62,7 +62,7 @@ bool CSafebox::Add(DWORD dwPos, LPITEM pkItem)
 
 	pkItem->SetWindow(m_bWindowMode);
 	pkItem->SetCell(m_pkChrOwner, dwPos);
-	pkItem->Save(); // °­Á¦·Î Save¸¦ ºÒ·¯Áà¾ß ÇÑ´Ù.
+	pkItem->Save(); // ê°•ì œë¡œ Saveë¥¼ ë¶ˆëŸ¬ì¤˜ì•¼ í•œë‹¤.
 	ITEM_MANAGER::instance().FlushDelayedSave(pkItem);
 
 	m_pkGrid->Put(dwPos, 1, pkItem->GetSize());
@@ -141,7 +141,7 @@ bool CSafebox::IsEmpty(DWORD dwPos, BYTE bSize)
 
 void CSafebox::ChangeSize(int iSize)
 {
-	// ÇöÀç »çÀÌÁî°¡ ÀÎÀÚº¸´Ù Å©¸é »çÀÌÁî¸¦ °¡¸¸ µĞ´Ù.
+	// í˜„ì¬ ì‚¬ì´ì¦ˆê°€ ì¸ìë³´ë‹¤ í¬ë©´ ì‚¬ì´ì¦ˆë¥¼ ê°€ë§Œ ë‘”ë‹¤.
 	if (m_iSize >= iSize)
 		return;
 
@@ -189,7 +189,7 @@ bool CSafebox::MoveItem(BYTE bCell, BYTE bDestCell, BYTE count)
 
 		if ((item2 = GetItem(bDestCell)) && item != item2 && item2->IsStackable() &&
 				!IS_SET(item2->GetAntiFlag(), ITEM_ANTIFLAG_STACK) &&
-				item2->GetVnum() == item->GetVnum()) // ÇÕÄ¥ ¼ö ÀÖ´Â ¾ÆÀÌÅÛÀÇ °æ¿ì
+				item2->GetVnum() == item->GetVnum()) // í•©ì¹  ìˆ˜ ìˆëŠ” ì•„ì´í…œì˜ ê²½ìš°
 		{
 			for (int i = 0; i < ITEM_SOCKET_MAX_NUM; ++i)
 				if (item2->GetSocket(i) != item->GetSocket(i))

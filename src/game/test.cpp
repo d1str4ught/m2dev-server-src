@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "../../libgame/include/attribute.h"
 #include "../../libgame/include/targa.h"
 #include "../../common/d3dtype.h"
@@ -120,7 +120,7 @@ int main(int argc, char ** argv)
 	SECTREE_MANAGER	sectree_manager;
 	DESC_MANAGER desc_manager;
 	CHARACTER_MANAGER char_manager;
-	quest::CQuestManager quest_manager; // CHARACTER::Intiailize¿¡¼­ ÇÊ¿äÇÔ
+	quest::CQuestManager quest_manager; // CHARACTER::Intiailizeì—ì„œ í•„ìš”í•¨
 	CArenaManager arena_manager;
 	CPVPManager pvp_manager;
 	LZOManager lzo;
@@ -186,7 +186,7 @@ int main(int argc, char ** argv)
 					// Buffer overflow test (must use with valgrind or gdb at least)
                     LPCHARACTER ch = CHARACTER_MANAGER::instance().CreateCharacter("test");
 
-					// ½ºÅÃ¿¡ ÇÒ´çÇÏ¸é valgrind°¡ Á¦´ë·Î ¿À·ù¸¦ ÀâÁö ¸øÇÔ
+					// ìŠ¤íƒì— í• ë‹¹í•˜ë©´ valgrindê°€ ì œëŒ€ë¡œ ì˜¤ë¥˜ë¥¼ ì¡ì§€ ëª»í•¨
 					size_t bufsize = 512 + 1;
 					size_t linesize = 1024 + 1;
 
@@ -289,11 +289,11 @@ bool ReadMapAttribute(DWORD dwAreaX, DWORD dwAreaY, const char * c_pszFileName)
 	fclose(fp);	// close file
 
 	// 
-	// ÇÏ³ªÀÇ SECTREE´Â 6400 PIXELÀ» Â÷Áö 100ÇÈ¼¿ÀÌ 1¹ÌÅÍ ÀÌ¹Ç·Î 
+	// í•˜ë‚˜ì˜ SECTREEëŠ” 6400 PIXELì„ ì°¨ì§€ 100í”½ì…€ì´ 1ë¯¸í„° ì´ë¯€ë¡œ 
 	// 1 SECTREE = 64m = 6400px
 	//
-	// Å¬¶óÀÌ¾ğÆ®ÀÇ ÇÏ³ªÀÇ Area´Â 256m¸¦ Â÷ÁöÇÏ¹Ç·Î SECTREE ³×°³¸¦ Ã³¸®ÇØ¾ß 
-	// ÇÑ´Ù.
+	// í´ë¼ì´ì–¸íŠ¸ì˜ í•˜ë‚˜ì˜ AreaëŠ” 256më¥¼ ì°¨ì§€í•˜ë¯€ë¡œ SECTREE ë„¤ê°œë¥¼ ì²˜ë¦¬í•´ì•¼ 
+	// í•œë‹¤.
 	//
 	DWORD dwStartX, dwStartY, dwEndX, dwEndY;
 
@@ -325,9 +325,9 @@ bool ReadMapAttribute(DWORD dwAreaX, DWORD dwAreaY, const char * c_pszFileName)
 			{
 				for (int ax = region[x - dwStartX][0], px = 0; ax < region[x - dwStartX][1]; ++ax, px += 2)
 				{
-					// AREAÀÇ °æ¿ì ¼Ó¼º ÇØ»óµµ°¡ 1m ÀÌ¹Ç·Î
-					// CELL 1°³°¡ 50x50cmÀÎ SECTREE¿¡¼­´Â
-					// AREAÀÇ ¼Ó¼º ÇÑ°³°¡ 2x2°³¸¦ Â÷Áö ÇÑ´Ù.
+					// AREAì˜ ê²½ìš° ì†ì„± í•´ìƒë„ê°€ 1m ì´ë¯€ë¡œ
+					// CELL 1ê°œê°€ 50x50cmì¸ SECTREEì—ì„œëŠ”
+					// AREAì˜ ì†ì„± í•œê°œê°€ 2x2ê°œë¥¼ ì°¨ì§€ í•œë‹¤.
 					BYTE bAttr = pbAttr[ay * wHeight + ax];
 
 					if (bAttr & ATTR_OBJECT)
@@ -535,7 +535,7 @@ void ProcessLine(int sx, int sy, int ex, int ey, _f f)
 	else
 		h = ey - sy;
 
-	// distance = (w * w) + (h * h); // °Å¸®
+	// distance = (w * w) + (h * h); // ê±°ë¦¬
 	if (w > h)
 	{
 		d = (h << 1) - w;
@@ -564,7 +564,7 @@ void ProcessLine(int sx, int sy, int ex, int ey, _f f)
 				default: return;
 			}
 
-			if (!f(px, py))	// false °¡ ¸®ÅÏ µÇ¸é Áß´Ü ÇÑ´Ù.
+			if (!f(px, py))	// false ê°€ ë¦¬í„´ ë˜ë©´ ì¤‘ë‹¨ í•œë‹¤.
 			{
 				printf("putting error %d %d", px, py);
 				return;
@@ -598,7 +598,7 @@ void ProcessLine(int sx, int sy, int ex, int ey, _f f)
 				default: return;
 			}
 
-			if (!f(px, py))	// false °¡ ¸®ÅÏ µÇ¸é Áß´Ü ÇÑ´Ù.
+			if (!f(px, py))	// false ê°€ ë¦¬í„´ ë˜ë©´ ì¤‘ë‹¨ í•œë‹¤.
 			{
 				printf("putting error %d %d", px, py);
 				return;
@@ -750,10 +750,10 @@ void ReadCollisionData(const char * c_pszFileName, int iBaseX, int iBaseY)
 
 								}
 							}
-							// »ç°¢Çü Ã¤¿ì±âµµ ÇÕ½Ã´Ù
-							// 0 1 2 3 ¼ø¼­´ë·Î
+							// ì‚¬ê°í˜• ì±„ìš°ê¸°ë„ í•©ì‹œë‹¤
+							// 0 1 2 3 ìˆœì„œëŒ€ë¡œ
 							// -- +- -+ ++
-							// ±Ùµ¥ y ´Â ¸¶ÀÌ³Ê½º ÃëÇÏ´Â°Å È®ÀÎÇÏ½Ã±æ
+							// ê·¼ë° y ëŠ” ë§ˆì´ë„ˆìŠ¤ ì·¨í•˜ëŠ”ê±° í™•ì¸í•˜ì‹œê¸¸
 							// TODO
 						}
 						break;
@@ -825,7 +825,7 @@ void ConvertAttribute(const char * c_pszCollisionDataFileName, const char * c_ps
 	printf("bx by %d %d\n", bx, by);
 	int x, y;
 
-	// ÀÏ´Ü ¼Ó¼º ÃÊ±âÈ­
+	// ì¼ë‹¨ ì†ì„± ì´ˆê¸°í™”
 	for (y = 0; y < iMapHeight * (25600 / SECTREE_SIZE); ++y)
 	{
 		for (x = 0; x < iMapWidth * (25600 / SECTREE_SIZE); ++x)

@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 
 /* Forwards */
 void socket_lingeron(socket_t s);
@@ -26,7 +26,7 @@ int socket_read(socket_t desc, char* read_point, size_t space_left)
     if (ret > 0)
 	return ret;
 
-    if (ret == 0)	// Á¤»óÀûÀ¸·Î Á¢¼Ó ²÷±è
+    if (ret == 0)	// ì •ìƒì ìœ¼ë¡œ ì ‘ì† ëŠê¹€
 	return -1;
 
 #ifdef EINTR            /* Interrupted system call - various platforms */
@@ -66,7 +66,7 @@ int socket_write_tcp(socket_t desc, const char *txt, int length)
 {
     int bytes_written = send(desc, txt, length, 0);
 
-    // ¼º°ø
+    // ì„±ê³µ
     if (bytes_written > 0)
 	return (bytes_written);
 
@@ -119,7 +119,7 @@ int socket_write(socket_t desc, const char *data, size_t length)
 	    if (errno == EAGAIN)
 		sys_err("socket write would block, about to close!");
 	    else
-		sys_err("write to desc error");   // 'º¸Åë' »ó´ëÆíÀ¸·Î ºÎÅÍ Á¢¼ÓÀÌ ²÷±ä °ÍÀÌ´Ù.
+		sys_err("write to desc error");   // 'ë³´í†µ' ìƒëŒ€í¸ìœ¼ë¡œ ë¶€í„° ì ‘ì†ì´ ëŠê¸´ ê²ƒì´ë‹¤.
 
 	    return -1;
 	}
@@ -162,8 +162,8 @@ int socket_bind(const char * ip, int port, int protocol)
 
     memset(&sa, 0, sizeof(sa));
     sa.sin_family	= AF_INET;
-//À©µµ¿ì ¼­¹ö´Â °³¹ß¿ëÀ¸·Î¸¸ ¾²±â ¶§¹®¿¡ BIND ip¸¦ INADDR_ANY·Î °íÁ¤
-//(Å×½ºÆ®ÀÇ ÆíÀÇ¼ºÀ» À§ÇØ)
+//ìœˆë„ìš° ì„œë²„ëŠ” ê°œë°œìš©ìœ¼ë¡œë§Œ ì“°ê¸° ë•Œë¬¸ì— BIND ipë¥¼ INADDR_ANYë¡œ ê³ ì •
+//(í…ŒìŠ¤íŠ¸ì˜ í¸ì˜ì„±ì„ ìœ„í•´)
 #ifndef OS_WINDOWS
     sa.sin_addr.s_addr	= inet_addr(ip);
 #else
@@ -240,7 +240,7 @@ socket_t socket_connect(const char* host, WORD port)
     struct sockaddr_in  server_addr;
     int                 rslt;
 
-    /* ¼ÒÄÏÁÖ¼Ò ±¸Á¶Ã¼ ÃÊ±âÈ­ */
+    /* ì†Œì¼“ì£¼ì†Œ êµ¬ì¡°ì²´ ì´ˆê¸°í™” */
     memset(&server_addr, 0, sizeof(server_addr));
 
     if (isdigit(*host))
@@ -273,7 +273,7 @@ socket_t socket_connect(const char* host, WORD port)
     socket_timeout(s, 10, 0);
     socket_lingeron(s);
 
-    /*  ¿¬°á¿äÃ» */
+    /*  ì—°ê²°ìš”ì²­ */
     if ((rslt = connect(s, (struct sockaddr *) &server_addr, sizeof(server_addr))) < 0)
     {
 	socket_close(s);

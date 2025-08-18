@@ -1,4 +1,4 @@
-//#define __FISHING_MAIN__
+Ôªø//#define __FISHING_MAIN__
 #include "stdafx.h"
 #include "constants.h"
 #include "fishing.h"
@@ -107,79 +107,79 @@ namespace fishing
 	SFishInfo fish_info[MAX_FISH] = { { "\0", }, };
 	/*
 	   {
-	   { "≤Œ",		00000, 00000, 00000, {  750, 1750, 2750 },   10, FISHING_LIMIT_NONE,	{  0,   0,   0}, FISHING_TIME_NORMAL, { 0,           }, 
+	   { "ÍΩù",		00000, 00000, 00000, {  750, 1750, 2750 },   10, FISHING_LIMIT_NONE,	{  0,   0,   0}, FISHING_TIME_NORMAL, { 0,           }, 
 	   {0, } },
-	   { "±›π›¡ˆ",	50002, 00000, 00000, {   50,   50,    0 },  200, FISHING_LIMIT_NONE,	{  0,   0,   0}, FISHING_TIME_NORMAL, { 0,           }, 
+	   { "Í∏àÎ∞òÏßÄ",	50002, 00000, 00000, {   50,   50,    0 },  200, FISHING_LIMIT_NONE,	{  0,   0,   0}, FISHING_TIME_NORMAL, { 0,           }, 
 	   {0, } },
-	   { "««∂ÛπÃ",	27802, 00000, 00000, { 2100, 1500,   50 },   10, FISHING_LIMIT_NONE,	{  0,   0,   0}, FISHING_TIME_EASY,   {500, 550, 600}, 
+	   { "ÌîºÎùºÎØ∏",	27802, 00000, 00000, { 2100, 1500,   50 },   10, FISHING_LIMIT_NONE,	{  0,   0,   0}, FISHING_TIME_EASY,   {500, 550, 600}, 
 	   {0, } },
-	   { "∫ÿæÓ",	27803, 27833, 27863, { 2100, 1500,  100 },   13, FISHING_LIMIT_NONE,	{  0,   0,   0}, FISHING_TIME_EASY,   {1000,2500,2800},
+	   { "Î∂ïÏñ¥",	27803, 27833, 27863, { 2100, 1500,  100 },   13, FISHING_LIMIT_NONE,	{  0,   0,   0}, FISHING_TIME_EASY,   {1000,2500,2800},
 	   {USED_NONE, USED_SHELLFISH, USED_NONE, USED_NONE, USED_WATER_STONE, USED_TREASURE_MAP, USED_EARTHWARM, USED_NONE,USED_NONE,  USED_NONE } },
-	   { "ΩÓ∞°∏Æ",	27804, 27834, 27864, { 1100, 1300,  150 },   16, FISHING_LIMIT_NONE,	{  0,   0,   0}, FISHING_TIME_NORMAL, {2000,3500,3800},
+	   { "ÏèòÍ∞ÄÎ¶¨",	27804, 27834, 27864, { 1100, 1300,  150 },   16, FISHING_LIMIT_NONE,	{  0,   0,   0}, FISHING_TIME_NORMAL, {2000,3500,3800},
 	   {USED_NONE, USED_SHELLFISH, USED_NONE, USED_NONE, USED_WATER_STONE, USED_TREASURE_MAP, USED_EARTHWARM, USED_NONE,USED_NONE,  USED_NONE } },
-	   { "ø˘√¥∫ÿæÓ",	27805, 27835, 27865, { 1100, 1100,  200 },   20, FISHING_LIMIT_NONE,	{  0,   0,   0}, FISHING_TIME_SLOW, {3030,3500,4300},
+	   { "ÏõîÏ≤ôÎ∂ïÏñ¥",	27805, 27835, 27865, { 1100, 1100,  200 },   20, FISHING_LIMIT_NONE,	{  0,   0,   0}, FISHING_TIME_SLOW, {3030,3500,4300},
 	   {USED_NONE, USED_SHELLFISH, USED_NONE, USED_NONE, USED_WATER_STONE, USED_TREASURE_MAP, USED_EARTHWARM, USED_NONE,USED_NONE,  USED_NONE } },
-	   { "¿◊æÓ",	27806, 27836, 27866, { 1100,  500,  300 },   26, FISHING_LIMIT_NONE,	{  0,   0,   0}, FISHING_TIME_NORMAL, {4000,6000,10000},
+	   { "ÏûâÏñ¥",	27806, 27836, 27866, { 1100,  500,  300 },   26, FISHING_LIMIT_NONE,	{  0,   0,   0}, FISHING_TIME_NORMAL, {4000,6000,10000},
 	   {USED_NONE, USED_SHELLFISH, USED_NONE, USED_NONE, USED_WATER_STONE, USED_TREASURE_MAP, USED_EARTHWARM, USED_NONE,USED_NONE,  USED_NONE } },
-	   { "ø¨æÓ",	27807, 27837, 27867, { 1100,  450,  400 },   33, FISHING_LIMIT_NONE,	{  0,   0,   0}, FISHING_TIME_NORMAL,{6000,8000,10000},
+	   { "Ïó∞Ïñ¥",	27807, 27837, 27867, { 1100,  450,  400 },   33, FISHING_LIMIT_NONE,	{  0,   0,   0}, FISHING_TIME_NORMAL,{6000,8000,10000},
 	   {USED_NONE, USED_SHELLFISH, USED_NONE, USED_NONE, USED_WATER_STONE, USED_TREASURE_MAP, USED_EARTHWARM, USED_NONE,USED_NONE,  USED_NONE } },
-	   { "«‚æÓ",	27808, 27838, 27868, {  200,  400,  500 },   42, FISHING_LIMIT_NONE,	{  0,   0,   0}, FISHING_TIME_NORMAL,{1500,3000,3800},
+	   { "Ìñ•Ïñ¥",	27808, 27838, 27868, {  200,  400,  500 },   42, FISHING_LIMIT_NONE,	{  0,   0,   0}, FISHING_TIME_NORMAL,{1500,3000,3800},
 	   {USED_NONE, USED_SHELLFISH, USED_NONE, USED_NONE, USED_WATER_STONE, USED_TREASURE_MAP, USED_EARTHWARM, USED_NONE,USED_NONE,  USED_NONE } },
-	   { "º€æÓ",	27809, 27839, 27869, {  200,  300,  700 },   54, FISHING_LIMIT_NONE,	{  0,   0,   0}, FISHING_TIME_NORMAL,{5000,7000,8000},
+	   { "ÏÜ°Ïñ¥",	27809, 27839, 27869, {  200,  300,  700 },   54, FISHING_LIMIT_NONE,	{  0,   0,   0}, FISHING_TIME_NORMAL,{5000,7000,8000},
 	   {USED_NONE, USED_SHELLFISH, USED_NONE, USED_NONE, USED_WATER_STONE, USED_TREASURE_MAP, USED_EARTHWARM, USED_NONE,USED_NONE,  USED_NONE } },
-	   { "πŒπ∞¿ÂæÓ",	27810, 27840, 27870, {    0,  270, 1000 },   70, FISHING_LIMIT_NONE,	{  0,   0,   0}, FISHING_TIME_NORMAL,{4000,5000,6000},
+	   { "ÎØºÎ¨ºÏû•Ïñ¥",	27810, 27840, 27870, {    0,  270, 1000 },   70, FISHING_LIMIT_NONE,	{  0,   0,   0}, FISHING_TIME_NORMAL,{4000,5000,6000},
 	   {USED_SHELLFISH, USED_NONE, USED_NONE, USED_WATER_STONE, USED_TREASURE_MAP, USED_NONE, USED_EARTHWARM, USED_NONE,USED_NONE,  USED_NONE } },
-	   { "π´¡ˆ∞≥º€æÓ",	27811, 27841, 27871, {    0,  200, 1000 },   91, FISHING_LIMIT_APPEAR,	{  0,   0,   0}, FISHING_TIME_NORMAL,{5000,7000,8000},
+	   { "Î¨¥ÏßÄÍ∞úÏÜ°Ïñ¥",	27811, 27841, 27871, {    0,  200, 1000 },   91, FISHING_LIMIT_APPEAR,	{  0,   0,   0}, FISHING_TIME_NORMAL,{5000,7000,8000},
 	   {USED_SHELLFISH, USED_NONE, USED_NONE, USED_WATER_STONE, USED_TREASURE_MAP, USED_NONE, USED_EARTHWARM, USED_NONE,USED_NONE,  USED_NONE } },
-	   { "∞≠º€æÓ",	27812, 27842, 27872, {    0,  160, 1000 },  118, FISHING_LIMIT_NONE,	{  0,   0,   0}, FISHING_TIME_QUICK,{4000,6000,7000},
+	   { "Í∞ïÏÜ°Ïñ¥",	27812, 27842, 27872, {    0,  160, 1000 },  118, FISHING_LIMIT_NONE,	{  0,   0,   0}, FISHING_TIME_QUICK,{4000,6000,7000},
 	   {USED_SHELLFISH, USED_NONE, USED_NONE, USED_WATER_STONE, USED_TREASURE_MAP, USED_NONE, USED_EARTHWARM, USED_NONE,USED_NONE,  USED_NONE } },
-	   { "∑ØµÂ",	27813, 27843, 27873, {    0,  130,  700 },  153, FISHING_LIMIT_NONE,	{  0,   0,   0}, FISHING_TIME_NORMAL,{4000,6000,10000},
+	   { "Îü¨Îìú",	27813, 27843, 27873, {    0,  130,  700 },  153, FISHING_LIMIT_NONE,	{  0,   0,   0}, FISHING_TIME_NORMAL,{4000,6000,10000},
 	   {USED_SHELLFISH, USED_NONE, USED_NONE, USED_WATER_STONE, USED_TREASURE_MAP, USED_NONE, USED_EARTHWARM, USED_NONE,USED_NONE,  USED_NONE } },
-	   { "∆€ƒ°",	27814, 27844, 27874, {    0,  100,  400 },  198, FISHING_LIMIT_NONE,	{  0,   0,   0}, FISHING_TIME_NORMAL,{3000,4000,5000},
+	   { "ÌçºÏπò",	27814, 27844, 27874, {    0,  100,  400 },  198, FISHING_LIMIT_NONE,	{  0,   0,   0}, FISHING_TIME_NORMAL,{3000,4000,5000},
 	   {USED_SHELLFISH, USED_NONE, USED_NONE, USED_WATER_STONE, USED_TREASURE_MAP, USED_NONE, USED_EARTHWARM, USED_NONE,USED_NONE,  USED_NONE } },
-	   { "≈Ÿƒ°",	27815, 27845, 27875, {    0,   50,  300 },  257, FISHING_LIMIT_NONE,	{  0,   0,   0}, FISHING_TIME_NORMAL,{3500,5500,8000},
+	   { "ÌÖêÏπò",	27815, 27845, 27875, {    0,   50,  300 },  257, FISHING_LIMIT_NONE,	{  0,   0,   0}, FISHING_TIME_NORMAL,{3500,5500,8000},
 	   {USED_SHELLFISH, USED_NONE, USED_NONE, USED_WATER_STONE, USED_TREASURE_MAP, USED_NONE, USED_EARTHWARM, USED_NONE,USED_NONE,  USED_NONE } },
-	   { "∏ﬁ±‚",	27816, 27846, 27876, {    0,   30,  100 },  334, FISHING_LIMIT_NONE,	{  0,   0,   0}, FISHING_TIME_NORMAL,{3000,5000,10000},
+	   { "Î©îÍ∏∞",	27816, 27846, 27876, {    0,   30,  100 },  334, FISHING_LIMIT_NONE,	{  0,   0,   0}, FISHING_TIME_NORMAL,{3000,5000,10000},
 	   {USED_SHELLFISH, USED_NONE, USED_NONE, USED_WATER_STONE, USED_TREASURE_MAP, USED_NONE, USED_EARTHWARM, USED_NONE,USED_NONE,  USED_NONE } },
-	   { "πÃ≤Ÿ∂Û¡ˆ",	27817, 27847, 27877, {    0,   10,   64 },  434, FISHING_LIMIT_NONE,	{  0,   0,   0}, FISHING_TIME_QUICK,{1800,2200,3000},
+	   { "ÎØ∏Íæ∏ÎùºÏßÄ",	27817, 27847, 27877, {    0,   10,   64 },  434, FISHING_LIMIT_NONE,	{  0,   0,   0}, FISHING_TIME_QUICK,{1800,2200,3000},
 	   {USED_SHELLFISH, USED_NONE, USED_NONE, USED_WATER_STONE, USED_TREASURE_MAP, USED_NONE, USED_EARTHWARM, USED_NONE,USED_NONE,  USED_NONE } },
-	   { "πÈ∑√",	27818, 27848, 27878, {    0,    0,   15 },  564, FISHING_LIMIT_NONE,	{  0,   0,   0}, FISHING_TIME_NORMAL,{5000,8000,10000},
+	   { "Î∞±Î†®",	27818, 27848, 27878, {    0,    0,   15 },  564, FISHING_LIMIT_NONE,	{  0,   0,   0}, FISHING_TIME_NORMAL,{5000,8000,10000},
 	   {USED_SHELLFISH, USED_NONE, USED_WATER_STONE, USED_TREASURE_MAP, USED_NONE, USED_NONE, USED_EARTHWARM, USED_NONE,USED_NONE,  USED_NONE } },
-	   { "¿∫æÓ",	27819, 27849, 27879, {    0,    0,    9 },  733, FISHING_LIMIT_NONE,	{  0,   0,   0}, FISHING_TIME_NORMAL,{1500,3000,3800},
+	   { "ÏùÄÏñ¥",	27819, 27849, 27879, {    0,    0,    9 },  733, FISHING_LIMIT_NONE,	{  0,   0,   0}, FISHING_TIME_NORMAL,{1500,3000,3800},
 	   {USED_SHELLFISH, USED_NONE, USED_WATER_STONE, USED_TREASURE_MAP, USED_NONE, USED_NONE, USED_EARTHWARM, USED_NONE,USED_NONE,  USED_NONE } },
-	   { "∫˘æÓ",	27820, 27850, 27880, {    0,    0,    6 },  952, FISHING_LIMIT_NONE,	{  0,   0,   0}, FISHING_TIME_QUICK,{1500,3000,3800},
+	   { "ÎπôÏñ¥",	27820, 27850, 27880, {    0,    0,    6 },  952, FISHING_LIMIT_NONE,	{  0,   0,   0}, FISHING_TIME_QUICK,{1500,3000,3800},
 	   {USED_SHELLFISH, USED_NONE, USED_WATER_STONE, USED_TREASURE_MAP, USED_NONE, USED_NONE, USED_EARTHWARM, USED_NONE,USED_NONE,  USED_NONE } },
-	   { "Ω¨∏Æ",	27821, 27851, 27881, {    0,    0,    3 }, 1237, FISHING_LIMIT_NONE,	{  0,   0,   0}, FISHING_TIME_NORMAL,{1000,1500,2000},
+	   { "Ïâ¨Î¶¨",	27821, 27851, 27881, {    0,    0,    3 }, 1237, FISHING_LIMIT_NONE,	{  0,   0,   0}, FISHING_TIME_NORMAL,{1000,1500,2000},
 	   {USED_SHELLFISH, USED_NONE, USED_WATER_STONE, USED_TREASURE_MAP, USED_NONE, USED_NONE, USED_EARTHWARM, USED_NONE,USED_NONE,  USED_NONE } },
-	   { "∫Ò¥√¿◊æÓ",	27822, 27852, 27882, {    0,    0,    2 }, 1608, FISHING_LIMIT_NONE,	{  0,   0,   0}, FISHING_TIME_SLOW,{4000,6000,10000},
+	   { "ÎπÑÎäòÏûâÏñ¥",	27822, 27852, 27882, {    0,    0,    2 }, 1608, FISHING_LIMIT_NONE,	{  0,   0,   0}, FISHING_TIME_SLOW,{4000,6000,10000},
 	   {USED_SHELLFISH, USED_NONE, USED_WATER_STONE, USED_TREASURE_MAP, USED_NONE, USED_NONE, USED_EARTHWARM, USED_NONE,USED_NONE,  USED_NONE } },
-	   { "»≤±›∫ÿæÓ",	27823, 27853, 27883, {    0,    0,    1 }, 2090, FISHING_LIMIT_NONE,	{  0,   0,   0}, FISHING_TIME_SLOW,{1000,3000,3500},
+	   { "Ìô©Í∏àÎ∂ïÏñ¥",	27823, 27853, 27883, {    0,    0,    1 }, 2090, FISHING_LIMIT_NONE,	{  0,   0,   0}, FISHING_TIME_SLOW,{1000,3000,3500},
 	   {USED_SHELLFISH, USED_NONE, USED_WATER_STONE, USED_TREASURE_MAP, USED_NONE, USED_NONE, USED_EARTHWARM, USED_NONE,USED_NONE,  USED_NONE } },
-	   { "≈ªªˆæ‡",     70201, 00000, 00000, { 5,    5,  0 },   60, FISHING_LIMIT_NONE,    {  0,   0,   0}, FISHING_TIME_NORMAL, {0,           },
+	   { "ÌÉàÏÉâÏïΩ",     70201, 00000, 00000, { 5,    5,  0 },   60, FISHING_LIMIT_NONE,    {  0,   0,   0}, FISHING_TIME_NORMAL, {0,           },
 	   {0,	}},
-	   { "ø∞ªˆæ‡(»Úªˆ)",  70202, 00000, 00000, { 15,  15,  0 },   60, FISHING_LIMIT_NONE,    {  0,   0,   0}, FISHING_TIME_NORMAL, {0,           },
+	   { "ÏóºÏÉâÏïΩ(Ìù∞ÏÉâ)",  70202, 00000, 00000, { 15,  15,  0 },   60, FISHING_LIMIT_NONE,    {  0,   0,   0}, FISHING_TIME_NORMAL, {0,           },
 	   {0,	}},
-	   { "ø∞ªˆæ‡(±›ªˆ)",  70203, 00000, 00000, { 15,  15,  0 },   60, FISHING_LIMIT_NONE,    {  0,   0,   0}, FISHING_TIME_NORMAL, {0,           },
+	   { "ÏóºÏÉâÏïΩ(Í∏àÏÉâ)",  70203, 00000, 00000, { 15,  15,  0 },   60, FISHING_LIMIT_NONE,    {  0,   0,   0}, FISHING_TIME_NORMAL, {0,           },
 	   {0,	}},
-	   { "ø∞ªˆæ‡(ª°∞£ªˆ)",70204, 00000, 00000, { 15,  15,  0 },   60, FISHING_LIMIT_NONE,    {  0,   0,   0}, FISHING_TIME_NORMAL, {0,           },
+	   { "ÏóºÏÉâÏïΩ(Îπ®Í∞ÑÏÉâ)",70204, 00000, 00000, { 15,  15,  0 },   60, FISHING_LIMIT_NONE,    {  0,   0,   0}, FISHING_TIME_NORMAL, {0,           },
 	   {0,	}},
-	   { "ø∞ªˆæ‡(∞•ªˆ)",  70205, 00000, 00000, { 15,  15,  0 },   60, FISHING_LIMIT_NONE,    {  0,   0,   0}, FISHING_TIME_NORMAL, {0,           },
+	   { "ÏóºÏÉâÏïΩ(Í∞àÏÉâ)",  70205, 00000, 00000, { 15,  15,  0 },   60, FISHING_LIMIT_NONE,    {  0,   0,   0}, FISHING_TIME_NORMAL, {0,           },
 	   {0,	}},
-	   { "ø∞ªˆæ‡(∞À¿∫ªˆ)",70206, 00000, 00000, { 15,  15,  0 },   60, FISHING_LIMIT_NONE,    {  0,   0,   0}, FISHING_TIME_NORMAL, {0,           },
+	   { "ÏóºÏÉâÏïΩ(Í≤ÄÏùÄÏÉâ)",70206, 00000, 00000, { 15,  15,  0 },   60, FISHING_LIMIT_NONE,    {  0,   0,   0}, FISHING_TIME_NORMAL, {0,           },
 	   {0,	}},
-	   { "¿∫µ–¿⁄¿« ∏¡≈‰", 70048, 00000, 00000, {  8,   8,  0 },   60, FISHING_LIMIT_NONE,    {  0,   0,   0}, FISHING_TIME_NORMAL, {0,           },
+	   { "ÏùÄÎëîÏûêÏùò ÎßùÌÜ†", 70048, 00000, 00000, {  8,   8,  0 },   60, FISHING_LIMIT_NONE,    {  0,   0,   0}, FISHING_TIME_NORMAL, {0,           },
 	   {0,	}},
-	   { "«‡øÓ¿« π›¡ˆ",   70049, 00000, 00000, {  8,   8,  0 },   60, FISHING_LIMIT_NONE,    {  0,   0,   0}, FISHING_TIME_NORMAL, {0,           },
+	   { "ÌñâÏö¥Ïùò Î∞òÏßÄ",   70049, 00000, 00000, {  8,   8,  0 },   60, FISHING_LIMIT_NONE,    {  0,   0,   0}, FISHING_TIME_NORMAL, {0,           },
 	   {0,	}},
-	   { "º±ø’¿« ¡ı«•",   70050, 00000, 00000, {  8,   8,  0 },   60, FISHING_LIMIT_NONE,    {  0,   0,   0}, FISHING_TIME_NORMAL, {0,           },
+	   { "ÏÑ†ÏôïÏùò Ï¶ùÌëú",   70050, 00000, 00000, {  8,   8,  0 },   60, FISHING_LIMIT_NONE,    {  0,   0,   0}, FISHING_TIME_NORMAL, {0,           },
 	   {0,	}},
-	   { "º±ø’¿« ¿Â∞©",   70051, 00000, 00000, {  8,   8,  0 },   60, FISHING_LIMIT_NONE,    {  0,   0,   0}, FISHING_TIME_NORMAL, {0,           },
+	   { "ÏÑ†ÏôïÏùò Ïû•Í∞ë",   70051, 00000, 00000, {  8,   8,  0 },   60, FISHING_LIMIT_NONE,    {  0,   0,   0}, FISHING_TIME_NORMAL, {0,           },
 	   {0,	}},
-	   { "±›µ¢æÓ∏Æ",	   80008, 00000, 00000, { 20,  20,  0 },  250, FISHING_LIMIT_NONE,    {  0,   0,   0}, FISHING_TIME_SLOW,    {0,           },
+	   { "Í∏àÎç©Ïñ¥Î¶¨",	   80008, 00000, 00000, { 20,  20,  0 },  250, FISHING_LIMIT_NONE,    {  0,   0,   0}, FISHING_TIME_SLOW,    {0,           },
 	   {0, } },
-	{ "¿∫ø≠ºË",	   50009, 00000, 00000, {300, 300, 0, },   70, FISHING_LIMIT_NONE,    { 0, 0, 0}, FISHING_TIME_NORMAL, {0,	}, {0, } },
+	{ "ÏùÄÏó¥Ïá†",	   50009, 00000, 00000, {300, 300, 0, },   70, FISHING_LIMIT_NONE,    { 0, 0, 0}, FISHING_TIME_NORMAL, {0,	}, {0, } },
 
-	{ "±›ø≠ºË",	   50008, 00000, 00000, {110, 110, 0, },  100, FISHING_LIMIT_NONE,    { 0, 0, 0}, FISHING_TIME_NORMAL, {0,	}, {0, } },
+	{ "Í∏àÏó¥Ïá†",	   50008, 00000, 00000, {110, 110, 0, },  100, FISHING_LIMIT_NONE,    { 0, 0, 0}, FISHING_TIME_NORMAL, {0,	}, {0, } },
 };
 	*/
 void Initialize()
@@ -205,7 +205,7 @@ void Initialize()
 	{
 		SendLog("error! cannot open fishing.txt");
 
-		// πÈæ˜ø° ¿Ã∏ß¿Ã ¿÷¿∏∏È ∏ÆΩ∫≈‰æÓ «—¥Ÿ.
+		// Î∞±ÏóÖÏóê Ïù¥Î¶ÑÏù¥ ÏûàÏúºÎ©¥ Î¶¨Ïä§ÌÜ†Ïñ¥ ÌïúÎã§.
 		if (*fish_info_bak[0].name)
 		{
 			thecore_memcpy(fish_info, fish_info_bak, sizeof(fish_info));
@@ -313,7 +313,7 @@ void Initialize()
 				fish_info[i].length_range[2]);
 	}
 
-	// »Æ∑¸ ∞ËªÍ
+	// ÌôïÎ•† Í≥ÑÏÇ∞
 	for (int j = 0; j < MAX_PROB; ++j)
 	{
 		g_prob_accumulate[j][0] = fish_info[0].prob[j];
@@ -366,7 +366,7 @@ int DetermineFish(LPCHARACTER ch)
 
 	// ADD_PREMIUM
 	if (ch->GetPremiumRemainSeconds(PREMIUM_FISH_MIND) > 0 ||
-			ch->IsEquipUniqueGroup(UNIQUE_GROUP_FISH_MIND)) // ø˘∞£æÓΩ… ¬¯øÎΩ√ ∞Ì±ﬁ π∞∞Ì±‚ »Æ∑¸ ªÛΩ¬
+			ch->IsEquipUniqueGroup(UNIQUE_GROUP_FISH_MIND)) // ÏõîÍ∞ÑÏñ¥Ïã¨ Ï∞©Ïö©Ïãú Í≥†Í∏â Î¨ºÍ≥†Í∏∞ ÌôïÎ•† ÏÉÅÏäπ
 	{
 		if (quest::CQuestManager::instance().GetEventFlag("manwoo") != 0)
 			prob_idx = 3;
@@ -394,7 +394,7 @@ int DetermineFish(LPCHARACTER ch)
 			return 0;
 	}
 
-	if (g_iUseLocale) // ¡ﬂ±πø°º≠¥¬ ±›µ¢æÓ∏Æ, ±›ø≠ºË, ¿∫ø≠ºË ≥™ø¿¡ˆ æ ∞‘ «‘
+	if (g_iUseLocale) // Ï§ëÍµ≠ÏóêÏÑúÎäî Í∏àÎç©Ïñ¥Î¶¨, Í∏àÏó¥Ïá†, ÏùÄÏó¥Ïá† ÎÇòÏò§ÏßÄ ÏïäÍ≤å Ìï®
 	{
 		DWORD vnum = fish_info[fish_idx].vnum;
 
@@ -437,26 +437,26 @@ void FishingPractice(LPCHARACTER ch)
 	LPITEM rod = ch->GetWear(WEAR_WEAPON);
 	if (rod && rod->GetType() == ITEM_ROD)
 	{
-		// √÷¥Î ºˆ∑√µµ∞° æ∆¥— ∞ÊøÏ ≥¨Ω√¥Î ºˆ∑√
+		// ÏµúÎåÄ ÏàòÎ†®ÎèÑÍ∞Ä ÏïÑÎãå Í≤ΩÏö∞ ÎÇöÏãúÎåÄ ÏàòÎ†®
 		if ( rod->GetRefinedVnum()>0 && rod->GetSocket(0) < rod->GetValue(2) && number(1,rod->GetValue(1))==1 )
 		{
 			rod->SetSocket(0, rod->GetSocket(0) + 1);
-			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("≥¨Ω√¥Î¿« ºˆ∑√µµ∞° ¡ı∞°«œø¥Ω¿¥œ¥Ÿ! (%d/%d)"),rod->GetSocket(0), rod->GetValue(2));
+			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ÎÇöÏãúÎåÄÏùò ÏàòÎ†®ÎèÑÍ∞Ä Ï¶ùÍ∞ÄÌïòÏòÄÏäµÎãàÎã§! (%d/%d)"),rod->GetSocket(0), rod->GetValue(2));
 			if (rod->GetSocket(0) == rod->GetValue(2))
 			{
-				ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("≥¨Ω√¥Î∞° √÷¥Î ºˆ∑√µµø° µµ¥ﬁ«œø¥Ω¿¥œ¥Ÿ."));
-				ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("æÓ∫Œ∏¶ ≈Î«ÿ ¥Ÿ¿Ω ∑π∫ß¿« ≥¨Ω√¥Î∑Œ æ˜±◊∑π¿ÃµÂ «“ ºˆ ¿÷Ω¿¥œ¥Ÿ."));
+				ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ÎÇöÏãúÎåÄÍ∞Ä ÏµúÎåÄ ÏàòÎ†®ÎèÑÏóê ÎèÑÎã¨ÌïòÏòÄÏäµÎãàÎã§."));
+				ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Ïñ¥Î∂ÄÎ•º ÌÜµÌï¥ Îã§Ïùå Î†àÎ≤®Ïùò ÎÇöÏãúÎåÄÎ°ú ÏóÖÍ∑∏Î†àÏù¥Îìú Ìï† Ïàò ÏûàÏäµÎãàÎã§."));
 			}
 		}
 	}
-	// πÃ≥¢∏¶ ª´¥Ÿ
+	// ÎØ∏ÎÅºÎ•º Î∫ÄÎã§
 	rod->SetSocket(2, 0);
 }
 
 bool PredictFish(LPCHARACTER ch)
 {
 	// ADD_PREMIUM
-	// æÓΩ…»Ø
+	// Ïñ¥Ïã¨Ìôò
 	if (ch->FindAffect(AFFECT_FISH_MIND_PILL) || 
 			ch->GetPremiumRemainSeconds(PREMIUM_FISH_MIND) > 0 ||
 			ch->IsEquipUniqueGroup(UNIQUE_GROUP_FISH_MIND))
@@ -491,7 +491,7 @@ EVENTFUNC(fishing_event)
 
 	switch (info->step)
 	{
-		case 0:	// »ÁµÈ∏Æ±‚ ∂«¥¬ ∂±π‰∏∏ ≥Øæ∆∞®
+		case 0:	// ÌùîÎì§Î¶¨Í∏∞ ÎòêÎäî Îñ°Î∞•Îßå ÎÇ†ÏïÑÍ∞ê
 			++info->step;
 
 			//info->ch->Motion(MOTION_FISHING_SIGN);
@@ -600,7 +600,7 @@ int GetFishLength(int fish_id)
 
 void Take(fishing_event_info* info, LPCHARACTER ch)
 {
-	if (info->step == 1)	// ∞Ì±‚∞° ∞…∏∞ ªÛ≈¬∏È..
+	if (info->step == 1)	// Í≥†Í∏∞Í∞Ä Í±∏Î¶∞ ÏÉÅÌÉúÎ©¥..
 	{
 		long ms = (long) ((get_dword_time() - info->hang_time));
 		DWORD item_vnum = 0;
@@ -611,10 +611,10 @@ void Take(fishing_event_info* info, LPCHARACTER ch)
 
 		switch (ret)
 		{
-			case -2: // ¿‚»˜¡ˆ æ ¿∫ ∞ÊøÏ
-			case -3: // ≥≠¿Ãµµ ∂ßπÆø° Ω«∆–
-			case -1: // Ω√∞£ »Æ∑¸ ∂ßπÆø° Ω«∆–
-				//ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("∞Ì±‚∞° πÃ≥¢∏∏ ª©∏‘∞Ì ¿ÏΩŒ∞‘ µµ∏¡ƒ®¥œ¥Ÿ."));
+			case -2: // Ïû°ÌûàÏßÄ ÏïäÏùÄ Í≤ΩÏö∞
+			case -3: // ÎÇúÏù¥ÎèÑ ÎïåÎ¨∏Ïóê Ïã§Ìå®
+			case -1: // ÏãúÍ∞Ñ ÌôïÎ•† ÎïåÎ¨∏Ïóê Ïã§Ìå®
+				//ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Í≥†Í∏∞Í∞Ä ÎØ∏ÎÅºÎßå ÎπºÎ®πÍ≥† ÏûΩÏã∏Í≤å ÎèÑÎßùÏπ©ÎãàÎã§."));
 				{
 					int map_idx = ch->GetMapIndex();
 					int prob_idx = GetProbIndexByMapIndex(map_idx);
@@ -630,7 +630,7 @@ void Take(fishing_event_info* info, LPCHARACTER ch)
 				break;
 
 			case 0:
-				//ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("∞Ì±‚∞° ¿‚«˚Ω¿¥œ¥Ÿ! (%s)"), fish_info[info->fish_id].name);
+				//ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Í≥†Í∏∞Í∞Ä Ïû°ÌòîÏäµÎãàÎã§! (%s)"), fish_info[info->fish_id].name);
 				if (item_vnum)
 				{
 					FishingSuccess(ch);
@@ -647,12 +647,12 @@ void Take(fishing_event_info* info, LPCHARACTER ch)
 						item->SetSocket(0,GetFishLength(info->fish_id));
 						if (test_server)
 						{
-							ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("¿Ãπ¯ø° ¿‚¿∫ π∞∞Ì±‚¿« ±Ê¿Ã¥¬ %.2fcm"), item->GetSocket(0)/100.f);
+							ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Ïù¥Î≤àÏóê Ïû°ÏùÄ Î¨ºÍ≥†Í∏∞Ïùò Í∏∏Ïù¥Îäî %.2fcm"), item->GetSocket(0)/100.f);
 						}
 
 						if (quest::CQuestManager::instance().GetEventFlag("fishevent") > 0 && (info->fish_id == 5 || info->fish_id == 6))
 						{
-							// ¿Ã∫•∆Æ ¡ﬂ¿Ãπ«∑Œ ±‚∑œ«—¥Ÿ.
+							// Ïù¥Î≤§Ìä∏ Ï§ëÏù¥ÎØÄÎ°ú Í∏∞Î°ùÌïúÎã§.
 
 							TPacketGDHighscore p;
 							p.dwPID = ch->GetPlayerID();
@@ -660,11 +660,11 @@ void Take(fishing_event_info* info, LPCHARACTER ch)
 
 							if (info->fish_id == 5)
 							{
-								strlcpy(p.szBoard, LC_TEXT("≥¨Ω√¿Ã∫•∆Æø˘√¥∫ÿæÓ"), sizeof(p.szBoard));
+								strlcpy(p.szBoard, LC_TEXT("ÎÇöÏãúÏù¥Î≤§Ìä∏ÏõîÏ≤ôÎ∂ïÏñ¥"), sizeof(p.szBoard));
 							}
 							else if (info->fish_id == 6)
 							{
-								strlcpy(p.szBoard, LC_TEXT("≥¨Ω√¿Ã∫•∆Æ¿◊æÓ"), sizeof(p.szBoard));
+								strlcpy(p.szBoard, LC_TEXT("ÎÇöÏãúÏù¥Î≤§Ìä∏ÏûâÏñ¥"), sizeof(p.szBoard));
 							}
 
 							db_clientdesc->DBPacket(HEADER_GD_HIGHSCORE_REGISTER, 0, &p, sizeof(TPacketGDHighscore));
@@ -711,7 +711,7 @@ void Take(fishing_event_info* info, LPCHARACTER ch)
 				info->fish_id,
 				GetFishingLevel(ch),
 				7000);
-		//ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("∞Ì±‚∞° πÃ≥¢∏∏ ª©∏‘∞Ì ¿ÏΩŒ∞‘ µµ∏¡ƒ®¥œ¥Ÿ."));
+		//ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Í≥†Í∏∞Í∞Ä ÎØ∏ÎÅºÎßå ÎπºÎ®πÍ≥† ÏûΩÏã∏Í≤å ÎèÑÎßùÏπ©ÎãàÎã§."));
 		FishingFail(ch);
 	}
 	else
@@ -749,16 +749,16 @@ void Simulation(int level, int count, int prob_idx, LPCHARACTER ch)
 	}
 
 	for (std::map<std::string,int>::iterator it = fished.begin(); it != fished.end(); ++it)
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%s : %d ∏∂∏Æ"), it->first.c_str(), it->second);
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%s : %d ÎßàÎ¶¨"), it->first.c_str(), it->second);
 
-	ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%d ¡æ∑˘ %d ∏∂∏Æ ≥¨¿Ω"), fished.size(), total_count);
+	ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%d Ï¢ÖÎ•ò %d ÎßàÎ¶¨ ÎÇöÏùå"), fished.size(), total_count);
 }
 
 void UseFish(LPCHARACTER ch, LPITEM item)
 {
 	int idx = item->GetVnum() - fish_info[2].vnum+2;
 
-	// ««∂ÛπÃ ªÁøÎ∫“∞°, ªÏæ∆¿÷¥¬∞‘ æ∆¥—∞« ªÁøÎ∫“∞°
+	// ÌîºÎùºÎØ∏ ÏÇ¨Ïö©Î∂àÍ∞Ä, ÏÇ¥ÏïÑÏûàÎäîÍ≤å ÏïÑÎãåÍ±¥ ÏÇ¨Ïö©Î∂àÍ∞Ä
 
 	if (idx<=1 || idx >= MAX_FISH)
 		return;
@@ -769,12 +769,12 @@ void UseFish(LPCHARACTER ch, LPITEM item)
 
 	if (r >= 4001)
 	{
-		// ¡◊¿∫ π∞∞Ì±‚
+		// Ï£ΩÏùÄ Î¨ºÍ≥†Í∏∞
 		ch->AutoGiveItem(fish_info[idx].dead_vnum);
 	}
 	else if (r >= 2001)
 	{
-		// ª˝º±ª¿
+		// ÏÉùÏÑ†Îºà
 		ch->AutoGiveItem(FISH_BONE_VNUM);
 	}
 	else
@@ -788,7 +788,7 @@ void UseFish(LPCHARACTER ch, LPITEM item)
 			case USED_TREASURE_MAP:	// 3
 			case USED_NONE:		// 0
 			case USED_WATER_STONE:	// 2
-				ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("∞Ì±‚∞° »Á¿˚µµ æ¯¿Ã ªÁ∂Û¡˝¥œ¥Ÿ."));
+				ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Í≥†Í∏∞Í∞Ä ÌùîÏ†ÅÎèÑ ÏóÜÏù¥ ÏÇ¨ÎùºÏßëÎãàÎã§."));
 				break;
 
 			case USED_SHELLFISH:	// 1
@@ -797,12 +797,12 @@ void UseFish(LPCHARACTER ch, LPITEM item)
 					if ( number(0, 2) != 2 ) return;
 				}
 
-				ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("πË º”ø°º≠ ¡∂∞≥∞° ≥™ø‘Ω¿¥œ¥Ÿ."));
+				ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Î∞∞ ÏÜçÏóêÏÑú Ï°∞Í∞úÍ∞Ä ÎÇòÏôîÏäµÎãàÎã§."));
 				ch->AutoGiveItem(SHELLFISH_VNUM);
 				break;
 
 			case USED_EARTHWARM:	// 4
-				ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("πË º”ø°º≠ ¡ˆ∑∑¿Ã∞° ≥™ø‘Ω¿¥œ¥Ÿ."));
+				ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Î∞∞ ÏÜçÏóêÏÑú ÏßÄÎ†ÅÏù¥Í∞Ä ÎÇòÏôîÏäµÎãàÎã§."));
 				ch->AutoGiveItem(EARTHWORM_VNUM);
 				break;
 
@@ -833,7 +833,7 @@ void Grill(LPCHARACTER ch, LPITEM item)
 
 	int count = item->GetCount();
 
-	ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%s∏¶ ±∏ø¸Ω¿¥œ¥Ÿ."), item->GetName());
+	ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%sÎ•º Íµ¨Ïõ†ÏäµÎãàÎã§."), item->GetName());
 	item->SetCount(0);
 	ch->AutoGiveItem(fish_info[idx].grill_vnum, count);
 }
@@ -878,14 +878,14 @@ int RealRefineRod(LPCHARACTER ch, LPITEM item)
 		if (pkNewItem)
 		{
 			BYTE bCell = rod->GetCell();
-			// ≥¨Ω√¥Î ∞≥∑Æ º∫∞¯
+			// ÎÇöÏãúÎåÄ Í∞úÎüâ ÏÑ±Í≥µ
 			ITEM_MANAGER::instance().RemoveItem(rod, "REMOVE (REFINE FISH_ROD)");
 			pkNewItem->AddToCharacter(ch, TItemPos (INVENTORY, bCell)); 
 			LogManager::instance().ItemLog(ch, pkNewItem, "REFINE FISH_ROD SUCCESS", pkNewItem->GetName());
 			return 1;
 		}
 
-		// ≥¨Ω√¥Î ∞≥∑Æ Ω«∆–
+		// ÎÇöÏãúÎåÄ Í∞úÎüâ Ïã§Ìå®
 		return 2;
 	}
 	else
@@ -896,14 +896,14 @@ int RealRefineRod(LPCHARACTER ch, LPITEM item)
 		if (pkNewItem)
 		{
 			BYTE bCell = rod->GetCell();
-			// ≥¨Ω√¥Î ∞≥∑Æø° º∫∞¯
+			// ÎÇöÏãúÎåÄ Í∞úÎüâÏóê ÏÑ±Í≥µ
 			ITEM_MANAGER::instance().RemoveItem(rod, "REMOVE (REFINE FISH_ROD)");
 			pkNewItem->AddToCharacter(ch, TItemPos(INVENTORY, bCell)); 
 			LogManager::instance().ItemLog(ch, pkNewItem, "REFINE FISH_ROD FAIL", pkNewItem->GetName());
 			return 0;
 		}
 
-		// ≥¨Ω√¥Î ∞≥∑Æ Ω«∆–
+		// ÎÇöÏãúÎåÄ Í∞úÎüâ Ïã§Ìå®
 		return 2;
 	}
 }

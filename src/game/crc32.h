@@ -1,4 +1,4 @@
-#ifndef __INC_CRC32_H__
+﻿#ifndef __INC_CRC32_H__
 #define __INC_CRC32_H__
 
 typedef unsigned long crc_t;

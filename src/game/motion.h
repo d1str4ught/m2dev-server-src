@@ -1,4 +1,4 @@
-#ifndef __INC_GAME_MOTION_H__
+ï»¿#ifndef __INC_GAME_MOTION_H__
 #define __INC_GAME_MOTION_H__
 
 #include "../../common/d3dtype.h"
@@ -18,40 +18,40 @@ enum EMotionMode
 
 enum EPublicMotion
 {
-	MOTION_NONE,                // 0 ¾øÀ½
-	MOTION_WAIT,                // 1 ´ë±â          (00.msa)
-	MOTION_WALK,                // 2 °È±â          (02.msa)
-	MOTION_RUN,                 // 3 ¶Ù±â          (03.msa)
-	MOTION_CHANGE_WEAPON,       // 4 ¹«±â¹Ù²Ù±â
-	MOTION_DAMAGE,              // 5 Á¤¸é¸Â±â      (30.msa)
-	MOTION_DAMAGE_FLYING,       // 6 Á¤¸é³¯¾Æ°¡±â  (32.msa)
-	MOTION_STAND_UP,            // 7 Á¤¸éÀÏ¾î³ª±â  (33.msa)
-	MOTION_DAMAGE_BACK,         // 8 ÈÄ¸é¸Â±â      (34.msa)
-	MOTION_DAMAGE_FLYING_BACK,  // 9 ÈÄ¸é³¯¾Æ°¡±â  (35.msa)
-	MOTION_STAND_UP_BACK,       // 10 ÈÄ¸éÀÏ¾î³ª±â (26.msa)
-	MOTION_DEAD,                // 11 Á×±â         (31.msa)
-	MOTION_DEAD_BACK,           // 12 ÈÄ¸éÁ×±â     (37.msa)
-	MOTION_NORMAL_ATTACK,		// 13 ±âº» °ø°Ý
-	MOTION_COMBO_ATTACK_1,		// 14 ÄÞº¸ °ø°Ý
-	MOTION_COMBO_ATTACK_2,      // 15 ÄÞº¸ °ø°Ý
-	MOTION_COMBO_ATTACK_3,      // 16 ÄÞº¸ °ø°Ý
-	MOTION_COMBO_ATTACK_4,      // 17 ÄÞº¸ °ø°Ý
-	MOTION_COMBO_ATTACK_5,      // 18 ÄÞº¸ °ø°Ý
-	MOTION_COMBO_ATTACK_6,      // 19 ÄÞº¸ °ø°Ý
-	MOTION_COMBO_ATTACK_7,      // 20 ÄÞº¸ °ø°Ý
-	MOTION_COMBO_ATTACK_8,      // 21 ÄÞº¸ °ø°Ý
-	MOTION_INTRO_WAIT,          // 22 ¼±ÅÃÈ­¸é ´ë±â
-	MOTION_INTRO_SELECTED,      // 23 ¼±ÅÃÈ­¸é ¼±ÅÃ
-	MOTION_INTRO_NOT_SELECTED,  // 24 ¼±ÅÃÈ­¸é ºñ¼±ÅÃ
-	MOTION_SPAWN,               // 25 ¼ÒÈ¯
-	MOTION_FISHING_THROW,       // 26 ³¬½Ã ´øÁö±â
-	MOTION_FISHING_WAIT,        // 27 ³¬½Ã ´ë±â
-	MOTION_FISHING_STOP,        // 28 ³¬½Ã ±×¸¸µÎ±â
-	MOTION_FISHING_REACT,       // 29 ³¬½Ã ¹ÝÀÀ
-	MOTION_FISHING_CATCH,       // 30 ³¬½Ã Àâ±â
-	MOTION_FISHING_FAIL,        // 31 ³¬½Ã ½ÇÆÐ
-	MOTION_STOP,                // 32 ¸» ¸ØÃß±â
-	MOTION_SPECIAL_1,           // 33 ¸ó½ºÅÍ ½ºÅ³
+	MOTION_NONE,                // 0 ì—†ìŒ
+	MOTION_WAIT,                // 1 ëŒ€ê¸°          (00.msa)
+	MOTION_WALK,                // 2 ê±·ê¸°          (02.msa)
+	MOTION_RUN,                 // 3 ë›°ê¸°          (03.msa)
+	MOTION_CHANGE_WEAPON,       // 4 ë¬´ê¸°ë°”ê¾¸ê¸°
+	MOTION_DAMAGE,              // 5 ì •ë©´ë§žê¸°      (30.msa)
+	MOTION_DAMAGE_FLYING,       // 6 ì •ë©´ë‚ ì•„ê°€ê¸°  (32.msa)
+	MOTION_STAND_UP,            // 7 ì •ë©´ì¼ì–´ë‚˜ê¸°  (33.msa)
+	MOTION_DAMAGE_BACK,         // 8 í›„ë©´ë§žê¸°      (34.msa)
+	MOTION_DAMAGE_FLYING_BACK,  // 9 í›„ë©´ë‚ ì•„ê°€ê¸°  (35.msa)
+	MOTION_STAND_UP_BACK,       // 10 í›„ë©´ì¼ì–´ë‚˜ê¸° (26.msa)
+	MOTION_DEAD,                // 11 ì£½ê¸°         (31.msa)
+	MOTION_DEAD_BACK,           // 12 í›„ë©´ì£½ê¸°     (37.msa)
+	MOTION_NORMAL_ATTACK,		// 13 ê¸°ë³¸ ê³µê²©
+	MOTION_COMBO_ATTACK_1,		// 14 ì½¤ë³´ ê³µê²©
+	MOTION_COMBO_ATTACK_2,      // 15 ì½¤ë³´ ê³µê²©
+	MOTION_COMBO_ATTACK_3,      // 16 ì½¤ë³´ ê³µê²©
+	MOTION_COMBO_ATTACK_4,      // 17 ì½¤ë³´ ê³µê²©
+	MOTION_COMBO_ATTACK_5,      // 18 ì½¤ë³´ ê³µê²©
+	MOTION_COMBO_ATTACK_6,      // 19 ì½¤ë³´ ê³µê²©
+	MOTION_COMBO_ATTACK_7,      // 20 ì½¤ë³´ ê³µê²©
+	MOTION_COMBO_ATTACK_8,      // 21 ì½¤ë³´ ê³µê²©
+	MOTION_INTRO_WAIT,          // 22 ì„ íƒí™”ë©´ ëŒ€ê¸°
+	MOTION_INTRO_SELECTED,      // 23 ì„ íƒí™”ë©´ ì„ íƒ
+	MOTION_INTRO_NOT_SELECTED,  // 24 ì„ íƒí™”ë©´ ë¹„ì„ íƒ
+	MOTION_SPAWN,               // 25 ì†Œí™˜
+	MOTION_FISHING_THROW,       // 26 ë‚šì‹œ ë˜ì§€ê¸°
+	MOTION_FISHING_WAIT,        // 27 ë‚šì‹œ ëŒ€ê¸°
+	MOTION_FISHING_STOP,        // 28 ë‚šì‹œ ê·¸ë§Œë‘ê¸°
+	MOTION_FISHING_REACT,       // 29 ë‚šì‹œ ë°˜ì‘
+	MOTION_FISHING_CATCH,       // 30 ë‚šì‹œ ìž¡ê¸°
+	MOTION_FISHING_FAIL,        // 31 ë‚šì‹œ ì‹¤íŒ¨
+	MOTION_STOP,                // 32 ë§ ë©ˆì¶”ê¸°
+	MOTION_SPECIAL_1,           // 33 ëª¬ìŠ¤í„° ìŠ¤í‚¬
 	MOTION_SPECIAL_2,           // 34 
 	MOTION_SPECIAL_3,			// 35
 	MOTION_SPECIAL_4,			// 36

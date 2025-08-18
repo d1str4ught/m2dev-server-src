@@ -1,9 +1,9 @@
-#ifndef __INC_METIN_II_GAME_BATTLE_H__
+Ôªø#ifndef __INC_METIN_II_GAME_BATTLE_H__
 #define __INC_METIN_II_GAME_BATTLE_H__
 
 #include "char.h"
 
-enum EBattleTypes       // ªÛ¥ÎπÊ ±‚¡ÿ
+enum EBattleTypes       // ÏÉÅÎåÄÎ∞© Í∏∞Ï§Ä
 {
 	BATTLE_NONE,
 	BATTLE_DAMAGE,
@@ -28,7 +28,7 @@ extern int	battle_count_attackers(LPCHARACTER ch);
 
 extern void	NormalAttackAffect(LPCHARACTER pkAttacker, LPCHARACTER pkVictim);
 
-// ∆Øº∫ ∞¯∞›
+// ÌäπÏÑ± Í≥µÍ≤©
 inline void AttackAffect(LPCHARACTER pkAttacker,
 		LPCHARACTER pkVictim,
 		BYTE att_point,

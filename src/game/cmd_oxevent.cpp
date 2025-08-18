@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "utils.h"
 #include "char.h"
 #include "OXEvent.h"
@@ -19,16 +19,16 @@ ACMD(do_oxevent_log)
 {
 	if ( COXEventManager::instance().LogWinner() == false )
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("OXÀÌº¥Æ®ÀÇ ³ª¸ÓÁö ÀÎ¿øÀ» ±â·ÏÇÏ¿´½À´Ï´Ù."));
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("OXì´ë²¤íŠ¸ì˜ ë‚˜ë¨¸ì§€ ì¸ì›ì„ ê¸°ë¡í•˜ì˜€ìŠµë‹ˆë‹¤."));
 	}
 	else
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("OXÀÌº¥Æ®ÀÇ ³ª¸ÓÁö ÀÎ¿ø ±â·ÏÀ» ½ÇÆĞÇß½À´Ï´Ù."));
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("OXì´ë²¤íŠ¸ì˜ ë‚˜ë¨¸ì§€ ì¸ì› ê¸°ë¡ì„ ì‹¤íŒ¨í–ˆìŠµë‹ˆë‹¤."));
 	}
 }
 
 ACMD(do_oxevent_get_attender)
 {
-	ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ÇöÀç ³²Àº Âü°¡ÀÚ¼ö : %d"), COXEventManager::instance().GetAttenderCount());
+	ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("í˜„ì¬ ë‚¨ì€ ì°¸ê°€ììˆ˜ : %d"), COXEventManager::instance().GetAttenderCount());
 }
 

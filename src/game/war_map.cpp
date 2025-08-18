@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "war_map.h"
 #include "sectree_manager.h"
 #include "char.h"
@@ -304,7 +304,7 @@ void CWarMap::STeamData::AppendMember(LPCHARACTER ch)
 
 void CWarMap::STeamData::RemoveMember(LPCHARACTER ch)
 {
-	// set_pidJoiner ´Â ´©Àû ÀÎ¿øÀ» °è»êÇÏ±â ¶§¹®¿¡ Á¦°ÅÇÏÁö ¾Ê´Â´Ù
+	// set_pidJoiner ëŠ” ëˆ„ì  ì¸ì›ì„ ê³„ì‚°í•˜ê¸° ë•Œë¬¸ì— ì œê±°í•˜ì§€ ì•ŠëŠ”ë‹¤
 	--iMemberCount;
 }
 
@@ -382,8 +382,8 @@ void CWarMap::IncMember(LPCHARACTER ch)
 		++m_iObserverCount; 
 		sys_log(0, "WarMap +o %d", m_iObserverCount);
 		ch->SetObserverMode(true);
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("°üÀü ¸ðµå·Î ±æµåÀü¿¡ Âü°¡ÇÏ¼Ì½À´Ï´Ù."));
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ÀÚ½ÅÀ» ¼±ÅÃÇÏ½Ã¸é ¹ÛÀ¸·Î ³ª°¥ ¼ö ÀÖ´Â <°ü¶÷ Á¾·á> ¹öÆ°ÀÌ ³ª¿É´Ï´Ù."));
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ê´€ì „ ëª¨ë“œë¡œ ê¸¸ë“œì „ì— ì°¸ê°€í•˜ì…¨ìŠµë‹ˆë‹¤."));
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ìžì‹ ì„ ì„ íƒí•˜ì‹œë©´ ë°–ìœ¼ë¡œ ë‚˜ê°ˆ ìˆ˜ ìžˆëŠ” <ê´€ëžŒ ì¢…ë£Œ> ë²„íŠ¼ì´ ë‚˜ì˜µë‹ˆë‹¤."));
 	}
 
 	UpdateUserCount();
@@ -480,8 +480,8 @@ void CWarMap::CheckWarEnd()
 		if (m_pkTimeoutEvent)
 			return;
 
-		Notice(LC_TEXT("±æµåÀü¿¡ Âü°¡ÇÑ »ó´ë¹æ ±æµå¿øÀÌ ¾Æ¹«µµ ¾ø½À´Ï´Ù."));
-		Notice(LC_TEXT("1ºÐ ÀÌ³»¿¡ ¾Æ¹«µµ Á¢¼ÓÇÏÁö ¾ÊÀ¸¸é ±æµåÀüÀÌ ÀÚµ¿ Á¾·áµË´Ï´Ù."));
+		Notice(LC_TEXT("ê¸¸ë“œì „ì— ì°¸ê°€í•œ ìƒëŒ€ë°© ê¸¸ë“œì›ì´ ì•„ë¬´ë„ ì—†ìŠµë‹ˆë‹¤."));
+		Notice(LC_TEXT("1ë¶„ ì´ë‚´ì— ì•„ë¬´ë„ ì ‘ì†í•˜ì§€ ì•Šìœ¼ë©´ ê¸¸ë“œì „ì´ ìžë™ ì¢…ë£Œë©ë‹ˆë‹¤."));
 
 		sys_log(0, "CheckWarEnd: Timeout begin %u vs %u", m_TeamData[0].dwID, m_TeamData[1].dwID);
 
@@ -523,7 +523,7 @@ void CWarMap::Timeout()
 
 	if (get_dword_time() - m_dwStartTime < 60000 * 5)
 	{
-		Notice(LC_TEXT("±æµåÀüÀÌ ÀÏÂï Á¾·áµÇ¾î ¹«½ÂºÎ·Î ÆÇÁ¤ µÇ¾ú½À´Ï´Ù. (5ºÐÀÌ Áö³ªÁö ¾ÊÀ½)"));
+		Notice(LC_TEXT("ê¸¸ë“œì „ì´ ì¼ì° ì¢…ë£Œë˜ì–´ ë¬´ìŠ¹ë¶€ë¡œ íŒì • ë˜ì—ˆìŠµë‹ˆë‹¤. (5ë¶„ì´ ì§€ë‚˜ì§€ ì•ŠìŒ)"));
 		dwWinner = 0;
 		dwLoser = 0;
 	}
@@ -688,11 +688,11 @@ bool CWarMap::CheckScore()
 	if (m_bEnded)
 		return true;
 
-	// 30ÃÊ ÀÌÈÄ ºÎÅÍ È®ÀÎÇÑ´Ù.
+	// 30ì´ˆ ì´í›„ ë¶€í„° í™•ì¸í•œë‹¤.
 	if (get_dword_time() - m_dwStartTime < 30000)
 		return false;
 
-	// Á¡¼ö°¡ °°À¸¸é Ã¼Å©ÇÏÁö ¾Ê´Â´Ù.
+	// ì ìˆ˜ê°€ ê°™ìœ¼ë©´ ì²´í¬í•˜ì§€ ì•ŠëŠ”ë‹¤.
 	if (m_TeamData[0].iScore == m_TeamData[1].iScore)
 		return false;
 

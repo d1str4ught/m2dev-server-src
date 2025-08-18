@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "ClientPackageCryptInfo.h"
 #include "../../common/stl.h"
 

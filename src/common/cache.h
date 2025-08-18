@@ -1,4 +1,4 @@
-#ifndef __INC_COMMON_CACHE_H__
+﻿#ifndef __INC_COMMON_CACHE_H__
 #define __INC_COMMON_CACHE_H__
 
 template <typename T> class cache
