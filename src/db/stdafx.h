@@ -3,7 +3,7 @@
 
 #include "../../libthecore/include/stdafx.h"
 
-#ifndef __WIN32__
+#ifndef OS_WINDOWS
 #include <semaphore.h>
 #else
 #define isdigit iswdigit

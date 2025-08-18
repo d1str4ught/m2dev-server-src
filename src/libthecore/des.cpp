@@ -278,4 +278,3 @@ int DES_Decrypt(DWORD *DstBuffer, const DWORD * SrcBuffer, const DWORD *KeyAddre
 
     return Length;
 }
-

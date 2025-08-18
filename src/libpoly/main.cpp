@@ -1,4 +1,4 @@
-#ifdef __WIN32__
+#ifdef OS_WINDOWS
 #include <windows.h>
 #endif
 
@@ -14,7 +14,7 @@ int main(int argc, char ** argv)
 {
 	printf( "12345\n" );
 
-#ifndef __WIN32__
+#ifndef OS_WINDOWS
 	srandom(time(0) + getpid());
 #else
 	srand(time(0) + GetCurrentProcessId());

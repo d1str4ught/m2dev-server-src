@@ -1,31 +1,7 @@
-/*
- *    Filename: tea.c
- * Description: TEA 암호화 모듈
- *
- *      Author: 김한주 (aka. 비엽, Cronan), 송영진 (aka. myevan, 빗자루)
- */
 #include "stdafx.h"
 
-/*
- * TEA Encryption Module Instruction
- *					Edited by 김한주 aka. 비엽, Cronan
- *
- * void tea_code(const DWORD sz, const DWORD sy, const DWORD *key, DWORD *dest)
- * void tea_decode(const DWORD sz, const DWORD sy, const DWORD *key, DWORD *dest)
- *   8바이트를 암호/복호화 할때 사용된다. key 는 16 바이트여야 한다.
- *   sz, sy 는 8바이트의 역순으로 대입한다. 
- * 
- * int tea_decrypt(DWORD *dest, const DWORD *src, const DWORD *key, int size);
- * int tea_encrypt(DWORD *dest, const DWORD *src, const DWORD *key, int size);
- *   한꺼번에 8 바이트 이상을 암호/복호화 할때 사용한다. 만약 size 가
- *   8의 배수가 아니면 8의 배수로 크기를 "늘려서" 암호화 한다. 
- *
- * ex. tea_code(pdwSrc[1], pdwSrc[0], pdwKey, pdwDest);
- *     tea_decrypt(pdwDest, pdwSrc, pdwKey, nSize);
- */
-
-#define TEA_ROUND		32		// 32 를 권장하며, 높을 수록 결과가 난해해 진다.
-#define DELTA			0x9E3779B9	// DELTA 값 바꾸지 말것.
+#define TEA_ROUND		32
+#define DELTA			0x9E3779B9
 
 char tea_nilbuf[8] = { 0, 0, 0, 0, 0, 0, 0, 0 };
 

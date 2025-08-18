@@ -1,6 +1,4 @@
-#ifndef DIRENT_INCLUDED
-#define DIRENT_INCLUDED
-
+#pragma once
 /*
 
     Declaration of POSIX directory browsing functions and types for Win32.
@@ -10,11 +8,6 @@
     Rights:  See end of file.
     
 */
-
-#ifdef __cplusplus
-extern "C"
-{
-#endif
 
 typedef struct DIR DIR;
 
@@ -42,9 +35,3 @@ void          rewinddir(DIR *);
     But that said, if there are any problems please get in touch.
 
 */
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif

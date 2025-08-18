@@ -126,7 +126,7 @@
     "Using prefetches efficiently is more of an art than a science"
 */
 
-#ifndef __WIN32__
+#ifndef OS_WINDOWS
 
 #include <string.h>
 void *(*thecore_memcpy) (void * to, const void * from, size_t len) = memcpy;

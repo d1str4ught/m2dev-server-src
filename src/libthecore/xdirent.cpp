@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-#ifdef __WIN32__
+#ifdef OS_WINDOWS
 
 /*
 
@@ -18,11 +18,6 @@
 #include <io.h> /* _findfirst and _findnext set errno iff they return -1 */
 #include <stdlib.h>
 #include <string.h>
-
-#ifdef __cplusplus
-extern "C"
-{
-#endif
 
 struct DIR
 {
@@ -130,10 +125,6 @@ void rewinddir(DIR *dir)
     }
 }
 
-#ifdef __cplusplus
-}
-#endif
-
 /*
 
     Copyright Kevlin Henney, 1997, 2003. All rights reserved.
@@ -149,4 +140,4 @@ void rewinddir(DIR *dir)
 
 */
 
-#endif // #ifdef __WIN32__
+#endif // #ifdef OS_WINDOWS

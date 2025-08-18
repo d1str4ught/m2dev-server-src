@@ -346,7 +346,7 @@ int MINMAX(int min, int value, int max)
 
 DWORD thecore_random()
 {
-#ifdef __WIN32__
+#ifdef OS_WINDOWS
     return rand();
 #else
     return random();
@@ -380,7 +380,7 @@ float fnumber(float from, float to)
 	return (((float)thecore_random() / (float)RAND_MAX) * (to - from)) + from;
 }
 
-#ifndef __WIN32__
+#ifndef OS_WINDOWS
 void thecore_sleep(struct timeval* timeout)
 {
     if (select(0, (fd_set *) 0, (fd_set *) 0, (fd_set *) 0, timeout) < 0)

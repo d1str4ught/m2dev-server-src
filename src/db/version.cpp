@@ -3,7 +3,7 @@
 
 void WriteVersion()
 {
-#ifndef __WIN32__
+#ifndef OS_WINDOWS
 	FILE* fp(fopen("VERSION.txt", "w"));
 
 	if (NULL != fp)

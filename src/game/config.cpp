@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include <sstream>
-#ifndef __WIN32__
+#ifndef OS_WINDOWS
 #include <ifaddrs.h>
 #endif
 
@@ -233,7 +233,7 @@ static void FN_log_adminpage()
 
 bool GetIPInfo()
 {
-#ifndef __WIN32__
+#ifndef OS_WINDOWS
 	struct ifaddrs* ifaddrp = NULL;
 
 	if (0 != getifaddrs(&ifaddrp))
@@ -273,7 +273,7 @@ bool GetIPInfo()
 		if (!strncmp(netip, "192.168", 7)) // ignore if address is starting with 192
 		{
 			strlcpy(g_szInternalIP, netip, sizeof(g_szInternalIP));
-#ifndef __WIN32__
+#ifndef OS_WINDOWS
 			fprintf(stderr, "INTERNAL_IP: %s interface %s\n", netip, ifap->ifa_name);
 #else
 			fprintf(stderr, "INTERNAL_IP: %s\n", netip);
@@ -282,7 +282,7 @@ bool GetIPInfo()
 		else if (!strncmp(netip, "10.", 3))
 		{
 			strlcpy(g_szInternalIP, netip, sizeof(g_szInternalIP));
-#ifndef __WIN32__
+#ifndef OS_WINDOWS
 			fprintf(stderr, "INTERNAL_IP: %s interface %s\n", netip, ifap->ifa_name);
 #else
 			fprintf(stderr, "INTERNAL_IP: %s\n", netip);
@@ -291,7 +291,7 @@ bool GetIPInfo()
 		else if (g_szPublicIP[0] == '0')
 		{
 			strlcpy(g_szPublicIP, netip, sizeof(g_szPublicIP));
-#ifndef __WIN32__
+#ifndef OS_WINDOWS
 			fprintf(stderr, "PUBLIC_IP: %s interface %s\n", netip, ifap->ifa_name);
 #else
 			fprintf(stderr, "PUBLIC_IP: %s\n", netip);
@@ -299,7 +299,7 @@ bool GetIPInfo()
 		}
 	}
 
-#ifndef __WIN32__
+#ifndef OS_WINDOWS
 	freeifaddrs( ifaddrp );
 #else
 	WSACleanup();

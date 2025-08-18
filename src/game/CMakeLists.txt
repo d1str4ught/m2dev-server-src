@@ -9,6 +9,9 @@ target_link_libraries(game
 	libsql 
 	libthecore 
 	liblua
+
+	# external
+	mariadbclient
 )
 
 if (WIN32)

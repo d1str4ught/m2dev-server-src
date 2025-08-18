@@ -95,7 +95,7 @@ inline bool str_to_number (double& out, const char *in)
 	return true;
 }
 
-#ifdef __FreeBSD__
+#ifdef OS_FREEBSD
 inline bool str_to_number (long double& out, const char *in)
 {
 	if (0==in || 0==in[0])	return false;

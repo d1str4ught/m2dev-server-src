@@ -1,17 +1,10 @@
-/*
- *    Filename: signal.c
- * Description: 시그널 관련 함수.
- *
- *      Author: 비엽 aka. Cronan
- */
-#define __LIBTHECORE__
 #include "stdafx.h"
 
-#ifdef __WIN32__
+#ifdef OS_WIN32
 void signal_setup() {}
 void signal_timer_disable() {}
 void signal_timer_enable(int timeout_seconds) {}
-#elif __FreeBSD__
+#elif OS_FREEBSD
 #define RETSIGTYPE void
 
 RETSIGTYPE reap(int sig)

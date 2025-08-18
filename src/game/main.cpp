@@ -64,13 +64,13 @@
 // #include "XTrapManager.h"
 #include "DragonSoul.h"
 #include <boost/bind.hpp>
-#ifndef __WIN32__
+#ifndef OS_WINDOWS
 	#include "limit_time.h"
 #endif
 
 //#define __FILEMONITOR__
 
-#if defined (__FreeBSD__) && defined(__FILEMONITOR__)
+#if defined (OS_FREEBSD) && defined(__FILEMONITOR__)
 	#include "FileMonitor_FreeBSD.h"
 #endif
 
@@ -78,7 +78,7 @@
 #include "auction_manager.h"
 #endif
 
-// #ifndef __WIN32__
+// #ifndef OS_WINDOWS
 // #include <gtest/gtest.h>
 // #endif
 
@@ -94,7 +94,7 @@
 
 extern void WriteVersion();
 //extern const char * _malloc_options;
-#if defined(__FreeBSD__) && defined(DEBUG_ALLOC)
+#if defined(OS_FREEBSD) && defined(DEBUG_ALLOC)
 extern void (*_malloc_message)(const char* p1, const char* p2, const char* p3, const char* p4);
 // FreeBSD _malloc_message replacement
 void WriteMallocMessage(const char* p1, const char* p2, const char* p3, const char* p4) {
@@ -317,7 +317,7 @@ void heartbeat(LPHEART ht, int pulse)
 		CHARACTER_MANAGER::instance().ProcessDelayedSave();
 
 	//4√  ∏∂¥Ÿ
-#if defined (__FreeBSD__) && defined(__FILEMONITOR__)
+#if defined (OS_FREEBSD) && defined(__FILEMONITOR__)
 	if (!(pulse % (passes_per_sec * 5)))
 	{
 		FileMonitorFreeBSD::Instance().Update(pulse); 
@@ -448,7 +448,7 @@ int main(int argc, char **argv)
 	DebugAllocator::StaticSetUp();
 #endif
 
-// #ifndef __WIN32__
+// #ifndef OS_WINDOWS
 	// // <Factor> start unit tests if option is set
 	// if ( argc > 1 ) 
 	// {
@@ -579,7 +579,7 @@ int main(int argc, char **argv)
 				// CleanUpForEarlyExit();
 				// return 0;
 			// }
-// #if defined (__FreeBSD__) && defined(__FILEMONITOR__)
+// #if defined (OS_FREEBSD) && defined(__FILEMONITOR__)
 			// // PFN_FileChangeListener pNotifyFunc = boost::bind( &CXTrapManager::NotifyMapFileChanged, CXTrapManager::instance(), _1 );
 			// PFN_FileChangeListener pNotifyFunc = &(CXTrapManager::NotifyMapFileChanged);
 
@@ -601,7 +601,7 @@ int main(int argc, char **argv)
 		sys_err("Failed to Load ClientPackageCryptInfo File(%s)", strPackageCryptInfoDir.c_str());	
 	}
 
-#if defined (__FreeBSD__) && defined(__FILEMONITOR__)
+#if defined (OS_FREEBSD) && defined(__FILEMONITOR__)
 	PFN_FileChangeListener pPackageNotifyFunc =  &(DESC_MANAGER::NotifyClientPackageFileChanged);
 	//FileMonitorFreeBSD::Instance().AddWatch( strPackageCryptInfoName, pPackageNotifyFunc );
 #endif
@@ -705,7 +705,7 @@ int start(int argc, char **argv)
 	char ch;
 
 	//_malloc_options = "A";
-#if defined(__FreeBSD__) && defined(DEBUG_ALLOC)
+#if defined(OS_FREEBSD) && defined(DEBUG_ALLOC)
 	_malloc_message = WriteMallocMessage;
 #endif
 #ifdef ENABLE_LIMIT_TIME
@@ -788,7 +788,7 @@ int start(int argc, char **argv)
 	config_init(st_localeServiceName);
 	// END_OF_LOCALE_SERVICE
 
-#ifdef __WIN32__
+#ifdef OS_WINDOWS
 	// In Windows dev mode, "verbose" option is [on] by default.
 	bVerbose = true;
 #endif
@@ -983,7 +983,7 @@ int idle()
 	}
 #endif
 
-#ifdef __WIN32__
+#ifdef OS_WINDOWS
 	if (_kbhit()) {
 		int c = _getch();
 		switch (c) {

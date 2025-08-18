@@ -33,7 +33,7 @@ public:
 
 	bool Verify_CSStep1( LPCHARACTER lpCharSession, BYTE* pOutBufData );
 	void Verify_CSStep3( LPCHARACTER lpCharSession, BYTE* pBufData );
-#ifdef __FreeBSD__
+#ifdef OS_FREEBSD
 	static void MapReloadSignalHandler( int signal );
 
 	static void NotifyMapFileChanged( const std::string& fileName, eFileUpdatedOptions eUpdateOption );

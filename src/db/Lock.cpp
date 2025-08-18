@@ -12,7 +12,7 @@ CLock::~CLock()
 void CLock::Initialize()
 {
 	m_bLocked = false;
-#ifndef __WIN32__
+#ifndef OS_WINDOWS
 	pthread_mutex_init(&m_lock, NULL);
 #else
 	::InitializeCriticalSection(&m_lock);
@@ -22,7 +22,7 @@ void CLock::Initialize()
 void CLock::Destroy()
 {
 	assert(!m_bLocked && "lock didn't released");
-#ifndef __WIN32__
+#ifndef OS_WINDOWS
 	pthread_mutex_destroy(&m_lock);
 #else
 	::DeleteCriticalSection(&m_lock);
@@ -31,7 +31,7 @@ void CLock::Destroy()
 
 int CLock::Trylock()
 {
-#ifndef __WIN32__
+#ifndef OS_WINDOWS
 	return pthread_mutex_trylock(&m_lock);
 #else
 	return ::TryEnterCriticalSection(&m_lock);
@@ -40,7 +40,7 @@ int CLock::Trylock()
 
 void CLock::Lock()
 {
-#ifndef __WIN32__
+#ifndef OS_WINDOWS
 	pthread_mutex_lock(&m_lock);
 #else
 	::EnterCriticalSection(&m_lock);
@@ -52,7 +52,7 @@ void CLock::Unlock()
 {
 	assert(m_bLocked && "lock didn't issued");
 	m_bLocked = false;
-#ifndef __WIN32__
+#ifndef OS_WINDOWS
 	pthread_mutex_unlock(&m_lock);
 #else
 	::LeaveCriticalSection(&m_lock);

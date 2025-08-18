@@ -1,4 +1,4 @@
-#ifndef __WIN32__
+#ifndef OS_WINDOWS
 #include <sys/time.h>
 #endif
 
@@ -8,7 +8,7 @@
 #include "AsyncSQL.h"
 
 // TODO: Consider providing platform-independent mutex class.
-#ifndef __WIN32__
+#ifndef OS_WINDOWS
 #define MUTEX_LOCK(mtx) pthread_mutex_lock(mtx)
 #define MUTEX_UNLOCK(mtx) pthread_mutex_unlock(mtx)
 #else
@@ -19,7 +19,7 @@
 CAsyncSQL::CAsyncSQL()
 	: m_stHost(""), m_stUser(""), m_stPassword(""), m_stDB(""), m_stLocale(""),
 	m_iMsgCount(0), m_bEnd(false),
-#ifndef __WIN32__
+#ifndef OS_WINDOWS
 	m_hThread(0), 
 #else
 	m_hThread(INVALID_HANDLE_VALUE),
@@ -51,7 +51,7 @@ void CAsyncSQL::Destroy()
 
 	if (m_mtxQuery)
 	{
-#ifndef __WIN32__
+#ifndef OS_WINDOWS
 		pthread_mutex_destroy(m_mtxQuery);
 #else
 		::DeleteCriticalSection(m_mtxQuery);
@@ -62,7 +62,7 @@ void CAsyncSQL::Destroy()
 
 	if (m_mtxResult)
 	{
-#ifndef __WIN32__
+#ifndef OS_WINDOWS
 		pthread_mutex_destroy(m_mtxResult);
 #else
 		::DeleteCriticalSection(m_mtxResult);
@@ -72,7 +72,7 @@ void CAsyncSQL::Destroy()
 	}
 }
 
-#ifndef __WIN32__
+#ifndef OS_WINDOWS
 void * AsyncSQLThread(void * arg)
 #else
 unsigned int __stdcall AsyncSQLThread(void* arg)
@@ -190,7 +190,7 @@ bool CAsyncSQL::Setup(const char * c_pszHost, const char * c_pszUser, const char
 			return false;
 		}
 		*/
-#ifndef __WIN32__
+#ifndef OS_WINDOWS
 		m_mtxQuery = new pthread_mutex_t;
 		m_mtxResult = new pthread_mutex_t;
 
@@ -232,7 +232,7 @@ void CAsyncSQL::Quit()
 	m_bEnd = true;
 	m_sem.Release();
 
-#ifndef __WIN32__
+#ifndef OS_WINDOWS
 	if (m_hThread)
 	{
 		pthread_join(m_hThread, NULL);
@@ -696,7 +696,7 @@ size_t CAsyncSQL::EscapeString(char* dst, size_t dstSize, const char *src, size_
 		// \0이 안붙어있을 때를 대비해서 256 바이트만 복사해서 로그로 출력
 		char tmp[256];
 		size_t tmpLen = sizeof(tmp) > srcSize ? srcSize : sizeof(tmp); // 둘 중에 작은 크기
-		strlcpy(tmp, src, tmpLen);
+		std::strncpy(tmp, src, tmpLen);
 
 		sys_err("FATAL ERROR!! not enough buffer size (dstSize %u srcSize %u src%s: %s)",
 				dstSize, srcSize, tmpLen != srcSize ? "(trimmed to 255 characters)" : "", tmp);

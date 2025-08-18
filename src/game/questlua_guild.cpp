@@ -10,7 +10,7 @@
 #include "guild_manager.h"
 
 #undef sys_err
-#ifndef __WIN32__
+#ifndef OS_WINDOWS
 #define sys_err(fmt, args...) quest::CQuestManager::instance().QuestError(__FUNCTION__, __LINE__, fmt, ##args)
 #else
 #define sys_err(fmt, ...) quest::CQuestManager::instance().QuestError(__FUNCTION__, __LINE__, fmt, __VA_ARGS__)

@@ -1657,7 +1657,7 @@ namespace quest
 			GetCurrentCharacterPtr()->ChatPacket(CHAT_TYPE_PARTY, "LUA_ERROR: quest %s.%s %s", GetCurrentQuestName().c_str(), state_name, event_index_name.c_str() );
 	}
 
-#ifndef __WIN32__
+#ifndef OS_WINDOWS
 	void CQuestManager::QuestError(const char* func, int line, const char* fmt, ...)
 	{
 		char szMsg[4096];

@@ -1,4 +1,4 @@
-#include "../../libthecore/include/stdafx.h"
+#include "libthecore/stdafx.h"
 #include "attribute.h"
 
 #define SET_BIT(var,bit)                ((var) |= (bit))

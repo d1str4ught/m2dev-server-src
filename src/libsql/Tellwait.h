@@ -1,7 +1,7 @@
 #ifndef __INC_METIN_II_TELLWAIT_H__
 #define __INC_METIN_II_TELLWAIT_H__
 
-#ifndef __WIN32__
+#ifndef OS_WINDOWS
 
 extern void TELL_WAIT();
 

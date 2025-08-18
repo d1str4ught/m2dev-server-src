@@ -1,5 +1,4 @@
-#ifndef __INC_LIBTHECORE_STDAFX_H__
-#define __INC_LIBTHECORE_STDAFX_H__
+#pragma once
 
 #if defined(__GNUC__)
 #define INLINE __inline__
@@ -7,7 +6,7 @@
 #define INLINE inline
 #endif
 
-#ifdef __WIN32__
+#ifdef OS_WINDOWS
 #define WIN32_LEAN_AND_MEAN
 
 #include <windows.h>
@@ -35,19 +34,14 @@
 #define S_ISDIR(m)	(m & _S_IFDIR)
 #define snprintf _snprintf
 
-struct timespec
-{
-    time_t  tv_sec;         /* seconds */
-    long    tv_nsec;        /* and nanoseconds */
-};
-
 #define __USE_SELECT__
 
 #define PATH_MAX _MAX_PATH
 
 // C runtime library adjustments
+
+#ifdef OS_FREEBSD
 #define strlcat(dst, src, size) strcat_s(dst, size, src)
-#define strlcpy(dst, src, size) strncpy_s(dst, size, src, _TRUNCATE)
 #define strtoull(str, endptr, base) _strtoui64(str, endptr, base)
 #define strtof(str, endptr) (float)strtod(str, endptr)
 #define strcasecmp(s1, s2) stricmp(s1, s2)
@@ -55,9 +49,9 @@ struct timespec
 #define atoll(str) _atoi64(str)
 #define localtime_r(timet, result) localtime_s(result, timet)
 #define strtok_r(s, delim, ptrptr) strtok_s(s, delim, ptrptr)
+#endif
 
-#include <boost/__typeof/__typeof.hpp>
-#define __typeof(t) BOOST_TYPEOF(t)
+#define __typeof(t) auto
 
 // dummy declaration of non-supported signals
 #define SIGUSR1     30  /* user defined signal 1 */
@@ -78,7 +72,7 @@ inline double rint(double x)
 
 #else
 
-#ifndef __FreeBSD__
+#ifndef OS_FREEBSD
 #define __USE_SELECT__
 #ifdef __CYGWIN__
 #define _POSIX_SOURCE 1
@@ -112,20 +106,15 @@ inline double rint(double x)
 #include <pthread.h>
 #include <semaphore.h>
 
-#ifdef __FreeBSD__
+#ifdef OS_FREEBSD
 #include <sys/event.h>
 #endif
 
 #endif
 
-#ifndef false
-#define false	0
-#define true	(!false)
-#endif
-
 #ifndef FALSE
 #define FALSE	false
-#define TRUE	(!FALSE)
+#define TRUE	true
 #endif
 
 #include "typedef.h"
@@ -141,5 +130,3 @@ inline double rint(double x)
 #include "utils.h"
 #include "crypt.h"
 #include "memcpy.h"
-
-#endif // __INC_LIBTHECORE_STDAFX_H__

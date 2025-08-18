@@ -1,4 +1,4 @@
-#ifndef __WIN32__
+#ifndef OS_WINDOWS
 
 #include <stdio.h>
 #include <stdlib.h>

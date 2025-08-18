@@ -1,16 +1,16 @@
 #ifndef __INC_METIN_II_ASYNCSQL_H__
 #define __INC_METIN_II_ASYNCSQL_H__
 
-#include "../libthecore/include/stdafx.h"
-#include "../libthecore/include/log.h"
+#include "libthecore/stdafx.h"
+#include "libthecore/log.h"
 
 #include <string>
 #include <queue>
 #include <vector>
 #include <map>
-#include <mysql/mysql.h>
-#include <mysql/errmsg.h>
-#include <mysql/mysqld_error.h>
+#include <mysql.h>
+#include <errmsg.h>
+#include <mysqld_error.h>
 
 #include "Semaphore.h"
 
@@ -182,7 +182,7 @@ class CAsyncSQL
 
 		volatile bool m_bEnd;
 
-#ifndef __WIN32__
+#ifndef OS_WINDOWS
 		pthread_t m_hThread;
 		pthread_mutex_t	* m_mtxQuery;
 		pthread_mutex_t	* m_mtxResult;

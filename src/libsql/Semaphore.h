@@ -1,7 +1,7 @@
 #ifndef __INC_METIN_II_SEMAPHORE_H__
 #define __INC_METIN_II_SEMAPHORE_H__
 
-#ifndef __WIN32__
+#ifndef OS_WINDOWS
 #include <semaphore.h>
 #else
 
@@ -10,7 +10,7 @@
 class CSemaphore
 {
 	private:
-#ifndef __WIN32__
+#ifndef OS_WINDOWS
 		sem_t *	m_hSem;
 #else
 		HANDLE m_hSem;

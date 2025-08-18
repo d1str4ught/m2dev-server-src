@@ -1,10 +1,3 @@
-/*
- *    Filename: socket.c
- * Description: 소켓 관련 소스.
- *
- *      Author: 비엽 aka. Cronan
- */
-#define __LIBTHECORE__
 #include "stdafx.h"
 
 /* Forwards */
@@ -56,7 +49,7 @@ int socket_read(socket_t desc, char* read_point, size_t space_left)
 	return (0);
 #endif
 
-#ifdef __WIN32__
+#ifdef OS_WINDOWS
 	int wsa_error = WSAGetLastError();
 	if (wsa_error == WSAEWOULDBLOCK) {
 		return 0;
@@ -95,7 +88,7 @@ int socket_write_tcp(socket_t desc, const char *txt, int length)
 	return 0;
 #endif
 
-#ifdef __WIN32__
+#ifdef OS_WINDOWS
 	int wsa_error = WSAGetLastError();
 	if (wsa_error == WSAEWOULDBLOCK) {
 		return 0;
@@ -157,7 +150,7 @@ int socket_bind(const char * ip, int port, int protocol)
     }
 
     socket_reuse(s);
-#ifndef __WIN32__
+#ifndef OS_WINDOWS
     socket_lingeroff(s);
 #else
 	// Winsock2: SO_DONTLINGER, SO_KEEPALIVE, SO_LINGER, and SO_OOBINLINE are 
@@ -171,7 +164,7 @@ int socket_bind(const char * ip, int port, int protocol)
     sa.sin_family	= AF_INET;
 //윈도우 서버는 개발용으로만 쓰기 때문에 BIND ip를 INADDR_ANY로 고정
 //(테스트의 편의성을 위해)
-#ifndef __WIN32__
+#ifndef OS_WINDOWS
     sa.sin_addr.s_addr	= inet_addr(ip);
 #else
 	sa.sin_addr.s_addr	= INADDR_ANY;
@@ -209,7 +202,7 @@ int socket_udp_bind(const char * ip, int port)
 
 void socket_close(socket_t s)
 {
-#ifdef __WIN32__
+#ifdef OS_WINDOWS
     closesocket(s);
 #else
     close(s);
@@ -285,27 +278,27 @@ socket_t socket_connect(const char* host, WORD port)
     {
 	socket_close(s);
 
-#ifdef __WIN32__
+#ifdef OS_WINDOWS
 	switch (WSAGetLastError())
 #else
 	    switch (rslt)
 #endif
 	    {
-#ifdef __WIN32__
+#ifdef OS_WINDOWS
 		case WSAETIMEDOUT:
 #else
 		case EINTR:
 #endif
 		    sys_err("HOST %s:%d connection timeout.", host, port);
 		    break;
-#ifdef __WIN32__
+#ifdef OS_WINDOWS
 		case WSAECONNREFUSED:
 #else
 		case ECONNREFUSED:
 #endif
 		    sys_err("HOST %s:%d port is not opened. connection refused.", host, port);
 		    break;
-#ifdef __WIN32__
+#ifdef OS_WINDOWS
 		case WSAENETUNREACH:
 #else
 		case ENETUNREACH:
@@ -325,7 +318,7 @@ socket_t socket_connect(const char* host, WORD port)
     return (s);
 }
 
-#ifndef __WIN32__
+#ifndef OS_WINDOWS
 
 #ifndef O_NONBLOCK
 #define O_NONBLOCK O_NDELAY
@@ -386,7 +379,7 @@ void socket_dontroute(socket_t s)
 
 void socket_lingeroff(socket_t s)
 {
-#ifdef __WIN32__
+#ifdef OS_WINDOWS
     int linger;
     linger = 0;
 #else
@@ -405,7 +398,7 @@ void socket_lingeroff(socket_t s)
 
 void socket_lingeron(socket_t s)
 {
-#ifdef __WIN32__
+#ifdef OS_WINDOWS
     int linger;
     linger = 0;
 #else
@@ -475,7 +468,7 @@ void socket_sndbuf(socket_t s, unsigned int opt)
 // sec : seconds, usec : microseconds
 void socket_timeout(socket_t s, long sec, long usec)
 {
-#ifndef __WIN32__
+#ifndef OS_WINDOWS
     struct timeval      rcvopt;
     struct timeval      sndopt;
     socklen_t		optlen = sizeof(rcvopt);
@@ -517,7 +510,7 @@ void socket_timeout(socket_t s, long sec, long usec)
 	return;
     }
 
-#ifndef __WIN32__
+#ifndef OS_WINDOWS
     sys_log(1, "SYSTEM: %d: TIMEOUT RCV: %d.%d, SND: %d.%d", s, rcvopt.tv_sec, rcvopt.tv_usec, sndopt.tv_sec, sndopt.tv_usec);
 #endif
 }

@@ -1,12 +1,11 @@
-#ifndef __INC_LIBTHECORE_TYPEDEF_H__
-#define __INC_LIBTHECORE_TYPEDEF_H__
+#pragma once
 
 typedef unsigned long int       QWORD;
 typedef unsigned char           UBYTE;
 typedef signed char             sbyte;
 typedef unsigned short		sh_int;
 
-#ifndef __WIN32__
+#ifndef OS_WINDOWS
 
 #ifndef __cplusplus
 typedef unsigned char		bool;
@@ -58,5 +57,3 @@ typedef unsigned __int64 uint64_t;
 typedef unsigned int uint;
 
 #endif
-
-#endif // __INC_LIBTHECORE_TYPEDEF_H__

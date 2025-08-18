@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-#ifndef __FreeBSD__
+#ifndef OS_FREEBSD
 
 /*
  * luau (Lib Update/Auto-Update): Simple Update Library
@@ -83,7 +83,7 @@ lutil_md5_file (const char *filename, char *buf)
 
     MD5Init(&ctx);
 
-#ifndef __WIN32__
+#ifndef OS_WINDOWS
     f = open(filename,O_RDONLY);
 #else
 	f = _open(filename, _O_RDONLY);
@@ -342,4 +342,4 @@ void MD5Transform(uint32_t buf[4], uint32_t const in[16])
     buf[3] += d;
 }
 
-#endif // #ifndef __FreeBSD__
+#endif // #ifndef OS_FREEBSD

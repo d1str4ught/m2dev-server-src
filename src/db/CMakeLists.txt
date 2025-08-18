@@ -9,6 +9,9 @@ target_link_libraries(db
 	libsql 
 	libthecore
 	libredis
+
+	# external
+	mariadbclient
 )
 
 if (WIN32)

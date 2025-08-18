@@ -318,7 +318,7 @@ void LogManager::DragonSlayLog(DWORD dwGuildID, DWORD dwDragonVnum, DWORD dwStar
 // {
 	// struct in_addr st_addr;
 
-// #ifndef __WIN32__
+// #ifndef OS_WINDOWS
 	// if (0 == inet_aton(ch->GetDesc()->GetHostName(), &st_addr))
 // #else
 	// unsigned long in_address;

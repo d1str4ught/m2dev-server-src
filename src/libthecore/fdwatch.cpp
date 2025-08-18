@@ -1,4 +1,3 @@
-#define __LIBTHECORE__
 #include "stdafx.h"
 
 #ifndef __USE_SELECT__
@@ -233,7 +232,7 @@ void * fdwatch_get_client_data(LPFDWATCH fdw, unsigned int event_idx)
 }
 #else	// ifndef __USE_SELECT__
 
-#ifdef __WIN32__
+#ifdef OS_WINDOWS
 static int win32_init_refcount = 0;
 
 static bool win32_init()
@@ -265,7 +264,7 @@ LPFDWATCH fdwatch_new(int nfiles)
 {
     LPFDWATCH fdw;
 
-#ifdef __WIN32__
+#ifdef OS_WINDOWS
     if (!win32_init())
 	return NULL;
 #endif
@@ -295,7 +294,7 @@ void fdwatch_delete(LPFDWATCH fdw)
     free(fdw->select_rfdidx);
     free(fdw);
 
-#ifdef __WIN32__
+#ifdef OS_WINDOWS
     win32_deinit();
 #endif
 }

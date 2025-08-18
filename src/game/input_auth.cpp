@@ -11,7 +11,7 @@
 #include "auth_brazil.h"
 #include "db.h"
 
-#ifndef __WIN32__
+#ifndef OS_WINDOWS
 	#include "limit_time.h"
 #endif
 
@@ -431,7 +431,7 @@ int CInputAuth::auth_OpenID(const char *authKey, const char *ipAddr, char *rID)
 						//"/kyw/gameauth.php", authKey, ipAddr);
 						openid_uri, authKey, ipAddr, openid_host);
 
-//#ifndef __WIN32__
+//#ifndef OS_WINDOWS
 //		if (write(fd, request, len) < 0)
 //#else
 		if (socket_write(fd, request, len) < 0)
@@ -446,7 +446,7 @@ int CInputAuth::auth_OpenID(const char *authKey, const char *ipAddr, char *rID)
     // read reply
 	char reply[1024] = {0};
 	int len;
-//#ifndef __WIN32__
+//#ifndef OS_WINDOWS
 //	len = read(fd, reply, sizeof(reply));
 //#else
 	len = socket_read(fd, reply, sizeof(reply));

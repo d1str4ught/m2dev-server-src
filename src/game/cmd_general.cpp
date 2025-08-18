@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#ifdef __FreeBSD__
+#ifdef OS_FREEBSD
 #include <md5.h>
 #else
 #include "../../libthecore/include/xmd5.h"
@@ -2367,7 +2367,7 @@ ACMD(do_in_game_mall)
 
 		MD5Init(&ctx);
 		MD5Update(&ctx, (const unsigned char *) buf, strlen(buf));
-#ifdef __FreeBSD__
+#ifdef OS_FREEBSD
 		MD5End(&ctx, sas);
 #else
 		static const char hex[] = "0123456789abcdef";

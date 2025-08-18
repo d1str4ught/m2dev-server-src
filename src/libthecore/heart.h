@@ -1,6 +1,4 @@
-#ifndef __INC_LIBTHECORE_HEART_H__
-#define __INC_LIBTHECORE_HEART_H__
-
+#pragma once
 typedef struct heart	HEART;
 typedef struct heart *	LPHEART;
 
@@ -18,9 +16,7 @@ struct heart
     int			pulse;
 };
 
-extern LPHEART	heart_new(int opt_usec, HEARTFUNC func);
-extern void	heart_delete(LPHEART ht);
-extern int	heart_idle(LPHEART ht);	// 몇 pulse가 지났나 리턴한다.
-extern void	heart_beat(LPHEART ht, int pulses);
-
-#endif
+LPHEART	heart_new(int opt_usec, HEARTFUNC func);
+void	heart_delete(LPHEART ht);
+int	    heart_idle(LPHEART ht);	// 몇 pulse가 지났나 리턴한다.
+void	heart_beat(LPHEART ht, int pulses);

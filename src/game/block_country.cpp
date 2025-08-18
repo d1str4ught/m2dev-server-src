@@ -110,7 +110,7 @@ bool is_blocked_country_ip(const char *user_ip)
 	DWORD			ip_number;
 	struct in_addr	st_addr;
 
-#ifndef __WIN32__
+#ifndef OS_WINDOWS
 	if (0 == inet_aton(user_ip, &st_addr))
 #else
 	unsigned long in_address;

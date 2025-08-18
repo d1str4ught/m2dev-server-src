@@ -28,7 +28,7 @@
 #include "stdafx.h"
 ///////////////////////////////////////////////////////////////////////////////
 
-#ifdef __WIN32__
+#ifdef OS_WINDOWS
 
 ///////////////////////////////////////////////////////////////////////////////
 // if you are not using precompiled headers then include these lines:
@@ -225,4 +225,4 @@ int getopt(int argc, TCHAR *argv[], TCHAR *optstring)
 	return c;
 }
 
-#endif // #ifdef __WIN32__
+#endif // #ifdef OS_WINDOWS

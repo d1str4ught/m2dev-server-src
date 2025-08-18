@@ -1,10 +1,3 @@
-/*
- *    Filename: main.c
- * Description: 라이브러리 초기화/삭제 등
- *
- *      Author: 비엽 aka. Cronan
- */
-#define __LIBTHECORE__
 #include "stdafx.h"
 #include "memory.h"
 
@@ -18,7 +11,7 @@ unsigned int	thecore_profiler[NUM_PF];
 
 static int pid_init(void)
 {   
-#ifdef __WIN32__
+#ifdef OS_WINDOWS
 	return true;
 #else
 	FILE*	fp;
@@ -40,7 +33,7 @@ static int pid_init(void)
 
 static void pid_deinit(void)
 {   
-#ifdef __WIN32__
+#ifdef OS_WINDOWS
     return;
 #else
     remove("./pid");
@@ -50,7 +43,7 @@ static void pid_deinit(void)
 
 int thecore_init(int fps, HEARTFUNC heartbeat_func)
 {
-#ifdef __WIN32__
+#ifdef OS_WINDOWS
     srand(time(0));
 #else
     srandom(time(0) + getpid() + getuid());

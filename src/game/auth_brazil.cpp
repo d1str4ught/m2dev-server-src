@@ -7,13 +7,13 @@
  */
 #include "stdafx.h"
 
-#ifndef __WIN32__
+#ifndef OS_WINDOWS
 #include <unistd.h>
 #include <stdint.h>
 #endif
 #include <stdio.h>
 #include <string.h>
-#ifdef __FreeBSD__
+#ifdef OS_FREEBSD
 #include <md5.h>
 #else
 #include "../../libthecore/include/xmd5.h"
@@ -109,7 +109,7 @@ int auth_brazil(const char *login, const char *pwd)
 	char request[512];
 	int len = FN_make_request(login, pwd, request, sizeof(request));
 
-#ifndef __WIN32__
+#ifndef OS_WINDOWS
 	if (write(fd, request, len) < 0)
 #else
 	if (_write(fd, request, len) < 0)

@@ -3239,7 +3239,7 @@ int CClientManager::Process()
 		}
 	}
 
-#ifdef __WIN32__
+#ifdef OS_WINDOWS
 	if (_kbhit()) {
 		int c = _getch();
 		switch (c) {

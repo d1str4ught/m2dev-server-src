@@ -2,7 +2,7 @@
 
 #include "HackShield_Impl.h"
 
-#ifdef __FreeBSD__
+#ifdef OS_FREEBSD
 
 #include "char.h"
 #include "packet.h"

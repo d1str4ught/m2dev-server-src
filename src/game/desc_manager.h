@@ -69,7 +69,7 @@ class DESC_MANAGER : public singleton<DESC_MANAGER>
 		bool			LoadClientPackageCryptInfo(const char* pDirName);
 		void			SendClientPackageCryptKey( LPDESC desc );
 		void			SendClientPackageSDBToLoadMap( LPDESC desc, const char* pMapName );
-#ifdef __FreeBSD__
+#ifdef OS_FREEBSD
 		static void		NotifyClientPackageFileChanged( const std::string& fileName, eFileUpdatedOptions eUpdateOption );
 #endif 
 

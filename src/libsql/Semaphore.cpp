@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "Semaphore.h"
 
-#ifndef __WIN32__
+#ifndef OS_WINDOWS
 
 CSemaphore::CSemaphore() : m_hSem(NULL)
 {

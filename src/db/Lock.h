@@ -2,7 +2,7 @@
 #ifndef __INC_LOCK_H__
 #define __INC_LOCK_H__
 
-#ifdef __WIN32__
+#ifdef OS_WINDOWS
 typedef CRITICAL_SECTION	lock_t;
 #else
 typedef pthread_mutex_t		lock_t;

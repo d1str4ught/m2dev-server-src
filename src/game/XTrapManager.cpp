@@ -55,7 +55,7 @@ CXTrapManager::CXTrapManager()
 
 CXTrapManager::~CXTrapManager()
 {
-#ifdef __FreeBSD__
+#ifdef OS_FREEBSD
 	if (m_pImpl->hXTrap4Server)
 	{
 		dlclose(m_pImpl->hXTrap4Server);
@@ -65,7 +65,7 @@ CXTrapManager::~CXTrapManager()
 	M2_DELETE(m_pImpl);
 }
 
-#ifdef __FreeBSD__
+#ifdef OS_FREEBSD
 void CXTrapManager::MapReloadSignalHandler( int signal )
 {
 	for(int i=0; i<CSFILE_NUM; ++i )
@@ -85,7 +85,7 @@ void CXTrapManager::NotifyMapFileChanged( const std::string& fileName, eFileUpda
 
 bool CXTrapManager::LoadXTrapModule()
 {
-#ifdef __FreeBSD__
+#ifdef OS_FREEBSD
 	//first load client mapfile
 	bool bClientMapFileLoaded = false;
 	for(int i=0; i<CSFILE_NUM; ++i )
@@ -154,7 +154,7 @@ bool CXTrapManager::LoadXTrapModule()
 
 bool CXTrapManager::LoadClientMapFile( unsigned int iMapIndex )
 {
-#ifdef __FreeBSD__
+#ifdef OS_FREEBSD
 	//index check
 	if( iMapIndex >= CSFILE_NUM )
 	{

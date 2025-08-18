@@ -106,7 +106,7 @@ bool CBlockCountry::IsBlockedCountryIp(const char *user_ip)
 	BLOCK_IP_VECTOR::iterator	iter;
 	struct in_addr st_addr;
 
-#ifndef __WIN32__
+#ifndef OS_WINDOWS
 	if (0 == inet_aton(user_ip, &st_addr))
 #else
 	unsigned long in_address;

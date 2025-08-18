@@ -9,7 +9,7 @@ using namespace std;
 
 double _random()
 {
-#ifndef __WIN32__
+#ifndef OS_WINDOWS
     return random() / (2147483648.0);
 #else
 	return rand() / (2147483648.0);

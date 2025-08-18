@@ -1,123 +1,116 @@
-/*
- *    Filename: hangul.c
- * Description: ÇÑ±Û °ü·Ã ±¸Çö ¼Ò½º
- *
- *      Author: ºñ¿± aka. Cronan
- */
-#define __LIBTHECORE__
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 
-int is_hangul(const BYTE * str)
+int is_hangul(const BYTE* str)
 {
     if (str[0] >= 0xb0 && str[0] <= 0xc8 && str[1] >= 0xa1 && str[1] <= 0xfe)
-	return 1;
+        return 1;
 
     return 0;
 }
 
-int check_han(const char *str)
+int check_han(const char* str)
 {
     int i, code;
 
     if (!str || !*str)
-	return 0;
+        return 0;
 
-    for (i = 0; str[i]; i += 2) 
+    for (i = 0; str[i]; i += 2)
     {
-	if (isnhspace(str[i]))
-	    return 0;
+        if (isnhspace(str[i]))
+            return 0;
 
-	if (isalpha(str[i]) || isdigit(str[i]))
-	    continue;
+        if (isalpha(str[i]) || isdigit(str[i]))
+            continue;
 
-	code = str[i];
-	code += 256;
+        code = str[i];
+        code += 256;
 
-	if (code < 176 || code > 200)
-	    return 0;
+        if (code < 176 || code > 200)
+            return 0;
     }
 
     return 1;
 }
 
-const char *first_han(const BYTE *str)
+const char* first_han(const BYTE* str)
 {
     unsigned char high, low;
     int len, i;
-    char *p = "±×¿Ü";
+    char* p = "ê·¸ì™¸";
 
     static const char* wansung[] =
     {
-	"°¡", "°¡", "³ª", "´Ù", "´Ù",
-	"¶ó", "¸¶", "¹Ù", "¹Ù", "»ç",
-	"»ç", "¾Æ", "ÀÚ", "ÀÚ", "Â÷", 
-	"Ä«", "Å¸", "ÆÄ", "ÇÏ", ""
+        "ê°€","ê°€","ë‚˜","ë‹¤","ë‹¤",
+        "ë¼","ë§ˆ","ë°”","ë°”","ì‚¬",
+        "ì‚¬","ì•„","ì","ì","ì°¨",
+        "ì¹´","íƒ€","íŒŒ","í•˜",""
     };
 
     static const char* johab[] =
     {
-	"ˆa", "Œa", "a", "”a", "˜a",
-	"œa", " a", "¤a", "¨a", "¬a",
-	"°a", "´a", "¸a", "¼a", "Àa",
-	"Äa", "?", "?", "?", "" 
+        "\x88" "a", "\x8C" "a", "\x90" "a", "\x94" "a", "\x98" "a",
+        "\x9C" "a", "\xA0" "a", "\xA4" "a", "\xA8" "a", "\xAC" "a",
+        "\xB0" "a", "\xB4" "a", "\xB8" "a", "\xBC" "a", "\xC0" "a",
+        "\xC4" "a", "\xC8" "a", "\xCC" "a", "\xD0" "a", ""
     };
 
-    len = strlen((const char*) str);
+    len = strlen((const char*)str);
 
     if (len < 2)
-	return p;
+        return p;
 
     high = str[0];
-    low  = str[1];
+    low = str[1];
 
     if (!is_hangul(str))
     {
-	return p;
+        return p;
     }
 
     high = (KStbl[(high - 0xb0) * 94 + low - 0xa1] >> 8) & 0x7c;
 
-    for (i = 0; johab[i][0]; i++) 
+    for (i = 0; johab[i][0]; i++)
     {
-	low = (johab[i][0] & 0x7f);
+        low = (johab[i][0] & 0x7f);
 
-	if (low == high)
-	    return (wansung[i]);
+        if (low == high)
+            return (wansung[i]);
     }
 
     return (p);
 }
 
-int under_han(const void * orig)
+int under_han(const void* orig)
 {
-    const BYTE * str = (const BYTE *) orig;
+    const BYTE* str = (const BYTE*)orig;
     BYTE high, low;
     int len;
 
-    len = strlen((const char*) str);
+    len = strlen((const char*)str);
 
-    if (len < 2) 
-	return 0;
+    if (len < 2)
+        return 0;
 
     if (str[len - 1] == ')')
     {
-	while (str[len] != '(')
-	    len--;
+        while (str[len] != '(')
+            len--;
     }
 
     high = str[len - 2];
-    low  = str[len - 1];
+    low = str[len - 1];
 
-    if (!is_hangul(&str[len - 2])) 
-	return 0; 
+    if (!is_hangul(&str[len - 2]))
+        return 0;
 
     high = KStbl[(high - 0xb0) * 94 + low - 0xa1] & 0x1f;
 
     if (high < 2)
-	return 0;
+        return 0;
 
-    if (high > 28) 
-	return 0;
+    if (high > 28)
+        return 0;
 
     return 1;
 }
