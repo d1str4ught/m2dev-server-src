@@ -9,8 +9,11 @@ It builds as it is, without external dependencies.
 ## How to build
 
 > mkdir build
+>
 > cd build
+>
 > cmake ..
+>
 > cmake --build .
 
 
