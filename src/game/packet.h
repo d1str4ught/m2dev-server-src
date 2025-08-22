@@ -334,65 +334,65 @@ enum
 #pragma pack(1)
 typedef struct SPacketGGSetup
 {
-	BYTE	bHeader;
-	WORD	wPort;
-	BYTE	bChannel;
+	uint8_t	bHeader;
+	uint16_t	wPort;
+	uint8_t	bChannel;
 } TPacketGGSetup;
 
 typedef struct SPacketGGLogin
 {
-	BYTE	bHeader;
+	uint8_t	bHeader;
 	char	szName[CHARACTER_NAME_MAX_LEN + 1];
-	DWORD	dwPID;
-	BYTE	bEmpire;
-	long	lMapIndex;
-	BYTE	bChannel;
+	uint32_t	dwPID;
+	uint8_t	bEmpire;
+	int32_t	lMapIndex;
+	uint8_t	bChannel;
 } TPacketGGLogin;
 
 typedef struct SPacketGGLogout
 {
-	BYTE	bHeader;
+	uint8_t	bHeader;
 	char	szName[CHARACTER_NAME_MAX_LEN + 1];
 } TPacketGGLogout;
 
 typedef struct SPacketGGRelay
 {
-	BYTE	bHeader;
+	uint8_t	bHeader;
 	char	szName[CHARACTER_NAME_MAX_LEN + 1];
-	long	lSize;
+	int32_t	lSize;
 } TPacketGGRelay;
 
 typedef struct SPacketGGNotice
 {
-	BYTE	bHeader;
-	long	lSize;
+	uint8_t	bHeader;
+	int32_t	lSize;
 } TPacketGGNotice;
 
 typedef struct SPacketGGMonarchNotice
 {
-	BYTE	bHeader;
-	BYTE	bEmpire;
-	long	lSize;
+	uint8_t	bHeader;
+	uint8_t	bEmpire;
+	int32_t	lSize;
 } TPacketGGMonarchNotice;
 
 //FORKED_ROAD
 typedef struct SPacketGGForkedMapInfo
 {
-	BYTE	bHeader;
-	BYTE	bPass;
-	BYTE	bSungzi;
+	uint8_t	bHeader;
+	uint8_t	bPass;
+	uint8_t	bSungzi;
 } TPacketGGForkedMapInfo;
 //END_FORKED_ROAD
 typedef struct SPacketGGShutdown
 {
-	BYTE	bHeader;
+	uint8_t	bHeader;
 } TPacketGGShutdown;
 
 typedef struct SPacketGGGuild
 {
-	BYTE	bHeader;
-	BYTE	bSubHeader;
-	DWORD	dwGuild;
+	uint8_t	bHeader;
+	uint8_t	bSubHeader;
+	uint32_t	dwGuild;
 } TPacketGGGuild;
 
 enum
@@ -403,18 +403,18 @@ enum
 
 typedef struct SPacketGGGuildChat
 {
-	BYTE	bHeader;
-	BYTE	bSubHeader;
-	DWORD	dwGuild;
+	uint8_t	bHeader;
+	uint8_t	bSubHeader;
+	uint32_t	dwGuild;
 	char	szText[CHAT_MAX_LEN + 1];
 } TPacketGGGuildChat;
 
 typedef struct SPacketGGParty
 {
-	BYTE	header;
-	BYTE	subheader;
-	DWORD	pid;
-	DWORD	leaderpid;
+	uint8_t	header;
+	uint8_t	subheader;
+	uint32_t	pid;
+	uint32_t	leaderpid;
 } TPacketGGParty;
 
 enum
@@ -427,28 +427,28 @@ enum
 
 typedef struct SPacketGGDisconnect
 {
-	BYTE	bHeader;
+	uint8_t	bHeader;
 	char	szLogin[LOGIN_MAX_LEN + 1];
 } TPacketGGDisconnect;
 
 typedef struct SPacketGGShout
 {
-	BYTE	bHeader;
-	BYTE	bEmpire;
+	uint8_t	bHeader;
+	uint8_t	bEmpire;
 	char	szText[CHAT_MAX_LEN + 1];
 } TPacketGGShout;
 
 typedef struct SPacketGGXmasWarpSanta
 {
-	BYTE	bHeader;
-	BYTE	bChannel;
-	long	lMapIndex;
+	uint8_t	bHeader;
+	uint8_t	bChannel;
+	int32_t	lMapIndex;
 } TPacketGGXmasWarpSanta;
 
 typedef struct SPacketGGXmasWarpSantaReply
 {
-	BYTE	bHeader;
-	BYTE	bChannel;
+	uint8_t	bHeader;
+	uint8_t	bChannel;
 } TPacketGGXmasWarpSantaReply;
 
 typedef struct SMessengerData
@@ -458,169 +458,169 @@ typedef struct SMessengerData
 
 typedef struct SPacketGGMessenger
 {   
-	BYTE        bHeader;
+	uint8_t        bHeader;
 	char        szAccount[CHARACTER_NAME_MAX_LEN + 1];
 	char        szCompanion[CHARACTER_NAME_MAX_LEN + 1];
 } TPacketGGMessenger;
 
 typedef struct SPacketGGMessengerMobile
 {   
-	BYTE        bHeader;
+	uint8_t        bHeader;
 	char        szName[CHARACTER_NAME_MAX_LEN + 1];
 	char        szMobile[MOBILE_MAX_LEN + 1];
 } TPacketGGMessengerMobile;
 
 typedef struct SPacketGGFindPosition
 {
-	BYTE header;
-	DWORD dwFromPID; // 저 위치로 워프하려는 사람
-	DWORD dwTargetPID; // 찾는 사람
+	uint8_t header;
+	uint32_t dwFromPID; // 저 위치로 워프하려는 사람
+	uint32_t dwTargetPID; // 찾는 사람
 } TPacketGGFindPosition;
 
 typedef struct SPacketGGWarpCharacter
 {
-	BYTE header;
-	DWORD pid;
-	long x;
-	long y;
+	uint8_t header;
+	uint32_t pid;
+	int32_t x;
+	int32_t y;
 } TPacketGGWarpCharacter;
 
 //  HEADER_GG_GUILD_WAR_ZONE_MAP_INDEX	    = 15,
 
 typedef struct SPacketGGGuildWarMapIndex
 {
-	BYTE bHeader;
-	DWORD dwGuildID1;
-	DWORD dwGuildID2;
-	long lMapIndex;
+	uint8_t bHeader;
+	uint32_t dwGuildID1;
+	uint32_t dwGuildID2;
+	int32_t lMapIndex;
 } TPacketGGGuildWarMapIndex;
 
 typedef struct SPacketGGTransfer
 {
-	BYTE	bHeader;
+	uint8_t	bHeader;
 	char	szName[CHARACTER_NAME_MAX_LEN + 1];
-	long	lX, lY;
+	int32_t	lX, lY;
 } TPacketGGTransfer;
 
 typedef struct SPacketGGLoginPing
 {
-	BYTE	bHeader;
+	uint8_t	bHeader;
 	char	szLogin[LOGIN_MAX_LEN + 1];
 } TPacketGGLoginPing;
 
 typedef struct SPacketGGBlockChat
 {
-	BYTE	bHeader;
+	uint8_t	bHeader;
 	char	szName[CHARACTER_NAME_MAX_LEN + 1];
-	long	lBlockDuration;
+	int32_t	lBlockDuration;
 } TPacketGGBlockChat;
 
 /* 클라이언트 측에서 보내는 패킷 */
 
 typedef struct command_text
 {
-	BYTE	bHeader;
+	uint8_t	bHeader;
 } TPacketCGText;
 
 /* 로그인 (1) */
 typedef struct command_handshake
 {
-	BYTE	bHeader;
-	DWORD	dwHandshake;
-	DWORD	dwTime;
-	long	lDelta;
+	uint8_t	bHeader;
+	uint32_t	dwHandshake;
+	uint32_t	dwTime;
+	int32_t	lDelta;
 } TPacketCGHandshake;
 
 typedef struct command_login
 {
-	BYTE	header;
+	uint8_t	header;
 	char	login[LOGIN_MAX_LEN + 1];
 	char	passwd[PASSWD_MAX_LEN + 1];
 } TPacketCGLogin;
 
 typedef struct command_login2
 {
-	BYTE	header;
+	uint8_t	header;
 	char	login[LOGIN_MAX_LEN + 1];
-	DWORD	dwLoginKey;
-	DWORD	adwClientKey[4];
+	uint32_t	dwLoginKey;
+	uint32_t	adwClientKey[4];
 } TPacketCGLogin2;
 
 typedef struct command_login3
 {
-	BYTE	header;
+	uint8_t	header;
 	char	login[LOGIN_MAX_LEN + 1];
 	char	passwd[PASSWD_MAX_LEN + 1];
-	DWORD	adwClientKey[4];
+	uint32_t	adwClientKey[4];
 } TPacketCGLogin3;
 
 typedef struct command_login5
 {
-	BYTE	header;
+	uint8_t	header;
 	char	authKey[OPENID_AUTHKEY_LEN + 1];
-	DWORD	adwClientKey[4];
+	uint32_t	adwClientKey[4];
 } TPacketCGLogin5;
 
 typedef struct command_matrix_card
 {
-	BYTE	bHeader;
+	uint8_t	bHeader;
 	char	szAnswer[MATRIX_ANSWER_MAX_LEN + 1];
 } TPacketCGMatrixCard;
 
 typedef struct packet_matrix_card
 {
-	BYTE	bHeader;
-	DWORD	dwRows;
-	DWORD	dwCols;
+	uint8_t	bHeader;
+	uint32_t	dwRows;
+	uint32_t	dwCols;
 } TPacketGCMatrixCard;
 
 typedef struct packet_login_key
 {
-	BYTE	bHeader;
-	DWORD	dwLoginKey;
+	uint8_t	bHeader;
+	uint32_t	dwLoginKey;
 } TPacketGCLoginKey;
 
 typedef struct command_player_select
 {
-	BYTE	header;
-	BYTE	index;
+	uint8_t	header;
+	uint8_t	index;
 } TPacketCGPlayerSelect;
 
 typedef struct command_player_delete
 {
-	BYTE	header;
-	BYTE	index;
+	uint8_t	header;
+	uint8_t	index;
 	char	private_code[8];
 } TPacketCGPlayerDelete;
 
 typedef struct command_player_create
 {
-	BYTE        header;
-	BYTE        index;
+	uint8_t        header;
+	uint8_t        index;
 	char        name[CHARACTER_NAME_MAX_LEN + 1];
-	WORD        job;
-	BYTE	shape;
-	BYTE	Con;
-	BYTE	Int;
-	BYTE	Str;
-	BYTE	Dex;
+	uint16_t        job;
+	uint8_t	shape;
+	uint8_t	Con;
+	uint8_t	int32_t;
+	uint8_t	Str;
+	uint8_t	Dex;
 } TPacketCGPlayerCreate;
 
 typedef struct command_player_create_success
 {
-	BYTE		header;
-	BYTE		bAccountCharacterIndex;
+	uint8_t		header;
+	uint8_t		bAccountCharacterIndex;
 	TSimplePlayer	player;
 } TPacketGCPlayerCreateSuccess;
 
 // 공격
 typedef struct command_attack
 {
-	BYTE	bHeader;
-	BYTE	bType;
-	DWORD	dwVID;
-	BYTE	bCRCMagicCubeProcPiece;
-	BYTE	bCRCMagicCubeFilePiece;
+	uint8_t	bHeader;
+	uint8_t	bType;
+	uint32_t	dwVID;
+	uint8_t	bCRCMagicCubeProcPiece;
+	uint8_t	bCRCMagicCubeFilePiece;
 } TPacketCGAttack;
 
 enum EMoveFuncType
@@ -638,110 +638,110 @@ enum EMoveFuncType
 // 이동
 typedef struct command_move
 {
-	BYTE	bHeader;
-	BYTE	bFunc;
-	BYTE	bArg;
-	BYTE	bRot;
-	long	lX;
-	long	lY;
-	DWORD	dwTime;
+	uint8_t	bHeader;
+	uint8_t	bFunc;
+	uint8_t	bArg;
+	uint8_t	bRot;
+	int32_t	lX;
+	int32_t	lY;
+	uint32_t	dwTime;
 } TPacketCGMove;
 
 typedef struct command_sync_position_element
 {
-	DWORD	dwVID;
-	long	lX;
-	long	lY;
+	uint32_t	dwVID;
+	int32_t	lX;
+	int32_t	lY;
 } TPacketCGSyncPositionElement;
 
 // 위치 동기화
 typedef struct command_sync_position	// 가변 패킷
 {
-	BYTE	bHeader;
-	WORD	wSize;
+	uint8_t	bHeader;
+	uint16_t	wSize;
 } TPacketCGSyncPosition;
 
 /* 채팅 (3) */
 typedef struct command_chat	// 가변 패킷
 {
-	BYTE	header;
-	WORD	size;
-	BYTE	type;
+	uint8_t	header;
+	uint16_t	size;
+	uint8_t	type;
 } TPacketCGChat;
 
 /* 귓속말 */
 typedef struct command_whisper
 {
-	BYTE	bHeader;
-	WORD	wSize;
+	uint8_t	bHeader;
+	uint16_t	wSize;
 	char 	szNameTo[CHARACTER_NAME_MAX_LEN + 1];
 } TPacketCGWhisper;
 
 typedef struct command_entergame
 {
-	BYTE	header;
+	uint8_t	header;
 } TPacketCGEnterGame;
 
 typedef struct command_item_use
 {
-	BYTE 	header;
+	uint8_t 	header;
 	TItemPos 	Cell;
 } TPacketCGItemUse;
 
 typedef struct command_item_use_to_item
 {
-	BYTE	header;
+	uint8_t	header;
 	TItemPos	Cell;
 	TItemPos	TargetCell;
 } TPacketCGItemUseToItem;
 
 typedef struct command_item_drop
 {
-	BYTE 	header;
+	uint8_t 	header;
 	TItemPos 	Cell;
-	DWORD	gold;
+	uint32_t	gold;
 } TPacketCGItemDrop;
 
 typedef struct command_item_drop2
 {
-	BYTE 	header;
+	uint8_t 	header;
 	TItemPos 	Cell;
-	DWORD	gold;
-	BYTE	count;
+	uint32_t	gold;
+	uint8_t	count;
 } TPacketCGItemDrop2;
 
 typedef struct command_item_move
 {
-	BYTE 	header;
+	uint8_t 	header;
 	TItemPos	Cell;
 	TItemPos	CellTo;
-	BYTE	count;
+	uint8_t	count;
 } TPacketCGItemMove;
 
 typedef struct command_item_pickup
 {
-	BYTE 	header;
-	DWORD	vid;
+	uint8_t 	header;
+	uint32_t	vid;
 } TPacketCGItemPickup;
 
 typedef struct command_quickslot_add
 {
-	BYTE	header;
-	BYTE	pos;
+	uint8_t	header;
+	uint8_t	pos;
 	TQuickslot	slot;
 } TPacketCGQuickslotAdd;
 
 typedef struct command_quickslot_del
 {
-	BYTE	header;
-	BYTE	pos;
+	uint8_t	header;
+	uint8_t	pos;
 } TPacketCGQuickslotDel;
 
 typedef struct command_quickslot_swap
 {
-	BYTE	header;
-	BYTE	pos;
-	BYTE	change_pos;
+	uint8_t	header;
+	uint8_t	pos;
+	uint8_t	change_pos;
 } TPacketCGQuickslotSwap;
 
 enum
@@ -754,25 +754,25 @@ enum
 
 typedef struct command_shop_buy
 {
-	BYTE	count;
+	uint8_t	count;
 } TPacketCGShopBuy;
 
 typedef struct command_shop_sell
 {
-	BYTE	pos;
-	BYTE	count;
+	uint8_t	pos;
+	uint8_t	count;
 } TPacketCGShopSell;
 
 typedef struct command_shop
 {
-	BYTE	header;
-	BYTE	subheader;
+	uint8_t	header;
+	uint8_t	subheader;
 } TPacketCGShop;
 
 typedef struct command_on_click
 {
-	BYTE	header;
-	DWORD	vid;
+	uint8_t	header;
+	uint32_t	vid;
 } TPacketCGOnClick;
 
 enum
@@ -787,45 +787,45 @@ enum
 
 typedef struct command_exchange
 {
-	BYTE	header;
-	BYTE	sub_header;
-	DWORD	arg1;
-	BYTE	arg2;
+	uint8_t	header;
+	uint8_t	sub_header;
+	uint32_t	arg1;
+	uint8_t	arg2;
 	TItemPos	Pos;
 } TPacketCGExchange;
 
 typedef struct command_position
 {
-	BYTE	header;
-	BYTE	position;
+	uint8_t	header;
+	uint8_t	position;
 } TPacketCGPosition;
 
 typedef struct command_script_answer
 {
-	BYTE	header;
-	BYTE	answer;
+	uint8_t	header;
+	uint8_t	answer;
 	//char	file[32 + 1];
-	//BYTE	answer[16 + 1];
+	//uint8_t	answer[16 + 1];
 } TPacketCGScriptAnswer;
 
 
 typedef struct command_script_button
 {
-	BYTE        header;
-	unsigned int	idx;
+	uint8_t        header;
+	uint32_t	idx;
 } TPacketCGScriptButton;
 
 typedef struct command_quest_input_string
 {
-	BYTE header;
+	uint8_t header;
 	char msg[64+1];
 } TPacketCGQuestInputString;
 
 typedef struct command_quest_confirm
 {
-	BYTE header;
-	BYTE answer;
-	DWORD requestPID;
+	uint8_t header;
+	uint8_t answer;
+	uint32_t requestPID;
 } TPacketCGQuestConfirm;
 
 /*
@@ -833,18 +833,18 @@ typedef struct command_quest_confirm
  */
 typedef struct packet_quest_confirm
 {
-	BYTE header;
+	uint8_t header;
 	char msg[64+1]; 
-	long timeout;
-	DWORD requestPID;
+	int32_t timeout;
+	uint32_t requestPID;
 } TPacketGCQuestConfirm;
 
 typedef struct packet_handshake
 {
-	BYTE	bHeader;
-	DWORD	dwHandshake;
-	DWORD	dwTime;
-	long	lDelta;
+	uint8_t	bHeader;
+	uint32_t	dwHandshake;
+	uint32_t	dwTime;
+	int32_t	lDelta;
 } TPacketGCHandshake;
 
 enum EPhase
@@ -867,15 +867,15 @@ enum EPhase
 
 typedef struct packet_phase
 {
-	BYTE	header;
-	BYTE	phase;
+	uint8_t	header;
+	uint8_t	phase;
 } TPacketGCPhase;
 
 typedef struct packet_bindudp
 {
-	BYTE	header;
-	DWORD	addr;
-	WORD	port;
+	uint8_t	header;
+	uint32_t	addr;
+	uint16_t	port;
 } TPacketGCBindUDP;
 
 enum
@@ -891,40 +891,40 @@ enum
 
 typedef struct packet_login_success
 {
-	BYTE		bHeader;
+	uint8_t		bHeader;
 	TSimplePlayer	players[PLAYER_PER_ACCOUNT];
-	DWORD		guild_id[PLAYER_PER_ACCOUNT];
+	uint32_t		guild_id[PLAYER_PER_ACCOUNT];
 	char		guild_name[PLAYER_PER_ACCOUNT][GUILD_NAME_MAX_LEN+1];
 
-	DWORD		handle;
-	DWORD		random_key;
+	uint32_t		handle;
+	uint32_t		random_key;
 } TPacketGCLoginSuccess;
 
 typedef struct packet_auth_success
 {
-	BYTE	bHeader;
-	DWORD	dwLoginKey;
-	BYTE	bResult;
+	uint8_t	bHeader;
+	uint32_t	dwLoginKey;
+	uint8_t	bResult;
 } TPacketGCAuthSuccess;
 
 typedef struct packet_auth_success_openid
 {
-	BYTE	bHeader;
-	DWORD	dwLoginKey;
-	BYTE	bResult;
+	uint8_t	bHeader;
+	uint32_t	dwLoginKey;
+	uint8_t	bResult;
 	char	login[LOGIN_MAX_LEN + 1];
 } TPacketGCAuthSuccessOpenID;
 
 typedef struct packet_login_failure
 {
-	BYTE	header;
+	uint8_t	header;
 	char	szStatus[ACCOUNT_STATUS_MAX_LEN + 1];
 } TPacketGCLoginFailure;
 
 typedef struct packet_create_failure
 {
-	BYTE	header;
-	BYTE	bType;
+	uint8_t	header;
+	uint8_t	bType;
 } TPacketGCCreateFailure;
 
 enum
@@ -947,108 +947,108 @@ enum ECharacterEquipmentPart
 
 typedef struct packet_add_char
 {
-	BYTE	header;
-	DWORD	dwVID;
+	uint8_t	header;
+	uint32_t	dwVID;
 
 	float	angle;
-	long	x;
-	long	y;
-	long	z;
+	int32_t	x;
+	int32_t	y;
+	int32_t	z;
 
-	BYTE	bType;
-	WORD	wRaceNum;
-	BYTE	bMovingSpeed;
-	BYTE	bAttackSpeed;
+	uint8_t	bType;
+	uint16_t	wRaceNum;
+	uint8_t	bMovingSpeed;
+	uint8_t	bAttackSpeed;
 
-	BYTE	bStateFlag;
-	DWORD	dwAffectFlag[2];	// 효과
+	uint8_t	bStateFlag;
+	uint32_t	dwAffectFlag[2];	// 효과
 } TPacketGCCharacterAdd;
 
 typedef struct packet_char_additional_info
 {
-	BYTE    header;
-	DWORD   dwVID;
+	uint8_t    header;
+	uint32_t   dwVID;
 	char    name[CHARACTER_NAME_MAX_LEN + 1];
-	WORD    awPart[CHR_EQUIPPART_NUM];
-	BYTE	bEmpire;
-	DWORD   dwGuildID;
-	DWORD   dwLevel;
-	short	sAlignment;
-	BYTE	bPKMode;
-	DWORD	dwMountVnum;
+	uint16_t    awPart[CHR_EQUIPPART_NUM];
+	uint8_t	bEmpire;
+	uint32_t   dwGuildID;
+	uint32_t   dwLevel;
+	int16_t	sAlignment;
+	uint8_t	bPKMode;
+	uint32_t	dwMountVnum;
 } TPacketGCCharacterAdditionalInfo;
 
 /*
    typedef struct packet_update_char_old
    {
-   BYTE	header;
-   DWORD	dwVID;
+   uint8_t	header;
+   uint32_t	dwVID;
 
-   WORD        awPart[CHR_EQUIPPART_NUM];
-   BYTE	bMovingSpeed;
-   BYTE	bAttackSpeed;
+   uint16_t        awPart[CHR_EQUIPPART_NUM];
+   uint8_t	bMovingSpeed;
+   uint8_t	bAttackSpeed;
 
-   BYTE	bStateFlag;
-   DWORD	dwAffectFlag[2];
+   uint8_t	bStateFlag;
+   uint32_t	dwAffectFlag[2];
 
-   DWORD	dwGuildID;
-   short	sAlignment;
-   BYTE	bPKMode;
-   DWORD	dwMountVnum;
+   uint32_t	dwGuildID;
+   int16_t	sAlignment;
+   uint8_t	bPKMode;
+   uint32_t	dwMountVnum;
    } TPacketGCCharacterUpdateOld;
  */
 
 typedef struct packet_update_char
 {
-	BYTE	header;
-	DWORD	dwVID;
+	uint8_t	header;
+	uint32_t	dwVID;
 
-	WORD        awPart[CHR_EQUIPPART_NUM];
-	BYTE	bMovingSpeed;
-	BYTE	bAttackSpeed;
+	uint16_t        awPart[CHR_EQUIPPART_NUM];
+	uint8_t	bMovingSpeed;
+	uint8_t	bAttackSpeed;
 
-	BYTE	bStateFlag;
-	DWORD	dwAffectFlag[2];
+	uint8_t	bStateFlag;
+	uint32_t	dwAffectFlag[2];
 
-	DWORD	dwGuildID;
-	short	sAlignment;
-	BYTE	bPKMode;
-	DWORD	dwMountVnum;
-	//WORD	wRaceNum;
+	uint32_t	dwGuildID;
+	int16_t	sAlignment;
+	uint8_t	bPKMode;
+	uint32_t	dwMountVnum;
+	//uint16_t	wRaceNum;
 } TPacketGCCharacterUpdate;
 
 typedef struct packet_del_char
 {
-	BYTE	header;
-	DWORD	id;
+	uint8_t	header;
+	uint32_t	id;
 } TPacketGCCharacterDelete;
 
 typedef struct packet_chat	// 가변 패킷
 {
-	BYTE	header;
-	WORD	size;
-	BYTE	type;
-	DWORD	id;
-	BYTE	bEmpire;
+	uint8_t	header;
+	uint16_t	size;
+	uint8_t	type;
+	uint32_t	id;
+	uint8_t	bEmpire;
 } TPacketGCChat;
 
 typedef struct packet_whisper	// 가변 패킷
 {
-	BYTE	bHeader;
-	WORD	wSize;
-	BYTE	bType;
+	uint8_t	bHeader;
+	uint16_t	wSize;
+	uint8_t	bType;
 	char	szNameFrom[CHARACTER_NAME_MAX_LEN + 1];
 } TPacketGCWhisper;
 
 typedef struct packet_main_character
 {
-	BYTE        header;
-	DWORD	dwVID;
-	WORD	wRaceNum;
+	uint8_t        header;
+	uint32_t	dwVID;
+	uint16_t	wRaceNum;
 	char	szName[CHARACTER_NAME_MAX_LEN + 1];
-	long	lx, ly, lz;
-	BYTE	empire;
-	BYTE	skill_group;
+	int32_t	lx, ly, lz;
+	uint8_t	empire;
+	uint8_t	skill_group;
 } TPacketGCMainCharacter;
 
 // SUPPORT_BGM
@@ -1059,14 +1059,14 @@ typedef struct packet_main_character3_bgm
 		MUSIC_NAME_LEN = 24,
 	};
 
-	BYTE    header;
-	DWORD	dwVID;
-	WORD	wRaceNum;
+	uint8_t    header;
+	uint32_t	dwVID;
+	uint16_t	wRaceNum;
 	char	szChrName[CHARACTER_NAME_MAX_LEN + 1];
 	char	szBGMName[MUSIC_NAME_LEN + 1];
-	long	lx, ly, lz;
-	BYTE	empire;
-	BYTE	skill_group;
+	int32_t	lx, ly, lz;
+	uint8_t	empire;
+	uint8_t	skill_group;
 } TPacketGCMainCharacter3_BGM;
 
 typedef struct packet_main_character4_bgm_vol
@@ -1076,152 +1076,152 @@ typedef struct packet_main_character4_bgm_vol
 		MUSIC_NAME_LEN = 24,
 	};
 
-	BYTE    header;
-	DWORD	dwVID;
-	WORD	wRaceNum;
+	uint8_t    header;
+	uint32_t	dwVID;
+	uint16_t	wRaceNum;
 	char	szChrName[CHARACTER_NAME_MAX_LEN + 1];
 	char	szBGMName[MUSIC_NAME_LEN + 1];
 	float	fBGMVol;
-	long	lx, ly, lz;
-	BYTE	empire;
-	BYTE	skill_group;
+	int32_t	lx, ly, lz;
+	uint8_t	empire;
+	uint8_t	skill_group;
 } TPacketGCMainCharacter4_BGM_VOL;
 // END_OF_SUPPORT_BGM
 
 typedef struct packet_points
 {
-	BYTE	header;
-	INT		points[POINT_MAX_NUM];
+	uint8_t	header;
+	int32_t		points[POINT_MAX_NUM];
 } TPacketGCPoints;
 
 typedef struct packet_skill_level
 {
-	BYTE		bHeader;
+	uint8_t		bHeader;
 	TPlayerSkill	skills[SKILL_MAX_NUM];
 } TPacketGCSkillLevel;
 
 typedef struct packet_point_change
 {
-	int		header;
-	DWORD	dwVID;
-	BYTE	type;
-	long	amount;
-	long	value;
+	int32_t		header;
+	uint32_t	dwVID;
+	uint8_t	type;
+	int32_t	amount;
+	int32_t	value;
 } TPacketGCPointChange;
 
 typedef struct packet_stun
 {
-	BYTE	header;
-	DWORD	vid;
+	uint8_t	header;
+	uint32_t	vid;
 } TPacketGCStun;
 
 typedef struct packet_dead
 {
-	BYTE	header;
-	DWORD	vid;
+	uint8_t	header;
+	uint32_t	vid;
 } TPacketGCDead;
 
 struct TPacketGCItemDelDeprecated
 {
-	BYTE	header;
+	uint8_t	header;
 	TItemPos Cell;
-	DWORD	vnum;
-	BYTE	count;
-	long	alSockets[ITEM_SOCKET_MAX_NUM];
+	uint32_t	vnum;
+	uint8_t	count;
+	int32_t	alSockets[ITEM_SOCKET_MAX_NUM];
 	TPlayerItemAttribute aAttr[ITEM_ATTRIBUTE_MAX_NUM];
 };
 
 typedef struct packet_item_set
 {
-	BYTE	header;
+	uint8_t	header;
 	TItemPos Cell;
-	DWORD	vnum;
-	BYTE	count;
-	DWORD	flags;
-	DWORD	anti_flags;
+	uint32_t	vnum;
+	uint8_t	count;
+	uint32_t	flags;
+	uint32_t	anti_flags;
 	bool	highlight;
-	long	alSockets[ITEM_SOCKET_MAX_NUM];
+	int32_t	alSockets[ITEM_SOCKET_MAX_NUM];
 	TPlayerItemAttribute aAttr[ITEM_ATTRIBUTE_MAX_NUM];
 } TPacketGCItemSet;
 
 typedef struct packet_item_del
 {
-	BYTE	header;
-	BYTE	pos;
+	uint8_t	header;
+	uint8_t	pos;
 } TPacketGCItemDel;
 
 struct packet_item_use
 {
-	BYTE	header;
+	uint8_t	header;
 	TItemPos Cell;
-	DWORD	ch_vid;
-	DWORD	victim_vid;
-	DWORD	vnum;
+	uint32_t	ch_vid;
+	uint32_t	victim_vid;
+	uint32_t	vnum;
 };
 
 struct packet_item_move
 {
-	BYTE	header;
+	uint8_t	header;
 	TItemPos Cell;
 	TItemPos CellTo;
 };
 
 typedef struct packet_item_update
 {
-	BYTE	header;
+	uint8_t	header;
 	TItemPos Cell;
-	BYTE	count;
-	long	alSockets[ITEM_SOCKET_MAX_NUM];
+	uint8_t	count;
+	int32_t	alSockets[ITEM_SOCKET_MAX_NUM];
 	TPlayerItemAttribute aAttr[ITEM_ATTRIBUTE_MAX_NUM];
 } TPacketGCItemUpdate;
 
 typedef struct packet_item_ground_add
 {
-	BYTE	bHeader;
-	long 	x, y, z;
-	DWORD	dwVID;
-	DWORD	dwVnum;
+	uint8_t	bHeader;
+	int32_t 	x, y, z;
+	uint32_t	dwVID;
+	uint32_t	dwVnum;
 } TPacketGCItemGroundAdd;
 
 typedef struct packet_item_ownership
 {
-	BYTE	bHeader;
-	DWORD	dwVID;
+	uint8_t	bHeader;
+	uint32_t	dwVID;
 	char	szName[CHARACTER_NAME_MAX_LEN + 1];
 } TPacketGCItemOwnership;
 
 typedef struct packet_item_ground_del
 {
-	BYTE	bHeader;
-	DWORD	dwVID;
+	uint8_t	bHeader;
+	uint32_t	dwVID;
 } TPacketGCItemGroundDel;
 
 struct packet_quickslot_add
 {
-	BYTE	header;
-	BYTE	pos;
+	uint8_t	header;
+	uint8_t	pos;
 	TQuickslot	slot;
 };
 
 struct packet_quickslot_del
 {
-	BYTE	header;
-	BYTE	pos;
+	uint8_t	header;
+	uint8_t	pos;
 };
 
 struct packet_quickslot_swap
 {
-	BYTE	header;
-	BYTE	pos;
-	BYTE	pos_to;
+	uint8_t	header;
+	uint8_t	pos;
+	uint8_t	pos_to;
 };
 
 struct packet_motion
 {
-	BYTE	header;
-	DWORD	vid;
-	DWORD	victim_vid;
-	WORD	motion;
+	uint8_t	header;
+	uint32_t	vid;
+	uint32_t	victim_vid;
+	uint16_t	motion;
 };
 
 enum EPacketShopSubHeaders
@@ -1242,17 +1242,17 @@ enum EPacketShopSubHeaders
 
 struct packet_shop_item
 {   
-	DWORD       vnum;
-	DWORD       price;
-	BYTE        count;
-	BYTE		display_pos;
-	long	alSockets[ITEM_SOCKET_MAX_NUM];
+	uint32_t       vnum;
+	uint32_t       price;
+	uint8_t        count;
+	uint8_t		display_pos;
+	int32_t	alSockets[ITEM_SOCKET_MAX_NUM];
 	TPlayerItemAttribute aAttr[ITEM_ATTRIBUTE_MAX_NUM];
 };
 
 typedef struct packet_shop_start
 {
-	DWORD   owner_vid;
+	uint32_t   owner_vid;
 	struct packet_shop_item	items[SHOP_HOST_ITEM_MAX_NUM];
 } TPacketGCShopStart;
 
@@ -1261,40 +1261,40 @@ typedef struct packet_shop_start_ex // 다음에 TSubPacketShopTab* shop_tabs �
 	typedef struct sub_packet_shop_tab 
 	{
 		char name[SHOP_TAB_NAME_MAX];
-		BYTE coin_type;
+		uint8_t coin_type;
 		packet_shop_item items[SHOP_HOST_ITEM_MAX_NUM];
 	} TSubPacketShopTab;
-	DWORD owner_vid;
-	BYTE shop_tab_count;
+	uint32_t owner_vid;
+	uint8_t shop_tab_count;
 } TPacketGCShopStartEx;
 
 typedef struct packet_shop_update_item
 {
-	BYTE			pos;
+	uint8_t			pos;
 	struct packet_shop_item	item;
 } TPacketGCShopUpdateItem;
 
 typedef struct packet_shop_update_price
 {
-	int				iPrice;
+	int32_t				iPrice;
 } TPacketGCShopUpdatePrice;
 
 typedef struct packet_shop	// 가변 패킷
 {
-	BYTE        header;
-	WORD	size; 
-	BYTE        subheader;
+	uint8_t        header;
+	uint16_t	size; 
+	uint8_t        subheader;
 } TPacketGCShop;
 
 struct packet_exchange
 {
-	BYTE	header;
-	BYTE	sub_header;
-	BYTE	is_me;
-	DWORD	arg1;	// vnum
+	uint8_t	header;
+	uint8_t	sub_header;
+	uint8_t	is_me;
+	uint32_t	arg1;	// vnum
 	TItemPos	arg2;	// cell
-	DWORD	arg3;	// count
-	long	alSockets[ITEM_SOCKET_MAX_NUM];
+	uint32_t	arg3;	// count
+	int32_t	alSockets[ITEM_SOCKET_MAX_NUM];
 	TPlayerItemAttribute aAttr[ITEM_ATTRIBUTE_MAX_NUM];
 };
 
@@ -1312,109 +1312,109 @@ enum EPacketTradeSubHeaders
 
 struct packet_position
 {
-	BYTE	header;
-	DWORD	vid;
-	BYTE	position;
+	uint8_t	header;
+	uint32_t	vid;
+	uint8_t	position;
 };
 
 typedef struct packet_ping
 {
-	BYTE	header;
+	uint8_t	header;
 } TPacketGCPing;
 
 struct packet_script
 {
-	BYTE	header;
-	WORD	size;
-	BYTE	skin;
-	WORD	src_size;
+	uint8_t	header;
+	uint16_t	size;
+	uint8_t	skin;
+	uint16_t	src_size;
 };
 
 typedef struct packet_change_speed
 {
-	BYTE		header;
-	DWORD		vid;
-	WORD		moving_speed;
+	uint8_t		header;
+	uint32_t		vid;
+	uint16_t		moving_speed;
 } TPacketGCChangeSpeed;
 
 struct packet_mount
 {
-	BYTE	header;
-	DWORD	vid;
-	DWORD	mount_vid;
-	BYTE	pos;
-	DWORD	x, y;
+	uint8_t	header;
+	uint32_t	vid;
+	uint32_t	mount_vid;
+	uint8_t	pos;
+	uint32_t	x, y;
 };
 
 typedef struct packet_move
 {	
-	BYTE		bHeader;
-	BYTE		bFunc;
-	BYTE		bArg;
-	BYTE		bRot;
-	DWORD		dwVID;
-	long		lX;
-	long		lY;
-	DWORD		dwTime;
-	DWORD		dwDuration;
+	uint8_t		bHeader;
+	uint8_t		bFunc;
+	uint8_t		bArg;
+	uint8_t		bRot;
+	uint32_t		dwVID;
+	int32_t		lX;
+	int32_t		lY;
+	uint32_t		dwTime;
+	uint32_t		dwDuration;
 } TPacketGCMove;
 
 // 소유권
 typedef struct packet_ownership
 {
-	BYTE		bHeader;
-	DWORD		dwOwnerVID;
-	DWORD		dwVictimVID;
+	uint8_t		bHeader;
+	uint32_t		dwOwnerVID;
+	uint32_t		dwVictimVID;
 } TPacketGCOwnership;
 
 // 위치 동기화 패킷의 bCount 만큼 붙는 단위
 typedef struct packet_sync_position_element
 {
-	DWORD	dwVID;
-	long	lX;
-	long	lY;
+	uint32_t	dwVID;
+	int32_t	lX;
+	int32_t	lY;
 } TPacketGCSyncPositionElement;
 
 // 위치 동기화
 typedef struct packet_sync_position	// 가변 패킷
 {
-	BYTE	bHeader;
-	WORD	wSize;	// 개수 = (wSize - sizeof(TPacketGCSyncPosition)) / sizeof(TPacketGCSyncPositionElement) 
+	uint8_t	bHeader;
+	uint16_t	wSize;	// 개수 = (wSize - sizeof(TPacketGCSyncPosition)) / sizeof(TPacketGCSyncPositionElement) 
 } TPacketGCSyncPosition;
 
 typedef struct packet_fly
 {
-	BYTE	bHeader;
-	BYTE	bType;
-	DWORD	dwStartVID;
-	DWORD	dwEndVID;
+	uint8_t	bHeader;
+	uint8_t	bType;
+	uint32_t	dwStartVID;
+	uint32_t	dwEndVID;
 } TPacketGCCreateFly;
 
 typedef struct command_fly_targeting
 {
-	BYTE		bHeader;
-	DWORD		dwTargetVID;
-	long		x, y;
+	uint8_t		bHeader;
+	uint32_t		dwTargetVID;
+	int32_t		x, y;
 } TPacketCGFlyTargeting;
 
 typedef struct packet_fly_targeting
 {
-	BYTE		bHeader;
-	DWORD		dwShooterVID;
-	DWORD		dwTargetVID;
-	long		x, y;
+	uint8_t		bHeader;
+	uint32_t		dwShooterVID;
+	uint32_t		dwTargetVID;
+	int32_t		x, y;
 } TPacketGCFlyTargeting;
 
 typedef struct packet_shoot
 {
-	BYTE		bHeader;
-	BYTE		bType;
+	uint8_t		bHeader;
+	uint8_t		bType;
 } TPacketCGShoot;
 
 typedef struct packet_duel_start
 {
-	BYTE	header;
-	WORD	wSize;	// DWORD가 몇개? 개수 = (wSize - sizeof(TPacketGCPVPList)) / 4
+	uint8_t	header;
+	uint16_t	wSize;	// uint32_t가 몇개? 개수 = (wSize - sizeof(TPacketGCPVPList)) / 4
 } TPacketGCDuelStart;
 
 enum EPVPModes
@@ -1427,52 +1427,52 @@ enum EPVPModes
 
 typedef struct packet_pvp
 {
-	BYTE        bHeader;
-	DWORD       dwVIDSrc;
-	DWORD       dwVIDDst;
-	BYTE        bMode;	// 0 이면 끔, 1이면 켬
+	uint8_t        bHeader;
+	uint32_t       dwVIDSrc;
+	uint32_t       dwVIDDst;
+	uint8_t        bMode;	// 0 이면 끔, 1이면 켬
 } TPacketGCPVP;
 
 typedef struct command_use_skill
 {
-	BYTE	bHeader;
-	DWORD	dwVnum;
-	DWORD	dwVID;
+	uint8_t	bHeader;
+	uint32_t	dwVnum;
+	uint32_t	dwVID;
 } TPacketCGUseSkill;
 
 typedef struct command_target
 {
-	BYTE	header;
-	DWORD	dwVID;
+	uint8_t	header;
+	uint32_t	dwVID;
 } TPacketCGTarget;
 
 typedef struct packet_target
 {
-	BYTE	header;
-	DWORD	dwVID;
-	BYTE	bHPPercent;
+	uint8_t	header;
+	uint32_t	dwVID;
+	uint8_t	bHPPercent;
 } TPacketGCTarget;
 
 typedef struct packet_warp
 {
-	BYTE	bHeader;
-	long	lX;
-	long	lY;
-	long	lAddr;
-	WORD	wPort;
+	uint8_t	bHeader;
+	int32_t	lX;
+	int32_t	lY;
+	int32_t	lAddr;
+	uint16_t	wPort;
 } TPacketGCWarp;
 
 typedef struct command_warp
 {
-	BYTE	bHeader;
+	uint8_t	bHeader;
 } TPacketCGWarp;
 
 struct packet_quest_info
 {
-	BYTE header;
-	WORD size;
-	WORD index;
-	BYTE flag;
+	uint8_t header;
+	uint16_t size;
+	uint16_t index;
+	uint8_t flag;
 };
 
 enum 
@@ -1486,41 +1486,41 @@ enum
 
 typedef struct packet_messenger
 {
-	BYTE header;
-	WORD size;
-	BYTE subheader;
+	uint8_t header;
+	uint16_t size;
+	uint8_t subheader;
 } TPacketGCMessenger;
 
 typedef struct packet_messenger_guild_list
 {
-	BYTE connected;
-	BYTE length;
+	uint8_t connected;
+	uint8_t length;
 	//char login[LOGIN_MAX_LEN+1];
 } TPacketGCMessengerGuildList;
 
 typedef struct packet_messenger_guild_login
 {
-	BYTE length;
+	uint8_t length;
 	//char login[LOGIN_MAX_LEN+1];
 } TPacketGCMessengerGuildLogin;
 
 typedef struct packet_messenger_guild_logout
 {
-	BYTE length;
+	uint8_t length;
 
 	//char login[LOGIN_MAX_LEN+1];
 } TPacketGCMessengerGuildLogout;
 
 typedef struct packet_messenger_list_offline
 {
-	BYTE connected; // always 0
-	BYTE length;
+	uint8_t connected; // always 0
+	uint8_t length;
 } TPacketGCMessengerListOffline;
 
 typedef struct packet_messenger_list_online
 {
-	BYTE connected; // always 1
-	BYTE length;
+	uint8_t connected; // always 1
+	uint8_t length;
 } TPacketGCMessengerListOnline;
 
 enum 
@@ -1533,38 +1533,38 @@ enum
 
 typedef struct command_messenger
 {
-	BYTE header;
-	BYTE subheader;
+	uint8_t header;
+	uint8_t subheader;
 } TPacketCGMessenger;
 
 typedef struct command_messenger_add_by_vid
 {
-	DWORD vid;
+	uint32_t vid;
 } TPacketCGMessengerAddByVID;
 
 typedef struct command_messenger_add_by_name
 {
-	BYTE length;
+	uint8_t length;
 	//char login[LOGIN_MAX_LEN+1];
 } TPacketCGMessengerAddByName;
 
 typedef struct command_messenger_remove
 {
 	char login[LOGIN_MAX_LEN+1];
-	//DWORD account;
+	//uint32_t account;
 } TPacketCGMessengerRemove;
 
 typedef struct command_safebox_checkout
 {
-	BYTE	bHeader;
-	BYTE	bSafePos;
+	uint8_t	bHeader;
+	uint8_t	bSafePos;
 	TItemPos	ItemPos;
 } TPacketCGSafeboxCheckout;
 
 typedef struct command_safebox_checkin
 {
-	BYTE	bHeader;
-	BYTE	bSafePos;
+	uint8_t	bHeader;
+	uint8_t	bSafePos;
 	TItemPos	ItemPos;
 } TPacketCGSafeboxCheckin;
 
@@ -1573,83 +1573,83 @@ typedef struct command_safebox_checkin
 
 typedef struct command_party_parameter
 {
-	BYTE	bHeader;
-	BYTE	bDistributeMode;
+	uint8_t	bHeader;
+	uint8_t	bDistributeMode;
 } TPacketCGPartyParameter;
 
 typedef struct paryt_parameter
 {
-	BYTE	bHeader;
-	BYTE	bDistributeMode;
+	uint8_t	bHeader;
+	uint8_t	bDistributeMode;
 } TPacketGCPartyParameter;
 
 typedef struct packet_party_add
 {
-	BYTE	header;
-	DWORD	pid;
+	uint8_t	header;
+	uint32_t	pid;
 	char	name[CHARACTER_NAME_MAX_LEN+1];
 } TPacketGCPartyAdd;
 
 typedef struct command_party_invite
 {
-	BYTE	header;
-	DWORD	vid;
+	uint8_t	header;
+	uint32_t	vid;
 } TPacketCGPartyInvite;
 
 typedef struct packet_party_invite
 {
-	BYTE	header;
-	DWORD	leader_vid;
+	uint8_t	header;
+	uint32_t	leader_vid;
 } TPacketGCPartyInvite;
 
 typedef struct command_party_invite_answer
 {
-	BYTE	header;
-	DWORD	leader_vid;
-	BYTE	accept;
+	uint8_t	header;
+	uint32_t	leader_vid;
+	uint8_t	accept;
 } TPacketCGPartyInviteAnswer;
 
 typedef struct packet_party_update
 {
-	BYTE	header;
-	DWORD	pid;
-	BYTE	role;
-	BYTE	percent_hp;
-	short	affects[7];
+	uint8_t	header;
+	uint32_t	pid;
+	uint8_t	role;
+	uint8_t	percent_hp;
+	int16_t	affects[7];
 } TPacketGCPartyUpdate;
 
 typedef struct packet_party_remove
 {
-	BYTE header;
-	DWORD pid;
+	uint8_t header;
+	uint32_t pid;
 } TPacketGCPartyRemove;
 
 typedef struct packet_party_link
 {
-	BYTE header;
-	DWORD pid;
-	DWORD vid;
+	uint8_t header;
+	uint32_t pid;
+	uint32_t vid;
 } TPacketGCPartyLink;
 
 typedef struct packet_party_unlink
 {
-	BYTE header;
-	DWORD pid;
-	DWORD vid;
+	uint8_t header;
+	uint32_t pid;
+	uint32_t vid;
 } TPacketGCPartyUnlink;
 
 typedef struct command_party_remove
 {
-	BYTE header;
-	DWORD pid;
+	uint8_t header;
+	uint32_t pid;
 } TPacketCGPartyRemove;
 
 typedef struct command_party_set_state
 {
-	BYTE header;
-	DWORD pid;
-	BYTE byRole;
-	BYTE flag;
+	uint8_t header;
+	uint32_t pid;
+	uint8_t byRole;
+	uint8_t flag;
 } TPacketCGPartySetState;
 
 enum 
@@ -1660,32 +1660,32 @@ enum
 
 typedef struct command_party_use_skill
 {
-	BYTE header;
-	BYTE bySkillIndex;
-	DWORD vid;
+	uint8_t header;
+	uint8_t bySkillIndex;
+	uint32_t vid;
 } TPacketCGPartyUseSkill;
 
 typedef struct packet_safebox_size
 {
-	BYTE bHeader;
-	BYTE bSize;
+	uint8_t bHeader;
+	uint8_t bSize;
 } TPacketCGSafeboxSize;
 
 typedef struct packet_safebox_wrong_password
 {
-	BYTE	bHeader;
+	uint8_t	bHeader;
 } TPacketCGSafeboxWrongPassword;
 
 typedef struct command_empire
 {
-	BYTE	bHeader;
-	BYTE	bEmpire;
+	uint8_t	bHeader;
+	uint8_t	bEmpire;
 } TPacketCGEmpire;
 
 typedef struct packet_empire
 {
-	BYTE	bHeader;
-	BYTE	bEmpire;
+	uint8_t	bHeader;
+	uint8_t	bEmpire;
 } TPacketGCEmpire;
 
 enum
@@ -1696,15 +1696,15 @@ enum
 
 typedef struct command_safebox_money
 {
-	BYTE        bHeader;
-	BYTE        bState;
-	long	lMoney;
+	uint8_t        bHeader;
+	uint8_t        bState;
+	int32_t	lMoney;
 } TPacketCGSafeboxMoney;
 
 typedef struct packet_safebox_money_change
 {
-	BYTE	bHeader;
-	long	lMoney;
+	uint8_t	bHeader;
+	int32_t	lMoney;
 } TPacketGCSafeboxMoneyChange;
 
 // Guild
@@ -1755,126 +1755,126 @@ enum GUILD_SUBHEADER_CG
 
 typedef struct packet_guild
 {
-	BYTE header;
-	WORD size;
-	BYTE subheader;
+	uint8_t header;
+	uint16_t size;
+	uint8_t subheader;
 } TPacketGCGuild;
 
 typedef struct packet_guild_name_t
 {
-	BYTE header;
-	WORD size;
-	BYTE subheader;
-	DWORD	guildID;
+	uint8_t header;
+	uint16_t size;
+	uint8_t subheader;
+	uint32_t	guildID;
 	char	guildName[GUILD_NAME_MAX_LEN];
 } TPacketGCGuildName;
 
 typedef struct packet_guild_war
 {
-	DWORD	dwGuildSelf;
-	DWORD	dwGuildOpp;
-	BYTE	bType;
-	BYTE 	bWarState;
+	uint32_t	dwGuildSelf;
+	uint32_t	dwGuildOpp;
+	uint8_t	bType;
+	uint8_t 	bWarState;
 } TPacketGCGuildWar;
 
 typedef struct command_guild
 {
-	BYTE header;
-	BYTE subheader;
+	uint8_t header;
+	uint8_t subheader;
 } TPacketCGGuild;
 
 typedef struct command_guild_answer_make_guild
 {
-	BYTE header;
+	uint8_t header;
 	char guild_name[GUILD_NAME_MAX_LEN+1];
 } TPacketCGAnswerMakeGuild;
 
 typedef struct command_guild_use_skill
 {
-	DWORD	dwVnum;
-	DWORD	dwPID;
+	uint32_t	dwVnum;
+	uint32_t	dwPID;
 } TPacketCGGuildUseSkill;
 
 // Guild Mark
 typedef struct command_mark_login
 {
-	BYTE    header;
-	DWORD   handle;
-	DWORD   random_key;
+	uint8_t    header;
+	uint32_t   handle;
+	uint32_t   random_key;
 } TPacketCGMarkLogin;
 
 typedef struct command_mark_upload
 {
-	BYTE	header;
-	DWORD	gid;
-	BYTE	image[16*12*4];
+	uint8_t	header;
+	uint32_t	gid;
+	uint8_t	image[16*12*4];
 } TPacketCGMarkUpload;
 
 typedef struct command_mark_idxlist
 {
-	BYTE	header;
+	uint8_t	header;
 } TPacketCGMarkIDXList;
 
 typedef struct command_mark_crclist
 {
-	BYTE	header;
-	BYTE	imgIdx;
-	DWORD	crclist[80];
+	uint8_t	header;
+	uint8_t	imgIdx;
+	uint32_t	crclist[80];
 } TPacketCGMarkCRCList;
 
 typedef struct packet_mark_idxlist
 {
-	BYTE    header;
-	DWORD	bufSize;
-	WORD	count;
-	//뒤에 size * (WORD + WORD)만큼 데이터 붙음
+	uint8_t    header;
+	uint32_t	bufSize;
+	uint16_t	count;
+	//뒤에 size * (uint16_t + uint16_t)만큼 데이터 붙음
 } TPacketGCMarkIDXList;
 
 typedef struct packet_mark_block
 {
-	BYTE	header;
-	DWORD	bufSize;
-	BYTE	imgIdx;
-	DWORD	count;
+	uint8_t	header;
+	uint32_t	bufSize;
+	uint8_t	imgIdx;
+	uint32_t	count;
 	// 뒤에 64 x 48 x 픽셀크기(4바이트) = 12288만큼 데이터 붙음
 } TPacketGCMarkBlock;
 
 typedef struct command_symbol_upload
 {
-	BYTE	header;
-	WORD	size;
-	DWORD	guild_id;
+	uint8_t	header;
+	uint16_t	size;
+	uint32_t	guild_id;
 } TPacketCGGuildSymbolUpload;
 
 typedef struct command_symbol_crc
 {
-	BYTE header;
-	DWORD guild_id;
-	DWORD crc;
-	DWORD size;
+	uint8_t header;
+	uint32_t guild_id;
+	uint32_t crc;
+	uint32_t size;
 } TPacketCGSymbolCRC;
 
 typedef struct packet_symbol_data
 {
-	BYTE header;
-	WORD size;
-	DWORD guild_id;
+	uint8_t header;
+	uint16_t size;
+	uint32_t guild_id;
 } TPacketGCGuildSymbolData;
 
 // Fishing
 
 typedef struct command_fishing
 {
-	BYTE header;
-	BYTE dir;
+	uint8_t header;
+	uint8_t dir;
 } TPacketCGFishing;
 
 typedef struct packet_fishing
 {
-	BYTE header;
-	BYTE subheader;
-	DWORD info;
-	BYTE dir;
+	uint8_t header;
+	uint8_t subheader;
+	uint32_t info;
+	uint8_t dir;
 } TPacketGCFishing;
 
 enum
@@ -1889,15 +1889,15 @@ enum
 
 typedef struct command_give_item
 {
-	BYTE byHeader;
-	DWORD dwTargetVID;
+	uint8_t byHeader;
+	uint32_t dwTargetVID;
 	TItemPos ItemPos;
-	BYTE byItemCount;
+	uint8_t byItemCount;
 } TPacketCGGiveItem;
 
 typedef struct SPacketCGHack
 {
-	BYTE	bHeader;
+	uint8_t	bHeader;
 	char	szBuf[255 + 1];
 } TPacketCGHack;
 
@@ -1910,34 +1910,34 @@ enum
 
 typedef struct packet_dungeon
 {
-	BYTE bHeader;
-	WORD size;
-	BYTE subheader;
+	uint8_t bHeader;
+	uint16_t size;
+	uint8_t subheader;
 } TPacketGCDungeon;
 
 typedef struct packet_dungeon_dest_position
 {
-	long x;
-	long y;
+	int32_t x;
+	int32_t y;
 } TPacketGCDungeonDestPosition;
 
 typedef struct SPacketGCShopSign
 {
-	BYTE	bHeader;
-	DWORD	dwVID;
+	uint8_t	bHeader;
+	uint32_t	dwVID;
 	char	szSign[SHOP_SIGN_MAX_LEN + 1];
 } TPacketGCShopSign;
 
 typedef struct SPacketCGMyShop
 {
-	BYTE	bHeader;
+	uint8_t	bHeader;
 	char	szSign[SHOP_SIGN_MAX_LEN + 1];
-	BYTE	bCount;
+	uint8_t	bCount;
 } TPacketCGMyShop;
 
 typedef struct SPacketGCTime
 {
-	BYTE	bHeader;
+	uint8_t	bHeader;
 	time_t	time;
 } TPacketGCTime;
 
@@ -1949,200 +1949,200 @@ enum
 
 typedef struct SPacketGCWalkMode
 {
-	BYTE	header;
-	DWORD	vid;
-	BYTE	mode;
+	uint8_t	header;
+	uint32_t	vid;
+	uint8_t	mode;
 } TPacketGCWalkMode;
 
 typedef struct SPacketGCChangeSkillGroup
 {
-	BYTE        header;
-	BYTE        skill_group;
+	uint8_t        header;
+	uint8_t        skill_group;
 } TPacketGCChangeSkillGroup;
 
 typedef struct SPacketCGRefine
 {
-	BYTE	header;
-	BYTE	pos;
-	BYTE	type;
+	uint8_t	header;
+	uint8_t	pos;
+	uint8_t	type;
 } TPacketCGRefine;
 
 typedef struct SPacketCGRequestRefineInfo
 {
-	BYTE	header;
-	BYTE	pos;
+	uint8_t	header;
+	uint8_t	pos;
 } TPacketCGRequestRefineInfo;
 
 typedef struct SPacketGCRefineInformaion
 {
-	BYTE	header;
-	BYTE	type;
-	BYTE	pos;
-	DWORD	src_vnum;
-	DWORD	result_vnum;
-	BYTE	material_count;
-	int		cost; // 소요 비용
-	int		prob; // 확률
+	uint8_t	header;
+	uint8_t	type;
+	uint8_t	pos;
+	uint32_t	src_vnum;
+	uint32_t	result_vnum;
+	uint8_t	material_count;
+	int32_t		cost; // 소요 비용
+	int32_t		prob; // 확률
 	TRefineMaterial materials[REFINE_MATERIAL_MAX_NUM];
 } TPacketGCRefineInformation;
 
 struct TNPCPosition
 {
-	BYTE bType;
+	uint8_t bType;
 	char name[CHARACTER_NAME_MAX_LEN+1];
-	long x;
-	long y;
+	int32_t x;
+	int32_t y;
 };
 
 typedef struct SPacketGCNPCPosition
 {
-	BYTE header;
-	WORD size;
-	WORD count;
+	uint8_t header;
+	uint16_t size;
+	uint16_t count;
 
 	// array of TNPCPosition
 } TPacketGCNPCPosition;
 
 typedef struct SPacketGCSpecialEffect
 {
-	BYTE header;
-	BYTE type;
-	DWORD vid;
+	uint8_t header;
+	uint8_t type;
+	uint32_t vid;
 } TPacketGCSpecialEffect;
 
 typedef struct SPacketCGChangeName
 {
-	BYTE header;
-	BYTE index;
+	uint8_t header;
+	uint8_t index;
 	char name[CHARACTER_NAME_MAX_LEN+1];
 } TPacketCGChangeName;
 
 typedef struct SPacketGCChangeName
 {
-	BYTE header;
-	DWORD pid;
+	uint8_t header;
+	uint32_t pid;
 	char name[CHARACTER_NAME_MAX_LEN+1];
 } TPacketGCChangeName;
 
 
 typedef struct command_client_version
 {
-	BYTE header;
+	uint8_t header;
 	char filename[32+1];
 	char timestamp[32+1];
 } TPacketCGClientVersion;
 
 typedef struct command_client_version2
 {
-	BYTE header;
+	uint8_t header;
 	char filename[32+1];
 	char timestamp[32+1];
 } TPacketCGClientVersion2;
 
 typedef struct packet_channel
 {
-	BYTE header;
-	BYTE channel;
+	uint8_t header;
+	uint8_t channel;
 } TPacketGCChannel;
 
 typedef struct pakcet_view_equip
 {
-	BYTE  header;
-	DWORD vid;
+	uint8_t  header;
+	uint32_t vid;
 	struct {
-		DWORD	vnum;
-		BYTE	count;
-		long	alSockets[ITEM_SOCKET_MAX_NUM];
+		uint32_t	vnum;
+		uint8_t	count;
+		int32_t	alSockets[ITEM_SOCKET_MAX_NUM];
 		TPlayerItemAttribute aAttr[ITEM_ATTRIBUTE_MAX_NUM];
 	} equips[WEAR_MAX_NUM];
 } TPacketViewEquip;
 
 typedef struct 
 {
-	DWORD	dwID;
-	long	x, y;
-	long	width, height;
-	DWORD	dwGuildID;
+	uint32_t	dwID;
+	int32_t	x, y;
+	int32_t	width, height;
+	uint32_t	dwGuildID;
 } TLandPacketElement;
 
 typedef struct packet_land_list
 {
-	BYTE	header;
-	WORD	size;
+	uint8_t	header;
+	uint16_t	size;
 } TPacketGCLandList;
 
 typedef struct
 {
-	BYTE	bHeader;
-	long	lID;
+	uint8_t	bHeader;
+	int32_t	lID;
 	char	szName[32+1];
-	DWORD	dwVID;
-	BYTE	bType;
+	uint32_t	dwVID;
+	uint8_t	bType;
 } TPacketGCTargetCreate;
 
 typedef struct
 {
-	BYTE	bHeader;
-	long	lID;
-	long	lX, lY;
+	uint8_t	bHeader;
+	int32_t	lID;
+	int32_t	lX, lY;
 } TPacketGCTargetUpdate;
 
 typedef struct
 {
-	BYTE	bHeader;
-	long	lID;
+	uint8_t	bHeader;
+	int32_t	lID;
 } TPacketGCTargetDelete;
 
 typedef struct
 {
-	BYTE		bHeader;
+	uint8_t		bHeader;
 	TPacketAffectElement elem;
 } TPacketGCAffectAdd;
 
 typedef struct
 {
-	BYTE	bHeader;
-	DWORD	dwType;
-	BYTE	bApplyOn;
+	uint8_t	bHeader;
+	uint32_t	dwType;
+	uint8_t	bApplyOn;
 } TPacketGCAffectRemove;
 
 typedef struct packet_lover_info
 {
-	BYTE header;
+	uint8_t header;
 	char name[CHARACTER_NAME_MAX_LEN + 1];
-	BYTE love_point;
+	uint8_t love_point;
 } TPacketGCLoverInfo;
 
 typedef struct packet_love_point_update
 {
-	BYTE header;
-	BYTE love_point;
+	uint8_t header;
+	uint8_t love_point;
 } TPacketGCLovePointUpdate;
 
 // MINING
 typedef struct packet_dig_motion
 {
-	BYTE header;
-	DWORD vid;
-	DWORD target_vid;
-	BYTE count;
+	uint8_t header;
+	uint32_t vid;
+	uint32_t target_vid;
+	uint8_t count;
 } TPacketGCDigMotion;
 // END_OF_MINING
 
 // SCRIPT_SELECT_ITEM
 typedef struct command_script_select_item
 {
-	BYTE header;
-	DWORD selection;
+	uint8_t header;
+	uint32_t selection;
 } TPacketCGScriptSelectItem;
 // END_OF_SCRIPT_SELECT_ITEM
 
 typedef struct packet_damage_info
 {
-	BYTE header;
-	DWORD dwVID;
-	BYTE flag;
-	int damage;
+	uint8_t header;
+	uint32_t dwVID;
+	uint8_t flag;
+	int32_t damage;
 } TPacketGCDamageInfo;
 
 enum 
@@ -2154,59 +2154,59 @@ enum
 
 typedef struct packet_runup_matrix_quiz
 {
-	BYTE    bHeader;
+	uint8_t    bHeader;
 	char    szQuiz[RUNUP_MATRIX_QUIZ_MAX_LEN + 1];
 } TPacketGCRunupMatrixQuiz;
 
 typedef struct command_runup_matrix_answer
 {
-	BYTE    bHeader;
+	uint8_t    bHeader;
 	char    szAnswer[RUNUP_MATRIX_ANSWER_MAX_LEN + 1];
 } TPacketCGRunupMatrixAnswer;
 
 typedef struct packet_passpod 
 {
-	BYTE    bHeader;
+	uint8_t    bHeader;
 	char    szAnswer[8+1];
 } TPacketCGPasspod;
 
 typedef struct packet_passpod_failed 
 {
-	BYTE    bHeader;
+	uint8_t    bHeader;
 	char    szMessage[128];
 } TPacketCGPasspodFailed;
 
 typedef struct tag_GGSiege
 {
-	BYTE	bHeader;
-	BYTE	bEmpire;
-	BYTE	bTowerCount;
+	uint8_t	bHeader;
+	uint8_t	bEmpire;
+	uint8_t	bTowerCount;
 } TPacketGGSiege;
 
 typedef struct SPacketGGMonarchTransfer
 {
-	BYTE	bHeader;
-	DWORD	dwTargetPID;
-	long	x;
-	long	y;
+	uint8_t	bHeader;
+	uint32_t	dwTargetPID;
+	int32_t	x;
+	int32_t	y;
 } TPacketMonarchGGTransfer;
 
 typedef struct SPacketGGPCBangUpdate
 {
-	BYTE bHeader;
-	unsigned long ulPCBangID;
+	uint8_t bHeader;
+	uint32_t ulPCBangID;
 } TPacketPCBangUpdate;
 
 typedef struct SPacketGGCheckAwakeness
 {
-	BYTE bHeader;
+	uint8_t bHeader;
 } TPacketGGCheckAwakeness;
 
 typedef struct SPacketGCPanamaPack
 {
-	BYTE	bHeader;
+	uint8_t	bHeader;
 	char	szPackName[256];
-	BYTE	abIV[32];
+	uint8_t	abIV[32];
 } TPacketGCPanamaPack;
 
 //TODO :  아우 짱나..가변패킷 사이즈 받아들일수 있게 패킷 핸들러 Refactoring 하자. 
@@ -2223,19 +2223,19 @@ typedef struct SPacketGCHybridCryptKeys
 		}
 	}
 	
-	DWORD GetStreamSize()
+	uint32_t GetStreamSize()
 	{
-		return sizeof(bHeader) + sizeof(WORD) + sizeof(int) + KeyStreamLen; 
+		return sizeof(bHeader) + sizeof(uint16_t) + sizeof(int32_t) + KeyStreamLen; 
 	}
 
-	BYTE* GetStreamData()
+	uint8_t* GetStreamData()
 	{
 		if( m_pStream )
 			delete[] m_pStream;
 
-		uDynamicPacketSize = (WORD)GetStreamSize();
+		uDynamicPacketSize = (uint16_t)GetStreamSize();
 		
-		m_pStream = new BYTE[ uDynamicPacketSize ];
+		m_pStream = new uint8_t[ uDynamicPacketSize ];
 
 		memcpy( m_pStream, &bHeader, 1 );
 		memcpy( m_pStream+1, &uDynamicPacketSize, 2 );
@@ -2247,13 +2247,13 @@ typedef struct SPacketGCHybridCryptKeys
 		return m_pStream;
 	}
 
-	BYTE	bHeader;
-	WORD    uDynamicPacketSize; // 빌어먹을 클라  DynamicPacketHeader 구조때문에 맞춰줘야한다 -_-;
-	int		KeyStreamLen;
-	BYTE*   pDataKeyStream;
+	uint8_t	bHeader;
+	uint16_t    uDynamicPacketSize; // 빌어먹을 클라  DynamicPacketHeader 구조때문에 맞춰줘야한다 -_-;
+	int32_t		KeyStreamLen;
+	uint8_t*   pDataKeyStream;
 
 private:
-	BYTE* m_pStream;
+	uint8_t* m_pStream;
 
 
 } TPacketGCHybridCryptKeys;
@@ -2271,19 +2271,19 @@ typedef struct SPacketGCPackageSDB
 		}
 	}
 	
-	DWORD GetStreamSize()
+	uint32_t GetStreamSize()
 	{
-		return sizeof(bHeader) + sizeof(WORD) + sizeof(int) + iStreamLen; 
+		return sizeof(bHeader) + sizeof(uint16_t) + sizeof(int32_t) + iStreamLen; 
 	}
 
-	BYTE* GetStreamData()
+	uint8_t* GetStreamData()
 	{
 		if( m_pStream )
 			delete[] m_pStream;
 
 		uDynamicPacketSize =  GetStreamSize();
 
-		m_pStream = new BYTE[ uDynamicPacketSize ];
+		m_pStream = new uint8_t[ uDynamicPacketSize ];
 
 		memcpy( m_pStream, &bHeader, 1 );
 		memcpy( m_pStream+1, &uDynamicPacketSize, 2 );
@@ -2295,13 +2295,13 @@ typedef struct SPacketGCPackageSDB
 		return m_pStream;
 	}
 
-	BYTE	bHeader;
-	WORD    uDynamicPacketSize; // 빌어먹을 클라  DynamicPacketHeader 구조때문에 맞춰줘야한다 -_-;
-	int		iStreamLen;
-	BYTE*   m_pDataSDBStream;
+	uint8_t	bHeader;
+	uint16_t    uDynamicPacketSize; // 빌어먹을 클라  DynamicPacketHeader 구조때문에 맞춰줘야한다 -_-;
+	int32_t		iStreamLen;
+	uint8_t*   m_pDataSDBStream;
 
 private:
-	BYTE* m_pStream;
+	uint8_t* m_pStream;
 
 
 } TPacketGCPackageSDB;
@@ -2309,17 +2309,17 @@ private:
 #ifdef _IMPROVED_PACKET_ENCRYPTION_
 struct TPacketKeyAgreement
 {
-	static const int MAX_DATA_LEN = 256;
-	BYTE bHeader;
-	WORD wAgreedLength;
-	WORD wDataLength;
-	BYTE data[MAX_DATA_LEN];
+	static const int32_t MAX_DATA_LEN = 256;
+	uint8_t bHeader;
+	uint16_t wAgreedLength;
+	uint16_t wDataLength;
+	uint8_t data[MAX_DATA_LEN];
 };
 
 struct TPacketKeyAgreementCompleted
 {
-	BYTE bHeader;
-	BYTE data[3]; // dummy (not used)
+	uint8_t bHeader;
+	uint8_t data[3]; // dummy (not used)
 };
 
 #endif // _IMPROVED_PACKET_ENCRYPTION_
@@ -2327,8 +2327,8 @@ struct TPacketKeyAgreementCompleted
 #define MAX_EFFECT_FILE_NAME 128
 typedef struct SPacketGCSpecificEffect
 {
-	BYTE header;
-	DWORD vid;
+	uint8_t header;
+	uint32_t vid;
 	char effect_file[MAX_EFFECT_FILE_NAME];
 } TPacketGCSpecificEffect;
 
@@ -2359,8 +2359,8 @@ typedef struct SPacketCGDragonSoulRefine
 {
 	SPacketCGDragonSoulRefine() : header (HEADER_CG_DRAGON_SOUL_REFINE)
 	{}
-	BYTE header;
-	BYTE bSubType;
+	uint8_t header;
+	uint8_t bSubType;
 	TItemPos ItemGrid[DRAGON_SOUL_REFINE_GRID_SIZE];
 } TPacketCGDragonSoulRefine;
 
@@ -2368,23 +2368,23 @@ typedef struct SPacketGCDragonSoulRefine
 {
 	SPacketGCDragonSoulRefine() : header(HEADER_GC_DRAGON_SOUL_REFINE)
 	{}
-	BYTE header;
-	BYTE bSubType;
+	uint8_t header;
+	uint8_t bSubType;
 	TItemPos Pos;
 } TPacketGCDragonSoulRefine;
 
 typedef struct SPacketCGStateCheck
 {
-	BYTE header;
-	unsigned long key;	
-	unsigned long index;
+	uint8_t header;
+	uint32_t key;	
+	uint32_t index;
 } TPacketCGStateCheck;
 
 typedef struct SPacketGCStateCheck
 {
-	BYTE header;
-	unsigned long key;
-	unsigned long index;
+	uint8_t header;
+	uint32_t key;
+	uint32_t index;
 	unsigned char state;
 } TPacketGCStateCheck;
 
