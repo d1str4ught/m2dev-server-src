@@ -7262,5 +7262,5 @@ int	CHARACTER::GetSkillPowerByLevel(int level, bool bMob) const
 
 void CHARACTER::SetLastPMPulse(void)
 {
-      m_iLastPMPulse = thecore_pulse() + 25;
+      m_iLastPMPulse = thecore_pulse() + passes_per_sec;
 }

@@ -791,7 +791,7 @@ int start(int argc, char **argv)
 	if (!bVerbose)
 		freopen("stdout", "a", stdout);
 
-	bool is_thecore_initialized = thecore_init(25, heartbeat);
+	bool is_thecore_initialized = thecore_init(passes_per_sec, heartbeat);
 
 	if (!is_thecore_initialized)
 	{

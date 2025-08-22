@@ -5437,11 +5437,11 @@ bool CHARACTER::DropItem(TItemPos Cell, BYTE bCount)
 	PIXEL_POSITION pxPos = GetXYZ();
 	
 	// Clear the variable, it looks the player does not dropped any item in the past second.
-	if (thecore_pulse() > LastDropTime + 25)
+	if (thecore_pulse() > LastDropTime + passes_per_sec)
 		CountDrops = 0;
 		
 	// It looks the player dropped min. 4 items in the past 1 second
-	if (thecore_pulse() < LastDropTime + 25 && CountDrops >= 4)
+	if (thecore_pulse() < LastDropTime + passes_per_sec && CountDrops >= 4)
 	{
 		// Set it to 0
 		CountDrops = 0;
