@@ -198,7 +198,7 @@ DWORD CGuildMarkImage::GetEmptyPosition()
 	return INVALID_MARK_POSITION;
 }
 
-void CGuildMarkImage::GetDiffBlocks(const DWORD * crcList, std::map<BYTE, const SGuildMarkBlock *> & mapDiffBlocks)
+void CGuildMarkImage::GetDiffBlocks(const uint32_t* crcList, std::map<BYTE, const SGuildMarkBlock *> & mapDiffBlocks)
 {
 	BYTE posBlock = 0;
 

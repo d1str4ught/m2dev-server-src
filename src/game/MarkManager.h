@@ -46,7 +46,7 @@ class CGuildMarkManager : public singleton<CGuildMarkManager>
 		void CopyMarkIdx(char * pcBuf) const;
 		DWORD SaveMark(DWORD guildID, BYTE * pbMarkImage);
 		void DeleteMark(DWORD guildID);
-		void GetDiffBlocks(DWORD imgIdx, const DWORD * crcList, std::map<BYTE, const SGuildMarkBlock *> & mapDiffBlocks);
+		void GetDiffBlocks(DWORD imgIdx, const uint32_t* crcList, std::map<BYTE, const SGuildMarkBlock *> & mapDiffBlocks);
 
 		// CLIENT
 		bool SaveBlockFromCompressedData(DWORD imgIdx, DWORD idBlock, const BYTE * pbBlock, DWORD dwSize);

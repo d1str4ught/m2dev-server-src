@@ -91,7 +91,7 @@ class CGuildMarkImage
 		DWORD GetEmptyPosition(); // 빈 마크 위치를 얻는다.
 
 		void GetBlockCRCList(DWORD * crcList);
-		void GetDiffBlocks(const DWORD * crcList, std::map<BYTE, const SGuildMarkBlock *> & mapDiffBlocks);
+		void GetDiffBlocks(const uint32_t* crcList, std::map<BYTE, const SGuildMarkBlock *> & mapDiffBlocks);
 
 	private:
 		enum

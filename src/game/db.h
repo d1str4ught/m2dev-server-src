@@ -97,7 +97,7 @@ class DBManager : public singleton<DBManager>
 
 		void			SendMoneyLog(BYTE type, DWORD vnum, int gold);
 
-		void			LoginPrepare(BYTE bBillType, DWORD dwBillID, long lRemainSecs, LPDESC d, DWORD * pdwClientKey, int * paiPremiumTimes = NULL);
+		void			LoginPrepare(BYTE bBillType, DWORD dwBillID, long lRemainSecs, LPDESC d, uint32_t * pdwClientKey, int * paiPremiumTimes = NULL);
 		void			SendAuthLogin(LPDESC d);
 		void			SendLoginPing(const char * c_pszLogin);
 

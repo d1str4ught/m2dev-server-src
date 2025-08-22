@@ -19,22 +19,22 @@ CLoginData::CLoginData()
 	memset(m_aiPremiumTimes, 0, sizeof(m_aiPremiumTimes));
 }
 
-void CLoginData::SetClientKey(const DWORD * c_pdwClientKey)
+void CLoginData::SetClientKey(const uint32_t * c_pdwClientKey)
 {
-	thecore_memcpy(&m_adwClientKey, c_pdwClientKey, sizeof(DWORD) * 4);
+	thecore_memcpy(&m_adwClientKey, c_pdwClientKey, sizeof(uint32_t) * 4);
 }
 
-const DWORD * CLoginData::GetClientKey()
+const uint32_t* CLoginData::GetClientKey()
 {
 	return &m_adwClientKey[0];
 }
 
-void CLoginData::SetKey(DWORD dwKey)
+void CLoginData::SetKey(uint32_t dwKey)
 {
 	m_dwKey = dwKey;
 }
 
-DWORD CLoginData::GetKey()
+uint32_t CLoginData::GetKey()
 {
 	return m_dwKey;
 }
@@ -44,12 +44,12 @@ void CLoginData::SetBillType(BYTE bType)
 	m_bBillType = bType;
 }
 
-DWORD CLoginData::GetBillID() 
+uint32_t CLoginData::GetBillID()
 {
 	return m_dwBillID;
 }
 
-void CLoginData::SetBillID(DWORD dwID)
+void CLoginData::SetBillID(uint32_t dwID)
 {
 	m_dwBillID = dwID;
 }
@@ -59,12 +59,12 @@ BYTE CLoginData::GetBillType()
 	return m_bBillType;
 }
 
-void CLoginData::SetConnectedPeerHandle(DWORD dwHandle)
+void CLoginData::SetConnectedPeerHandle(uint32_t dwHandle)
 {
 	m_dwConnectedPeerHandle = dwHandle;
 }
 
-DWORD CLoginData::GetConnectedPeerHandle()
+uint32_t CLoginData::GetConnectedPeerHandle()
 {
 	return m_dwConnectedPeerHandle;
 }
@@ -74,7 +74,7 @@ void CLoginData::SetLogonTime()
 	m_dwLogonTime = get_dword_time();
 }
 
-DWORD CLoginData::GetLogonTime()
+uint32_t CLoginData::GetLogonTime()
 {
 	return m_dwLogonTime;
 }

@@ -262,7 +262,7 @@ void CGuildMarkManager::DeleteMark(DWORD guildID)
 }
 
 // SERVER
-void CGuildMarkManager::GetDiffBlocks(DWORD imgIdx, const DWORD * crcList, std::map<BYTE, const SGuildMarkBlock *> & mapDiffBlocks)
+void CGuildMarkManager::GetDiffBlocks(DWORD imgIdx, const uint32_t* crcList, std::map<BYTE, const SGuildMarkBlock *> & mapDiffBlocks)
 {
 	mapDiffBlocks.clear();
 

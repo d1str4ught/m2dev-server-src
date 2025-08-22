@@ -6,26 +6,26 @@ class CLoginData
 	public:
 		CLoginData();
 
-		void            SetClientKey(const DWORD * c_pdwClientKey);
+		void            SetClientKey(const uint32_t * c_pdwClientKey);
 
-		const DWORD *   GetClientKey();
-		void            SetKey(DWORD dwKey);
-		DWORD           GetKey();
+		const uint32_t *   GetClientKey();
+		void            SetKey(uint32_t dwKey);
+		uint32_t           GetKey();
 
 		void		SetLogin(const char * c_pszLogin);
 		const char *	GetLogin();
 
 		void            SetBillType(BYTE bType);
-		DWORD           GetBillID();
+		uint32_t           GetBillID();
 
-		void            SetBillID(DWORD dwID);
+		void            SetBillID(uint32_t dwID);
 		BYTE            GetBillType();
 
-		void            SetConnectedPeerHandle(DWORD dwHandle);
-		DWORD		GetConnectedPeerHandle();
+		void            SetConnectedPeerHandle(uint32_t dwHandle);
+		uint32_t		GetConnectedPeerHandle();
 
 		void            SetLogonTime();
-		DWORD		GetLogonTime();
+		uint32_t		GetLogonTime();
 
 		void		SetIP(const char * c_pszIP);
 		const char *	GetIP();
@@ -40,17 +40,17 @@ class CLoginData
 		bool		IsDeleted();
 
 		void		SetPremium(int * paiPremiumTimes);
-		int		GetPremium(BYTE type);
+		int			GetPremium(BYTE type);
 		int *		GetPremiumPtr();
 
 
 	private:
-		DWORD           m_dwKey;
-		DWORD           m_adwClientKey[4];
-		BYTE            m_bBillType;
-		DWORD           m_dwBillID;
-		DWORD           m_dwConnectedPeerHandle;
-		DWORD           m_dwLogonTime;
+		uint32_t           m_dwKey;
+		uint32_t           m_adwClientKey[4];
+		uint8_t            m_bBillType;
+		uint32_t           m_dwBillID;
+		uint32_t           m_dwConnectedPeerHandle;
+		uint32_t           m_dwLogonTime;
 		long		m_lRemainSecs;
 		char		m_szIP[MAX_HOST_LENGTH+1];
 		bool		m_bBilling;

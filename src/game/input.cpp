@@ -90,6 +90,8 @@ bool CInputProcessor::Process(LPDESC lpDesc, const void * c_pvOrig, int iBytes, 
 			return true;
 		}
 
+		sys_log(0, "PACKET %d (%s)", bHeader, c_pszName);
+
 		if (m_iBufferLeft < iPacketLen)
 			return true;
 
