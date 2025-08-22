@@ -23,7 +23,7 @@ pck.bHeader = HEADER_GC_TARGET_CREATE;
 pck.lID = info->iID;
 pck.bType = info->iType;
 pck.dwVID = info->iArg1;
-std::strncpy(pck.szName, info->szTargetDesc, sizeof(pck.szName));
+strlcpy(pck.szName, info->szTargetDesc, sizeof(pck.szName));
 d->Packet(&pck, sizeof(TPacketGCTargetCreate));
 }
 
@@ -181,7 +181,7 @@ void CTargetManager::CreateTarget(DWORD dwPID,
 
 				if (c_pszTargetDesc)
 				{
-					std::strncpy(existInfo->szTargetDesc, c_pszTargetDesc, sizeof(existInfo->szTargetDesc));
+					strlcpy(existInfo->szTargetDesc, c_pszTargetDesc, sizeof(existInfo->szTargetDesc));
 				}
 				else
 				{
@@ -206,7 +206,7 @@ void CTargetManager::CreateTarget(DWORD dwPID,
 
 	if (c_pszTargetDesc)
 	{
-		std::strncpy(newInfo->szTargetDesc, c_pszTargetDesc, sizeof(newInfo->szTargetDesc));
+		strlcpy(newInfo->szTargetDesc, c_pszTargetDesc, sizeof(newInfo->szTargetDesc));
 	}
 	else
 	{
@@ -218,7 +218,7 @@ void CTargetManager::CreateTarget(DWORD dwPID,
 	//newInfo->pkChr = pkChr;
 	newInfo->dwPID = dwPID;
 	newInfo->dwQuestIndex = dwQuestIndex;
-	std::strncpy(newInfo->szTargetName, c_pszTargetName, sizeof(newInfo->szTargetName));
+	strlcpy(newInfo->szTargetName, c_pszTargetName, sizeof(newInfo->szTargetName));
 	newInfo->iType = iType;
 	newInfo->iArg1 = iArg1;
 	newInfo->iArg2 = iArg2;

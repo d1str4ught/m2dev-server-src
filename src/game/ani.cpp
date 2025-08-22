@@ -157,27 +157,27 @@ DWORD ANI::load_one_weapon(const char *dir_name, int weapon, BYTE combo, bool ho
 	switch (weapon)
 	{
 		case WEAPON_SWORD:
-			std::strncpy(format, "%s/%sonehand_sword/combo_%02d.msa", sizeof(format));
+			strlcpy(format, "%s/%sonehand_sword/combo_%02d.msa", sizeof(format));
 			break;
 
 		case WEAPON_DAGGER:
-			std::strncpy(format, "%s/%sdualhand_sword/combo_%02d.msa", sizeof(format));
+			strlcpy(format, "%s/%sdualhand_sword/combo_%02d.msa", sizeof(format));
 			break;
 
 		case WEAPON_BOW:
-			std::strncpy(format, "%s/%sbow/attack.msa", sizeof(format));
+			strlcpy(format, "%s/%sbow/attack.msa", sizeof(format));
 			break;
 
 		case WEAPON_TWO_HANDED:
-			std::strncpy(format, "%s/%stwohand_sword/combo_%02d.msa", sizeof(format));
+			strlcpy(format, "%s/%stwohand_sword/combo_%02d.msa", sizeof(format));
 			break;
 
 		case WEAPON_BELL:
-			std::strncpy(format, "%s/%sbell/combo_%02d.msa", sizeof(format));
+			strlcpy(format, "%s/%sbell/combo_%02d.msa", sizeof(format));
 			break;
 
 		case WEAPON_FAN:
-			std::strncpy(format, "%s/%sfan/combo_%02d.msa", sizeof(format));
+			strlcpy(format, "%s/%sfan/combo_%02d.msa", sizeof(format));
 			break;
 
 		default:

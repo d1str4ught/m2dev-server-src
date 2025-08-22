@@ -81,7 +81,7 @@ DWORD CLoginData::GetLogonTime()
 
 void CLoginData::SetIP(const char * c_pszIP)
 {
-	std::strncpy(m_szIP, c_pszIP, sizeof(m_szIP));
+	strlcpy(m_szIP, c_pszIP, sizeof(m_szIP));
 }
 
 const char * CLoginData::GetIP()

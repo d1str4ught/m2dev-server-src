@@ -53,7 +53,7 @@ void ItemAwardManager::Load(SQLMsg * pMsg)
 
 		if (row[col])
 		{
-			std::strncpy(kData->szWhy, row[col], sizeof(kData->szWhy));
+			strlcpy(kData->szWhy, row[col], sizeof(kData->szWhy));
 			//게임 중에 why콜룸에 변동이 생기면				
 			char* whyStr = kData->szWhy;	//why 콜룸 읽기
 			char cmdStr[100] = "";	//why콜룸에서 읽은 값을 임시 문자열에 복사해둠

@@ -77,7 +77,7 @@ void SendPanamaList(LPDESC d)
 
 	while (it != s_panamaVector.end())
 	{
-		std::strncpy(pack.szPackName, it->first.c_str(), sizeof(pack.szPackName));
+		strlcpy(pack.szPackName, it->first.c_str(), sizeof(pack.szPackName));
 		memcpy(pack.abIV, it->second, sizeof(pack.abIV));
 
 

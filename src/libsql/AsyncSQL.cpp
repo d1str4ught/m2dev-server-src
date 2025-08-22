@@ -696,7 +696,7 @@ size_t CAsyncSQL::EscapeString(char* dst, size_t dstSize, const char *src, size_
 		// \0이 안붙어있을 때를 대비해서 256 바이트만 복사해서 로그로 출력
 		char tmp[256];
 		size_t tmpLen = sizeof(tmp) > srcSize ? srcSize : sizeof(tmp); // 둘 중에 작은 크기
-		std::strncpy(tmp, src, tmpLen);
+		strlcpy(tmp, src, tmpLen);
 
 		sys_err("FATAL ERROR!! not enough buffer size (dstSize %u srcSize %u src%s: %s)",
 				dstSize, srcSize, tmpLen != srcSize ? "(trimmed to 255 characters)" : "", tmp);

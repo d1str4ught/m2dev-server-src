@@ -101,7 +101,7 @@ bool CSkillManager::Initialize(TSkillTable * pTab, int iSize)
 		CSkillProto * pkProto = M2_NEW CSkillProto;
 
 		pkProto->dwVnum = t->dwVnum;
-		std::strncpy(pkProto->szName, t->szName, sizeof(pkProto->szName));
+		strlcpy(pkProto->szName, t->szName, sizeof(pkProto->szName));
 		pkProto->dwType = t->bType;
 		pkProto->bMaxLevel = t->bMaxLevel;
 		pkProto->dwFlag = t->dwFlag;

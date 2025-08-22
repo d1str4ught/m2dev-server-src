@@ -156,7 +156,7 @@ void CLIENT_DESC::SetPhase(int iPhase)
 				TPacketGDSetup p;
 
 				memset(&p, 0, sizeof(p));
-				std::strncpy(p.szPublicIP, g_szPublicIP, sizeof(p.szPublicIP));
+				strlcpy(p.szPublicIP, g_szPublicIP, sizeof(p.szPublicIP));
 
 				if (!g_bAuthServer)
 				{
@@ -192,9 +192,9 @@ void CLIENT_DESC::SetPhase(int iPhase)
 							if (r.id != 0)
 							{
 								pck.dwID = r.id;
-								std::strncpy(pck.szLogin, r.login, sizeof(pck.szLogin));
-								std::strncpy(pck.szSocialID, r.social_id, sizeof(pck.szSocialID));
-								std::strncpy(pck.szHost, d->GetHostName(), sizeof(pck.szHost));
+								strlcpy(pck.szLogin, r.login, sizeof(pck.szLogin));
+								strlcpy(pck.szSocialID, r.social_id, sizeof(pck.szSocialID));
+								strlcpy(pck.szHost, d->GetHostName(), sizeof(pck.szHost));
 								pck.dwLoginKey = d->GetLoginKey();
 #ifndef _IMPROVED_PACKET_ENCRYPTION_
 								thecore_memcpy(pck.adwClientKey, d->GetDecryptionKey(), 16);

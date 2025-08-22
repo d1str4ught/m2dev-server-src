@@ -140,7 +140,7 @@ bool COXEventManager::AddQuiz(unsigned char level, const char* pszQuestion, bool
 	struct tag_Quiz tmpQuiz;
 
 	tmpQuiz.level = level;
-	std::strncpy(tmpQuiz.Quiz, pszQuestion, sizeof(tmpQuiz.Quiz));
+	strlcpy(tmpQuiz.Quiz, pszQuestion, sizeof(tmpQuiz.Quiz));
 	tmpQuiz.answer = answer;
 
 	m_vec_quiz[level].push_back(tmpQuiz);

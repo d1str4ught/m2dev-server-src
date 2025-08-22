@@ -30,7 +30,7 @@ const char * locale_find(const char *string)
 	if( iter == localeString.end() )
 	{
 		static char s_line[1024] = "@0949";
-		std::strncpy(s_line + 5, string, sizeof(s_line) - 5);
+		strlcpy(s_line + 5, string, sizeof(s_line) - 5);
 
 		sys_err("LOCALE_ERROR: \"%s\";", string);
 		return s_line;

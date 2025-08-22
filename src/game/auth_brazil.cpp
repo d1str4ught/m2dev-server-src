@@ -57,7 +57,7 @@ static int FN_make_request(const char *login, const char *password, /*out*/ char
 static int FN_parse_reply(char *reply)
 {
     char buffer[2048];
-    std::strncpy(buffer, reply, sizeof(buffer));
+    strlcpy(buffer, reply, sizeof(buffer));
 
     const char *delim = "\r\n";
     char *last = 0;

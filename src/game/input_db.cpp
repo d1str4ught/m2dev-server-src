@@ -144,7 +144,7 @@ void CInputDB::LoginSuccess(DWORD dwHandle, const char *data)
 
 		TLogoutPacket pack;
 
-		std::strncpy(pack.login, pTab->login, sizeof(pack.login));
+		strlcpy(pack.login, pTab->login, sizeof(pack.login));
 		db_clientdesc->DBPacket(HEADER_GD_LOGOUT, dwHandle, &pack, sizeof(pack));
 		return;
 	}
@@ -155,7 +155,7 @@ void CInputDB::LoginSuccess(DWORD dwHandle, const char *data)
 
 		TLogoutPacket pack;
 
-		std::strncpy(pack.login, pTab->login, sizeof(pack.login));
+		strlcpy(pack.login, pTab->login, sizeof(pack.login));
 		db_clientdesc->DBPacket(HEADER_GD_LOGOUT, dwHandle, &pack, sizeof(pack));
 
 		LoginFailure(d, pTab->status);
@@ -338,14 +338,14 @@ void CInputDB::ChangeName(LPDESC d, const char * data)
 	for (size_t i = 0; i < PLAYER_PER_ACCOUNT; ++i)
 		if (r.players[i].dwID == p->pid)
 		{
-			std::strncpy(r.players[i].szName, p->name, sizeof(r.players[i].szName));
+			strlcpy(r.players[i].szName, p->name, sizeof(r.players[i].szName));
 			r.players[i].bChangeName = 0;
 
 			TPacketGCChangeName pgc;
 
 			pgc.header = HEADER_GC_CHANGE_NAME;
 			pgc.pid = p->pid;
-			std::strncpy(pgc.name, p->name, sizeof(pgc.name));
+			strlcpy(pgc.name, p->name, sizeof(pgc.name));
 
 			d->Packet(&pgc, sizeof(TPacketGCChangeName));
 			break;
@@ -423,7 +423,7 @@ void CInputDB::PlayerLoad(LPDESC d, const char * data)
 		TPacketGGLogin p;
 
 		p.bHeader = HEADER_GG_LOGIN;
-		std::strncpy(p.szName, ch->GetName(), sizeof(p.szName));
+		strlcpy(p.szName, ch->GetName(), sizeof(p.szName));
 		p.dwPID = ch->GetPlayerID();
 		p.bEmpire = ch->GetEmpire();
 		p.lMapIndex = SECTREE_MANAGER::instance().GetMapIndex(ch->GetX(), ch->GetY());
@@ -1296,7 +1296,7 @@ void CInputDB::LoginAlready(LPDESC d, const char * c_pData)
 			TPacketGGDisconnect pgg;
 
 			pgg.bHeader = HEADER_GG_DISCONNECT;
-			std::strncpy(pgg.szLogin, p->szLogin, sizeof(pgg.szLogin));
+			strlcpy(pgg.szLogin, p->szLogin, sizeof(pgg.szLogin));
 
 			P2P_MANAGER::instance().Send(&pgg, sizeof(TPacketGGDisconnect));
 		}
@@ -1995,7 +1995,7 @@ void CInputDB::Notice(const char * c_pData)
 	extern void SendNotice(const char * c_pszBuf);
 
 	char szBuf[256+1];
-	std::strncpy(szBuf, c_pData, sizeof(szBuf));
+	strlcpy(szBuf, c_pData, sizeof(szBuf));
 
 	sys_log(0, "InputDB:: Notice: %s", szBuf);
 

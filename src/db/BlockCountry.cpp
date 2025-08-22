@@ -61,7 +61,7 @@ bool CBlockCountry::Load()
 			BLOCK_IP	*block_ip = new BLOCK_IP;
 			block_ip->ip_from	= strtoul(row[0], NULL, 10);
 			block_ip->ip_to		= strtoul(row[1], NULL, 10);
-			std::strncpy(block_ip->country, row[2], sizeof(block_ip->country));
+			strlcpy(block_ip->country, row[2], sizeof(block_ip->country));
 
 			m_block_ip.push_back(block_ip);
 			sys_log(0, "BLOCKED_IP : %u - %u", block_ip->ip_from, block_ip->ip_to);
@@ -174,7 +174,7 @@ void CBlockCountry::SendBlockExceptionOne(CPeer *peer, const char *login, BYTE c
 	TPacketBlockException	packet;
 
 	packet.cmd = cmd;
-	std::strncpy(packet.login, login, sizeof(packet.login));
+	strlcpy(packet.login, login, sizeof(packet.login));
 
 	peer->EncodeHeader(HEADER_DG_BLOCK_EXCEPTION, 0, sizeof(TPacketBlockException));
 	peer->Encode(&packet, sizeof(packet));

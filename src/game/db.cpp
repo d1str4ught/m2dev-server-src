@@ -253,9 +253,9 @@ void DBManager::PushBilling(CLoginData * pkLD)
 	if (t.bBillType == BILLING_IP_FREE || t.bBillType == BILLING_IP_TIME || t.bBillType == BILLING_IP_DAY)
 		snprintf(t.szLogin, sizeof(t.szLogin), "%u", pkLD->GetBillID());
 	else
-		std::strncpy(t.szLogin, pkLD->GetLogin(), sizeof(t.szLogin));
+		strlcpy(t.szLogin, pkLD->GetLogin(), sizeof(t.szLogin));
 
-	std::strncpy(t.szIP, pkLD->GetIP(), sizeof(t.szIP));
+	strlcpy(t.szIP, pkLD->GetIP(), sizeof(t.szIP));
 
 	m_vec_kUseTime.push_back(t);
 }
@@ -460,7 +460,7 @@ void DBManager::SendLoginPing(const char * c_pszLogin)
 	TPacketGGLoginPing ptog;
 
 	ptog.bHeader = HEADER_GG_LOGIN_PING;
-	std::strncpy(ptog.szLogin, c_pszLogin, sizeof(ptog.szLogin));
+	strlcpy(ptog.szLogin, c_pszLogin, sizeof(ptog.szLogin));
 
 	if (!g_pkAuthMasterDesc)  // If I am master, broadcast to others
 	{
@@ -485,7 +485,7 @@ void DBManager::SendAuthLogin(LPDESC d)
 	ptod.dwID = r.id;
 	
 	trim_and_lower(r.login, ptod.szLogin, sizeof(ptod.szLogin));
-	std::strncpy(ptod.szSocialID, r.social_id, sizeof(ptod.szSocialID));
+	strlcpy(ptod.szSocialID, r.social_id, sizeof(ptod.szSocialID));
 	ptod.dwLoginKey = d->GetLoginKey();
 	ptod.bBillType = pkLD->GetBillType();
 	ptod.dwBillID = pkLD->GetBillID();
@@ -598,7 +598,7 @@ bool GetGameTimeIP(MYSQL_RES * pRes, BYTE & bBillType, DWORD & dwBillID, int & s
 	str_to_number(day_seconds, row[col++]);
 
 	char szIP[MAX_HOST_LENGTH + 1];
-	std::strncpy(szIP, c_pszIP, sizeof(szIP));
+	strlcpy(szIP, c_pszIP, sizeof(szIP));
 
 	char * p = strrchr(szIP, '.');
 	++p;
@@ -668,7 +668,7 @@ void SendBillingExpire(const char * c_pszLogin, BYTE bBillType, int iSecs, CLogi
 {
 	TPacketBillingExpire ptod;
 
-	std::strncpy(ptod.szLogin, c_pszLogin, sizeof(ptod.szLogin));
+	strlcpy(ptod.szLogin, c_pszLogin, sizeof(ptod.szLogin));
 	ptod.bBillType = bBillType;
 	ptod.dwRemainSeconds = MAX(0, iSecs);
 	db_clientdesc->DBPacket(HEADER_GD_BILLING_EXPIRE, 0, &ptod, sizeof(TPacketBillingExpire));
@@ -735,7 +735,7 @@ void DBManager::AnalyzeReturnQuery(SQLMsg * pMsg)
 					   	break; 
 					}
 					
-					std::strncpy(szEncrytPassword, row[col++], sizeof(szEncrytPassword));
+					strlcpy(szEncrytPassword, row[col++], sizeof(szEncrytPassword));
 
 					if (!row[col]) 
 					{
@@ -744,7 +744,7 @@ void DBManager::AnalyzeReturnQuery(SQLMsg * pMsg)
 					   	break;
 				   	}
 				
-					std::strncpy(szPassword, row[col++], sizeof(szPassword));
+					strlcpy(szPassword, row[col++], sizeof(szPassword));
 
 					if (!row[col]) 
 					{
@@ -753,7 +753,7 @@ void DBManager::AnalyzeReturnQuery(SQLMsg * pMsg)
 					}
 					else
 					{
-						std::strncpy(szMatrixCode, row[col++], sizeof(szMatrixCode));
+						strlcpy(szMatrixCode, row[col++], sizeof(szMatrixCode));
 					}
 
 					if (!row[col])
@@ -763,7 +763,7 @@ void DBManager::AnalyzeReturnQuery(SQLMsg * pMsg)
 						break;
 				   	}
 
-					std::strncpy(szSocialID, row[col++], sizeof(szSocialID));
+					strlcpy(szSocialID, row[col++], sizeof(szSocialID));
 
 					if (!row[col])
 				   	{
@@ -781,7 +781,7 @@ void DBManager::AnalyzeReturnQuery(SQLMsg * pMsg)
 						break;
 				   	}
 
-					std::strncpy(szStatus, row[col++], sizeof(szStatus));
+					strlcpy(szStatus, row[col++], sizeof(szStatus));
 
 					BYTE bNotAvail = 0;
 					str_to_number(bNotAvail, row[col++]);
@@ -879,8 +879,8 @@ void DBManager::AnalyzeReturnQuery(SQLMsg * pMsg)
 
 						r.id = dwID;
 						trim_and_lower(pinfo->login, r.login, sizeof(r.login));
-						std::strncpy(r.passwd, pinfo->passwd, sizeof(r.passwd));
-						std::strncpy(r.social_id, szSocialID, sizeof(r.social_id));
+						strlcpy(r.passwd, pinfo->passwd, sizeof(r.passwd));
+						strlcpy(r.social_id, szSocialID, sizeof(r.social_id));
 						DESC_MANAGER::instance().ConnectAccount(r.login, d);
 
 						d->SetMatrixCode(szMatrixCode);
@@ -961,7 +961,7 @@ void DBManager::AnalyzeReturnQuery(SQLMsg * pMsg)
 					   	break; 
 					}
 					
-					std::strncpy(szEncrytPassword, row[col++], sizeof(szEncrytPassword));
+					strlcpy(szEncrytPassword, row[col++], sizeof(szEncrytPassword));
 
 					if (!row[col]) 
 					{
@@ -970,7 +970,7 @@ void DBManager::AnalyzeReturnQuery(SQLMsg * pMsg)
 					   	break;
 				   	}
 				
-					std::strncpy(szPassword, row[col++], sizeof(szPassword));
+					strlcpy(szPassword, row[col++], sizeof(szPassword));
 
 					if (!row[col]) 
 					{
@@ -979,7 +979,7 @@ void DBManager::AnalyzeReturnQuery(SQLMsg * pMsg)
 					}
 					else
 					{
-						std::strncpy(szMatrixCode, row[col++], sizeof(szMatrixCode));
+						strlcpy(szMatrixCode, row[col++], sizeof(szMatrixCode));
 					}
 
 					if (!row[col])
@@ -989,7 +989,7 @@ void DBManager::AnalyzeReturnQuery(SQLMsg * pMsg)
 						break;
 				   	}
 
-					std::strncpy(szSocialID, row[col++], sizeof(szSocialID));
+					strlcpy(szSocialID, row[col++], sizeof(szSocialID));
 
 					if (!row[col])
 				   	{
@@ -1007,7 +1007,7 @@ void DBManager::AnalyzeReturnQuery(SQLMsg * pMsg)
 						break;
 				   	}
 
-					std::strncpy(szStatus, row[col++], sizeof(szStatus));
+					strlcpy(szStatus, row[col++], sizeof(szStatus));
 
 					BYTE bNotAvail = 0;
 					str_to_number(bNotAvail, row[col++]);
@@ -1111,8 +1111,8 @@ void DBManager::AnalyzeReturnQuery(SQLMsg * pMsg)
 
 						r.id = dwID;
 						trim_and_lower(pinfo->login, r.login, sizeof(r.login));
-						std::strncpy(r.passwd, pinfo->passwd, sizeof(r.passwd));
-						std::strncpy(r.social_id, szSocialID, sizeof(r.social_id));
+						strlcpy(r.passwd, pinfo->passwd, sizeof(r.passwd));
+						strlcpy(r.social_id, szSocialID, sizeof(r.social_id));
 						DESC_MANAGER::instance().ConnectAccount(r.login, d);
 
 						d->SetMatrixCode(szMatrixCode);
@@ -1542,10 +1542,10 @@ void VCardUse(LPCHARACTER CardOwner, LPCHARACTER CardTaker, LPITEM item)
 	TPacketGDVCard p;
 
 	p.dwID = item->GetSocket(0);
-	std::strncpy(p.szSellCharacter, CardOwner->GetName(), sizeof(p.szSellCharacter));
-	std::strncpy(p.szSellAccount, CardOwner->GetDesc()->GetAccountTable().login, sizeof(p.szSellAccount));
-	std::strncpy(p.szBuyCharacter, CardTaker->GetName(), sizeof(p.szBuyCharacter));
-	std::strncpy(p.szBuyAccount, CardTaker->GetDesc()->GetAccountTable().login, sizeof(p.szBuyAccount));
+	strlcpy(p.szSellCharacter, CardOwner->GetName(), sizeof(p.szSellCharacter));
+	strlcpy(p.szSellAccount, CardOwner->GetDesc()->GetAccountTable().login, sizeof(p.szSellAccount));
+	strlcpy(p.szBuyCharacter, CardTaker->GetName(), sizeof(p.szBuyCharacter));
+	strlcpy(p.szBuyAccount, CardTaker->GetDesc()->GetAccountTable().login, sizeof(p.szBuyAccount));
 
 	db_clientdesc->DBPacket(HEADER_GD_VCARD, 0, &p, sizeof(TPacketGDVCard));
 
@@ -1573,7 +1573,7 @@ void DBManager::RequestBlockException(const char *login, int cmd)
 	TPacketBlockException packet;
 
 	packet.cmd = cmd;
-	std::strncpy(packet.login, login, sizeof(packet.login));
+	strlcpy(packet.login, login, sizeof(packet.login));
 	db_clientdesc->DBPacket(HEADER_GD_BLOCK_EXCEPTION, 0, &packet, sizeof(packet));
 }
 

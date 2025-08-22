@@ -226,8 +226,8 @@ void MessengerManager::AddToList(MessengerManager::keyA account, MessengerManage
 	TPacketGGMessenger p2ppck;
 
 	p2ppck.bHeader = HEADER_GG_MESSENGER_ADD;
-	std::strncpy(p2ppck.szAccount, account.c_str(), sizeof(p2ppck.szAccount));
-	std::strncpy(p2ppck.szCompanion, companion.c_str(), sizeof(p2ppck.szCompanion));
+	strlcpy(p2ppck.szAccount, account.c_str(), sizeof(p2ppck.szAccount));
+	strlcpy(p2ppck.szCompanion, companion.c_str(), sizeof(p2ppck.szCompanion));
 	P2P_MANAGER::instance().Send(&p2ppck, sizeof(TPacketGGMessenger));
 }
 
@@ -282,8 +282,8 @@ void MessengerManager::RemoveFromList(MessengerManager::keyA account, MessengerM
 	TPacketGGMessenger p2ppck;
 	
 	p2ppck.bHeader = HEADER_GG_MESSENGER_REMOVE;
-	std::strncpy(p2ppck.szAccount, account.c_str(), sizeof(p2ppck.szAccount));
-	std::strncpy(p2ppck.szCompanion, companion.c_str(), sizeof(p2ppck.szCompanion));
+	strlcpy(p2ppck.szAccount, account.c_str(), sizeof(p2ppck.szAccount));
+	strlcpy(p2ppck.szCompanion, companion.c_str(), sizeof(p2ppck.szCompanion));
 	P2P_MANAGER::instance().Send(&p2ppck, sizeof(TPacketGGMessenger));
 }
 

@@ -125,8 +125,8 @@ bool CClientManager::Initialize()
 	char szBindIP[128];
 
 	if (!CConfig::instance().GetValue("BIND_IP", szBindIP, 128))
-		// std::strncpy(szBindIP, "0", sizeof(szBindIP));
-		std::strncpy(szBindIP, "127.0.0.1", sizeof(szBindIP)); // Fix: Now even if the DB port is publicly available an attacker can't connect to it with a fake auth.
+		// strlcpy(szBindIP, "0", sizeof(szBindIP));
+		strlcpy(szBindIP, "127.0.0.1", sizeof(szBindIP)); // Fix: Now even if the DB port is publicly available an attacker can't connect to it with a fake auth.
 
 	m_fdAccept = socket_tcp_bind(szBindIP, tmpValue);
 
@@ -487,11 +487,11 @@ void CClientManager::QUERY_QUEST_SAVE(CPeer * pkPeer, TQuestTable * pTable, DWOR
 void CClientManager::QUERY_SAFEBOX_LOAD(CPeer * pkPeer, DWORD dwHandle, TSafeboxLoadPacket * packet, bool bMall)
 {
 	ClientHandleInfo * pi = new ClientHandleInfo(dwHandle);
-	std::strncpy(pi->safebox_password, packet->szPassword, sizeof(pi->safebox_password));
+	strlcpy(pi->safebox_password, packet->szPassword, sizeof(pi->safebox_password));
 	pi->account_id = packet->dwID;
 	pi->account_index = 0;
 	pi->ip[0] = bMall ? 1 : 0;
-	std::strncpy(pi->login, packet->szLogin, sizeof(pi->login));
+	strlcpy(pi->login, packet->szLogin, sizeof(pi->login));
 
 	char szQuery[QUERY_MAX_LEN];
 	snprintf(szQuery, sizeof(szQuery),
@@ -517,7 +517,7 @@ void CClientManager::RESULT_SAFEBOX_LOAD(CPeer * pkPeer, SQLMsg * msg)
 	if (pi->account_index == 0)
 	{
 		char szSafeboxPassword[SAFEBOX_PASSWORD_MAX_LEN + 1];
-		std::strncpy(szSafeboxPassword, pi->safebox_password, sizeof(szSafeboxPassword));
+		strlcpy(szSafeboxPassword, pi->safebox_password, sizeof(szSafeboxPassword));
 
 		TSafeboxTable * pSafebox = new TSafeboxTable;
 		memset(pSafebox, 0, sizeof(TSafeboxTable));
@@ -858,8 +858,8 @@ void CClientManager::RESULT_SAFEBOX_CHANGE_SIZE(CPeer * pkPeer, SQLMsg * msg)
 void CClientManager::QUERY_SAFEBOX_CHANGE_PASSWORD(CPeer * pkPeer, DWORD dwHandle, TSafeboxChangePasswordPacket * p)
 {
 	ClientHandleInfo * pi = new ClientHandleInfo(dwHandle);
-	std::strncpy(pi->safebox_password, p->szNewPassword, sizeof(pi->safebox_password));
-	std::strncpy(pi->login, p->szOldPassword, sizeof(pi->login));
+	strlcpy(pi->safebox_password, p->szNewPassword, sizeof(pi->safebox_password));
+	strlcpy(pi->login, p->szOldPassword, sizeof(pi->login));
 	pi->account_id = p->dwID;
 
 	char szQuery[QUERY_MAX_LEN];
@@ -1086,7 +1086,7 @@ void CClientManager::QUERY_SETUP(CPeer * peer, DWORD dwHandle, const char * c_pD
 	//
 	TMapLocation kMapLocations;
 
-	std::strncpy(kMapLocations.szHost, peer->GetPublicIP(), sizeof(kMapLocations.szHost));
+	strlcpy(kMapLocations.szHost, peer->GetPublicIP(), sizeof(kMapLocations.szHost));
 	kMapLocations.wPort = peer->GetListenPort();
 	thecore_memcpy(kMapLocations.alMaps, peer->GetMaps(), sizeof(kMapLocations.alMaps));
 
@@ -1109,7 +1109,7 @@ void CClientManager::QUERY_SETUP(CPeer * peer, DWORD dwHandle, const char * c_pD
 			if (tmp->GetChannel() == GUILD_WARP_WAR_CHANNEL || tmp->GetChannel() == peer->GetChannel())
 			{
 				TMapLocation kMapLocation2;
-				std::strncpy(kMapLocation2.szHost, tmp->GetPublicIP(), sizeof(kMapLocation2.szHost));
+				strlcpy(kMapLocation2.szHost, tmp->GetPublicIP(), sizeof(kMapLocation2.szHost));
 				kMapLocation2.wPort = tmp->GetListenPort();
 				thecore_memcpy(kMapLocation2.alMaps, tmp->GetMaps(), sizeof(kMapLocation2.alMaps));
 				vec_kMapLocations.push_back(kMapLocation2);
@@ -1136,7 +1136,7 @@ void CClientManager::QUERY_SETUP(CPeer * peer, DWORD dwHandle, const char * c_pD
 			if (tmp->GetChannel() == 1 || tmp->GetChannel() == peer->GetChannel())
 			{
 				TMapLocation kMapLocation2;
-				std::strncpy(kMapLocation2.szHost, tmp->GetPublicIP(), sizeof(kMapLocation2.szHost));
+				strlcpy(kMapLocation2.szHost, tmp->GetPublicIP(), sizeof(kMapLocation2.szHost));
 				kMapLocation2.wPort = tmp->GetListenPort();
 				thecore_memcpy(kMapLocation2.alMaps, tmp->GetMaps(), sizeof(kMapLocation2.alMaps));
 				vec_kMapLocations.push_back(kMapLocation2);
@@ -1164,7 +1164,7 @@ void CClientManager::QUERY_SETUP(CPeer * peer, DWORD dwHandle, const char * c_pD
 			{
 				TMapLocation kMapLocation2;
 
-				std::strncpy(kMapLocation2.szHost, tmp->GetPublicIP(), sizeof(kMapLocation2.szHost));
+				strlcpy(kMapLocation2.szHost, tmp->GetPublicIP(), sizeof(kMapLocation2.szHost));
 				kMapLocation2.wPort = tmp->GetListenPort();
 				thecore_memcpy(kMapLocation2.alMaps, tmp->GetMaps(), sizeof(kMapLocation2.alMaps));
 
@@ -1196,7 +1196,7 @@ void CClientManager::QUERY_SETUP(CPeer * peer, DWORD dwHandle, const char * c_pD
 	TPacketDGP2P p2pSetupPacket;
 	p2pSetupPacket.wPort = peer->GetP2PPort();
 	p2pSetupPacket.bChannel = peer->GetChannel();
-	std::strncpy(p2pSetupPacket.szHost, peer->GetPublicIP(), sizeof(p2pSetupPacket.szHost));
+	strlcpy(p2pSetupPacket.szHost, peer->GetPublicIP(), sizeof(p2pSetupPacket.szHost));
 
 	for (itertype(m_peerList) i = m_peerList.begin(); i != m_peerList.end();++i)
 	{
@@ -1231,8 +1231,8 @@ void CClientManager::QUERY_SETUP(CPeer * peer, DWORD dwHandle, const char * c_pD
 
 		r.id = pck->dwID;
 		trim_and_lower(pck->szLogin, r.login, sizeof(r.login));
-		std::strncpy(r.social_id, pck->szSocialID, sizeof(r.social_id));
-		std::strncpy(r.passwd, "TEMP", sizeof(r.passwd));
+		strlcpy(r.social_id, pck->szSocialID, sizeof(r.social_id));
+		strlcpy(r.passwd, "TEMP", sizeof(r.passwd));
 
 		InsertLoginData(pkLD);
 
@@ -1245,8 +1245,8 @@ void CClientManager::QUERY_SETUP(CPeer * peer, DWORD dwHandle, const char * c_pD
 			{
 				TPacketBillingRepair pck_repair;
 				pck_repair.dwLoginKey = pkLD->GetKey();
-				std::strncpy(pck_repair.szLogin, pck->szLogin, sizeof(pck_repair.szLogin));
-				std::strncpy(pck_repair.szHost, pck->szHost, sizeof(pck_repair.szHost));
+				strlcpy(pck_repair.szLogin, pck->szLogin, sizeof(pck_repair.szLogin));
+				strlcpy(pck_repair.szHost, pck->szHost, sizeof(pck_repair.szHost));
 				vec_repair.push_back(pck_repair);
 			}
 		}
@@ -1796,8 +1796,8 @@ void CClientManager::QUERY_AUTH_LOGIN(CPeer * pkPeer, DWORD dwHandle, TPacketGDA
 
 		r.id = p->dwID;
 		trim_and_lower(p->szLogin, r.login, sizeof(r.login));
-		std::strncpy(r.social_id, p->szSocialID, sizeof(r.social_id));
-		std::strncpy(r.passwd, "TEMP", sizeof(r.passwd));
+		strlcpy(r.social_id, p->szSocialID, sizeof(r.social_id));
+		strlcpy(r.passwd, "TEMP", sizeof(r.passwd));
 
 		sys_log(0, "AUTH_LOGIN id(%u) login(%s) social_id(%s) login_key(%u), client_key(%u %u %u %u)",
 				p->dwID, p->szLogin, p->szSocialID, p->dwLoginKey,
@@ -1837,7 +1837,7 @@ void CClientManager::BillingExpire(TPacketBillingExpire * p)
 
 						if (pkPeer)
 						{
-							std::strncpy(p->szLogin, pkLD->GetAccountRef().login, sizeof(p->szLogin));
+							strlcpy(p->szLogin, pkLD->GetAccountRef().login, sizeof(p->szLogin));
 							pkPeer->EncodeHeader(HEADER_DG_BILLING_EXPIRE, 0, sizeof(TPacketBillingExpire));
 							pkPeer->Encode(p, sizeof(TPacketBillingExpire));
 						}
@@ -1950,8 +1950,8 @@ void CClientManager::SendAllLoginToBilling()
 		CLoginData * pkLD = (it++)->second;
 
 		p.dwLoginKey = pkLD->GetKey();
-		std::strncpy(p.szLogin, pkLD->GetAccountRef().login, sizeof(p.szLogin));
-		std::strncpy(p.szHost, pkLD->GetIP(), sizeof(p.szHost));
+		strlcpy(p.szLogin, pkLD->GetAccountRef().login, sizeof(p.szLogin));
+		strlcpy(p.szHost, pkLD->GetIP(), sizeof(p.szHost));
 		sys_log(0, "SendAllLoginToBilling %s %s", pkLD->GetAccountRef().login, pkLD->GetIP());
 		vec.push_back(p);
 	}
@@ -3377,8 +3377,8 @@ bool CClientManager::InitializeLocalization()
 		int col = 0;
 		tLocale locale;
 
-		std::strncpy(locale.szValue, row[col++], sizeof(locale.szValue));
-		std::strncpy(locale.szKey, row[col++], sizeof(locale.szKey));
+		strlcpy(locale.szValue, row[col++], sizeof(locale.szValue));
+		strlcpy(locale.szKey, row[col++], sizeof(locale.szKey));
 
 		//DB_NAME_COLUMN Setting		
 		if (strcmp(locale.szKey, "LOCALE") == 0)
@@ -3776,9 +3776,9 @@ bool CClientManager::__GetAdminInfo(const char *szIP, std::vector<tAdminInfo> & 
 
 		str_to_number(Info.m_ID, row[idx++]);
 		trim_and_lower(row[idx++], Info.m_szAccount, sizeof(Info.m_szAccount));
-		std::strncpy(Info.m_szName, row[idx++], sizeof(Info.m_szName));
-		std::strncpy(Info.m_szContactIP, row[idx++], sizeof(Info.m_szContactIP));
-		std::strncpy(Info.m_szServerIP, row[idx++], sizeof(Info.m_szServerIP));
+		strlcpy(Info.m_szName, row[idx++], sizeof(Info.m_szName));
+		strlcpy(Info.m_szContactIP, row[idx++], sizeof(Info.m_szContactIP));
+		strlcpy(Info.m_szServerIP, row[idx++], sizeof(Info.m_szServerIP));
 		std::string stAuth = row[idx++];
 
 		if (!stAuth.compare("IMPLEMENTOR"))
@@ -4099,7 +4099,7 @@ void CClientManager::RMCandidacy(CPeer * peer, DWORD dwHandle, const char * data
 {
 	char szName[32];
 
-	std::strncpy(szName, data, sizeof(szName));
+	strlcpy(szName, data, sizeof(szName));
 	sys_log(0, "[MONARCH_GM] Remove candidacy name(%s)", szName); 
 
 	int iRet = CMonarch::instance().DelCandidacy(szName) ? 1 : 0;
@@ -4140,7 +4140,7 @@ void CClientManager::SetMonarch(CPeer * peer, DWORD dwHandle, const char * data)
 {
 	char szName[32];
 
-	std::strncpy(szName, data, sizeof(szName));
+	strlcpy(szName, data, sizeof(szName));
 
 	if (g_test_server)
 		sys_log(0, "[MONARCH_GM] Set Monarch name(%s)", szName); 
@@ -4183,7 +4183,7 @@ void CClientManager::RMMonarch(CPeer * peer, DWORD dwHandle, const char * data)
 {
 	char szName[32];
 
-	std::strncpy(szName, data, sizeof(szName));
+	strlcpy(szName, data, sizeof(szName));
 	
 	if (g_test_server)
 		sys_log(0, "[MONARCH_GM] Remove Monarch name(%s)", szName); 
@@ -4242,8 +4242,8 @@ void CClientManager::ChangeMonarchLord(CPeer * peer, DWORD dwHandle, TPacketChan
 		ack.dwPID = info->dwPID;
 		
 		MYSQL_ROW row = mysql_fetch_row(pMsg->Get()->pSQLResult);
-		std::strncpy(ack.szName, row[0], sizeof(ack.szName));
-		std::strncpy(ack.szDate, row[1], sizeof(ack.szDate));
+		strlcpy(ack.szName, row[0], sizeof(ack.szName));
+		strlcpy(ack.szDate, row[1], sizeof(ack.szDate));
 		
 		snprintf(szQuery, sizeof(szQuery), "UPDATE monarch SET pid=%u, windate=NOW() WHERE empire=%d", ack.dwPID, ack.bEmpire);
 		SQLMsg* pMsg2 = CDBManager::instance().DirectQuery(szQuery, SQL_PLAYER);

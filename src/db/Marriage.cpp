@@ -121,8 +121,8 @@ namespace marriage
 		p.dwPID1 = dwPID1;
 		p.dwPID2 = dwPID2;
 		p.tMarryTime = now;
-		std::strncpy(p.szName1, szName1, sizeof(p.szName1));
-		std::strncpy(p.szName2, szName2, sizeof(p.szName2));
+		strlcpy(p.szName1, szName1, sizeof(p.szName1));
+		strlcpy(p.szName2, szName2, sizeof(p.szName2));
 		CClientManager::instance().ForwardPacket(HEADER_DG_MARRIAGE_ADD, &p, sizeof(p));
 	}
 
@@ -263,8 +263,8 @@ namespace marriage
 				p.dwPID1 = pMarriage->pid1;
 				p.dwPID2 = pMarriage->pid2;
 				p.tMarryTime = pMarriage->time;
-				std::strncpy(p.szName1, pMarriage->name1.c_str(), sizeof(p.szName1));
-				std::strncpy(p.szName2, pMarriage->name2.c_str(), sizeof(p.szName2));
+				strlcpy(p.szName1, pMarriage->name1.c_str(), sizeof(p.szName1));
+				strlcpy(p.szName2, pMarriage->name2.c_str(), sizeof(p.szName2));
 				peer->EncodeHeader(HEADER_DG_MARRIAGE_ADD, 0, sizeof(p));
 				peer->Encode(&p, sizeof(p));
 			}

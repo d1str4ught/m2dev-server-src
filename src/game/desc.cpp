@@ -144,8 +144,8 @@ void DESC::Destroy()
 		{
 			TLogoutPacket pack;
 
-			std::strncpy(pack.login, m_accountTable.login, sizeof(pack.login));
-			std::strncpy(pack.passwd, m_accountTable.passwd, sizeof(pack.passwd));
+			strlcpy(pack.login, m_accountTable.login, sizeof(pack.login));
+			strlcpy(pack.passwd, m_accountTable.passwd, sizeof(pack.passwd));
 
 			db_clientdesc->DBPacket(HEADER_GD_LOGOUT, m_dwHandle, &pack, sizeof(TLogoutPacket));
 		}
@@ -441,7 +441,7 @@ void DESC::Packet(const void * c_pvData, int iSize)
 		TPacketGGRelay p;
 
 		p.bHeader = HEADER_GG_RELAY;
-		std::strncpy(p.szName, m_stRelayName.c_str(), sizeof(p.szName));
+		strlcpy(p.szName, m_stRelayName.c_str(), sizeof(p.szName));
 		p.lSize = iSize;
 
 		if (!packet_encode(m_lpOutputBuffer, &p, sizeof(p)))
@@ -947,7 +947,7 @@ void DESC::SendLoginSuccessPacket()
 		if (g)
 		{   
 			p.guild_id[i] = g->GetID();
-			std::strncpy(p.guild_name[i], g->GetName(), sizeof(p.guild_name[i]));
+			strlcpy(p.guild_name[i], g->GetName(), sizeof(p.guild_name[i]));
 		}   
 		else
 		{

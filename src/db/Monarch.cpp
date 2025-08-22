@@ -81,7 +81,7 @@ bool CMonarch::AddCandidacy(DWORD pid, const char * name)
 	MonarchCandidacy info;
 
 	info.pid = pid;
-	std::strncpy(info.name, name, sizeof(info.name));
+	strlcpy(info.name, name, sizeof(info.name));
 	m_vec_MonarchCandidacy.push_back(info);	
 
 	char szQuery[256];
@@ -192,10 +192,10 @@ bool CMonarch::LoadMonarch()
         int Empire = 0; str_to_number(Empire, row[idx++]);
 
         str_to_number(p->pid[Empire], row[idx++]);
-		std::strncpy(p->name[Empire], row[idx++], sizeof(p->name[Empire]));
+		strlcpy(p->name[Empire], row[idx++], sizeof(p->name[Empire]));
 
         str_to_number(p->money[Empire], row[idx++]);
-		std::strncpy(p->date[Empire], row[idx++], sizeof(p->date[Empire]));
+		strlcpy(p->date[Empire], row[idx++], sizeof(p->date[Empire]));
 
 		if (g_test_server)
         	sys_log(0, "[LOAD_MONARCH] Empire %d pid %d money %lld windate %s", Empire, p->pid[Empire], p->money[Empire], p->date[Empire]);
@@ -227,7 +227,7 @@ bool CMonarch::SetMonarch(const char * name)
         str_to_number(Empire, row[idx++]);
 
         str_to_number(p->pid[Empire], row[idx++]);
-		std::strncpy(p->name[Empire], row[idx++], sizeof(p->name[Empire]));
+		strlcpy(p->name[Empire], row[idx++], sizeof(p->name[Empire]));
         p->money[Empire] = atoll(row[idx++]);
 	
 		if (g_test_server)

@@ -390,7 +390,7 @@ ACMD(do_cmd)
 
 				info->ch		= ch;
 				info->subcmd		= subcmd;
-				std::strncpy(info->szReason, argument, sizeof(info->szReason));
+				strlcpy(info->szReason, argument, sizeof(info->szReason));
 
 				ch->m_pkTimedEvent	= event_create(timed_event, info, 1);
 			}
@@ -928,8 +928,8 @@ ACMD(do_safebox_change_password)
 	TSafeboxChangePasswordPacket p;
 
 	p.dwID = ch->GetDesc()->GetAccountTable().id;
-	std::strncpy(p.szOldPassword, arg1, sizeof(p.szOldPassword));
-	std::strncpy(p.szNewPassword, arg2, sizeof(p.szNewPassword));
+	strlcpy(p.szOldPassword, arg1, sizeof(p.szOldPassword));
+	strlcpy(p.szNewPassword, arg2, sizeof(p.szNewPassword));
 
 	db_clientdesc->DBPacket(HEADER_GD_SAFEBOX_CHANGE_PASSWORD, ch->GetDesc()->GetHandle(), &p, sizeof(p));
 }
@@ -963,8 +963,8 @@ ACMD(do_mall_password)
 
 	TSafeboxLoadPacket p;
 	p.dwID = ch->GetDesc()->GetAccountTable().id;
-	std::strncpy(p.szLogin, ch->GetDesc()->GetAccountTable().login, sizeof(p.szLogin));
-	std::strncpy(p.szPassword, arg1, sizeof(p.szPassword));
+	strlcpy(p.szLogin, ch->GetDesc()->GetAccountTable().login, sizeof(p.szLogin));
+	strlcpy(p.szPassword, arg1, sizeof(p.szPassword));
 
 	db_clientdesc->DBPacket(HEADER_GD_MALL_LOAD, ch->GetDesc()->GetHandle(), &p, sizeof(p));
 }
@@ -1641,7 +1641,7 @@ ACMD(do_monarch_transfer)
 			TPacketGGTransfer pgg;
 
 			pgg.bHeader = HEADER_GG_TRANSFER;
-			std::strncpy(pgg.szName, arg1, sizeof(pgg.szName));
+			strlcpy(pgg.szName, arg1, sizeof(pgg.szName));
 			pgg.lX = ch->GetX();
 			pgg.lY = ch->GetY();
 

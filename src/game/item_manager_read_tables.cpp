@@ -451,7 +451,7 @@ bool ITEM_MANAGER::ReadEtcDropItemFile(const char * c_pszFileName)
 		char szItemName[256];
 		float fProb = 0.0f;
 
-		std::strncpy(szItemName, buf, sizeof(szItemName));
+		strlcpy(szItemName, buf, sizeof(szItemName));
 		char * cpTab = strrchr(szItemName, '\t');
 
 		if (!cpTab)

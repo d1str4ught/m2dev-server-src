@@ -41,7 +41,7 @@ void P2P_MANAGER::Boot(LPDESC d)
 		it++;
 
 		p.bHeader = HEADER_GG_LOGIN;
-		std::strncpy(p.szName, ch->GetName(), sizeof(p.szName));
+		strlcpy(p.szName, ch->GetName(), sizeof(p.szName));
 		p.dwPID = ch->GetPlayerID();
 		p.bEmpire = ch->GetEmpire();
 		p.lMapIndex = SECTREE_MANAGER::instance().GetMapIndex(ch->GetX(), ch->GetY());
@@ -142,7 +142,7 @@ void P2P_MANAGER::Login(LPDESC d, const TPacketGGLogin * p)
 		pkCCI = M2_NEW CCI;
 
 		if (false == LC_IsBrazil())
-			std::strncpy(pkCCI->szName, p->szName, sizeof(pkCCI->szName));
+			strlcpy(pkCCI->szName, p->szName, sizeof(pkCCI->szName));
 		else
 			trim_and_lower(p->szName, pkCCI->szName, sizeof(pkCCI->szName));
 
