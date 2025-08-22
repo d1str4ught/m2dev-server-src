@@ -634,7 +634,7 @@ bool ITEM_MANAGER::ReadMonsterDropItemGroup(const char * c_pszFileName)
 			else
 			{
 				bNew = false;
-				CDropItemGroup* pkGroup = it->second;
+				pkGroup = it->second;
 			}
 
 			for (int k = 1; k < 256; ++k)
