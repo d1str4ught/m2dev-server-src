@@ -371,11 +371,11 @@ void config_init(const string& st_localeServiceName)
 		exit(1);
 	}
 
-	char db_host[2][64], db_user[2][64], db_pwd[2][64], db_db[2][64];
+	char db_host[3][64], db_user[3][64], db_pwd[3][64], db_db[3][64];
 	// ... 아... db_port는 이미 있는데... 네이밍 어찌해야함...
-	int mysql_db_port[2];
+	int mysql_db_port[3];
 
-	for (int n = 0; n < 2; ++n)
+	for (int n = 0; n < 3; ++n)
 	{
 		*db_host[n]	= '\0';
 		*db_user[n] = '\0';
@@ -410,7 +410,7 @@ void config_init(const string& st_localeServiceName)
 	while (fgets(buf, 256, fp_common)) {
 		parse_token(buf, token_string, value_string);
 
-		TOKEN("player_sql")
+		TOKEN("account_sql")
 		{
 			const char* line = two_arguments(value_string, db_host[0], sizeof(db_host[0]), db_user[0], sizeof(db_user[0]));
 			line = two_arguments(line, db_pwd[0], sizeof(db_pwd[0]), db_db[0], sizeof(db_db[0]));
@@ -434,7 +434,7 @@ void config_init(const string& st_localeServiceName)
 			continue;
 		}
 
-		TOKEN("common_sql")
+		TOKEN("player_sql")
 		{
 			const char* line = two_arguments(value_string, db_host[1], sizeof(db_host[1]), db_user[1], sizeof(db_user[1]));
 			line = two_arguments(line, db_pwd[1], sizeof(db_pwd[1]), db_db[1], sizeof(db_db[1]));
@@ -448,12 +448,36 @@ void config_init(const string& st_localeServiceName)
 
 			if (!*db_host[1] || !*db_user[1] || !*db_pwd[1] || !*db_db[1])
 			{
+				fprintf(stderr, "PLAYER_SQL syntax: logsql <host user password db>\n");
+				exit(1);
+			}
+
+			char buf[1024];
+			snprintf(buf, sizeof(buf), "PLAYER_SQL: %s %s %s %s %d", db_host[1], db_user[1], db_pwd[1], db_db[1], mysql_db_port[1]);
+			isPlayerSQL = true;
+			continue;
+		}
+
+		TOKEN("common_sql")
+		{
+			const char* line = two_arguments(value_string, db_host[2], sizeof(db_host[2]), db_user[2], sizeof(db_user[2]));
+			line = two_arguments(line, db_pwd[2], sizeof(db_pwd[2]), db_db[2], sizeof(db_db[2]));
+
+			if (line[0])
+			{
+				char buf[256];
+				one_argument(line, buf, sizeof(buf));
+				str_to_number(mysql_db_port[2], buf);
+			}
+
+			if (!*db_host[2] || !*db_user[2] || !*db_pwd[2] || !*db_db[2])
+			{
 				fprintf(stderr, "COMMON_SQL syntax: logsql <host user password db>\n");
 				exit(1);
 			}
 
 			char buf[1024];
-			snprintf(buf, sizeof(buf), "COMMON_SQL: %s %s %s %s %d", db_host[1], db_user[1], db_pwd[1], db_db[1], mysql_db_port[1]);
+			snprintf(buf, sizeof(buf), "COMMON_SQL: %s %s %s %s %d", db_host[2], db_user[2], db_pwd[2], db_db[2], mysql_db_port[2]);
 			isCommonSQL = true;
 			continue;
 		}
@@ -866,6 +890,35 @@ void config_init(const string& st_localeServiceName)
 			str_to_number(g_bChannel, value_string);
 			continue;
 		}
+
+		TOKEN("auth_server")
+		{
+			char szIP[32];
+			char szPort[32];
+
+			two_arguments(value_string, szIP, sizeof(szIP), szPort, sizeof(szPort));
+
+			if (!*szIP || (!*szPort && strcasecmp(szIP, "master")))
+			{
+				fprintf(stderr, "AUTH_SERVER: syntax error: <ip|master> <port>\n");
+				exit(1);
+			}
+
+			g_bAuthServer = true;
+
+			LoadBanIP("BANIP");
+
+			if (!strcasecmp(szIP, "master"))
+				fprintf(stdout, "AUTH_SERVER: I am the master\n");
+			else
+			{
+				g_stAuthMasterIP = szIP;
+				str_to_number(g_wAuthMasterPort, szPort);
+
+				fprintf(stdout, "AUTH_SERVER: master %s %u\n", g_stAuthMasterIP.c_str(), g_wAuthMasterPort);
+			}
+			continue;
+		}
 	}
 
 	//처리가 끝났으니 파일을 닫자.
@@ -895,7 +948,7 @@ void config_init(const string& st_localeServiceName)
 	}
 
 	// Common DB 가 Locale 정보를 가지고 있기 때문에 가장 먼저 접속해야 한다.
-	AccountDB::instance().Connect(db_host[1], mysql_db_port[1], db_user[1], db_pwd[1], db_db[1]);
+	AccountDB::instance().Connect(db_host[2], mysql_db_port[2], db_user[2], db_pwd[2], db_db[2]);
 
 	if (false == AccountDB::instance().IsConnected())
 	{
@@ -941,10 +994,13 @@ void config_init(const string& st_localeServiceName)
 
 	AccountDB::instance().SetLocale(g_stLocale);
 
-	AccountDB::instance().ConnectAsync(db_host[1], mysql_db_port[1], db_user[1], db_pwd[1], db_db[1], g_stLocale.c_str());
+	AccountDB::instance().ConnectAsync(db_host[2], mysql_db_port[2], db_user[2], db_pwd[2], db_db[2], g_stLocale.c_str());
 
 	// Player DB 접속
-	DBManager::instance().Connect(db_host[0], mysql_db_port[0], db_user[0], db_pwd[0], db_db[0]);
+	if (g_bAuthServer)
+		DBManager::instance().Connect(db_host[0], mysql_db_port[0], db_user[0], db_pwd[0], db_db[0]);
+	else
+		DBManager::instance().Connect(db_host[1], mysql_db_port[1], db_user[1], db_pwd[1], db_db[1]);
 
 	if (!DBManager::instance().IsConnected())
 	{
@@ -1107,38 +1163,10 @@ void config_init(const string& st_localeServiceName)
 			continue;
 		}
 
-		TOKEN("auth_server")
-		{
-			char szIP[32];
-			char szPort[32];
-
-			two_arguments(value_string, szIP, sizeof(szIP), szPort, sizeof(szPort));
-
-			if (!*szIP || (!*szPort && strcasecmp(szIP, "master")))
-			{
-				fprintf(stderr, "AUTH_SERVER: syntax error: <ip|master> <port>\n");
-				exit(1);
-			}
-
-			g_bAuthServer = true;
-
-			LoadBanIP("BANIP");
-
-			if (!strcasecmp(szIP, "master"))
-				fprintf(stdout, "AUTH_SERVER: I am the master\n");
-			else
-			{
-				g_stAuthMasterIP = szIP;
-				str_to_number(g_wAuthMasterPort, szPort);
-
-				fprintf(stdout, "AUTH_SERVER: master %s %u\n", g_stAuthMasterIP.c_str(), g_wAuthMasterPort);
-			}
-			continue;
-		}
-
 		TOKEN("server_id")
 		{
 			str_to_number(g_server_id, value_string);
+			continue;
 		}
 
 		
