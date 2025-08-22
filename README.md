@@ -17,11 +17,3 @@ It builds as it is, without external dependencies.
 > cmake --build .
 
 
-
-### Contributors
-
-- Distraught
-- Gurgarath
-- Mitachi
-- valki
-- Amun
