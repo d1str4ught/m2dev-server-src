@@ -460,8 +460,7 @@ class CClientManager : public CNetBase, public singleton<CClientManager>
 
 	typedef std::map<DWORD, TPartyInfo>	TPartyMember;
 	typedef std::map<DWORD, TPartyMember>	TPartyMap;
-	typedef std::map<BYTE, TPartyMap>	TPartyChannelMap;
-	TPartyChannelMap m_map_pkChannelParty;
+	TPartyMap m_map_pkParty;
 
 	typedef std::map<std::string, long>	TEventFlagMap;
 	TEventFlagMap m_map_lEventFlag;

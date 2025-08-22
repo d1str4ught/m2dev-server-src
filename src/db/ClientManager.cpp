@@ -424,7 +424,7 @@ void CClientManager::QUERY_BOOT(CPeer* peer, TPacketGDBoot * p)
 
 void CClientManager::SendPartyOnSetup(CPeer* pkPeer)
 {
-	TPartyMap & pm = m_map_pkChannelParty[pkPeer->GetChannel()];
+	TPartyMap & pm = m_map_pkParty;
 
 	for (itertype(pm) it_party = pm.begin(); it_party != pm.end(); ++it_party)
 	{

@@ -7,12 +7,12 @@
 
 void CClientManager::QUERY_PARTY_CREATE(CPeer* peer, TPacketPartyCreate* p)
 {
-	TPartyMap & pm = m_map_pkChannelParty[peer->GetChannel()];
+	TPartyMap & pm = m_map_pkParty;
 
 	if (pm.find(p->dwLeaderPID) == pm.end())
 	{
 		pm.insert(make_pair(p->dwLeaderPID, TPartyMember()));
-		ForwardPacket(HEADER_DG_PARTY_CREATE, p, sizeof(TPacketPartyCreate), peer->GetChannel(), peer);
+		ForwardPacket(HEADER_DG_PARTY_CREATE, p, sizeof(TPacketPartyCreate), 0, peer);
 		sys_log(0, "PARTY Create [%lu]", p->dwLeaderPID);
 	}
 	else
@@ -23,7 +23,7 @@ void CClientManager::QUERY_PARTY_CREATE(CPeer* peer, TPacketPartyCreate* p)
 
 void CClientManager::QUERY_PARTY_DELETE(CPeer* peer, TPacketPartyDelete* p)
 {
-	TPartyMap& pm = m_map_pkChannelParty[peer->GetChannel()];
+	TPartyMap& pm = m_map_pkParty;
 	itertype(pm) it = pm.find(p->dwLeaderPID);
 
 	if (it == pm.end())
@@ -33,13 +33,13 @@ void CClientManager::QUERY_PARTY_DELETE(CPeer* peer, TPacketPartyDelete* p)
 	}
 
 	pm.erase(it);
-	ForwardPacket(HEADER_DG_PARTY_DELETE, p, sizeof(TPacketPartyDelete), peer->GetChannel(), peer);
+	ForwardPacket(HEADER_DG_PARTY_DELETE, p, sizeof(TPacketPartyDelete), 0, peer);
 	sys_log(0, "PARTY Delete [%lu]", p->dwLeaderPID);
 }
 
 void CClientManager::QUERY_PARTY_ADD(CPeer* peer, TPacketPartyAdd* p)
 {
-	TPartyMap & pm = m_map_pkChannelParty[peer->GetChannel()];
+	TPartyMap & pm = m_map_pkParty;
 	itertype(pm) it = pm.find(p->dwLeaderPID);
 
 	if (it == pm.end())
@@ -51,7 +51,7 @@ void CClientManager::QUERY_PARTY_ADD(CPeer* peer, TPacketPartyAdd* p)
 	if (it->second.find(p->dwPID) == it->second.end())
 	{
 		it->second.insert(std::make_pair(p->dwPID, TPartyInfo()));
-		ForwardPacket(HEADER_DG_PARTY_ADD, p, sizeof(TPacketPartyAdd), peer->GetChannel(), peer);
+		ForwardPacket(HEADER_DG_PARTY_ADD, p, sizeof(TPacketPartyAdd), 0, peer);
 		sys_log(0, "PARTY Add [%lu] to [%lu]", p->dwPID, p->dwLeaderPID);
 	}
 	else
@@ -60,7 +60,7 @@ void CClientManager::QUERY_PARTY_ADD(CPeer* peer, TPacketPartyAdd* p)
 
 void CClientManager::QUERY_PARTY_REMOVE(CPeer* peer, TPacketPartyRemove* p)
 {
-	TPartyMap & pm = m_map_pkChannelParty[peer->GetChannel()];
+	TPartyMap & pm = m_map_pkParty;
 	itertype(pm) it = pm.find(p->dwLeaderPID);
 
 	if (it == pm.end())
@@ -74,7 +74,7 @@ void CClientManager::QUERY_PARTY_REMOVE(CPeer* peer, TPacketPartyRemove* p)
 	if (pit != it->second.end())
 	{
 		it->second.erase(pit);
-		ForwardPacket(HEADER_DG_PARTY_REMOVE, p, sizeof(TPacketPartyRemove), peer->GetChannel(), peer);
+		ForwardPacket(HEADER_DG_PARTY_REMOVE, p, sizeof(TPacketPartyRemove), 0, peer);
 		sys_log(0, "PARTY Remove [%lu] to [%lu]", p->dwPID, p->dwLeaderPID);
 	}
 	else
@@ -83,7 +83,7 @@ void CClientManager::QUERY_PARTY_REMOVE(CPeer* peer, TPacketPartyRemove* p)
 
 void CClientManager::QUERY_PARTY_STATE_CHANGE(CPeer* peer, TPacketPartyStateChange* p)
 {
-	TPartyMap & pm = m_map_pkChannelParty[peer->GetChannel()];
+	TPartyMap & pm = m_map_pkParty;
 	itertype(pm) it = pm.find(p->dwLeaderPID);
 
 	if (it == pm.end())
@@ -105,13 +105,13 @@ void CClientManager::QUERY_PARTY_STATE_CHANGE(CPeer* peer, TPacketPartyStateChan
 	else 
 		pit->second.bRole = 0;
 
-	ForwardPacket(HEADER_DG_PARTY_STATE_CHANGE, p, sizeof(TPacketPartyStateChange), peer->GetChannel(), peer);
+	ForwardPacket(HEADER_DG_PARTY_STATE_CHANGE, p, sizeof(TPacketPartyStateChange), 0, peer);
 	sys_log(0, "PARTY StateChange [%lu] at [%lu] from %d %d",p->dwPID, p->dwLeaderPID, p->bRole, p->bFlag);
 }
 
 void CClientManager::QUERY_PARTY_SET_MEMBER_LEVEL(CPeer* peer, TPacketPartySetMemberLevel* p)
 {
-	TPartyMap & pm = m_map_pkChannelParty[peer->GetChannel()];
+	TPartyMap & pm = m_map_pkParty;
 	itertype(pm) it = pm.find(p->dwLeaderPID);
 
 	if (it == pm.end())
@@ -130,6 +130,6 @@ void CClientManager::QUERY_PARTY_SET_MEMBER_LEVEL(CPeer* peer, TPacketPartySetMe
 
 	pit->second.bLevel = p->bLevel;
 
-	ForwardPacket(HEADER_DG_PARTY_SET_MEMBER_LEVEL, p, sizeof(TPacketPartySetMemberLevel), peer->GetChannel());
+	ForwardPacket(HEADER_DG_PARTY_SET_MEMBER_LEVEL, p, sizeof(TPacketPartySetMemberLevel));
 	sys_log(0, "PARTY SetMemberLevel pid [%lu] level %d",p->dwPID, p->bLevel);
 }
