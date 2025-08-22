@@ -46,16 +46,7 @@ bool CPeerBase::Accept(socket_t fd_accept)
 	{
 		Destroy();
 		return false;
-	} 
-
-#ifdef ENABLE_PORT_SECURITY
-	if (strcmp(inet_ntoa(peer.sin_addr), "127.0.0.1")) // refuse if remote host != localhost (only the same machine must be able to connect in here)
-	{
-		sys_log(0, "PORT_SECURITY: BLOCK CONNECTION FROM %s", inet_ntoa(peer.sin_addr));
-		Destroy();
-		return false;
 	}
-#endif
 
 	//socket_block(m_fd);
 	socket_sndbuf(m_fd, 233016);

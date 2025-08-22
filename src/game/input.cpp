@@ -286,14 +286,6 @@ int CInputHandshake::Analyze(LPDESC d, BYTE bHeader, const char * c_pData)
 		if (!(c_pSep = strchr(c_pData, '\n')))	// \n을 찾는다.
 			return -1;
 
-#ifdef ENABLE_PORT_SECURITY
-		if (IsEmptyAdminPage() || !IsAdminPage(inet_ntoa(d->GetAddr().sin_addr))) // block if adminpage is not set or if not admin
-		{
-			sys_log(0, "PORT_SECURITY: BLOCK FROM(%s)", d->GetHostName());
-			return -1;
-		}
-#endif
-
 		if (*(c_pSep - 1) == '\r')
 			--c_pSep;
 

@@ -133,9 +133,9 @@ void emptybeat(LPHEART heart, int pulse)
 //
 int Start()
 {
-	if (!CConfig::instance().LoadFile("conf.txt"))
+	if (!CConfig::instance().LoadFile("conf/db.txt"))
 	{
-		fprintf(stderr, "Loading conf.txt failed.\n");
+		fprintf(stderr, "Loading conf/db.txt failed.\n");
 		return false;
 	}
 

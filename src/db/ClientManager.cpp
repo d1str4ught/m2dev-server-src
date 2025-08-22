@@ -146,7 +146,7 @@ bool CClientManager::Initialize()
 
 	if (!CConfig::instance().GetValue("PLAYER_DELETE_LEVEL_LIMIT", &m_iPlayerDeleteLevelLimit))
 	{
-		sys_err("conf.txt: Cannot find PLAYER_DELETE_LEVEL_LIMIT, use default level %d", PLAYER_MAX_LEVEL_CONST + 1);
+		sys_err("conf/db.txt: Cannot find PLAYER_DELETE_LEVEL_LIMIT, use default level %d", PLAYER_MAX_LEVEL_CONST + 1);
 		m_iPlayerDeleteLevelLimit = PLAYER_MAX_LEVEL_CONST + 1;
 	}
 
@@ -3324,7 +3324,7 @@ bool CClientManager::InitializeNowItemID()
 	//아이템 ID를 초기화 한다.
 	if (!CConfig::instance().GetTwoValue("ITEM_ID_RANGE", &dwMin, &dwMax))
 	{
-		sys_err("conf.txt: Cannot find ITEM_ID_RANGE [start_item_id] [end_item_id]");
+		sys_err("conf/db.txt: Cannot find ITEM_ID_RANGE [start_item_id] [end_item_id]");
 		return false;
 	}
 

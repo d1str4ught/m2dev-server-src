@@ -128,7 +128,7 @@ bool CConfig::LoadFile(const char* filename)
 
 			case 2:
 				mode = 0;
-				m_valueMap.insert(TValueMap::value_type(comment, szTmp));
+				m_valueMap.insert(std::make_pair(comment, szTmp));
 				break;
 		}
 

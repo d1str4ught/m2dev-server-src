@@ -400,21 +400,85 @@ void config_init(const string& st_localeServiceName)
 	bool isCommonSQL = false;	
 	bool isPlayerSQL = false;
 
-	FILE* fpOnlyForDB;
-
-	if (!(fpOnlyForDB = fopen(st_configFileName.c_str(), "r")))
+	FILE* fp_common;
+	if (!(fp_common = fopen("conf/game.txt", "r")))
 	{
-		fprintf(stderr, "Can not open [%s]\n", st_configFileName.c_str());
+		fprintf(stderr, "Can not open [conf/game.txt]\n");
 		exit(1);
 	}
 
-	while (fgets(buf, 256, fpOnlyForDB))
-	{
+	while (fgets(buf, 256, fp_common)) {
 		parse_token(buf, token_string, value_string);
 
-		TOKEN("BLOCK_LOGIN")
+		TOKEN("player_sql")
 		{
-			g_stBlockDate = value_string;
+			const char* line = two_arguments(value_string, db_host[0], sizeof(db_host[0]), db_user[0], sizeof(db_user[0]));
+			line = two_arguments(line, db_pwd[0], sizeof(db_pwd[0]), db_db[0], sizeof(db_db[0]));
+
+			if (line[0])
+			{
+				char buf[256];
+				one_argument(line, buf, sizeof(buf));
+				str_to_number(mysql_db_port[0], buf);
+			}
+
+			if (!*db_host[0] || !*db_user[0] || !*db_pwd[0] || !*db_db[0])
+			{
+				fprintf(stderr, "PLAYER_SQL syntax: logsql <host user password db>\n");
+				exit(1);
+			}
+
+			char buf[1024];
+			snprintf(buf, sizeof(buf), "PLAYER_SQL: %s %s %s %s %d", db_host[0], db_user[0], db_pwd[0], db_db[0], mysql_db_port[0]);
+			isPlayerSQL = true;
+			continue;
+		}
+
+		TOKEN("common_sql")
+		{
+			const char* line = two_arguments(value_string, db_host[1], sizeof(db_host[1]), db_user[1], sizeof(db_user[1]));
+			line = two_arguments(line, db_pwd[1], sizeof(db_pwd[1]), db_db[1], sizeof(db_db[1]));
+
+			if (line[0])
+			{
+				char buf[256];
+				one_argument(line, buf, sizeof(buf));
+				str_to_number(mysql_db_port[1], buf);
+			}
+
+			if (!*db_host[1] || !*db_user[1] || !*db_pwd[1] || !*db_db[1])
+			{
+				fprintf(stderr, "COMMON_SQL syntax: logsql <host user password db>\n");
+				exit(1);
+			}
+
+			char buf[1024];
+			snprintf(buf, sizeof(buf), "COMMON_SQL: %s %s %s %s %d", db_host[1], db_user[1], db_pwd[1], db_db[1], mysql_db_port[1]);
+			isCommonSQL = true;
+			continue;
+		}
+
+		TOKEN("log_sql")
+		{
+			const char* line = two_arguments(value_string, log_host, sizeof(log_host), log_user, sizeof(log_user));
+			line = two_arguments(line, log_pwd, sizeof(log_pwd), log_db, sizeof(log_db));
+
+			if (line[0])
+			{
+				char buf[256];
+				one_argument(line, buf, sizeof(buf));
+				str_to_number(log_port, buf);
+			}
+
+			if (!*log_host || !*log_user || !*log_pwd || !*log_db)
+			{
+				fprintf(stderr, "LOG_SQL syntax: logsql <host user password db>\n");
+				exit(1);
+			}
+
+			char buf[1024];
+			snprintf(buf, sizeof(buf), "LOG_SQL: %s %s %s %s %d", log_host, log_user, log_pwd, log_db, log_port);
+			continue;
 		}
 
 		TOKEN("adminpage_ip")
@@ -446,95 +510,10 @@ void config_init(const string& st_localeServiceName)
 			g_stAdminPagePassword = value_string;
 		}
 
-		TOKEN("hostname")
-		{
-			g_stHostname = value_string;
-			fprintf(stdout, "HOSTNAME: %s\n", g_stHostname.c_str());
-			continue;
-		}
-
-		TOKEN("channel")
-		{
-			str_to_number(g_bChannel, value_string);
-			continue;
-		}
-
-		TOKEN("player_sql")
-		{
-			const char * line = two_arguments(value_string, db_host[0], sizeof(db_host[0]), db_user[0], sizeof(db_user[0]));
-			line = two_arguments(line, db_pwd[0], sizeof(db_pwd[0]), db_db[0], sizeof(db_db[0]));
-
-			if (line[0])
-			{
-				char buf[256];
-				one_argument(line, buf, sizeof(buf));
-				str_to_number(mysql_db_port[0], buf);
-			}
-
-			if (!*db_host[0] || !*db_user[0] || !*db_pwd[0] || !*db_db[0])
-			{
-				fprintf(stderr, "PLAYER_SQL syntax: logsql <host user password db>\n");
-				exit(1);
-			}
-
-			char buf[1024];
-			snprintf(buf, sizeof(buf), "PLAYER_SQL: %s %s %s %s %d", db_host[0], db_user[0], db_pwd[0], db_db[0], mysql_db_port[0]);
-			isPlayerSQL = true;
-			continue;
-		}
-
-		TOKEN("common_sql")
-		{
-			const char * line = two_arguments(value_string, db_host[1], sizeof(db_host[1]), db_user[1], sizeof(db_user[1]));
-			line = two_arguments(line, db_pwd[1], sizeof(db_pwd[1]), db_db[1], sizeof(db_db[1]));
-
-			if (line[0])
-			{
-				char buf[256];
-				one_argument(line, buf, sizeof(buf));
-				str_to_number(mysql_db_port[1], buf);
-			}
-
-			if (!*db_host[1] || !*db_user[1] || !*db_pwd[1] || !*db_db[1])
-			{
-				fprintf(stderr, "COMMON_SQL syntax: logsql <host user password db>\n");
-				exit(1);
-			}
-
-			char buf[1024];
-			snprintf(buf, sizeof(buf), "COMMON_SQL: %s %s %s %s %d", db_host[1], db_user[1], db_pwd[1], db_db[1], mysql_db_port[1]);
-			isCommonSQL = true;
-			continue;
-		}
-
-		TOKEN("log_sql")
-		{
-			const char * line = two_arguments(value_string, log_host, sizeof(log_host), log_user, sizeof(log_user));
-			line = two_arguments(line, log_pwd, sizeof(log_pwd), log_db, sizeof(log_db));
-
-			if (line[0])
-			{
-				char buf[256];
-				one_argument(line, buf, sizeof(buf));
-				str_to_number(log_port, buf);
-			}
-
-			if (!*log_host || !*log_user || !*log_pwd || !*log_db)
-			{
-				fprintf(stderr, "LOG_SQL syntax: logsql <host user password db>\n");
-				exit(1);
-			}
-
-			char buf[1024];
-			snprintf(buf, sizeof(buf), "LOG_SQL: %s %s %s %s %d", log_host, log_user, log_pwd, log_db, log_port);
-			continue;
-		}
-
-		
 		//OPENID		
 		TOKEN("WEB_AUTH")
 		{
-			const char * line = two_arguments(value_string, openid_host, sizeof(openid_host), openid_uri, sizeof(openid_uri));
+			const char* line = two_arguments(value_string, openid_host, sizeof(openid_host), openid_uri, sizeof(openid_uri));
 
 			if (!*openid_host || !*openid_uri)
 			{
@@ -545,6 +524,346 @@ void config_init(const string& st_localeServiceName)
 			char buf[1024];
 			openid_server = 1;
 			snprintf(buf, sizeof(buf), "WEB_AUTH: %s %s", openid_host, openid_uri);
+			continue;
+		}
+
+		TOKEN("empire_whisper")
+		{
+			bool b_value = 0;
+			str_to_number(b_value, value_string);
+			g_bEmpireWhisper = !!b_value;
+			continue;
+		}
+
+		TOKEN("mark_server")
+		{
+			guild_mark_server = is_string_true(value_string);
+			continue;
+		}
+
+		TOKEN("mark_min_level")
+		{
+			str_to_number(guild_mark_min_level, value_string);
+			guild_mark_min_level = MINMAX(0, guild_mark_min_level, GUILD_MAX_LEVEL);
+			continue;
+		}
+
+		TOKEN("log_keep_days")
+		{
+			int i = 0;
+			str_to_number(i, value_string);
+			log_set_expiration_days(MINMAX(1, i, 90));
+			continue;
+		}
+
+		TOKEN("passes_per_sec")
+		{
+			str_to_number(passes_per_sec, value_string);
+			continue;
+		}
+
+		TOKEN("db_port")
+		{
+			str_to_number(db_port, value_string);
+			continue;
+		}
+
+		TOKEN("db_addr")
+		{
+			std::strncpy(db_addr, value_string, sizeof(db_addr));
+
+			for (int n = 0; n < ADDRESS_MAX_LEN; ++n)
+			{
+				if (db_addr[n] == ' ')
+					db_addr[n] = '\0';
+			}
+
+			continue;
+		}
+
+		TOKEN("save_event_second_cycle")
+		{
+			int	cycle = 0;
+			str_to_number(cycle, value_string);
+			save_event_second_cycle = cycle * passes_per_sec;
+			continue;
+		}
+
+		TOKEN("ping_event_second_cycle")
+		{
+			int	cycle = 0;
+			str_to_number(cycle, value_string);
+			ping_event_second_cycle = cycle * passes_per_sec;
+			continue;
+		}
+
+		TOKEN("table_postfix")
+		{
+			g_table_postfix = value_string;
+			continue;
+		}
+
+		TOKEN("test_server")
+		{
+			printf("-----------------------------------------------\n");
+			printf("TEST_SERVER\n");
+			printf("-----------------------------------------------\n");
+			str_to_number(test_server, value_string);
+			continue;
+		}
+
+		TOKEN("speed_server")
+		{
+			printf("-----------------------------------------------\n");
+			printf("SPEED_SERVER\n");
+			printf("-----------------------------------------------\n");
+			str_to_number(speed_server, value_string);
+			continue;
+		}
+#ifdef __AUCTION__
+		TOKEN("auction_server")
+		{
+			printf("-----------------------------------------------\n");
+			printf("AUCTION_SERVER\n");
+			printf("-----------------------------------------------\n");
+			str_to_number(auction_server, value_string);
+			continue;
+		}
+#endif
+		TOKEN("distribution_test_server")
+		{
+			str_to_number(distribution_test_server, value_string);
+			continue;
+		}
+
+		TOKEN("china_event_server")
+		{
+			str_to_number(china_event_server, value_string);
+			continue;
+		}
+
+		TOKEN("shutdowned")
+		{
+			g_bNoMoreClient = true;
+			continue;
+		}
+
+		TOKEN("no_regen")
+		{
+			g_bNoRegen = true;
+			continue;
+		}
+
+		TOKEN("traffic_profile")
+		{
+			g_bTrafficProfileOn = true;
+			continue;
+		}
+
+		TOKEN("no_wander")
+		{
+			no_wander = true;
+			continue;
+		}
+
+		TOKEN("user_limit")
+		{
+			str_to_number(g_iUserLimit, value_string);
+			continue;
+		}
+
+		TOKEN("skill_disable")
+		{
+			str_to_number(g_bSkillDisable, value_string);
+			continue;
+		}
+
+		TOKEN("billing")
+		{
+			g_bBilling = true;
+		}
+
+		TOKEN("quest_dir")
+		{
+			sys_log(0, "QUEST_DIR SETTING : %s", value_string);
+			g_stQuestDir = value_string;
+		}
+
+		TOKEN("quest_object_dir")
+		{
+			//g_stQuestObjectDir = value_string;
+			std::istringstream is(value_string);
+			sys_log(0, "QUEST_OBJECT_DIR SETTING : %s", value_string);
+			string dir;
+			while (!is.eof())
+			{
+				is >> dir;
+				if (is.fail())
+					break;
+				g_setQuestObjectDir.insert(dir);
+				sys_log(0, "QUEST_OBJECT_DIR INSERT : %s", dir.c_str());
+			}
+		}
+
+		TOKEN("teen_addr")
+		{
+			std::strncpy(teen_addr, value_string, sizeof(teen_addr));
+
+			for (int n = 0; n < ADDRESS_MAX_LEN; ++n)
+			{
+				if (teen_addr[n] == ' ')
+					teen_addr[n] = '\0';
+			}
+
+			continue;
+		}
+
+		TOKEN("teen_port")
+		{
+			str_to_number(teen_port, value_string);
+		}
+
+		TOKEN("synchack_limit_count")
+		{
+			str_to_number(g_iSyncHackLimitCount, value_string);
+		}
+
+		TOKEN("speedhack_limit_count")
+		{
+			str_to_number(SPEEDHACK_LIMIT_COUNT, value_string);
+		}
+
+		TOKEN("speedhack_limit_bonus")
+		{
+			str_to_number(SPEEDHACK_LIMIT_BONUS, value_string);
+		}
+
+		TOKEN("mall_url")
+		{
+			g_strWebMallURL = value_string;
+		}
+
+		TOKEN("bind_ip")
+		{
+			std::strncpy(g_szPublicIP, value_string, sizeof(g_szPublicIP));
+		}
+
+		TOKEN("view_range")
+		{
+			str_to_number(VIEW_RANGE, value_string);
+		}
+
+		TOKEN("spam_block_duration")
+		{
+			str_to_number(g_uiSpamBlockDuration, value_string);
+		}
+
+		TOKEN("spam_block_score")
+		{
+			str_to_number(g_uiSpamBlockScore, value_string);
+			g_uiSpamBlockScore = MAX(1, g_uiSpamBlockScore);
+		}
+
+		TOKEN("spam_block_reload_cycle")
+		{
+			str_to_number(g_uiSpamReloadCycle, value_string);
+			g_uiSpamReloadCycle = MAX(60, g_uiSpamReloadCycle); // 최소 1분
+		}
+
+		TOKEN("check_multihack")
+		{
+			str_to_number(g_bCheckMultiHack, value_string);
+		}
+
+		TOKEN("spam_block_max_level")
+		{
+			str_to_number(g_iSpamBlockMaxLevel, value_string);
+		}
+		TOKEN("protect_normal_player")
+		{
+			str_to_number(g_protectNormalPlayer, value_string);
+		}
+		TOKEN("notice_battle_zone")
+		{
+			str_to_number(g_noticeBattleZone, value_string);
+		}
+
+		TOKEN("pk_protect_level")
+		{
+			str_to_number(PK_PROTECT_LEVEL, value_string);
+			fprintf(stderr, "PK_PROTECT_LEVEL: %d", PK_PROTECT_LEVEL);
+		}
+
+		TOKEN("max_level")
+		{
+			str_to_number(gPlayerMaxLevel, value_string);
+
+			gPlayerMaxLevel = MINMAX(1, gPlayerMaxLevel, PLAYER_MAX_LEVEL_CONST);
+
+			fprintf(stderr, "PLAYER_MAX_LEVEL: %d\n", gPlayerMaxLevel);
+		}
+
+		TOKEN("block_char_creation")
+		{
+			int tmp = 0;
+
+			str_to_number(tmp, value_string);
+
+			if (0 == tmp)
+				g_BlockCharCreation = false;
+			else
+				g_BlockCharCreation = true;
+
+			continue;
+		}
+
+#ifdef ENABLE_PROXY_IP
+		TOKEN("proxy_ip")
+		{
+#ifndef WIN32
+			if (validateIpAddress(value_string))
+				g_stProxyIP = value_string;
+			else {
+				struct hostent* host = gethostbyname(value_string);
+				g_stProxyIP = inet_ntoa(*(struct in_addr*)host->h_addr_list[0]);
+				fprintf(stderr, "PROXY_IP: [%s] resolves to [%s]\n", value_string, g_stProxyIP.c_str());
+			}
+#else
+			g_stProxyIP = value_string;
+#endif
+			fprintf(stderr, "PROXY_IP: %s\n", g_stProxyIP.c_str());
+		}
+#endif
+	}
+	fclose(fp_common);
+
+	FILE* fpOnlyForDB;
+
+	if (!(fpOnlyForDB = fopen(st_configFileName.c_str(), "r")))
+	{
+		fprintf(stderr, "Can not open [%s]\n", st_configFileName.c_str());
+		exit(1);
+	}
+
+	while (fgets(buf, 256, fpOnlyForDB))
+	{
+		parse_token(buf, token_string, value_string);
+
+		TOKEN("BLOCK_LOGIN")
+		{
+			g_stBlockDate = value_string;
+		}
+
+		TOKEN("hostname")
+		{
+			g_stHostname = value_string;
+			fprintf(stdout, "HOSTNAME: %s\n", g_stHostname.c_str());
+			continue;
+		}
+
+		TOKEN("channel")
+		{
+			str_to_number(g_bChannel, value_string);
 			continue;
 		}
 	}
@@ -745,44 +1064,9 @@ void config_init(const string& st_localeServiceName)
 	{
 		parse_token(buf, token_string, value_string);
 
-		TOKEN("empire_whisper")
-		{
-			bool b_value = 0;
-			str_to_number(b_value, value_string);
-			g_bEmpireWhisper = !!b_value;
-			continue;
-		}
-
-		TOKEN("mark_server")
-		{
-			guild_mark_server = is_string_true(value_string);
-			continue;
-		}
-
-		TOKEN("mark_min_level")
-		{
-			str_to_number(guild_mark_min_level, value_string);
-			guild_mark_min_level = MINMAX(0, guild_mark_min_level, GUILD_MAX_LEVEL);
-			continue;
-		}
-
 		TOKEN("port")
 		{
 			str_to_number(mother_port, value_string);
-			continue;
-		}
-
-		TOKEN("log_keep_days")
-		{
-			int i = 0;
-			str_to_number(i, value_string);
-			log_set_expiration_days(MINMAX(1, i, 90));
-			continue;
-		}
-
-		TOKEN("passes_per_sec")
-		{
-			str_to_number(passes_per_sec, value_string);
 			continue;
 		}
 
@@ -791,105 +1075,6 @@ void config_init(const string& st_localeServiceName)
 			str_to_number(p2p_port, value_string);
 			continue;
 		}
-
-		TOKEN("db_port")
-		{
-			str_to_number(db_port, value_string);
-			continue;
-		}
-
-		TOKEN("db_addr")
-		{
-			std::strncpy(db_addr, value_string, sizeof(db_addr));
-
-			for (int n =0; n < ADDRESS_MAX_LEN; ++n)
-			{
-				if (db_addr[n] == ' ')
-					db_addr[n] = '\0';
-			}
-
-			continue;
-		}
-
-		TOKEN("save_event_second_cycle")
-		{
-			int	cycle = 0;
-			str_to_number(cycle, value_string);
-			save_event_second_cycle = cycle * passes_per_sec;
-			continue;
-		}
-
-		TOKEN("ping_event_second_cycle")
-		{
-			int	cycle = 0;
-			str_to_number(cycle, value_string);
-			ping_event_second_cycle = cycle * passes_per_sec;
-			continue;
-		}
-
-		TOKEN("table_postfix")
-		{
-			g_table_postfix = value_string;
-			continue;
-		}
-
-		TOKEN("test_server")
-		{
-			printf("-----------------------------------------------\n");
-			printf("TEST_SERVER\n");
-			printf("-----------------------------------------------\n");
-			str_to_number(test_server, value_string);
-			continue;
-		}
-
-		TOKEN("speed_server")
-		{
-			printf("-----------------------------------------------\n");
-			printf("SPEED_SERVER\n");
-			printf("-----------------------------------------------\n");
-			str_to_number(speed_server, value_string);
-			continue;
-		}
-#ifdef __AUCTION__
-		TOKEN("auction_server")
-		{
-			printf("-----------------------------------------------\n");
-			printf("AUCTION_SERVER\n");
-			printf("-----------------------------------------------\n");
-			str_to_number(auction_server, value_string);
-			continue;
-		}
-#endif
-		TOKEN("distribution_test_server")
-		{
-			str_to_number(distribution_test_server, value_string);
-			continue;
-		}
-
-		TOKEN("china_event_server")
-		{
-			str_to_number(china_event_server, value_string);
-			continue;
-		}
-
-		TOKEN("shutdowned")
-		{
-			g_bNoMoreClient = true;
-			continue;
-		}
-
-		TOKEN("no_regen")
-		{
-			g_bNoRegen = true;
-			continue;
-		}
-
-		TOKEN("traffic_profile")
-		{
-			g_bTrafficProfileOn = true;
-			continue;
-		}
-
 
 		TOKEN("map_allow")
 		{
@@ -922,24 +1107,6 @@ void config_init(const string& st_localeServiceName)
 			continue;
 		}
 
-		TOKEN("no_wander")
-		{
-			no_wander = true;
-			continue;
-		}
-
-		TOKEN("user_limit")
-		{
-			str_to_number(g_iUserLimit, value_string);
-			continue;
-		}
-
-		TOKEN("skill_disable")
-		{
-			str_to_number(g_bSkillDisable, value_string);
-			continue;
-		}
-
 		TOKEN("auth_server")
 		{
 			char szIP[32];
@@ -969,120 +1136,12 @@ void config_init(const string& st_localeServiceName)
 			continue;
 		}
 
-		TOKEN("billing")
-		{
-			g_bBilling = true;
-		}
-
-		TOKEN("quest_dir")
-		{
-			sys_log(0, "QUEST_DIR SETTING : %s", value_string);
-			g_stQuestDir = value_string;
-		}
-
-		TOKEN("quest_object_dir")
-		{
-			//g_stQuestObjectDir = value_string;
-			std::istringstream is(value_string);
-			sys_log(0, "QUEST_OBJECT_DIR SETTING : %s", value_string);
-			string dir;
-			while (!is.eof())
-			{
-				is >> dir;
-				if (is.fail())
-					break;
-				g_setQuestObjectDir.insert(dir);
-				sys_log(0, "QUEST_OBJECT_DIR INSERT : %s", dir .c_str());
-			}
-		}
-
-		TOKEN("teen_addr")
-		{
-			std::strncpy(teen_addr, value_string, sizeof(teen_addr));
-
-			for (int n =0; n < ADDRESS_MAX_LEN; ++n)
-			{
-				if (teen_addr[n] == ' ')
-					teen_addr[n] = '\0';
-			}
-
-			continue;
-		}
-
-		TOKEN("teen_port")
-		{
-			str_to_number(teen_port, value_string);
-		}
-
-		TOKEN("synchack_limit_count")
-		{
-			str_to_number(g_iSyncHackLimitCount, value_string);
-		}
-
-		TOKEN("speedhack_limit_count")
-		{
-			str_to_number(SPEEDHACK_LIMIT_COUNT, value_string);
-		}
-
-		TOKEN("speedhack_limit_bonus")
-		{
-			str_to_number(SPEEDHACK_LIMIT_BONUS, value_string);
-		}
-
 		TOKEN("server_id")
 		{
 			str_to_number(g_server_id, value_string);
 		}
 
-		TOKEN("mall_url")
-		{
-			g_strWebMallURL = value_string;
-		}
-
-		TOKEN("bind_ip")
-		{
-			std::strncpy(g_szPublicIP, value_string, sizeof(g_szPublicIP));
-		}
-
-		TOKEN("view_range")
-		{
-			str_to_number(VIEW_RANGE, value_string);
-		}
-
-		TOKEN("spam_block_duration")
-		{
-			str_to_number(g_uiSpamBlockDuration, value_string);
-		}
-
-		TOKEN("spam_block_score")
-		{
-			str_to_number(g_uiSpamBlockScore, value_string);
-			g_uiSpamBlockScore = MAX(1, g_uiSpamBlockScore);
-		}
-
-		TOKEN("spam_block_reload_cycle")
-		{
-			str_to_number(g_uiSpamReloadCycle, value_string);
-			g_uiSpamReloadCycle = MAX(60, g_uiSpamReloadCycle); // 최소 1분
-		}
-
-		TOKEN("check_multihack")
-		{
-			str_to_number(g_bCheckMultiHack, value_string);
-		}
-
-		TOKEN("spam_block_max_level")
-		{
-			str_to_number(g_iSpamBlockMaxLevel, value_string);
-		}
-		TOKEN("protect_normal_player")
-		{
-			str_to_number(g_protectNormalPlayer, value_string);
-		}
-		TOKEN("notice_battle_zone")
-		{
-			str_to_number(g_noticeBattleZone, value_string);
-		}
+		
 
 		// TOKEN("hackshield_enable")
 		// {
@@ -1123,53 +1182,6 @@ void config_init(const string& st_localeServiceName)
 				// bXTrapEnabled = true;
 			// }
 		// }
-
-		TOKEN("pk_protect_level")
-		{
-		    str_to_number(PK_PROTECT_LEVEL, value_string);
-		    fprintf(stderr, "PK_PROTECT_LEVEL: %d", PK_PROTECT_LEVEL);
-		}
-
-		TOKEN("max_level")
-		{
-			str_to_number(gPlayerMaxLevel, value_string);
-
-			gPlayerMaxLevel = MINMAX(1, gPlayerMaxLevel, PLAYER_MAX_LEVEL_CONST);
-
-			fprintf(stderr, "PLAYER_MAX_LEVEL: %d\n", gPlayerMaxLevel);
-		}
-
-		TOKEN("block_char_creation")
-		{
-			int tmp = 0;
-
-			str_to_number(tmp, value_string);
-
-			if (0 == tmp)
-				g_BlockCharCreation = false;
-			else
-				g_BlockCharCreation = true;
-
-			continue;
-		}
-
-#ifdef ENABLE_PROXY_IP
-		TOKEN("proxy_ip")
-		{
-#ifndef WIN32
-			if (validateIpAddress(value_string))
-				g_stProxyIP = value_string;
-			else {
-				struct hostent *host = gethostbyname(value_string);
-				g_stProxyIP = inet_ntoa(*(struct in_addr *)host->h_addr_list[0]);
-				fprintf(stderr, "PROXY_IP: [%s] resolves to [%s]\n", value_string, g_stProxyIP.c_str());
-			}
-#else
-			g_stProxyIP = value_string;
-#endif
-			fprintf(stderr, "PROXY_IP: %s\n", g_stProxyIP.c_str());
-		}
-#endif
 
 	}
 

@@ -202,9 +202,9 @@ bool CClientManager::InitializeMobTable()
 	bool isNameFile = true;
 	//<파일 읽기>
 	cCsvTable nameData;
-	if(!nameData.Load("mob_names.txt",'\t'))
+	if(!nameData.Load("conf/mob_names.txt",'\t'))
 	{
-		fprintf(stderr, "mob_names.txt 파일을 읽어오지 못했습니다\n");
+		fprintf(stderr, "conf/mob_names.txt 파일을 읽어오지 못했습니다\n");
 		isNameFile = false;
 	} else {
 		nameData.Next();	//설명row 생략.
@@ -264,8 +264,8 @@ bool CClientManager::InitializeMobTable()
 
 	//1. 파일 읽기.
 	cCsvTable data;
-	if(!data.Load("mob_proto.txt",'\t')) {
-		fprintf(stderr, "mob_proto.txt 파일을 읽어오지 못했습니다\n");
+	if(!data.Load("conf/mob_proto.txt",'\t')) {
+		fprintf(stderr, "conf/mob_proto.txt 파일을 읽어오지 못했습니다\n");
 		return false;
 	}
 	data.Next();					//설명 row 넘어가기
@@ -282,9 +282,9 @@ bool CClientManager::InitializeMobTable()
 	}
 	//data를 다시 첫줄로 옮긴다.(다시 읽어온다;;)
 	data.Destroy();
-	if(!data.Load("mob_proto.txt",'\t'))
+	if(!data.Load("conf/mob_proto.txt",'\t'))
 	{
-		fprintf(stderr, "mob_proto.txt 파일을 읽어오지 못했습니다\n");
+		fprintf(stderr, "conf/mob_proto.txt 파일을 읽어오지 못했습니다\n");
 		return false;
 	}
 	data.Next(); //맨 윗줄 제외 (아이템 칼럼을 설명하는 부분)
@@ -602,9 +602,9 @@ bool CClientManager::InitializeItemTable()
 	bool isNameFile = true;
 	map<int,const char*> localMap;
 	cCsvTable nameData;
-	if(!nameData.Load("item_names.txt",'\t'))
+	if(!nameData.Load("conf/item_names.txt",'\t'))
 	{
-		fprintf(stderr, "item_names.txt 파일을 읽어오지 못했습니다\n");
+		fprintf(stderr, "conf/item_names.txt 파일을 읽어오지 못했습니다\n");
 		isNameFile = false;
 	} else {
 		nameData.Next();
@@ -665,9 +665,9 @@ bool CClientManager::InitializeItemTable()
 
 	//파일 읽어오기.
 	cCsvTable data;
-	if(!data.Load("item_proto.txt",'\t'))
+	if(!data.Load("conf/item_proto.txt",'\t'))
 	{
-		fprintf(stderr, "item_proto.txt 파일을 읽어오지 못했습니다\n");
+		fprintf(stderr, "conf/item_proto.txt 파일을 읽어오지 못했습니다\n");
 		return false;
 	}
 	data.Next(); //맨 윗줄 제외 (아이템 칼럼을 설명하는 부분)
@@ -692,9 +692,9 @@ bool CClientManager::InitializeItemTable()
 	}
 	//data를 다시 첫줄로 옮긴다.(다시 읽어온다;;)
 	data.Destroy();
-	if(!data.Load("item_proto.txt",'\t'))
+	if(!data.Load("conf/item_proto.txt",'\t'))
 	{
-		fprintf(stderr, "item_proto.txt 파일을 읽어오지 못했습니다\n");
+		fprintf(stderr, "conf/item_proto.txt 파일을 읽어오지 못했습니다\n");
 		return false;
 	}
 	data.Next(); //맨 윗줄 제외 (아이템 칼럼을 설명하는 부분)

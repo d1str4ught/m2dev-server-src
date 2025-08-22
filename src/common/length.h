@@ -1,5 +1,5 @@
-﻿#ifndef __INC_METIN_II_LENGTH_H__
-#define __INC_METIN_II_LENGTH_H__
+﻿#pragma once
+#include <cstdint>
 
 #define WORD_MAX 0xffff
 enum EMisc
@@ -708,15 +708,15 @@ enum EMisc2
 
 typedef struct SItemPos
 {
-	BYTE window_type;
-	WORD cell;
+	uint8_t window_type;
+	uint16_t cell;
     SItemPos ()
     {
         window_type = INVENTORY;
 		cell = WORD_MAX;
     }
 
-	SItemPos (BYTE _window_type, WORD _cell)
+	SItemPos (uint8_t _window_type, WORD _cell)
     {
         window_type = _window_type;
         cell = _cell;
@@ -792,5 +792,3 @@ typedef enum
 } EShopCoinType;
 
 #pragma pack(pop)
-
-#endif
