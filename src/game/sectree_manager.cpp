@@ -458,14 +458,13 @@ bool SECTREE_MANAGER::LoadAttribute(LPSECTREE_MAP pkMapSectree, const char * c_p
 		return false;
 	}
 
-	int iWidth, iHeight;
-
-	fread(&iWidth, sizeof(int), 1, fp);
-	fread(&iHeight, sizeof(int), 1, fp);
+	int32_t iWidth, iHeight;
+	fread(&iWidth, sizeof(int32_t), 1, fp);
+	fread(&iHeight, sizeof(int32_t), 1, fp);
 
 	int maxMemSize = LZOManager::instance().GetMaxCompressedSize(sizeof(DWORD) * (SECTREE_SIZE / CELL_SIZE) * (SECTREE_SIZE / CELL_SIZE));
 
-	lzo_uint uiSize;
+	uint32_t uiSize;
 	lzo_uint uiDestSize;
 
 #ifndef _MSC_VER
@@ -517,8 +516,8 @@ bool SECTREE_MANAGER::LoadAttribute(LPSECTREE_MAP pkMapSectree, const char * c_p
 				return false;
 			}
 
-			fread(&uiSize, sizeof(int), 1, fp);
-			fread(abComp, sizeof(char), uiSize, fp);
+			fread(&uiSize, sizeof(uint32_t), 1, fp);
+			fread(abComp, sizeof(uint8_t), uiSize, fp);
 
 			//LZOManager::instance().Decompress(abComp, uiSize, (BYTE *) tree->GetAttributePointer(), &uiDestSize);
 			uiDestSize = sizeof(DWORD) * maxMemSize;
