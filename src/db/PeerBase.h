@@ -33,10 +33,10 @@ class CPeerBase : public CNetBase
 
 	socket_t	GetFd() { return m_fd; }
 
-	void		EncodeBYTE(BYTE b);
-	void		EncodeWORD(WORD w);
-	void		EncodeDWORD(DWORD dw);
-	void		Encode(const void* data, DWORD size);
+	void		EncodeBYTE(uint8_t b);
+	void		EncodeWORD(uint16_t w);
+	void		EncodeDWORD(uint32_t dw);
+	void		Encode(const void* data, uint32_t size);
 	int		Send();
 
 	int		Recv();

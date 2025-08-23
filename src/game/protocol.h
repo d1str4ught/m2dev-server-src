@@ -1,40 +1,42 @@
-﻿#ifndef __PROTOCOL_H__
-#define __PROTOCOL_H__
+﻿#pragma once
+#include <cassert>
+#include <cstdint>
+#include "libthecore/buffer.h"
 
-inline const char *encode_byte(char ind)
+inline const char *encode_byte(uint8_t ind)
 {
-	static char a[8];
-	*((char *) a) = ind;
+	static char a[1];
+	*((uint8_t*)a) = ind;
 	return (a);
 }
 
-inline const char *encode_2bytes(sh_int ind)
+inline const char *encode_2bytes(uint16_t ind)
 {
-	static char a[8];
-	*((sh_int *) a) = ind;
+	static char a[2];
+	*((uint16_t*)a) = ind;
 	return (a);
 }
 
-inline const char *encode_4bytes(int ind)
+inline const char *encode_4bytes(uint32_t ind)
 {
-	static char a[8];
-	*((int *) a) = ind;
+	static char a[4];
+	*((uint32_t*)a) = ind;
 	return (a);
 }
 
-inline BYTE decode_byte(const void * a)
+inline uint8_t decode_byte(const void * a)
 {
-	return (*(BYTE *) a);
+	return (*(uint8_t*)a);
 }
 
-inline WORD decode_2bytes(const void * a)
+inline uint16_t decode_2bytes(const void * a)
 {
-	return (*((WORD *) a));
+	return (*((uint16_t*)a));
 }
 
-inline INT decode_4bytes(const void *a)
+inline uint32_t decode_4bytes(const void *a)
 {
-	return (*((INT *) a));
+	return (*((uint32_t*)a));
 }
 
 #define packet_encode(buf, data, len) __packet_encode(buf, data, len, __FILE__, __LINE__)
@@ -42,7 +44,7 @@ inline INT decode_4bytes(const void *a)
 //#define DEFAULT_PACKET_BUFFER_SIZE 32768
 #define DEFAULT_PACKET_BUFFER_SIZE 65536
 
-inline bool __packet_encode(LPBUFFER pbuf, const void * data, int length, const char * file, int line)
+inline bool __packet_encode(LPBUFFER& pbuf, const void * data, int length, const char * file, int line)
 {
 	assert(NULL != pbuf);
 	assert(NULL != data);
@@ -57,5 +59,3 @@ inline bool __packet_encode(LPBUFFER pbuf, const void * data, int length, const 
 	buffer_write(pbuf, data, length);
 	return true;
 }
-
-#endif

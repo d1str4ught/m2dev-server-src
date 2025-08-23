@@ -95,7 +95,7 @@ void CPeerBase::Close()
 	OnClose();
 }
 
-void CPeerBase::EncodeBYTE(BYTE b)
+void CPeerBase::EncodeBYTE(uint8_t b)
 {
 	if (!m_outBuffer)
 	{
@@ -103,11 +103,11 @@ void CPeerBase::EncodeBYTE(BYTE b)
 		return;
 	}
 
-	buffer_write(m_outBuffer, &b, 1);
+	buffer_write(m_outBuffer, &b, sizeof(uint8_t));
 	fdwatch_add_fd(m_fdWatcher, m_fd, this, FDW_WRITE, true);
 }
 
-void CPeerBase::EncodeWORD(WORD w)
+void CPeerBase::EncodeWORD(uint16_t w)
 {
 	if (!m_outBuffer)
 	{
@@ -115,11 +115,11 @@ void CPeerBase::EncodeWORD(WORD w)
 		return;
 	}
 
-	buffer_write(m_outBuffer, &w, 2);
+	buffer_write(m_outBuffer, &w, sizeof(uint16_t));
 	fdwatch_add_fd(m_fdWatcher, m_fd, this, FDW_WRITE, true);
 }
 
-void CPeerBase::EncodeDWORD(DWORD dw)
+void CPeerBase::EncodeDWORD(uint32_t dw)
 {
 	if (!m_outBuffer)
 	{
@@ -127,11 +127,11 @@ void CPeerBase::EncodeDWORD(DWORD dw)
 		return;
 	}
 
-	buffer_write(m_outBuffer, &dw, 4);
+	buffer_write(m_outBuffer, &dw, sizeof(uint32_t));
 	fdwatch_add_fd(m_fdWatcher, m_fd, this, FDW_WRITE, true);
 }
 
-void CPeerBase::Encode(const void* data, DWORD size)
+void CPeerBase::Encode(const void* data, uint32_t size)
 {
 	if (!m_outBuffer)
 	{
