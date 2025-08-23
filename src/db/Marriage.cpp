@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "Marriage.h"
 #include "Main.h"
 #include "DBManager.h"
@@ -253,7 +253,7 @@ namespace marriage
 
 	void CManager::OnSetup(CPeer* peer)
 	{
-		// °áÈ¥ÇÑ »ç¶÷µé º¸³»±â
+		// ê²°í˜¼í•œ ì‚¬ëžŒë“¤ ë³´ë‚´ê¸°
 		for (itertype(m_Marriages) it = m_Marriages.begin(); it != m_Marriages.end(); ++it)
 		{
 			TMarriage* pMarriage = *it;
@@ -280,7 +280,7 @@ namespace marriage
 			}
 		}
 
-		// °áÈ¥½Ä º¸³»±â
+		// ê²°í˜¼ì‹ ë³´ë‚´ê¸°
 		for (itertype(m_mapRunningWedding) it = m_mapRunningWedding.begin(); it != m_mapRunningWedding.end(); ++it)
 		{
 			const TWedding& t = it->second;
