@@ -24,12 +24,12 @@ TAccountTable & CLoginData::GetAccountRef()
 	return m_data;
 }
 
-void CLoginData::SetClientKey(const DWORD * c_pdwClientKey)
+void CLoginData::SetClientKey(const uint32_t* c_pdwClientKey)
 {
-	thecore_memcpy(&m_adwClientKey, c_pdwClientKey, sizeof(DWORD) * 4);
+	thecore_memcpy(&m_adwClientKey, c_pdwClientKey, sizeof(uint32_t) * 4);
 }
 
-const DWORD * CLoginData::GetClientKey()
+const uint32_t * CLoginData::GetClientKey()
 {
 	return &m_adwClientKey[0];
 }

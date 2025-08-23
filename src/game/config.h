@@ -40,7 +40,7 @@ extern bool	g_bTrafficProfileOn;		///< true 이면 TrafficProfiler 를 켠다.
 extern BYTE	g_bChannel;
 
 extern bool	map_allow_find(int index);
-extern void	map_allow_copy(long * pl, int size);
+extern void	map_allow_copy(int32_t * pl, int size);
 extern bool	no_wander;
 
 extern int	g_iUserLimit;

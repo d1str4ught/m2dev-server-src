@@ -129,9 +129,9 @@ void CClientManager::QUERY_LOGIN_BY_KEY(CPeer * pkPeer, DWORD dwHandle, TPacketG
 		return;
 	}
 
-	if (memcmp(pkLoginData->GetClientKey(), p->adwClientKey, sizeof(DWORD) * 4))
+	if (memcmp(pkLoginData->GetClientKey(), p->adwClientKey, sizeof(uint32_t) * 4))
 	{
-		const DWORD * pdwClientKey = pkLoginData->GetClientKey();
+		const uint32_t * pdwClientKey = pkLoginData->GetClientKey();
 
 		sys_log(0, "LOGIN_BY_KEY client key differ %s %lu %lu %lu %lu, %lu %lu %lu %lu",
 				r.login,

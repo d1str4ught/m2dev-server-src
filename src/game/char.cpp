@@ -5239,9 +5239,9 @@ bool CHARACTER::WarpSet(long x, long y, long lPrivateMapIndex)
 	if (!IsPC())
 		return false;
 
-	long lAddr;
-	long lMapIndex;
-	WORD wPort;
+	uint32_t lAddr;
+	int32_t lMapIndex;
+	uint16_t wPort;
 
 	if (!CMapLocation::instance().Get(x, y, lMapIndex, lAddr, wPort))
 	{
@@ -5251,9 +5251,9 @@ bool CHARACTER::WarpSet(long x, long y, long lPrivateMapIndex)
 
 	//Send Supplementary Data Block if new map requires security packages in loading this map
 	{
-		long lCurAddr;
-		long lCurMapIndex = 0;
-		WORD wCurPort;
+		uint32_t lCurAddr;
+		int32_t lCurMapIndex = 0;
+		uint16_t wCurPort;
 
 		CMapLocation::instance().Get(GetX(), GetY(), lCurMapIndex, lCurAddr, wCurPort);
 

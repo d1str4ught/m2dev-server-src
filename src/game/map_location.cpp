@@ -1,20 +1,17 @@
-﻿
-#include "stdafx.h"
-
+﻿#include "stdafx.h"
 #include "map_location.h"
-
 #include "sectree_manager.h"
 
 CMapLocation g_mapLocations;
 
-bool CMapLocation::Get(long x, long y, long & lIndex, long & lAddr, WORD & wPort)
+bool CMapLocation::Get(long x, long y, int32_t& lIndex, uint32_t& lAddr, uint16_t& wPort)
 {
 	lIndex = SECTREE_MANAGER::instance().GetMapIndex(x, y);
 
 	return Get(lIndex, lAddr, wPort);
 }
 
-bool CMapLocation::Get(int iIndex, long & lAddr, WORD & wPort)
+bool CMapLocation::Get(int32_t iIndex, uint32_t& lAddr, uint16_t& wPort)
 {
 	if (iIndex == 0)
 	{
@@ -40,7 +37,7 @@ bool CMapLocation::Get(int iIndex, long & lAddr, WORD & wPort)
 	return true;
 }
 
-void CMapLocation::Insert(long lIndex, const char * c_pszHost, WORD wPort)
+void CMapLocation::Insert(int32_t lIndex, const char * c_pszHost, uint16_t wPort)
 {
 	TLocation loc;
 

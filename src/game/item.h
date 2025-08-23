@@ -106,11 +106,11 @@ class CItem : public CEntity
 		void		ModifyPoints(bool bAdd);	// 아이템의 효과를 캐릭터에 부여 한다. bAdd가 false이면 제거함
 
 		bool		CreateSocket(BYTE bSlot, BYTE bGold);
-		const long *	GetSockets()		{ return &m_alSockets[0];	}
-		long		GetSocket(int i)	{ return m_alSockets[i];	}
+		const int32_t*	GetSockets()		{ return &m_alSockets[0];	}
+		int32_t		GetSocket(int i)	{ return m_alSockets[i];	}
 
-		void		SetSockets(const long * al);
-		void		SetSocket(int i, long v, bool bLog = true);
+		void		SetSockets(const int32_t * al);
+		void		SetSocket(int i, int32_t v, bool bLog = true);
 
 		int		GetSocketCount();
 		bool		AddSocket();
@@ -276,7 +276,7 @@ class CItem : public CEntity
 
 		bool		m_bExchanging;	///< 현재 교환중 상태 
 
-		long		m_alSockets[ITEM_SOCKET_MAX_NUM];	// 아이템 소캣
+		int32_t		m_alSockets[ITEM_SOCKET_MAX_NUM];	// 아이템 소캣
 		TPlayerItemAttribute	m_aAttr[ITEM_ATTRIBUTE_MAX_NUM];
 
 		LPEVENT		m_pkDestroyEvent;

@@ -3,7 +3,7 @@
 
 #include "length.h"
 
-typedef	DWORD IDENT;
+typedef	uint32_t IDENT;
 
 /**
  * @version 05/06/10	Bang2ni - Myshop Pricelist 관련 패킷 HEADER_XX_MYSHOP_PRICELIST_XXX 추가
@@ -311,7 +311,7 @@ enum E_PASSPOD
 
 typedef struct SRequestConfirmPasspod
 {
-	int pid;
+	int32_t pid;
 	char passpod[MAX_PASSPOD + 1];
 	char login[LOGIN_MAX_LEN + 1];
 
@@ -319,8 +319,8 @@ typedef struct SRequestConfirmPasspod
 
 typedef struct SResultConfirmPasspod
 {
-	int pid;
-	int ret_code;
+	int32_t pid;
+	int32_t ret_code;
 	char login[LOGIN_MAX_LEN + 1];
 } ResultConfirmPasspod;
 /* ----------------------------------------------
@@ -338,165 +338,165 @@ enum ERequestChargeType
 
 typedef struct SRequestChargeCash
 {
-	DWORD		dwAID;		// id(primary key) - Account Table
-	DWORD		dwAmount;
+	uint32_t		dwAID;		// id(primary key) - Account Table
+	uint32_t		dwAmount;
 	ERequestChargeType	eChargeType;
 
 } TRequestChargeCash;
 
 typedef struct SSimplePlayer
 {
-	DWORD		dwID;
+	uint32_t		dwID;
 	char		szName[CHARACTER_NAME_MAX_LEN + 1];
-	BYTE		byJob;
-	BYTE		byLevel;
-	DWORD		dwPlayMinutes;
-	BYTE		byST, byHT, byDX, byIQ;
-	WORD		wMainPart;
-	BYTE		bChangeName;
-	WORD		wHairPart;
-	BYTE		bDummy[4];
-	long		x, y;
-	long		lAddr;
-	WORD		wPort;
-	BYTE		skill_group;
+	uint8_t		byJob;
+	uint8_t		byLevel;
+	uint32_t		dwPlayMinutes;
+	uint8_t		byST, byHT, byDX, byIQ;
+	uint16_t		wMainPart;
+	uint8_t		bChangeName;
+	uint16_t		wHairPart;
+	uint8_t		bDummy[4];
+	int32_t		x, y;
+	uint32_t		lAddr;
+	uint16_t		wPort;
+	uint8_t		skill_group;
 } TSimplePlayer;
 
 typedef struct SAccountTable
 {
-	DWORD		id;
+	uint32_t		id;
 	char		login[LOGIN_MAX_LEN + 1];
 	char		passwd[PASSWD_MAX_LEN + 1];
 	char		social_id[SOCIAL_ID_MAX_LEN + 1];
 	char		status[ACCOUNT_STATUS_MAX_LEN + 1];
-	BYTE		bEmpire;
+	uint8_t		bEmpire;
 	TSimplePlayer	players[PLAYER_PER_ACCOUNT];
 } TAccountTable;
 
 typedef struct SPacketDGCreateSuccess
 {
-	BYTE		bAccountCharacterIndex;
+	uint8_t		bAccountCharacterIndex;
 	TSimplePlayer	player;
 } TPacketDGCreateSuccess;
 
 typedef struct TPlayerItemAttribute
 {
-	BYTE	bType;
-	short	sValue;
+	uint8_t	bType;
+	int16_t	sValue;
 } TPlayerItemAttribute;
 
 typedef struct SPlayerItem
 {
-	DWORD	id;
-	BYTE	window;
-	WORD	pos;
-	DWORD	count;
+	uint32_t	id;
+	uint8_t	window;
+	uint16_t	pos;
+	uint32_t	count;
 
-	DWORD	vnum;
-	long	alSockets[ITEM_SOCKET_MAX_NUM];	// 소켓번호
+	uint32_t	vnum;
+	int32_t	alSockets[ITEM_SOCKET_MAX_NUM];	// 소켓번호
 
 	TPlayerItemAttribute    aAttr[ITEM_ATTRIBUTE_MAX_NUM];
 
-	DWORD	owner;
+	uint32_t	owner;
 } TPlayerItem;
 
 typedef struct SQuickslot
 {
-	BYTE	type;
-	BYTE	pos;
+	uint8_t	type;
+	uint8_t	pos;
 } TQuickslot;
 
 typedef struct SPlayerSkill
 {
-	BYTE	bMasterType;
-	BYTE	bLevel;
+	uint8_t	bMasterType;
+	uint8_t	bLevel;
 	time_t	tNextRead;
 } TPlayerSkill;
 
 struct	THorseInfo
 {
-	BYTE	bLevel;
-	BYTE	bRiding;
-	short	sStamina;
-	short	sHealth;
-	DWORD	dwHorseHealthDropTime;
+	uint8_t	bLevel;
+	uint8_t	bRiding;
+	int16_t	sStamina;
+	int16_t	sHealth;
+	uint32_t	dwHorseHealthDropTime;
 };
 
 typedef struct SPlayerTable
 {
-	DWORD	id;
+	uint32_t	id;
 
 	char	name[CHARACTER_NAME_MAX_LEN + 1];
 	char	ip[IP_ADDRESS_LENGTH + 1];
 
-	WORD	job;
-	BYTE	voice;
+	uint16_t	job;
+	uint8_t	voice;
 
-	BYTE	level;
-	BYTE	level_step;
-	short	st, ht, dx, iq;
+	uint8_t	level;
+	uint8_t	level_step;
+	int16_t	st, ht, dx, iq;
 
-	DWORD	exp;
+	uint32_t	exp;
 	INT		gold;
 
-	BYTE	dir;
+	uint8_t	dir;
 	INT		x, y, z;
 	INT		lMapIndex;
 
-	long	lExitX, lExitY;
-	long	lExitMapIndex;
+	int32_t	lExitX, lExitY;
+	int32_t	lExitMapIndex;
 
-	// short	hp;
-	// short	sp;
+	// int16_t	hp;
+	// int16_t	sp;
 
-	// short	sRandomHP;
-	// short	sRandomSP;
+	// int16_t	sRandomHP;
+	// int16_t	sRandomSP;
 	
 	// Fix
-	int       hp;
-	int       sp;
+	int32_t       hp;
+	int32_t       sp;
 
-	int	sRandomHP;
-	int	sRandomSP;
+	int32_t	sRandomHP;
+	int32_t	sRandomSP;
 
-	int         playtime;
+	int32_t         playtime;
 
-	short	stat_point;
-	short	skill_point;
-	short	sub_skill_point;
-	short	horse_skill_point;
+	int16_t	stat_point;
+	int16_t	skill_point;
+	int16_t	sub_skill_point;
+	int16_t	horse_skill_point;
 
 	TPlayerSkill skills[SKILL_MAX_NUM];
 
 	TQuickslot  quickslot[QUICKSLOT_MAX_NUM];
 
-	BYTE	part_base;
-	WORD	parts[PART_MAX_NUM];
+	uint8_t	part_base;
+	uint16_t	parts[PART_MAX_NUM];
 
-	short	stamina;
+	int16_t	stamina;
 
-	BYTE	skill_group;
-	long	lAlignment;
+	uint8_t	skill_group;
+	int32_t	lAlignment;
 	char	szMobile[MOBILE_MAX_LEN + 1];
 
-	short	stat_reset_count;
+	int16_t	stat_reset_count;
 
 	THorseInfo	horse;
 
-	DWORD	logoff_interval;
+	uint32_t	logoff_interval;
 
-	int		aiPremiumTimes[PREMIUM_MAX_NUM];
+	int32_t		aiPremiumTimes[PREMIUM_MAX_NUM];
 } TPlayerTable;
 
 typedef struct SMobSkillLevel
 {
-	DWORD	dwVnum;
-	BYTE	bLevel;
+	uint32_t	dwVnum;
+	uint8_t	bLevel;
 } TMobSkillLevel;
 
 typedef struct SEntityTable
 {
-	DWORD dwVnum;
+	uint32_t dwVnum;
 } TEntityTable;
 
 typedef struct SMobTable : public SEntityTable
@@ -504,68 +504,68 @@ typedef struct SMobTable : public SEntityTable
 	char	szName[CHARACTER_NAME_MAX_LEN + 1];
 	char	szLocaleName[CHARACTER_NAME_MAX_LEN + 1];
 
-	BYTE	bType;			// Monster, NPC
-	BYTE	bRank;			// PAWN, KNIGHT, KING
-	BYTE	bBattleType;		// MELEE, etc..
-	BYTE	bLevel;			// Level
-	BYTE	bSize;
+	uint8_t	bType;			// Monster, NPC
+	uint8_t	bRank;			// PAWN, KNIGHT, KING
+	uint8_t	bBattleType;		// MELEE, etc..
+	uint8_t	bLevel;			// Level
+	uint8_t	bSize;
 
-	DWORD	dwGoldMin;
-	DWORD	dwGoldMax;
-	DWORD	dwExp;
-	DWORD	dwMaxHP;
-	BYTE	bRegenCycle;
-	BYTE	bRegenPercent;
-	WORD	wDef;
+	uint32_t	dwGoldMin;
+	uint32_t	dwGoldMax;
+	uint32_t	dwExp;
+	uint32_t	dwMaxHP;
+	uint8_t	bRegenCycle;
+	uint8_t	bRegenPercent;
+	uint16_t	wDef;
 
-	DWORD	dwAIFlag;
-	DWORD	dwRaceFlag;
-	DWORD	dwImmuneFlag;
+	uint32_t	dwAIFlag;
+	uint32_t	dwRaceFlag;
+	uint32_t	dwImmuneFlag;
 
-	BYTE	bStr, bDex, bCon, bInt;
-	DWORD	dwDamageRange[2];
+	uint8_t	bStr, bDex, bCon, bInt;
+	uint32_t	dwDamageRange[2];
 
-	short	sAttackSpeed;
-	short	sMovingSpeed;
-	BYTE	bAggresiveHPPct;
-	WORD	wAggressiveSight;
-	WORD	wAttackRange;
+	int16_t	sAttackSpeed;
+	int16_t	sMovingSpeed;
+	uint8_t	bAggresiveHPPct;
+	uint16_t	wAggressiveSight;
+	uint16_t	wAttackRange;
 
 	char	cEnchants[MOB_ENCHANTS_MAX_NUM];
 	char	cResists[MOB_RESISTS_MAX_NUM];
 
-	DWORD	dwResurrectionVnum;
-	DWORD	dwDropItemVnum;
+	uint32_t	dwResurrectionVnum;
+	uint32_t	dwDropItemVnum;
 
-	BYTE	bMountCapacity;
-	BYTE	bOnClickType;
+	uint8_t	bMountCapacity;
+	uint8_t	bOnClickType;
 
-	BYTE	bEmpire;
+	uint8_t	bEmpire;
 	char	szFolder[64 + 1];
 
 	float	fDamMultiply;
 
-	DWORD	dwSummonVnum;
-	DWORD	dwDrainSP;
-	DWORD	dwMobColor;
-	DWORD	dwPolymorphItemVnum;
+	uint32_t	dwSummonVnum;
+	uint32_t	dwDrainSP;
+	uint32_t	dwMobColor;
+	uint32_t	dwPolymorphItemVnum;
 
 	TMobSkillLevel Skills[MOB_SKILL_MAX_NUM];
 
-	BYTE	bBerserkPoint;
-	BYTE	bStoneSkinPoint;
-	BYTE	bGodSpeedPoint;
-	BYTE	bDeathBlowPoint;
-	BYTE	bRevivePoint;
+	uint8_t	bBerserkPoint;
+	uint8_t	bStoneSkinPoint;
+	uint8_t	bGodSpeedPoint;
+	uint8_t	bDeathBlowPoint;
+	uint8_t	bRevivePoint;
 } TMobTable;
 
 typedef struct SSkillTable
 {
-	DWORD	dwVnum;
+	uint32_t	dwVnum;
 	char	szName[32 + 1];
-	BYTE	bType;
-	BYTE	bMaxLevel;
-	DWORD	dwSplashRange;
+	uint8_t	bType;
+	uint8_t	bMaxLevel;
+	uint32_t	dwSplashRange;
 
 	char	szPointOn[64];
 	char	szPointPoly[100 + 1];
@@ -576,49 +576,49 @@ typedef struct SSkillTable
 	char	szMasterBonusPoly[100 + 1];
 	//char	szAttackGradePoly[100 + 1];
 	char	szGrandMasterAddSPCostPoly[100 + 1];
-	DWORD	dwFlag;
-	DWORD	dwAffectFlag;
+	uint32_t	dwFlag;
+	uint32_t	dwAffectFlag;
 
 	// Data for secondary skill
 	char 	szPointOn2[64];
 	char 	szPointPoly2[100 + 1];
 	char 	szDurationPoly2[100 + 1];
-	DWORD 	dwAffectFlag2;
+	uint32_t 	dwAffectFlag2;
 
 	// Data for grand master point
 	char 	szPointOn3[64];
 	char 	szPointPoly3[100 + 1];
 	char 	szDurationPoly3[100 + 1];
 
-	BYTE	bLevelStep;
-	BYTE	bLevelLimit;
-	DWORD	preSkillVnum;
-	BYTE	preSkillLevel;
+	uint8_t	bLevelStep;
+	uint8_t	bLevelLimit;
+	uint32_t	preSkillVnum;
+	uint8_t	preSkillLevel;
 
-	long	lMaxHit; 
+	int32_t	lMaxHit; 
 	char	szSplashAroundDamageAdjustPoly[100 + 1];
 
-	BYTE	bSkillAttrType;
+	uint8_t	bSkillAttrType;
 
-	DWORD	dwTargetRange;
+	uint32_t	dwTargetRange;
 } TSkillTable;
 
 typedef struct SShopItemTable
 {
-	DWORD		vnum;
-	BYTE		count;
+	uint32_t		vnum;
+	uint8_t		count;
 
     TItemPos	pos;			// PC 상점에만 이용
-	DWORD		price;	// PC, shop_table_ex.txt 상점에만 이용
-	BYTE		display_pos; // PC, shop_table_ex.txt 상점에만 이용, 보일 위치.
+	uint32_t		price;	// PC, shop_table_ex.txt 상점에만 이용
+	uint8_t		display_pos; // PC, shop_table_ex.txt 상점에만 이용, 보일 위치.
 } TShopItemTable;
 
 typedef struct SShopTable
 {
-	DWORD		dwVnum;
-	DWORD		dwNPCVnum;
+	uint32_t		dwVnum;
+	uint32_t		dwNPCVnum;
 
-	BYTE		byItemCount;
+	uint8_t		byItemCount;
 	TShopItemTable	items[SHOP_HOST_ITEM_MAX_NUM];
 } TShopTable;
 
@@ -627,54 +627,54 @@ typedef struct SShopTable
 
 typedef struct SQuestTable
 {
-	DWORD		dwPID;
+	uint32_t		dwPID;
 	char		szName[QUEST_NAME_MAX_LEN + 1];
 	char		szState[QUEST_STATE_MAX_LEN + 1];
-	long		lValue;
+	int32_t		lValue;
 } TQuestTable;
 
 typedef struct SItemLimit
 {
-	BYTE	bType;
-	long	lValue;
+	uint8_t	bType;
+	int32_t	lValue;
 } TItemLimit;
 
 typedef struct SItemApply
 {
-	BYTE	bType;
-	long	lValue;
+	uint8_t	bType;
+	int32_t	lValue;
 } TItemApply;
 
 typedef struct SItemTable : public SEntityTable
 {
-	DWORD		dwVnumRange;
+	uint32_t		dwVnumRange;
 	char        szName[ITEM_NAME_MAX_LEN + 1];
 	char	szLocaleName[ITEM_NAME_MAX_LEN + 1];
-	BYTE	bType;
-	BYTE	bSubType;
+	uint8_t	bType;
+	uint8_t	bSubType;
 
-	BYTE        bWeight;
-	BYTE	bSize;
+	uint8_t        bWeight;
+	uint8_t	bSize;
 
-	DWORD	dwAntiFlags;
-	DWORD	dwFlags;
-	DWORD	dwWearFlags;
-	DWORD	dwImmuneFlag;
+	uint32_t	dwAntiFlags;
+	uint32_t	dwFlags;
+	uint32_t	dwWearFlags;
+	uint32_t	dwImmuneFlag;
 
-	DWORD       dwGold;
-	DWORD       dwShopBuyPrice;
+	uint32_t       dwGold;
+	uint32_t       dwShopBuyPrice;
 
 	TItemLimit	aLimits[ITEM_LIMIT_MAX_NUM];
 	TItemApply	aApplies[ITEM_APPLY_MAX_NUM];
-	long        alValues[ITEM_VALUES_MAX_NUM];
-	long	alSockets[ITEM_SOCKET_MAX_NUM];
-	DWORD	dwRefinedVnum;
-	WORD	wRefineSet;
-	BYTE	bAlterToMagicItemPct;
-	BYTE	bSpecular;
-	BYTE	bGainSocketPct;
+	int32_t        alValues[ITEM_VALUES_MAX_NUM];
+	int32_t	alSockets[ITEM_SOCKET_MAX_NUM];
+	uint32_t	dwRefinedVnum;
+	uint16_t	wRefineSet;
+	uint8_t	bAlterToMagicItemPct;
+	uint8_t	bSpecular;
+	uint8_t	bGainSocketPct;
 
-	short int	sAddonType; // 기본 속성
+	int16_t	sAddonType; // 기본 속성
 
 	// 아래 limit flag들은 realtime에 체크 할 일이 많고, 아이템 VNUM당 고정된 값인데,
 	// 현재 구조대로 매번 아이템마다 필요한 경우에 LIMIT_MAX_NUM까지 루프돌면서 체크하는 부하가 커서 미리 저장 해 둠.
@@ -695,10 +695,10 @@ struct TItemAttrTable
 	}
 
 	char    szApply[APPLY_NAME_MAX_LEN + 1];
-	DWORD   dwApplyIndex;
-	DWORD   dwProb;
-	long    lValues[5];
-	BYTE    bMaxLevelBySet[ATTRIBUTE_SET_MAX_NUM];
+	uint32_t   dwApplyIndex;
+	uint32_t   dwProb;
+	int32_t    lValues[5];
+	uint8_t    bMaxLevelBySet[ATTRIBUTE_SET_MAX_NUM];
 };
 
 typedef struct SConnectTable
@@ -715,25 +715,25 @@ typedef struct SLoginPacket
 
 typedef struct SPlayerLoadPacket
 {
-	DWORD	account_id;
-	DWORD	player_id;
-	BYTE	account_index;	/* account 에서의 위치 */
+	uint32_t	account_id;
+	uint32_t	player_id;
+	uint8_t	account_index;	/* account 에서의 위치 */
 } TPlayerLoadPacket;
 
 typedef struct SPlayerCreatePacket
 {
 	char		login[LOGIN_MAX_LEN + 1];
 	char		passwd[PASSWD_MAX_LEN + 1];
-	DWORD		account_id;
-	BYTE		account_index;
+	uint32_t		account_id;
+	uint8_t		account_index;
 	TPlayerTable	player_table;
 } TPlayerCreatePacket;
 
 typedef struct SPlayerDeletePacket
 {
 	char	login[LOGIN_MAX_LEN + 1];
-	DWORD	player_id;
-	BYTE	account_index;
+	uint32_t	player_id;
+	uint8_t	account_index;
 	//char	name[CHARACTER_NAME_MAX_LEN + 1];
 	char	private_code[8];
 } TPlayerDeletePacket;
@@ -746,7 +746,7 @@ typedef struct SLogoutPacket
 
 typedef struct SPlayerCountPacket
 {
-	DWORD	dwCount;
+	uint32_t	dwCount;
 } TPlayerCountPacket;
 
 #define SAFEBOX_MAX_NUM			135
@@ -754,78 +754,78 @@ typedef struct SPlayerCountPacket
 
 typedef struct SSafeboxTable
 {
-	DWORD	dwID;
-	BYTE	bSize;
-	DWORD	dwGold;
-	WORD	wItemCount;
+	uint32_t	dwID;
+	uint8_t	bSize;
+	uint32_t	dwGold;
+	uint16_t	wItemCount;
 } TSafeboxTable;
 
 typedef struct SSafeboxChangeSizePacket
 {
-	DWORD	dwID;
-	BYTE	bSize;
+	uint32_t	dwID;
+	uint8_t	bSize;
 } TSafeboxChangeSizePacket;
 
 typedef struct SSafeboxLoadPacket
 {
-	DWORD	dwID;
+	uint32_t	dwID;
 	char	szLogin[LOGIN_MAX_LEN + 1];
 	char	szPassword[SAFEBOX_PASSWORD_MAX_LEN + 1];
 } TSafeboxLoadPacket;
 
 typedef struct SSafeboxChangePasswordPacket
 {
-	DWORD	dwID;
+	uint32_t	dwID;
 	char	szOldPassword[SAFEBOX_PASSWORD_MAX_LEN + 1];
 	char	szNewPassword[SAFEBOX_PASSWORD_MAX_LEN + 1];
 } TSafeboxChangePasswordPacket;
 
 typedef struct SSafeboxChangePasswordPacketAnswer
 {
-	BYTE	flag;
+	uint8_t	flag;
 } TSafeboxChangePasswordPacketAnswer;
 
 typedef struct SEmpireSelectPacket
 {
-	DWORD	dwAccountID;
-	BYTE	bEmpire;
+	uint32_t	dwAccountID;
+	uint8_t	bEmpire;
 } TEmpireSelectPacket;
 
 typedef struct SPacketGDSetup
 {
 	char	szPublicIP[16];	// Public IP which listen to users
-	BYTE	bChannel;	// 채널
-	WORD	wListenPort;	// 클라이언트가 접속하는 포트 번호
-	WORD	wP2PPort;	// 서버끼리 연결 시키는 P2P 포트 번호
-	long	alMaps[32];
-	DWORD	dwLoginCount;
-	BYTE	bAuthServer;
+	uint8_t	bChannel;	// 채널
+	uint16_t	wListenPort;	// 클라이언트가 접속하는 포트 번호
+	uint16_t	wP2PPort;	// 서버끼리 연결 시키는 P2P 포트 번호
+	int32_t	alMaps[32];
+	uint32_t	dwLoginCount;
+	uint8_t	bAuthServer;
 } TPacketGDSetup;
 
 typedef struct SPacketDGMapLocations
 {
-	BYTE	bCount;
+	uint8_t	bCount;
 } TPacketDGMapLocations;
 
 typedef struct SMapLocation
 {
-	long	alMaps[32];
+	int32_t	alMaps[32];
 	char	szHost[MAX_HOST_LENGTH + 1];
-	WORD	wPort;
+	uint16_t	wPort;
 } TMapLocation;
 
 typedef struct SPacketDGP2P
 {
 	char	szHost[MAX_HOST_LENGTH + 1];
-	WORD	wPort;
-	BYTE	bChannel;
+	uint16_t	wPort;
+	uint8_t	bChannel;
 } TPacketDGP2P;
 
 typedef struct SPacketGDDirectEnter
 {
 	char	login[LOGIN_MAX_LEN + 1];
 	char	passwd[PASSWD_MAX_LEN + 1];
-	BYTE	index;
+	uint8_t	index;
 } TPacketGDDirectEnter;
 
 typedef struct SPacketDGDirectEnter
@@ -836,26 +836,26 @@ typedef struct SPacketDGDirectEnter
 
 typedef struct SPacketGuildSkillUpdate
 {
-	DWORD guild_id;
-	int amount;
-	BYTE skill_levels[12];
-	BYTE skill_point;
-	BYTE save;
+	uint32_t guild_id;
+	int32_t amount;
+	uint8_t skill_levels[12];
+	uint8_t skill_point;
+	uint8_t save;
 } TPacketGuildSkillUpdate;
 
 typedef struct SPacketGuildExpUpdate
 {
-	DWORD guild_id;
-	int amount;
+	uint32_t guild_id;
+	int32_t amount;
 } TPacketGuildExpUpdate;
 
 typedef struct SPacketGuildChangeMemberData
 {
-	DWORD guild_id;
-	DWORD pid;
-	DWORD offer;
-	BYTE level;
-	BYTE grade;
+	uint32_t guild_id;
+	uint32_t pid;
+	uint32_t offer;
+	uint8_t level;
+	uint8_t grade;
 } TPacketGuildChangeMemberData;
 
 
@@ -866,138 +866,138 @@ typedef struct SPacketDGLoginAlready
 
 typedef struct TPacketAffectElement
 {
-	DWORD	dwType;
-	BYTE	bApplyOn;
-	long	lApplyValue;
-	DWORD	dwFlag;
-	long	lDuration;
-	long	lSPCost;
+	uint32_t	dwType;
+	uint8_t	bApplyOn;
+	int32_t	lApplyValue;
+	uint32_t	dwFlag;
+	int32_t	lDuration;
+	int32_t	lSPCost;
 } TPacketAffectElement;
 
 typedef struct SPacketGDAddAffect
 {
-	DWORD			dwPID;
+	uint32_t			dwPID;
 	TPacketAffectElement	elem;
 } TPacketGDAddAffect;
 
 typedef struct SPacketGDRemoveAffect
 {
-	DWORD	dwPID;
-	DWORD	dwType;
-	BYTE	bApplyOn;
+	uint32_t	dwPID;
+	uint32_t	dwType;
+	uint8_t	bApplyOn;
 } TPacketGDRemoveAffect;
 
 typedef struct SPacketGDHighscore
 {
-	DWORD	dwPID;
-	long	lValue;
+	uint32_t	dwPID;
+	int32_t	lValue;
 	char	cDir;
 	char	szBoard[21];
 } TPacketGDHighscore;
 
 typedef struct SPacketPartyCreate
 {
-	DWORD	dwLeaderPID;
+	uint32_t	dwLeaderPID;
 } TPacketPartyCreate;
 
 typedef struct SPacketPartyDelete
 {
-	DWORD	dwLeaderPID;
+	uint32_t	dwLeaderPID;
 } TPacketPartyDelete;
 
 typedef struct SPacketPartyAdd
 {
-	DWORD	dwLeaderPID;
-	DWORD	dwPID;
-	BYTE	bState;
+	uint32_t	dwLeaderPID;
+	uint32_t	dwPID;
+	uint8_t	bState;
 } TPacketPartyAdd;
 
 typedef struct SPacketPartyRemove
 {
-	DWORD	dwLeaderPID;
-	DWORD	dwPID;
+	uint32_t	dwLeaderPID;
+	uint32_t	dwPID;
 } TPacketPartyRemove;
 
 typedef struct SPacketPartyStateChange
 {
-	DWORD	dwLeaderPID;
-	DWORD	dwPID;
-	BYTE	bRole;
-	BYTE	bFlag;
+	uint32_t	dwLeaderPID;
+	uint32_t	dwPID;
+	uint8_t	bRole;
+	uint8_t	bFlag;
 } TPacketPartyStateChange;
 
 typedef struct SPacketPartySetMemberLevel
 {
-	DWORD	dwLeaderPID;
-	DWORD	dwPID;
-	BYTE	bLevel;
+	uint32_t	dwLeaderPID;
+	uint32_t	dwPID;
+	uint8_t	bLevel;
 } TPacketPartySetMemberLevel;
 
 typedef struct SPacketGDBoot
 {
-    DWORD	dwItemIDRange[2];
+    uint32_t	dwItemIDRange[2];
 	char	szIP[16];
 } TPacketGDBoot;
 
 typedef struct SPacketGuild
 {
-	DWORD	dwGuild;
-	DWORD	dwInfo;
+	uint32_t	dwGuild;
+	uint32_t	dwInfo;
 } TPacketGuild;
 
 typedef struct SPacketGDGuildAddMember
 {
-	DWORD	dwPID;
-	DWORD	dwGuild;
-	BYTE	bGrade;
+	uint32_t	dwPID;
+	uint32_t	dwGuild;
+	uint8_t	bGrade;
 } TPacketGDGuildAddMember;
 
 typedef struct SPacketDGGuildMember
 {
-	DWORD	dwPID;
-	DWORD	dwGuild;
-	BYTE	bGrade;
-	BYTE	isGeneral;
-	BYTE	bJob;
-	BYTE	bLevel;
-	DWORD	dwOffer;
+	uint32_t	dwPID;
+	uint32_t	dwGuild;
+	uint8_t	bGrade;
+	uint8_t	isGeneral;
+	uint8_t	bJob;
+	uint8_t	bLevel;
+	uint32_t	dwOffer;
 	char	szName[CHARACTER_NAME_MAX_LEN + 1];
 } TPacketDGGuildMember;
 
 typedef struct SPacketGuildWar
 {
-	BYTE	bType;
-	BYTE	bWar;
-	DWORD	dwGuildFrom;
-	DWORD	dwGuildTo;
-	long	lWarPrice;
-	long	lInitialScore;
+	uint8_t	bType;
+	uint8_t	bWar;
+	uint32_t	dwGuildFrom;
+	uint32_t	dwGuildTo;
+	int32_t	lWarPrice;
+	int32_t	lInitialScore;
 } TPacketGuildWar;
 
 // Game -> DB : 상대적 변화값
 // DB -> Game : 토탈된 최종값
 typedef struct SPacketGuildWarScore
 {
-	DWORD dwGuildGainPoint;
-	DWORD dwGuildOpponent;
-	long lScore;
-	long lBetScore;
+	uint32_t dwGuildGainPoint;
+	uint32_t dwGuildOpponent;
+	int32_t lScore;
+	int32_t lBetScore;
 } TPacketGuildWarScore;
 
 typedef struct SRefineMaterial
 {
-	DWORD vnum;
-	int count;
+	uint32_t vnum;
+	int32_t count;
 } TRefineMaterial;
 
 typedef struct SRefineTable
 {
-	//DWORD src_vnum;
-	//DWORD result_vnum;
-	DWORD id;
-	BYTE material_count;
-	int cost; // 소요 비용
-	int prob; // 확률
+	//uint32_t src_vnum;
+	//uint32_t result_vnum;
+	uint32_t id;
+	uint8_t material_count;
+	int32_t cost; // 소요 비용
+	int32_t prob; // 확률
 	TRefineMaterial materials[REFINE_MATERIAL_MAX_NUM];
 } TRefineTable;
 
@@ -1008,29 +1008,29 @@ typedef struct SBanwordTable
 
 typedef struct SPacketGDChangeName
 {
-	DWORD pid;
+	uint32_t pid;
 	char name[CHARACTER_NAME_MAX_LEN + 1];
 } TPacketGDChangeName;
 
 typedef struct SPacketDGChangeName
 {
-	DWORD pid;
+	uint32_t pid;
 	char name[CHARACTER_NAME_MAX_LEN + 1];
 } TPacketDGChangeName;
 
 typedef struct SPacketGuildLadder
 {
-	DWORD dwGuild;
-	long lLadderPoint;
-	long lWin;
-	long lDraw;
-	long lLoss;
+	uint32_t dwGuild;
+	int32_t lLadderPoint;
+	int32_t lWin;
+	int32_t lDraw;
+	int32_t lLoss;
 } TPacketGuildLadder;
 
 typedef struct SPacketGuildLadderPoint
 {
-	DWORD dwGuild;
-	long lChange;
+	uint32_t dwGuild;
+	int32_t lChange;
 } TPacketGuildLadderPoint;
 
 typedef struct SPacketGDSMS
@@ -1043,41 +1043,41 @@ typedef struct SPacketGDSMS
 
 typedef struct SPacketGuildUseSkill
 {
-	DWORD dwGuild;
-	DWORD dwSkillVnum;
-	DWORD dwCooltime;
+	uint32_t dwGuild;
+	uint32_t dwSkillVnum;
+	uint32_t dwCooltime;
 } TPacketGuildUseSkill;
 
 typedef struct SPacketGuildSkillUsableChange
 {
-	DWORD dwGuild;
-	DWORD dwSkillVnum;
-	BYTE bUsable;
+	uint32_t dwGuild;
+	uint32_t dwSkillVnum;
+	uint8_t bUsable;
 } TPacketGuildSkillUsableChange;
 
 typedef struct SPacketGDLoginKey
 {
-	DWORD dwAccountID;
-	DWORD dwLoginKey;
+	uint32_t dwAccountID;
+	uint32_t dwLoginKey;
 } TPacketGDLoginKey;
 
 typedef struct SPacketGDAuthLogin
 {
-	DWORD	dwID;
-	DWORD	dwLoginKey;
+	uint32_t	dwID;
+	uint32_t	dwLoginKey;
 	char	szLogin[LOGIN_MAX_LEN + 1];
 	char	szSocialID[SOCIAL_ID_MAX_LEN + 1];
-	DWORD	adwClientKey[4];
-	BYTE	bBillType;
-	DWORD	dwBillID;
-	int		iPremiumTimes[PREMIUM_MAX_NUM];
+	uint32_t	adwClientKey[4];
+	uint8_t	bBillType;
+	uint32_t	dwBillID;
+	int32_t		iPremiumTimes[PREMIUM_MAX_NUM];
 } TPacketGDAuthLogin;
 
 typedef struct SPacketGDLoginByKey
 {
 	char	szLogin[LOGIN_MAX_LEN + 1];
-	DWORD	dwLoginKey;
-	DWORD	adwClientKey[4];
+	uint32_t	dwLoginKey;
+	uint32_t	adwClientKey[4];
 	char	szIP[MAX_HOST_LENGTH + 1];
 } TPacketGDLoginByKey;
 
@@ -1086,41 +1086,41 @@ typedef struct SPacketGDLoginByKey
  */
 typedef struct SPacketGiveGuildPriv
 {
-	BYTE type;
-	int value;
-	DWORD guild_id;
+	uint8_t type;
+	int32_t value;
+	uint32_t guild_id;
 	time_t duration_sec;	///< 지속시간
 } TPacketGiveGuildPriv;
 typedef struct SPacketGiveEmpirePriv
 {
-	BYTE type;
-	int value;
-	BYTE empire;
+	uint8_t type;
+	int32_t value;
+	uint8_t empire;
 	time_t duration_sec;
 } TPacketGiveEmpirePriv;
 typedef struct SPacketGiveCharacterPriv
 {
-	BYTE type;
-	int value;
-	DWORD pid;
+	uint8_t type;
+	int32_t value;
+	uint32_t pid;
 } TPacketGiveCharacterPriv;
 typedef struct SPacketRemoveGuildPriv
 {
-	BYTE type;
-	DWORD guild_id;
+	uint8_t type;
+	uint32_t guild_id;
 } TPacketRemoveGuildPriv;
 typedef struct SPacketRemoveEmpirePriv
 {
-	BYTE type;
-	BYTE empire;
+	uint8_t type;
+	uint8_t empire;
 } TPacketRemoveEmpirePriv;
 
 typedef struct SPacketDGChangeCharacterPriv
 {
-	BYTE type;
-	int value;
-	DWORD pid;
-	BYTE bLog;
+	uint8_t type;
+	int32_t value;
+	uint32_t pid;
+	uint8_t bLog;
 } TPacketDGChangeCharacterPriv;
 
 /**
@@ -1128,69 +1128,69 @@ typedef struct SPacketDGChangeCharacterPriv
  */
 typedef struct SPacketDGChangeGuildPriv
 {
-	BYTE type;
-	int value;
-	DWORD guild_id;
-	BYTE bLog;
+	uint8_t type;
+	int32_t value;
+	uint32_t guild_id;
+	uint8_t bLog;
 	time_t end_time_sec;	///< 지속시간
 } TPacketDGChangeGuildPriv;
 
 typedef struct SPacketDGChangeEmpirePriv
 {
-	BYTE type;
-	int value;
-	BYTE empire;
-	BYTE bLog;
+	uint8_t type;
+	int32_t value;
+	uint8_t empire;
+	uint8_t bLog;
 	time_t end_time_sec;
 } TPacketDGChangeEmpirePriv;
 
 typedef struct SPacketMoneyLog
 {
-	BYTE type;
-	DWORD vnum;
+	uint8_t type;
+	uint32_t vnum;
 	INT gold;
 } TPacketMoneyLog;
 
 typedef struct SPacketGDGuildMoney
 {
-	DWORD dwGuild;
+	uint32_t dwGuild;
 	INT iGold;
 } TPacketGDGuildMoney;
 
 typedef struct SPacketDGGuildMoneyChange
 {
-	DWORD dwGuild;
+	uint32_t dwGuild;
 	INT iTotalGold;
 } TPacketDGGuildMoneyChange;
 
 typedef struct SPacketDGGuildMoneyWithdraw
 {
-	DWORD dwGuild;
+	uint32_t dwGuild;
 	INT iChangeGold;
 } TPacketDGGuildMoneyWithdraw;
 
 typedef struct SPacketGDGuildMoneyWithdrawGiveReply
 {
-	DWORD dwGuild;
+	uint32_t dwGuild;
 	INT iChangeGold;
-	BYTE bGiveSuccess;
+	uint8_t bGiveSuccess;
 } TPacketGDGuildMoneyWithdrawGiveReply;
 
 typedef struct SPacketSetEventFlag
 {
 	char	szFlagName[EVENT_FLAG_NAME_MAX_LEN + 1];
-	long	lValue;
+	int32_t	lValue;
 } TPacketSetEventFlag;
 
 typedef struct SPacketBillingLogin
 {
-	DWORD	dwLoginKey;
-	BYTE	bLogin;
+	uint32_t	dwLoginKey;
+	uint8_t	bLogin;
 } TPacketBillingLogin;
 
 typedef struct SPacketBillingRepair
 {
-	DWORD	dwLoginKey;
+	uint32_t	dwLoginKey;
 	char	szLogin[LOGIN_MAX_LEN + 1];
 	char	szHost[MAX_HOST_LENGTH + 1];
 } TPacketBillingRepair;
@@ -1198,24 +1198,24 @@ typedef struct SPacketBillingRepair
 typedef struct SPacketBillingExpire
 {
 	char	szLogin[LOGIN_MAX_LEN + 1];
-	BYTE	bBillType;
-	DWORD	dwRemainSeconds;
+	uint8_t	bBillType;
+	uint32_t	dwRemainSeconds;
 } TPacketBillingExpire;
 
 typedef struct SPacketLoginOnSetup
 {
-	DWORD   dwID;
+	uint32_t   dwID;
 	char    szLogin[LOGIN_MAX_LEN + 1];
 	char    szSocialID[SOCIAL_ID_MAX_LEN + 1];
 	char    szHost[MAX_HOST_LENGTH + 1];
-	DWORD   dwLoginKey;
-	DWORD   adwClientKey[4];
+	uint32_t   dwLoginKey;
+	uint32_t   adwClientKey[4];
 } TPacketLoginOnSetup;
 
 typedef struct SPacketGDCreateObject
 {
-	DWORD	dwVnum;
-	DWORD	dwLandID;
+	uint32_t	dwVnum;
+	uint32_t	dwLandID;
 	INT		lMapIndex;
 	INT	 	x, y;
 	float	xRot;
@@ -1225,13 +1225,13 @@ typedef struct SPacketGDCreateObject
 
 typedef struct SPacketGDHammerOfTor
 {
-	DWORD 	key;
-	DWORD	delay;
+	uint32_t 	key;
+	uint32_t	delay;
 } TPacketGDHammerOfTor;
 
 typedef struct SPacketGDVCard
 {
-	DWORD	dwID;
+	uint32_t	dwID;
 	char	szSellCharacter[CHARACTER_NAME_MAX_LEN + 1];
 	char	szSellAccount[LOGIN_MAX_LEN + 1];
 	char	szBuyCharacter[CHARACTER_NAME_MAX_LEN + 1];
@@ -1240,35 +1240,35 @@ typedef struct SPacketGDVCard
 
 typedef struct SGuildReserve
 {
-	DWORD       dwID;
-	DWORD       dwGuildFrom;
-	DWORD       dwGuildTo;
-	DWORD       dwTime;
-	BYTE        bType;
-	long        lWarPrice;
-	long        lInitialScore;
+	uint32_t       dwID;
+	uint32_t       dwGuildFrom;
+	uint32_t       dwGuildTo;
+	uint32_t       dwTime;
+	uint8_t        bType;
+	int32_t        lWarPrice;
+	int32_t        lInitialScore;
 	bool        bStarted;
-	DWORD	dwBetFrom;
-	DWORD	dwBetTo;
-	long	lPowerFrom;
-	long	lPowerTo;
-	long	lHandicap;
+	uint32_t	dwBetFrom;
+	uint32_t	dwBetTo;
+	int32_t	lPowerFrom;
+	int32_t	lPowerTo;
+	int32_t	lHandicap;
 } TGuildWarReserve;
 
 typedef struct
 {
-	DWORD	dwWarID;
+	uint32_t	dwWarID;
 	char	szLogin[LOGIN_MAX_LEN + 1];
-	DWORD	dwGold;
-	DWORD	dwGuild;
+	uint32_t	dwGold;
+	uint32_t	dwGuild;
 } TPacketGDGuildWarBet;
 
 // Marriage
 
 typedef struct
 {
-	DWORD dwPID1;
-	DWORD dwPID2;
+	uint32_t dwPID1;
+	uint32_t dwPID2;
 	time_t tMarryTime;
 	char szName1[CHARACTER_NAME_MAX_LEN + 1];
 	char szName2[CHARACTER_NAME_MAX_LEN + 1];
@@ -1276,62 +1276,62 @@ typedef struct
 
 typedef struct
 {
-	DWORD dwPID1;
-	DWORD dwPID2;
+	uint32_t dwPID1;
+	uint32_t dwPID2;
 	INT  iLovePoint;
-	BYTE  byMarried;
+	uint8_t  byMarried;
 } TPacketMarriageUpdate;
 
 typedef struct
 {
-	DWORD dwPID1;
-	DWORD dwPID2;
+	uint32_t dwPID1;
+	uint32_t dwPID2;
 } TPacketMarriageRemove;
 
 typedef struct
 {
-	DWORD dwPID1;
-	DWORD dwPID2;
+	uint32_t dwPID1;
+	uint32_t dwPID2;
 } TPacketWeddingRequest;
 
 typedef struct
 {
-	DWORD dwPID1;
-	DWORD dwPID2;
-	DWORD dwMapIndex;
+	uint32_t dwPID1;
+	uint32_t dwPID2;
+	uint32_t dwMapIndex;
 } TPacketWeddingReady;
 
 typedef struct
 {
-	DWORD dwPID1;
-	DWORD dwPID2;
+	uint32_t dwPID1;
+	uint32_t dwPID2;
 } TPacketWeddingStart;
 
 typedef struct
 {
-	DWORD dwPID1;
-	DWORD dwPID2;
+	uint32_t dwPID1;
+	uint32_t dwPID2;
 } TPacketWeddingEnd;
 
 /// 개인상점 가격정보의 헤더. 가변 패킷으로 이 뒤에 byCount 만큼의 TItemPriceInfo 가 온다.
 typedef struct SPacketMyshopPricelistHeader
 { 
-	DWORD	dwOwnerID;	///< 가격정보를 가진 플레이어 ID 
-	BYTE	byCount;	///< 가격정보 갯수
+	uint32_t	dwOwnerID;	///< 가격정보를 가진 플레이어 ID 
+	uint8_t	byCount;	///< 가격정보 갯수
 } TPacketMyshopPricelistHeader;
 
 /// 개인상점의 단일 아이템에 대한 가격정보
 typedef struct SItemPriceInfo
 {
-	DWORD	dwVnum;		///< 아이템 vnum
-	DWORD	dwPrice;	///< 가격
+	uint32_t	dwVnum;		///< 아이템 vnum
+	uint32_t	dwPrice;	///< 가격
 } TItemPriceInfo;
 
 /// 개인상점 아이템 가격정보 리스트 테이블
 typedef struct SItemPriceListTable
 {
-	DWORD	dwOwnerID;	///< 가격정보를 가진 플레이어 ID
-	BYTE	byCount;	///< 가격정보 리스트의 갯수
+	uint32_t	dwOwnerID;	///< 가격정보를 가진 플레이어 ID
+	uint8_t	byCount;	///< 가격정보 리스트의 갯수
 
 	TItemPriceInfo	aPriceInfo[SHOP_PRICELIST_MAX_NUM];	///< 가격정보 리스트
 } TItemPriceListTable;
@@ -1339,14 +1339,14 @@ typedef struct SItemPriceListTable
 typedef struct
 {
 	char szName[CHARACTER_NAME_MAX_LEN + 1];
-	long lDuration;
+	int32_t lDuration;
 } TPacketBlockChat;
 
 // PCBANG_IP_LIST
 typedef struct SPacketPCBangIP
 {
-	DWORD id;
-	DWORD ip;
+	uint32_t id;
+	uint32_t ip;
 } TPacketPCBangIP;
 // END_OF_PCBANG_IP_LIST
 
@@ -1354,12 +1354,12 @@ typedef struct SPacketPCBangIP
 //ADMIN_MANAGER
 typedef struct TAdminInfo
 {
-	int m_ID;				//고유ID
+	int32_t m_ID;				//고유ID
 	char m_szAccount[32];	//계정
 	char m_szName[32];		//캐릭터이름
 	char m_szContactIP[16];	//접근아이피
 	char m_szServerIP[16];  //서버아이피
-	int m_Authority;		//권한
+	int32_t m_Authority;		//권한
 } tAdminInfo;
 //END_ADMIN_MANAGER
 
@@ -1380,7 +1380,7 @@ typedef struct SPacketReloadAdmin
 
 typedef struct TMonarchInfo
 {
-	DWORD pid[4];  // 군주의 PID
+	uint32_t pid[4];  // 군주의 PID
 	int64_t money[4];  // 군주의 별개 돈	
 	char name[4][32];  // 군주의 이름	
 	char date[4][32];  // 군주 등록 날짜
@@ -1388,29 +1388,29 @@ typedef struct TMonarchInfo
 
 typedef struct TMonarchElectionInfo
 {
-	DWORD pid;  // 투표 한사람 PID
-	DWORD selectedpid; // 투표 당한 PID ( 군주 참가자 )
+	uint32_t pid;  // 투표 한사람 PID
+	uint32_t selectedpid; // 투표 당한 PID ( 군주 참가자 )
 	char date[32]; // 투표 날짜
 } MonarchElectionInfo;
 
 // 군주 출마자
 typedef struct tMonarchCandidacy
 {
-	DWORD pid;
+	uint32_t pid;
 	char name[32];
 	char date[32];
 } MonarchCandidacy;
 
 typedef struct tChangeMonarchLord
 {
-	BYTE bEmpire;
-	DWORD dwPID;
+	uint8_t bEmpire;
+	uint32_t dwPID;
 } TPacketChangeMonarchLord;
 
 typedef struct tChangeMonarchLordACK
 {
-	BYTE bEmpire;
-	DWORD dwPID;
+	uint8_t bEmpire;
+	uint32_t dwPID;
 	char szName[32];
 	char szDate[32];
 } TPacketChangeMonarchLordACK;
@@ -1418,8 +1418,8 @@ typedef struct tChangeMonarchLordACK
 // Block Country Ip
 typedef struct tBlockCountryIp
 {
-	DWORD	ip_from;
-	DWORD	ip_to;
+	uint32_t	ip_from;
+	uint32_t	ip_to;
 } TPacketBlockCountryIp;
 
 enum EBlockExceptionCommand
@@ -1431,27 +1431,27 @@ enum EBlockExceptionCommand
 // Block Exception Account
 typedef struct tBlockException
 {
-	BYTE	cmd;	// 1 == add, 2 == delete
+	uint8_t	cmd;	// 1 == add, 2 == delete
 	char	login[LOGIN_MAX_LEN + 1];
 }TPacketBlockException;
 
 typedef struct tChangeGuildMaster
 {
-	DWORD dwGuildID;
-	DWORD idFrom;
-	DWORD idTo;
+	uint32_t dwGuildID;
+	uint32_t idFrom;
+	uint32_t idTo;
 } TPacketChangeGuildMaster;
 
 typedef struct tItemIDRange
 {
-	DWORD dwMin;
-	DWORD dwMax;
-	DWORD dwUsableItemIDMin;
+	uint32_t dwMin;
+	uint32_t dwMax;
+	uint32_t dwUsableItemIDMin;
 } TItemIDRangeTable;
 
 typedef struct tUpdateHorseName
 {
-	DWORD dwPlayerID;
+	uint32_t dwPlayerID;
 	char szHorseName[CHARACTER_NAME_MAX_LEN + 1];
 } TPacketUpdateHorseName;
 
@@ -1462,7 +1462,7 @@ typedef struct tDC
 
 typedef struct tNeedLoginLogInfo
 {
-	DWORD dwPlayerID;
+	uint32_t dwPlayerID;
 } TPacketNeedLoginLogInfo;
 
 //독일 선물 알림 기능 테스트용 패킷 정보
@@ -1470,18 +1470,18 @@ typedef struct tItemAwardInformer
 {
 	char	login[LOGIN_MAX_LEN + 1];
 	char	command[20];		//명령어
-	unsigned int vnum;			//아이템
+	uint32_t vnum;			//아이템
 } TPacketItemAwardInfromer;
 // 선물 알림 기능 삭제용 패킷 정보
 typedef struct tDeleteAwardID
 {
-	DWORD dwID;
+	uint32_t dwID;
 } TPacketDeleteAwardID;
 
 typedef struct SChannelStatus
 {
-	short nPort;
-	BYTE bStatus;
+	int16_t nPort;
+	uint8_t bStatus;
 } TChannelStatus;
 
 #pragma pack()

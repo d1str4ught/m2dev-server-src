@@ -1044,13 +1044,13 @@ bool CItem::CreateSocket(BYTE bSlot, BYTE bGold)
 	return true;
 }
 
-void CItem::SetSockets(const long * c_al)
+void CItem::SetSockets(const int32_t* c_al)
 {
 	thecore_memcpy(m_alSockets, c_al, sizeof(m_alSockets));
 	Save();
 }
 
-void CItem::SetSocket(int i, long v, bool bLog)
+void CItem::SetSocket(int i, int32_t v, bool bLog)
 {
 	assert(i < ITEM_SOCKET_MAX_NUM);
 	m_alSockets[i] = v;

@@ -42,11 +42,11 @@ enum
 
 typedef struct SUseTime
 {
-	DWORD	dwLoginKey;
-	char        szLogin[LOGIN_MAX_LEN+1];
-	BYTE        bBillType;
-	DWORD       dwUseSec;
-	char        szIP[MAX_HOST_LENGTH+1];
+	uint32_t		dwLoginKey;
+	char			szLogin[LOGIN_MAX_LEN+1];
+	uint8_t         bBillType;
+	uint32_t        dwUseSec;
+	char			szIP[MAX_HOST_LENGTH+1];
 } TUseTime;
 
 class CQueryInfo

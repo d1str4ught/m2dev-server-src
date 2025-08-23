@@ -72,7 +72,7 @@ bool GetServerLocation(TAccountTable & rTab, BYTE bEmpire)
 			continue;
 
 		bFound = true;
-		long lIndex = 0;
+		int32_t lIndex = 0;
 
 		if (!CMapLocation::instance().Get(rTab.players[i].x,
 					rTab.players[i].y,
@@ -219,8 +219,7 @@ void CInputDB::PlayerCreateSuccess(LPDESC d, const char * data)
 		return;
 	}
 
-	long lIndex = 0;
-
+	int32_t lIndex = 0;
 	if (!CMapLocation::instance().Get(pPacketDB->player.x,
 				pPacketDB->player.y,
 				lIndex,
