@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "libgame/grid.h"
 #include "constants.h"
 #include "utils.h"
@@ -69,7 +69,7 @@ bool CShopEx::AddGuest(LPCHARACTER ch,DWORD owner_vid, bool bOtherEmpire)
 	
 	pack2.owner_vid = owner_vid;
 	pack2.shop_tab_count = m_vec_shopTabs.size();
-	char temp[8096]; // �ִ� 1728 * 3
+	char temp[8096]; // ÃÖ´ë 1728 * 3
 	char* buf = &temp[0];
 	size_t size = 0;
 	for (itertype(m_vec_shopTabs) it = m_vec_shopTabs.begin(); it != m_vec_shopTabs.end(); it++)

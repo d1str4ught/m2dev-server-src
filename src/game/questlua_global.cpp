@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include <sstream>
 #include "constants.h"
 #include "char.h"

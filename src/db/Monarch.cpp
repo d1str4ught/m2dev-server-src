@@ -1,4 +1,4 @@
-#include "Monarch.h"
+﻿#include "Monarch.h"
 #include "common/utils.h"
 #include "Main.h"
 #include "ClientManager.h"
@@ -235,7 +235,7 @@ bool CMonarch::SetMonarch(const char * name)
     }
     delete pMsg;
 
-	//db�� �Է�
+	//db¿¡ ÀÔ·Â
 	snprintf(szQuery, sizeof(szQuery),
 					"REPLACE INTO monarch (empire, name, windate, money) VALUES(%d, %d, now(), %lld)", Empire, p->pid[Empire], p->money[Empire]);
 

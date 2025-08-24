@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "dungeon.h"
 #include "char.h"
 #include "char_manager.h"
@@ -1130,7 +1130,7 @@ struct FExitDungeonToStartPosition
 			{
 				PIXEL_POSITION posWarp;
 
-				// ÇöÀç ¸Ê ÀÎµ¦½º¸¦ ³Ö´Â °ÍÀÌ ¾Æ´Ï¶ó ½ÃÀÛÇÏ´Â ¸Ê ÀÎµ¦½º¸¦ ³Ö´Â´Ù.
+				// í˜„ì¬ ë§µ ì¸ë±ìŠ¤ë¥¼ ë„£ëŠ” ê²ƒì´ ì•„ë‹ˆë¼ ì‹œì‘í•˜ëŠ” ë§µ ì¸ë±ìŠ¤ë¥¼ ë„£ëŠ”ë‹¤.
 				if (SECTREE_MANAGER::instance().GetRecallPositionByEmpire(g_start_map[ch->GetEmpire()], ch->GetEmpire(), posWarp))
 					ch->WarpSet(posWarp.x, posWarp.y);
 				else
@@ -1280,7 +1280,7 @@ void CDungeon::JumpToEliminateLocation()
 	}
 	else
 	{
-		// ÀÏ¹İ ¸ÊÀ¸·Î ¿öÇÁ
+		// ì¼ë°˜ ë§µìœ¼ë¡œ ì›Œí”„
 		LPSECTREE_MAP pMap = SECTREE_MANAGER::instance().GetMap(m_lMapIndex);
 
 		if (!pMap)

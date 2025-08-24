@@ -1,4 +1,4 @@
-#ifndef __INC_METIN_II_ASYNCSQL_H__
+ï»¿#ifndef __INC_METIN_II_ASYNCSQL_H__
 #define __INC_METIN_II_ASYNCSQL_H__
 
 #include "libthecore/stdafx.h"
@@ -99,8 +99,8 @@ typedef struct _SQLMsg
 	int				iID;
 	std::string			stQuery;
 
-	std::vector<SQLResult *>	vec_pkResult;	// result º¤ÅÍ
-	unsigned int		uiResultPos;	// ÇöÀç result À§Ä¡
+	std::vector<SQLResult *>	vec_pkResult;	// result ë²¡í„°
+	unsigned int		uiResultPos;	// í˜„ìž¬ result ìœ„ì¹˜
 
 	void *			pvUserData;
 	bool			bReturn;

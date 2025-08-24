@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "constants.h"
 #include "group_text_parse_tree.h"
 #include "dragon_soul_table.h"
@@ -172,7 +172,7 @@ bool DragonSoulTable::ReadBasicApplys()
 		TVecApplys vecApplys;
 		int n = pChild->GetRowCount();
 		
-		// BasicApply GroupÀº Key°¡ 1ºÎÅÍ ½ÃÀÛÇÔ.
+		// BasicApply Groupì€ Keyê°€ 1ë¶€í„° ì‹œì‘í•¨.
 		for (int j = 1; j <= n; j++)
 		{
 			std::stringstream ss;
@@ -654,7 +654,7 @@ bool DragonSoulTable::GetWeight(BYTE ds_type, BYTE grade_idx, BYTE step_index, B
 			return true;
 		}
 	}
-	// default groupÀ» »ìÆìº½.
+	// default groupì„ ì‚´í´ë´„.
 	pDragonSoulGroup = m_pWeightTableNode->GetChildNode("default");
 	if (NULL != pDragonSoulGroup)
 	{

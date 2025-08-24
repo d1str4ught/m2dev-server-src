@@ -1,12 +1,12 @@
-#ifndef __INC_XMAS_EVENT_H
+ï»¿#ifndef __INC_XMAS_EVENT_H
 #define __INC_XMAS_EVENT_H
 
 namespace xmas
 {
 	enum
 	{
-		MOB_SANTA_VNUM = 20031,	//»êÅ¸ 
-	//	MOB_SANTA_VNUM = 20095,	//³ëÇØ
+		MOB_SANTA_VNUM = 20031,	//Â»ÃªÃ…Â¸ 
+	//	MOB_SANTA_VNUM = 20095,	//Â³Ã«Ã‡Ã˜
 		MOB_XMAS_TREE_VNUM = 20032,
 		MOB_XMAS_FIRWORK_SELLER_VNUM = 9004,
 	};

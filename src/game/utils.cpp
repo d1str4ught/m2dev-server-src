@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 
 static int global_time_gap = 0;
 
@@ -47,12 +47,12 @@ size_t str_lower(const char * src, char * dest, size_t dest_size)
 		return len;
 	}
 
-	// \0 ÀÚ¸® È®º¸
+	// \0 ìë¦¬ í™•ë³´
 	--dest_size;
 
 	while (*src && len < dest_size)
 	{
-		*dest = LOWER(*src); // LOWER ¸ÅÅ©·Î¿¡¼­ ++³ª --ÇÏ¸é ¾ÈµÊ!!
+		*dest = LOWER(*src); // LOWER ë§¤í¬ë¡œì—ì„œ ++ë‚˜ --í•˜ë©´ ì•ˆë¨!!
 
 		++src;
 		++dest;
@@ -80,7 +80,7 @@ const char *one_argument(const char *argument, char *first_arg, size_t first_siz
 		return NULL;    
 	} 
 
-	// \0 ÀÚ¸® È®º¸
+	// \0 ìë¦¬ í™•ë³´
 	--first_size;
 
 	skip_spaces(&argument);
@@ -118,7 +118,7 @@ const char *first_cmd(const char *argument, char *first_arg, size_t first_arg_si
 	size_t cur_len = 0;
 	skip_spaces(&argument);
 
-	// \0 ÀÚ¸® È®º¸
+	// \0 ìë¦¬ í™•ë³´
 	first_arg_size -= 1;
 
 	while (*argument && !isnhspace(*argument) && cur_len < first_arg_size)
