@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "questmanager.h"
 #include "char.h"
 #include "item.h"
@@ -444,7 +444,7 @@ namespace quest
 			ITEM_MANAGER::instance().FlushDelayedSave(pkNewItem);
 			pkNewItem->AttrLog();
 
-			// ¼º°ø!
+			// Â¼ÂºÂ°Ã¸!
 			lua_pushboolean(L, 1);			
 		}
 

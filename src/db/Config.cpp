@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ο»Ώ#include "stdafx.h"
 #include "Config.h"
 
 CConfig::CConfig()
@@ -67,7 +67,7 @@ bool CConfig::GetWord(FILE *fp, char *tar)
 
 			if ((c == ' ' || c == '\t' || c == '\n'))
 			{
-				// Εά.
+				// Γ…Γ.
 				tar[i] = '\0';
 				return true;
 			}
@@ -144,7 +144,7 @@ bool CConfig::LoadFile(const char* filename)
 	}
 
 
-	// ΖΔΐΟ ΄έ΄Β ΊΞΊΠ.
+	// Γ†Γ„Γ€Γ Β΄ΓΒ΄Γ‚ ΒΊΓΒΊΓ.
 	fclose(fp);
 	return true;
 }

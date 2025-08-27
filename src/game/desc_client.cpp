@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "config.h"
 #include "utils.h"
 #include "desc_client.h"
@@ -84,7 +84,7 @@ bool CLIENT_DESC::Connect(int iPhaseWhenSucceed)
 	if (iPhaseWhenSucceed != 0)
 		m_iPhaseWhenSucceed = iPhaseWhenSucceed;
 
-	if (get_global_time() - m_LastTryToConnectTime < 3)	// 3ÃÊ
+	if (get_global_time() - m_LastTryToConnectTime < 3)	// 3ì´ˆ
 		return false;
 
 	m_LastTryToConnectTime = get_global_time();
@@ -207,7 +207,7 @@ void CLIENT_DESC::SetPhase(int iPhase)
 
 					sys_log(0, "DB_SETUP current user %d size %d", p.dwLoginCount, buf.size());
 
-					// ÆÄÆ¼¸¦ Ã³¸®ÇÒ ¼ö ÀÖ°Ô µÊ.
+					// íŒŒí‹°ë¥¼ ì²˜ë¦¬í•  ìˆ˜ ìžˆê²Œ ë¨.
 					CPartyManager::instance().EnablePCParty();
 					//CPartyManager::instance().SendPartyToDB();
 				}
@@ -294,7 +294,7 @@ void CLIENT_DESC::Update(DWORD t)
 void CLIENT_DESC::UpdateChannelStatus(DWORD t, bool fForce)
 {
 	enum {
-		CHANNELSTATUS_UPDATE_PERIOD = 5*60*1000,	// 5ºÐ¸¶´Ù
+		CHANNELSTATUS_UPDATE_PERIOD = 5*60*1000,	// 5ë¶„ë§ˆë‹¤
 	};
 	if (fForce || m_tLastChannelStatusUpdateTime+CHANNELSTATUS_UPDATE_PERIOD < t) {
 		int iTotal; 
