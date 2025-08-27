@@ -128,40 +128,8 @@ bool CInputProcessor::Process(LPDESC lpDesc, const void * c_pvOrig, int iBytes, 
 			if (bSeq != bSeqReceived)
 			{
 				sys_err("SEQUENCE %x mismatch 0x%x != 0x%x header %u", get_pointer(lpDesc), bSeq, bSeqReceived, bHeader);
-
-				LPCHARACTER	ch = lpDesc->GetCharacter();
-
-				char buf[1024];
-				int	offset, len;
-
-				offset = snprintf(buf, sizeof(buf), "SEQUENCE_LOG [%s]-------------\n", ch ? ch->GetName() : "UNKNOWN");
-
-				if (offset < 0 || offset >= (int) sizeof(buf))
-					offset = sizeof(buf) - 1;
-
-				for (size_t i = 0; i < lpDesc->m_seq_vector.size(); ++i)
-				{
-					len = snprintf(buf + offset, sizeof(buf) - offset, "\t[%03d : 0x%x]\n",
-							lpDesc->m_seq_vector[i].hdr,
-							lpDesc->m_seq_vector[i].seq);
-
-					if (len < 0 || len >= (int) sizeof(buf) - offset)
-						offset += (sizeof(buf) - offset) - 1;
-					else
-						offset += len;
-				}
-
-				snprintf(buf + offset, sizeof(buf) - offset, "\t[%03d : 0x%x]\n", bHeader, bSeq);
-				sys_err("%s", buf);
-
 				lpDesc->SetPhase(PHASE_CLOSE);
 				return true;
-			}
-			else
-			{
-				lpDesc->push_seq(bHeader, bSeq);
-				lpDesc->SetNextSequence();
-				//sys_err("SEQUENCE %x match %u next %u header %u", lpDesc, bSeq, lpDesc->GetSequence(), bHeader);
 			}
 		}
 

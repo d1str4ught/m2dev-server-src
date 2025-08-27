@@ -77,7 +77,7 @@ void DESC::Initialize()
 	m_bPong = true;
 	m_bChannelStatusRequested = false;
 
-	m_iCurrentSequence = 0;
+	m_SequenceGenerator.seed(SEQUENCE_SEED);
 
 	m_dwMatrixRows = m_dwMatrixCols = 0;
 	m_bMatrixTryCount = 0;
@@ -103,8 +103,6 @@ void DESC::Initialize()
 	m_offtime = 0;
 
 	m_pkDisconnectEvent = NULL;
-
-	m_seq_vector.clear();
 }
 
 void DESC::Destroy()
@@ -164,8 +162,6 @@ void DESC::Destroy()
 		socket_close(m_sock);
 		m_sock = INVALID_SOCKET;
 	}
-
-	m_seq_vector.clear();
 }
 
 EVENTFUNC(ping_event)
@@ -913,13 +909,7 @@ bool DESC::IsAdminMode()
 
 BYTE DESC::GetSequence()
 {
-	return gc_abSequence[m_iCurrentSequence];
-}
-
-void DESC::SetNextSequence()
-{
-	if (++m_iCurrentSequence == SEQUENCE_MAX_NUM)
-		m_iCurrentSequence = 0;
+	return m_SequenceGenerator(UINT8_MAX + 1);
 }
 
 void DESC::SendLoginSuccessPacket()
@@ -1096,17 +1086,6 @@ void DESC::SetBillingExpireSecond(DWORD dwSec)
 DWORD DESC::GetBillingExpireSecond()
 {
 	return m_dwBillingExpireSecond;
-}
-
-void DESC::push_seq(BYTE hdr, BYTE seq)
-{
-	if (m_seq_vector.size()>=20)
-	{
-		m_seq_vector.erase(m_seq_vector.begin());
-	}
-
-	seq_t info = { hdr, seq };
-	m_seq_vector.push_back(info);
 }
 
 BYTE DESC::GetEmpire()

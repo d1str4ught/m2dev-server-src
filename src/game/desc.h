@@ -7,6 +7,9 @@
 #include "cipher.h"
 #endif
 
+#include <pcg_random.hpp>
+
+#define SEQUENCE_SEED 0
 #define MAX_ALLOW_USER                  4096
 //#define MAX_INPUT_LEN			2048
 #define MAX_INPUT_LEN			65536
@@ -152,7 +155,6 @@ class DESC
 		bool			IsPong();
 
 		BYTE			GetSequence();
-		void			SetNextSequence();
 
 		void			SendLoginSuccessPacket();
 		//void			SendServerStatePacket(int nIndex);
@@ -234,7 +236,7 @@ class DESC
 		bool			m_bAdminMode; // Handshake 에서 어드민 명령을 쓸수있나?
 		bool			m_bPong;
 
-		int			m_iCurrentSequence;
+		pcg32 			m_SequenceGenerator;
 
 		DWORD			m_dwMatrixRows;
 		DWORD			m_dwMatrixCols;
@@ -293,12 +295,6 @@ class DESC
 
 		void RawPacket(const void * c_pvData, int iSize);
 		void ChatPacket(BYTE type, const char * format, ...);
-
-		/* 시퀀스 버그 찾기용 코드 */
-	public:
-		seq_vector_t	m_seq_vector;
-		void			push_seq (BYTE hdr, BYTE seq);
-		
 };
 
 #endif
