@@ -1096,34 +1096,24 @@ typedef struct packet_dead
 	uint32_t	vid;
 } TPacketGCDead;
 
-struct TPacketGCItemDelDeprecated
+typedef struct packet_del_item
 {
-	uint8_t	header;
-	TItemPos Cell;
-	uint32_t	vnum;
-	uint8_t	count;
-	int32_t	alSockets[ITEM_SOCKET_MAX_NUM];
-	TPlayerItemAttribute aAttr[ITEM_ATTRIBUTE_MAX_NUM];
-};
+	uint8_t		header;
+	TItemPos	pos;
+} TPacketGCItemDel;
 
 typedef struct packet_item_set
 {
-	uint8_t	header;
-	TItemPos Cell;
-	uint32_t	vnum;
-	uint8_t	count;
-	uint32_t	flags;
-	uint32_t	anti_flags;
-	bool	highlight;
-	int32_t	alSockets[ITEM_SOCKET_MAX_NUM];
-	TPlayerItemAttribute aAttr[ITEM_ATTRIBUTE_MAX_NUM];
+	uint8_t					header;
+	TItemPos				pos;
+	uint32_t				vnum;
+	uint8_t					count;
+	uint32_t				flags;
+	uint32_t				anti_flags;
+	uint8_t					highlight;
+	int32_t					alSockets[ITEM_SOCKET_MAX_NUM];
+	TPlayerItemAttribute	aAttr[ITEM_ATTRIBUTE_MAX_NUM];
 } TPacketGCItemSet;
-
-typedef struct packet_item_del
-{
-	uint8_t	header;
-	uint8_t	pos;
-} TPacketGCItemDel;
 
 struct packet_item_use
 {

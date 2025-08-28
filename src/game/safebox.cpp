@@ -71,7 +71,7 @@ bool CSafebox::Add(DWORD dwPos, LPITEM pkItem)
 	TPacketGCItemSet pack;
 
 	pack.header	= m_bWindowMode == SAFEBOX ? HEADER_GC_SAFEBOX_SET : HEADER_GC_MALL_SET;
-	pack.Cell	= TItemPos(m_bWindowMode, dwPos);
+	pack.pos	= TItemPos(m_bWindowMode, dwPos);
 	pack.vnum	= pkItem->GetVnum();
 	pack.count	= pkItem->GetCount();
 	pack.flags	= pkItem->GetFlag();
@@ -111,7 +111,7 @@ LPITEM CSafebox::Remove(DWORD dwPos)
 	TPacketGCItemDel pack;
 
 	pack.header	= m_bWindowMode == SAFEBOX ? HEADER_GC_SAFEBOX_DEL : HEADER_GC_MALL_DEL;
-	pack.pos	= dwPos;
+	pack.pos	= TItemPos(m_bWindowMode, dwPos);
 
 	m_pkChrOwner->GetDesc()->Packet(&pack, sizeof(pack));
 	sys_log(1, "SAFEBOX: REMOVE %s %s count %d", m_pkChrOwner->GetName(), pkItem->GetName(), pkItem->GetCount());

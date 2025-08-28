@@ -404,14 +404,13 @@ void CHARACTER::SetItem(TItemPos Cell, LPITEM pItem)
 		{
 			TPacketGCItemSet pack;
 			pack.header = HEADER_GC_ITEM_SET;
-			pack.Cell = Cell;
+			pack.pos = Cell;
 
 			pack.count = pItem->GetCount();
 			pack.vnum = pItem->GetVnum();
 			pack.flags = pItem->GetFlag();
 			pack.anti_flags	= pItem->GetAntiFlag();
 			pack.highlight = (Cell.window_type == DRAGON_SOUL_INVENTORY);
-
 
 			thecore_memcpy(pack.alSockets, pItem->GetSockets(), sizeof(pack.alSockets));
 			thecore_memcpy(pack.aAttr, pItem->GetAttributes(), sizeof(pack.aAttr));
@@ -420,15 +419,10 @@ void CHARACTER::SetItem(TItemPos Cell, LPITEM pItem)
 		}
 		else
 		{
-			TPacketGCItemDelDeprecated pack;
+			TPacketGCItemDel pack;
 			pack.header = HEADER_GC_ITEM_DEL;
-			pack.Cell = Cell;
-			pack.count = 0;
-			pack.vnum = 0;
-			memset(pack.alSockets, 0, sizeof(pack.alSockets));
-			memset(pack.aAttr, 0, sizeof(pack.aAttr));
-
-			GetDesc()->Packet(&pack, sizeof(TPacketGCItemDelDeprecated));
+			pack.pos = Cell;
+			GetDesc()->Packet(&pack, sizeof(TPacketGCItemDel));
 		}
 	}
 
