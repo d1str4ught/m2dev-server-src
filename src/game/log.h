@@ -52,7 +52,6 @@ class LogManager : public singleton<LogManager>
 		void		QuestRewardLog(const char * c_pszQuestName, DWORD dwPID, DWORD dwLevel, int iValue1, int iValue2);
 		void		DetailLoginLog(bool isLogin, LPCHARACTER ch);
 		void		DragonSlayLog(DWORD dwGuildID, DWORD dwDragonVnum, DWORD dwStartTime, DWORD dwEndTime);
-		// void		HackShieldLog(unsigned long ErrorCode, LPCHARACTER ch);
 
 	private:
 		void		Query(const char * c_pszFormat, ...);

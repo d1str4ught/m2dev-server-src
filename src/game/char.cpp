@@ -53,7 +53,6 @@
 #include "gm.h"
 #include "map_location.h"
 #include "BlueDragon_Binder.h"
-// #include "HackShield.h"
 #include "skill_power.h"
 #include "buff_on_attributes.h"
 
@@ -363,9 +362,6 @@ void CHARACTER::Initialize()
 
 	m_dwLastGoldDropTime = 0;
 
-	// m_HackShieldCheckEvent = NULL;
-	// m_HackShieldCheckMode = false;
-
 	m_bIsLoadedAffect = false;
 	cannot_dead = false;
 
@@ -432,14 +428,6 @@ void CHARACTER::Destroy()
 
 	if (GetRider())
 		GetRider()->ClearHorseInfo();
-
-	// if( IsPC() )
-	// {
-		// if (isHackShieldEnable)
-		// {
-			// CHackShieldManager::instance().DeleteClientHandle(GetPlayerID());
-		// }
-	// }
 
 	if (GetDesc())
 	{

@@ -16,7 +16,6 @@
 #include "guild_manager.h"
 #include "TrafficProfiler.h"
 #include "locale_service.h"
-// #include "HackShield.h"
 #include "log.h"
 
 extern int max_bytes_written;

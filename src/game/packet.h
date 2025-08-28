@@ -104,8 +104,6 @@ enum
 	//enum을 별도로 구별을 하던가. 아님 namepsace로 구별을 하던가..
 	//정말 packet generator까지는 바라지도 않는다. 이런 씨XX
 	//이러다가 숫자 겹치면 누가 책임지는데???
-	HEADER_CG_HS_ACK				= 203,
-	HEADER_CG_XTRAP_ACK				= 204,
 
 	HEADER_CG_DRAGON_SOUL_REFINE			= 205,
 	HEADER_CG_STATE_CHECKER					= 206,
@@ -287,9 +285,6 @@ enum
 	//
 	HEADER_GC_REQUEST_PASSPOD				= 202,
 	HEADER_GC_REQUEST_PASSPOD_FAILED		= 203,
-
-	HEADER_GC_HS_REQUEST					= 204,
-	HEADER_GC_XTRAP_CS1_REQUEST				= 205,
 
 	HEADER_GC_SPECIFIC_EFFECT				= 208,
 

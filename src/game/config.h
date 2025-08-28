@@ -111,11 +111,6 @@ extern bool g_noticeBattleZone;         // 중립지대에 입장하면 안내�
 
 extern DWORD g_GoldDropTimeLimitValue;
 
-// extern bool isHackShieldEnable;
-// extern int  HackShield_FirstCheckWaitTime;
-// extern int  HackShield_CheckCycleTime;
-// extern bool bXTrapEnabled;
-
 extern int gPlayerMaxLevel;
 
 extern bool g_BlockCharCreation;

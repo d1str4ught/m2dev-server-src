@@ -15,7 +15,6 @@
 #include "questmanager.h"
 #include "questlua.h"
 #include "locale_service.h"
-// #include "XTrapManager.h"
 
 CHARACTER_MANAGER::CHARACTER_MANAGER() :
 	m_iVIDCount(0),

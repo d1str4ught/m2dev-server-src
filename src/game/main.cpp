@@ -58,10 +58,8 @@
 #include "threeway_war.h"
 #include "auth_brazil.h"
 #include "DragonLair.h"
-// #include "HackShield.h"
 #include "skill_power.h"
 #include "SpeedServer.h"
-// #include "XTrapManager.h"
 #include "DragonSoul.h"
 #ifndef OS_WINDOWS
 	#include "limit_time.h"
@@ -507,9 +505,6 @@ int main(int argc, char **argv)
 	CThreeWayWar	threeway_war;
 	CDragonLairManager	dl_manager;
 
-	// CHackShieldManager	HSManager;
-	// CXTrapManager		XTManager;
-
 	CSpeedServerManager SSManager;
 	DSManager dsManager;
 
@@ -552,43 +547,6 @@ int main(int argc, char **argv)
 
 	if ( g_bTrafficProfileOn )
 		TrafficProfiler::instance().Initialize( TRAFFIC_PROFILE_FLUSH_CYCLE, "ProfileLog" );
-
-	//if game server
-	// if (!g_bAuthServer)
-	// {
-		//hackshield
-		// if (isHackShieldEnable)
-		// {
-			// if (!HSManager.Initialize())
-			// {
-				// fprintf(stderr, "Failed To Initialize HS");
-				// CleanUpForEarlyExit();
-				// return 0;
-			// }
-		// }
-
-		//xtrap
-		// if(bXTrapEnabled)
-		// {
-			// if (!XTManager.LoadXTrapModule())
-			// {
-				// CleanUpForEarlyExit();
-				// return 0;
-			// }
-// #if defined (OS_FREEBSD) && defined(__FILEMONITOR__)
-			// // PFN_FileChangeListener pNotifyFunc = boost::bind( &CXTrapManager::NotifyMapFileChanged, CXTrapManager::instance(), _1 );
-			// PFN_FileChangeListener pNotifyFunc = &(CXTrapManager::NotifyMapFileChanged);
-
-			// const std::string strMap1Name = "map1.CS3";
-			// const std::string strMap2Name = "map2.CS3";
-
-			// FileMonitorFreeBSD::Instance().AddWatch( strMap1Name, pNotifyFunc );
-			// FileMonitorFreeBSD::Instance().AddWatch( strMap2Name, pNotifyFunc );
-// #endif
-		// }
-	// }
-
-	// Client PackageCrypt
 
 	//TODO : make it config
 	const std::string strPackageCryptInfoDir = "package/";
@@ -661,15 +619,6 @@ int main(int argc, char **argv)
 	quest_manager.Destroy();
 	sys_log(0, "<shutdown> Destroying building::CManager...");
 	building_manager.Destroy();
-
-	// if (!g_bAuthServer)
-	// {
-		// if (isHackShieldEnable)
-		// {
-			// sys_log(0, "<shutdown> Releasing HackShield manager...");
-			// HSManager.Release();
-		// }
-	// }
 
 	sys_log(0, "<shutdown> Flushing TrafficProfiler...");
 	trafficProfiler.Flush();

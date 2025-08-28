@@ -314,33 +314,3 @@ void LogManager::DragonSlayLog(DWORD dwGuildID, DWORD dwDragonVnum, DWORD dwStar
 			dwGuildID, dwDragonVnum, dwStartTime, dwEndTime);
 }
 
-// void LogManager::HackShieldLog(unsigned long ErrorCode, LPCHARACTER ch)
-// {
-	// struct in_addr st_addr;
-
-// #ifndef OS_WINDOWS
-	// if (0 == inet_aton(ch->GetDesc()->GetHostName(), &st_addr))
-// #else
-	// unsigned long in_address;
-	// in_address = inet_addr(ch->GetDesc()->GetHostName());
-	// st_addr.s_addr = in_address;
-	// if (INADDR_NONE == in_address)
-// #endif
-	// {
-		// Query( "INSERT INTO hackshield_log(time, account_id, login, pid, name, reason, ip) "
-				// "VALUES(NOW(), %u, '%s', %u, '%s', %u, 0)",
-				// ch->GetDesc()->GetAccountTable().id, ch->GetDesc()->GetAccountTable().login,
-				// ch->GetPlayerID(), ch->GetName(),
-				// ErrorCode);
-	// }
-	// else
-	// {
-		// Query( "INSERT INTO hackshield_log(time, account_id, login, pid, name, reason, ip) "
-				// "VALUES(NOW(), %u, '%s', %u, '%s', %u, inet_aton('%s'))",
-				// ch->GetDesc()->GetAccountTable().id, ch->GetDesc()->GetAccountTable().login,
-				// ch->GetPlayerID(), ch->GetName(),
-				// ErrorCode,
-				// ch->GetDesc()->GetHostName());
-	// }
-// }
-

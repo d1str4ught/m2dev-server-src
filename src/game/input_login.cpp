@@ -30,8 +30,6 @@
 #include "log.h"
 #include "horsename_manager.h"
 #include "MarkManager.h"
-// #include "HackShield.h"
-// #include "XTrapManager.h"
 
 static void _send_bonus_info(LPCHARACTER ch)
 {
@@ -1098,20 +1096,6 @@ int CInputLogin::Analyze(LPDESC d, BYTE bHeader, const char * c_pData)
 		case HEADER_CG_CLIENT_VERSION2:
 			Version(d->GetCharacter(), c_pData);
 			break;
-
-		// case HEADER_CG_HS_ACK:
-			// if (isHackShieldEnable)
-			// {
-				// CHackShieldManager::instance().VerifyAck(d->GetCharacter(), c_pData);
-			// }
-			// break;
-
-		// case HEADER_CG_XTRAP_ACK:
-			// {
-				// TPacketXTrapCSVerify* p = reinterpret_cast<TPacketXTrapCSVerify*>((void*)c_pData);
-				// CXTrapManager::instance().Verify_CSStep3(d->GetCharacter(), p->bPacketData);
-			// }
-			// break;
 
 		default:
 			sys_err("login phase does not handle this packet! header %d", bHeader);
