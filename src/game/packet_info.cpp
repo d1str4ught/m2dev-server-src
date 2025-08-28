@@ -146,7 +146,6 @@ CPacketInfoCG::CPacketInfoCG()
 	Set(HEADER_CG_LOGIN, sizeof(TPacketCGLogin), "Login", true);
 	Set(HEADER_CG_LOGIN2, sizeof(TPacketCGLogin2), "Login2", true);
 	Set(HEADER_CG_LOGIN3, sizeof(TPacketCGLogin3), "Login3", true);
-	Set(HEADER_CG_LOGIN5_OPENID, sizeof(TPacketCGLogin5), "Login5", true);	//OpenID
 	Set(HEADER_CG_ATTACK, sizeof(TPacketCGAttack), "Attack", true);
 	Set(HEADER_CG_CHAT, sizeof(TPacketCGChat), "Chat", true);
 	Set(HEADER_CG_WHISPER, sizeof(TPacketCGWhisper), "Whisper", true);

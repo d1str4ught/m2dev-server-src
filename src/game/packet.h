@@ -92,8 +92,6 @@ enum
 	HEADER_CG_SCRIPT_SELECT_ITEM	= 114,
 	// END_OF_SCRIPT_SELECT_ITEM
 	
-	HEADER_CG_LOGIN5_OPENID			= 116,	//OpenID : 클라이언트로부터 OpenID 인증키를 받는다.
-
 //	HEADER_CG_ROULETTE				= 200,
 //	HEADER_CG_RUNUP_MATRIX_ANSWER	= 201,
 
@@ -276,8 +274,6 @@ enum
 	HEADER_GC_HYBRIDCRYPT_KEYS		= 152,
 	HEADER_GC_HYBRIDCRYPT_SDB		= 153, // SDB means Supplmentary Data Blocks
 	//HYBRID CRYPT
-
-	HEADER_GC_AUTH_SUCCESS_OPENID	= 154,
 
 	// ROULETTE
 	HEADER_GC_ROULETTE					= 200, 
@@ -548,13 +544,6 @@ typedef struct command_login3
 	char	passwd[PASSWD_MAX_LEN + 1];
 	uint32_t	adwClientKey[4];
 } TPacketCGLogin3;
-
-typedef struct command_login5
-{
-	uint8_t	header;
-	char	authKey[OPENID_AUTHKEY_LEN + 1];
-	uint32_t	adwClientKey[4];
-} TPacketCGLogin5;
 
 typedef struct command_matrix_card
 {
@@ -901,14 +890,6 @@ typedef struct packet_auth_success
 	uint32_t	dwLoginKey;
 	uint8_t	bResult;
 } TPacketGCAuthSuccess;
-
-typedef struct packet_auth_success_openid
-{
-	uint8_t	bHeader;
-	uint32_t	dwLoginKey;
-	uint8_t	bResult;
-	char	login[LOGIN_MAX_LEN + 1];
-} TPacketGCAuthSuccessOpenID;
 
 typedef struct packet_login_failure
 {

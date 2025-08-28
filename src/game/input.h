@@ -234,7 +234,6 @@ protected:
 	void		ChangeName(LPDESC d, const char * data);
 
 	void		AuthLogin(LPDESC d, const char * c_pData);
-	void		AuthLoginOpenID(LPDESC d, const char * c_pData);
 	void		ItemAward(const char * c_pData);
 
 	void		ChangeEmpirePriv(const char* c_pData);
@@ -366,11 +365,9 @@ class CInputAuth : public CInputProcessor
 
 	protected:
 		virtual int	Analyze(LPDESC d, BYTE bHeader, const char * c_pData);
-		int auth_OpenID(const char *authKey, const char *ipAddr, char *rID);
 
 	public:
 		void		Login(LPDESC d, const char * c_pData);
-		void		LoginOpenID(LPDESC d, const char * c_pData);		//2012.07.19 OpenID : 김용욱
 		void		PasspodAnswer(LPDESC d, const char * c_pData );
 
 };
