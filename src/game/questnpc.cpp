@@ -6,6 +6,8 @@
 #include "config.h"
 #include "char.h"
 
+#include <filesystem>
+
 // questpc.h: PC::typedef Quest
 // questpc.h: PC::typedef map<unsigned long, QuestState> QuestInfo;
 // typedef 
@@ -26,46 +28,30 @@ namespace quest
 	{
 		m_vnum = vnum;
 
-		char buf[PATH_MAX];
+		auto& eventNameMap = CQuestManager::instance().m_mapEventName;
 
-		CQuestManager::TEventNameMap::iterator itEventName = CQuestManager::instance().m_mapEventName.begin();
-
-		while (itEventName != CQuestManager::instance().m_mapEventName.end())
+		for (const auto& eventPair : eventNameMap)
 		{
-			__typeof(itEventName) it = itEventName;
-			++itEventName;
+			const std::string& eventName = eventPair.first;
+			int event_index = eventPair.second;
 
-			for (itertype(g_setQuestObjectDir) itObjectDir = g_setQuestObjectDir.begin(); itObjectDir != g_setQuestObjectDir.end(); ++itObjectDir)
-			{	
-				int is = snprintf(buf, sizeof(buf), "%s/%s/%s/", itObjectDir->c_str(), script_name.c_str(), it->first.c_str());
+			for (auto itObjectDir = g_setQuestObjectDir.begin(); itObjectDir != g_setQuestObjectDir.end(); ++itObjectDir)
+			{
+				std::filesystem::path dirPath = std::filesystem::path(*itObjectDir) / script_name / eventName;
 
-				if (is < 0 || is >= (int) sizeof(buf))
-					is = sizeof(buf) - 1;
-
-				//sys_log(0, "XXX %s", buf);
-				int event_index = it->second;
-
-				DIR * pdir = opendir(buf);
-
-				if (!pdir)
+				if (!std::filesystem::exists(dirPath) || !std::filesystem::is_directory(dirPath))
 					continue;
 
-				dirent * pde;
-
-				while ((pde = readdir(pdir)))
+				for (const auto& entry : std::filesystem::directory_iterator(dirPath))
 				{
-					if (pde->d_name[0] == '.')
+					const std::string& filename = entry.path().filename().string();
+
+					if (filename.front() == '.' || filename.compare(0, 3, "CVS") == 0)
 						continue;
 
-					if (!strncasecmp(pde->d_name, "CVS", 3))
-						continue;
-
-					sys_log(1, "QUEST reading %s", pde->d_name);
-					strlcpy(buf + is, pde->d_name, sizeof(buf) - is);
-					LoadStateScript(event_index, buf, pde->d_name);
+					sys_log(1, "QUEST reading %s", filename.c_str());
+					LoadStateScript(event_index, entry.path().string().c_str(), filename.c_str());
 				}
-
-				closedir(pdir);
 			}
 		}
 	}

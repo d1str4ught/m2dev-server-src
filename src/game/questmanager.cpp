@@ -15,8 +15,9 @@
 #include "target.h"
 #include "party.h"
 #include "locale_service.h"
-
 #include "dungeon.h"
+
+#include <filesystem>
 
 DWORD g_GoldDropTimeLimitValue = 0;
 extern bool DropEvent_CharStone_SetValue(const std::string& name, int value);
@@ -1616,22 +1617,15 @@ namespace quest
 
 		m_registeredNPCVnum.insert(dwVnum);
 
-		char buf[256];
-		DIR* dir;
-
-		for (itertype(g_setQuestObjectDir) it = g_setQuestObjectDir.begin(); it != g_setQuestObjectDir.end(); ++it)
+		for (auto it = g_setQuestObjectDir.begin(); it != g_setQuestObjectDir.end(); ++it)
 		{
-			const string& stQuestObjectDir = *it;
-			snprintf(buf, sizeof(buf), "%s/%u", stQuestObjectDir.c_str(), dwVnum);
-			sys_log(0, "%s", buf);
+			std::filesystem::path dirPath = std::filesystem::path(*it) / std::to_string(dwVnum);
+			sys_log(0, "%s", dirPath.string().c_str());
 
-			if ((dir = opendir(buf)))
+			if (std::filesystem::exists(dirPath) && std::filesystem::is_directory(dirPath))
 			{
-				closedir(dir);
-				snprintf(buf, sizeof(buf), "%u", dwVnum);
-				sys_log(0, "%s", buf);
-
-				m_mapNPC[dwVnum].Set(dwVnum, buf);
+				sys_log(0, "%s", std::to_string(dwVnum).c_str());
+				m_mapNPC[dwVnum].Set(dwVnum, std::to_string(dwVnum));
 			}
 		}
 	}

@@ -6,6 +6,7 @@ add_subdirectory(libthecore)
 add_subdirectory(liblua)
 add_subdirectory(game)
 add_subdirectory(db)
+add_subdirectory(qc)
 
 if (WIN32)
 	set_target_properties(common PROPERTIES FOLDER lib)

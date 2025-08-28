@@ -19,6 +19,8 @@
 #include "guild_manager.h"
 #include "sectree_manager.h"
 
+#include <filesystem>
+
 #undef sys_err
 #ifndef OS_WINDOWS
 #define sys_err(fmt, args...) quest::CQuestManager::instance().QuestError(__FUNCTION__, __LINE__, fmt, ##args)
@@ -594,31 +596,27 @@ namespace quest
 
 		for (itertype(g_setQuestObjectDir) it = g_setQuestObjectDir.begin(); it != g_setQuestObjectDir.end(); ++it)
 		{
-			const string& stQuestObjectDir = *it;
-			char buf[PATH_MAX];
-			snprintf(buf, sizeof(buf), "%s/state/", stQuestObjectDir.c_str());
-			DIR * pdir = opendir(buf);
+			std::filesystem::path stateDir = *it;
+			stateDir /= "state";
+
 			int iQuestIdx = 0;
-
-			if (pdir)
+			if (std::filesystem::exists(stateDir) && std::filesystem::is_directory(stateDir))
 			{
-				dirent * pde;
-
-				while ((pde = readdir(pdir)))
+				for (const auto& entry : std::filesystem::directory_iterator(stateDir))
 				{
-					if (pde->d_name[0] == '.')
-						continue;
+					if (entry.is_regular_file())
+					{
+						const std::string& filename = entry.path().filename().string();
+						if (filename.front() == '.')
+							continue;
 
-					snprintf(buf + 11, sizeof(buf) - 11, "%s", pde->d_name);
+						RegisterQuest(filename, ++iQuestIdx);
+						int ret = lua_dofile(L, entry.path().string().c_str());
+						sys_log(0, "QUEST: loading %s, returns %d", entry.path().string().c_str(), ret);
 
-					RegisterQuest(pde->d_name, ++iQuestIdx);
-					int ret = lua_dofile(L, (stQuestObjectDir + "/state/" + pde->d_name).c_str());
-					sys_log(0, "QUEST: loading %s, returns %d", (stQuestObjectDir + "/state/" + pde->d_name).c_str(), ret);
-
-					BuildStateIndexToName(pde->d_name);
+						BuildStateIndexToName(filename.c_str());
+					}
 				}
-
-				closedir(pdir);
 			}
 		}
 
