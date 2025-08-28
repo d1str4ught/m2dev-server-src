@@ -1891,18 +1891,6 @@ bool CItem::CanPutInto(LPITEM item)
 	return 50623 + type == GetVnum();
 }
 
-// PC_BANG_ITEM_ADD
-bool CItem::IsPCBangItem()
-{
-	for (int i = 0; i < ITEM_LIMIT_MAX_NUM; ++i)
-	{
-		if (m_pProto->aLimits[i].bType == LIMIT_PCBANG)
-			return true;
-	}
-	return false;
-}
-// END_PC_BANG_ITEM_ADD
-
 bool CItem::CheckItemUseLevel(int nLevel)
 {
 	for (int i = 0; i < ITEM_LIMIT_MAX_NUM; ++i)

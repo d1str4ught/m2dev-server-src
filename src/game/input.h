@@ -350,7 +350,6 @@ class CInputP2P : public CInputProcessor
 		void		XmasWarpSantaReply(const char * c_pData);
 		void		LoginPing(LPDESC d, const char * c_pData);
 		void		BlockChat(const char * c_pData);
-		void		PCBangUpdate(const char* c_pData);
 		void		IamAwake(LPDESC d, const char * c_pData);
 
 	protected:

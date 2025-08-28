@@ -10,9 +10,6 @@ ACMD(do_user_horse_ride);
 ACMD(do_user_horse_back);
 ACMD(do_user_horse_feed);
 
-ACMD(do_pcbang_update);
-ACMD(do_pcbang_check);
-
 // ADD_COMMAND_SLOW_STUN
 ACMD(do_slow);
 ACMD(do_stun);
@@ -445,9 +442,6 @@ struct command_info cmd_info[] =
 	{ "horse_summon",	do_horse_summon,	0,			POS_DEAD,	GM_HIGH_WIZARD	},
 	{ "horse_unsummon",	do_horse_unsummon,	0,			POS_DEAD,	GM_HIGH_WIZARD	},
 	{ "horse_set_stat", do_horse_set_stat,	0,			POS_DEAD,	GM_HIGH_WIZARD	},
-
-	{ "pcbang_update", 	do_pcbang_update,	0,			POS_DEAD,	GM_LOW_WIZARD	},
-	{ "pcbang_check", 	do_pcbang_check,	0,			POS_DEAD,	GM_LOW_WIZARD	},
 
 	{ "emotion_allow",	do_emotion_allow,	0,			POS_FIGHTING,	GM_PLAYER	},
 	{ "kiss",		do_emotion,		0,			POS_FIGHTING,	GM_PLAYER	},

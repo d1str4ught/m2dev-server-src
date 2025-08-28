@@ -32,7 +32,6 @@
 #include "BattleArena.h"
 #include "xmas_event.h"
 #include "log.h"
-#include "pcbang.h"
 #include "threeway_war.h"
 #include "unique_item.h"
 #include "DragonSoul.h"
@@ -81,52 +80,6 @@ void Command_ApplyAffect(LPCHARACTER ch, const char* argument, const char* affec
 	ch->ChatPacket(CHAT_TYPE_INFO, "%s %s", arg1, affectName);
 }
 // END_OF_ADD_COMMAND_SLOW_STUN
-
-ACMD(do_pcbang_update)
-{
-	char arg1[256];
-	one_argument(argument, arg1, sizeof(arg1));
-
-	unsigned long PCBangID = 0;
-
-	if (*arg1 == '\0')
-		PCBangID = 0;
-	else
-		str_to_number(PCBangID, arg1);
-
-	if (PCBangID == 0)
-	{
-		CPCBangManager::instance().RequestUpdateIPList(0);
-		ch->ChatPacket(CHAT_TYPE_INFO, "PCBang Info Update For All");
-	}
-	else
-	{
-		CPCBangManager::instance().RequestUpdateIPList(PCBangID);
-		ch->ChatPacket(CHAT_TYPE_INFO, "PCBang Info Update For %u", PCBangID);
-	}
-
-	TPacketPCBangUpdate packet;
-	packet.bHeader = HEADER_GG_PCBANG_UPDATE;
-	packet.ulPCBangID = PCBangID;
-
-	P2P_MANAGER::instance().Send(&packet, sizeof(TPacketPCBangUpdate));
-
-}
-
-ACMD(do_pcbang_check)
-{
-	char arg1[256];
-	one_argument(argument, arg1, sizeof(arg1));
-
-	if (CPCBangManager::instance().IsPCBangIP(arg1) == true)
-	{
-		ch->ChatPacket(CHAT_TYPE_INFO, "%s is a PCBang IP", arg1);
-	}
-	else
-	{
-		ch->ChatPacket(CHAT_TYPE_INFO, "%s is not a PCBang IP", arg1);
-	}
-}
 
 ACMD(do_stun)
 {

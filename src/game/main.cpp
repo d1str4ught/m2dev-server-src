@@ -51,7 +51,6 @@
 #include "BattleArena.h"
 #include "over9refine.h"
 #include "horsename_manager.h"
-#include "pcbang.h"
 #include "MarkManager.h"
 #include "spam.h"
 #include "panama.h"
@@ -490,7 +489,6 @@ int main(int argc, char **argv)
 	COXEventManager OXEvent_manager;
 	CMonarch		Monarch;
 	CHorseNameManager horsename_manager;
-	CPCBangManager pcbang_manager;
 
 	DESC_MANAGER	desc_manager;
 

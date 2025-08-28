@@ -18,8 +18,6 @@ class CItem : public CEntity
 
 		bool		CheckItemUseLevel(int nLevel);
 
-		bool		IsPCBangItem();
-
 		long		FindApplyValue(BYTE bApplyType);
 
 		bool		IsStackable()		{ return (GetFlag() & ITEM_FLAG_STACKABLE)?true:false; }

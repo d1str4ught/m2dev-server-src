@@ -109,12 +109,6 @@ enum
 
 	HEADER_GD_BLOCK_CHAT				= 110,
 
-	// PCBANG_IP_LIST_BY_AUTH
-	HEADER_GD_PCBANG_REQUEST_IP_LIST	= 111,
-	HEADER_GD_PCBANG_CLEAR_IP_LIST		= 112,
-	HEADER_GD_PCBANG_INSERT_IP			= 113,
-	// END_OF_PCBANG_IP_LIST_BY_AUTH
-
 	HEADER_GD_HAMMER_OF_TOR			= 114,
 	HEADER_GD_RELOAD_ADMIN			= 115,			///<운영자 정보 요청
 	HEADER_GD_BREAK_MARRIAGE		= 116,			///< 결혼 파기
@@ -1341,15 +1335,6 @@ typedef struct
 	char szName[CHARACTER_NAME_MAX_LEN + 1];
 	int32_t lDuration;
 } TPacketBlockChat;
-
-// PCBANG_IP_LIST
-typedef struct SPacketPCBangIP
-{
-	uint32_t id;
-	uint32_t ip;
-} TPacketPCBangIP;
-// END_OF_PCBANG_IP_LIST
-
 
 //ADMIN_MANAGER
 typedef struct TAdminInfo

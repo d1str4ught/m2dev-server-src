@@ -1746,15 +1746,6 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 		static const char		msc_szChangeItemAttrCycleFlag[];		///< 아이템 속성병경 가능 주기의 Quest Flag 이름
 		// END_OF_CHANGE_ITEM_ATTRIBUTES
 
-		// PC_BANG_ITEM_ADD
-	private :
-		bool m_isinPCBang;
-
-	public :
-		bool SetPCBang(bool flag) { m_isinPCBang = flag; return m_isinPCBang; }
-		bool IsPCBang() const { return m_isinPCBang; }
-		// END_PC_BANG_ITEM_ADD
-
 		// NEW_HAIR_STYLE_ADD
 	public :
 		bool ItemProcess_Hair(LPITEM item, int iDestCell);

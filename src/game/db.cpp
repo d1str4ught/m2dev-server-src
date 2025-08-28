@@ -17,7 +17,6 @@
 #include "log.h"
 #include "login_data.h"
 #include "locale_service.h"
-#include "pcbang.h"
 #include "spam.h"
 #include "auth_brazil.h"
 
@@ -1119,74 +1118,6 @@ void DBManager::AnalyzeReturnQuery(SQLMsg * pMsg)
 			}
 			break;
 			// END_OF_BLOCK_CHAT
-
-			// PCBANG_IP_LIST
-		case QID_PCBANG_IP_LIST_CHECK:
-			{
-				const std::string PCBANG_IP_TABLE_NAME("pcbang_ip");
-
-				if (pMsg->Get()->uiNumRows > 0)
-				{
-					MYSQL_ROW row;
-					bool isFinded = false;
-
-					while ((row = mysql_fetch_row(pMsg->Get()->pSQLResult)))
-					{
-						const char* c_szName = row[0];
-						const char* c_szUpdateTime = row[12];
-
-						if (test_server)
-							sys_log(0, "%s:%s", c_szName, c_szUpdateTime);
-
-						if (PCBANG_IP_TABLE_NAME == c_szName)
-						{
-							isFinded = true;
-
-							static std::string s_stLastTime;
-							if (s_stLastTime != c_szUpdateTime)
-							{
-								s_stLastTime = c_szUpdateTime;
-								sys_log(0, "'%s' mysql table is UPDATED(%s)", PCBANG_IP_TABLE_NAME.c_str(), c_szUpdateTime);
-								ReturnQuery(QID_PCBANG_IP_LIST_SELECT, 0, NULL, "SELECT pcbang_id, ip FROM %s;", PCBANG_IP_TABLE_NAME.c_str());
-							}
-							else
-							{
-								sys_log(0, "'%s' mysql table is NOT updated(%s)", PCBANG_IP_TABLE_NAME.c_str(), c_szUpdateTime);
-							}
-							break;
-						}
-					}
-
-					if (!isFinded)
-					{
-						sys_err(0, "'%s' mysql table CANNOT FIND", PCBANG_IP_TABLE_NAME.c_str());
-					}
-				}
-				else if (test_server)
-				{
-					sys_err(0, "'%s' mysql table is NOT EXIST", PCBANG_IP_TABLE_NAME.c_str());
-				}
-			}
-			break;
-
-		case QID_PCBANG_IP_LIST_SELECT:
-			{
-				if (pMsg->Get()->uiNumRows > 0)
-				{
-					MYSQL_ROW row;
-
-					while ((row = mysql_fetch_row(pMsg->Get()->pSQLResult)))
-					{
-						CPCBangManager::instance().InsertIP(row[0], row[1]);
-					}
-				}
-				else if (test_server)
-				{
-					sys_log(0, "PCBANG_IP_LIST is EMPTY");
-				}
-			}
-			break;
-			// END_OF_PCBANG_IP_LIST
 
 		default:
 			sys_err("FATAL ERROR!!! Unhandled return query id %d", qi->iType);

@@ -821,14 +821,6 @@ bool ITEM_MANAGER::GetDropPct(LPCHARACTER pkChr, LPCHARACTER pkKiller, OUT int& 
 		iDeltaPercent += iDeltaPercent;
 	// END_OF_ADD_PREMIUM
 
-	// PC_BANG_ITEM_ADD
-	if (pkKiller->GetPoint(POINT_PC_BANG_DROP_BONUS) > 0)
-	{
-		if (pkKiller->IsPCBang() == true)
-			iDeltaPercent += iDeltaPercent * pkKiller->GetPoint(POINT_PC_BANG_DROP_BONUS)/100;
-	}
-	// END_PC_BANG_ITEM_ADD
-
 	iRandRange = 4000000;
 	iRandRange = iRandRange * 100 / 
 		(100 + 

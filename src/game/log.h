@@ -38,7 +38,6 @@ class LogManager : public singleton<LogManager>
 		void		HackLog(const char * c_pszHackName, LPCHARACTER ch);
 		void		HackCRCLog(const char * c_pszHackName, const char * c_pszLogin, const char * c_pszName, const char * c_pszIP, DWORD dwCRC);
 		void		GoldBarLog(DWORD dwPID, DWORD dwItemID, GOLDBAR_HOW eHow, const char * c_pszHint);
-		void		PCBangLoginLog(DWORD dwPCBangID, const char * c_szPCBangIP, DWORD dwPlayerID, DWORD dwPlayTime);
 		void		CubeLog(DWORD dwPID, DWORD x, DWORD y, DWORD item_vnum, DWORD item_uid, int item_count, bool success);
 		void		GMCommandLog(DWORD dwPID, const char * szName, const char * szIP, BYTE byChannel, const char * szCommand);
 		void		SpeedHackLog(DWORD pid, DWORD x, DWORD y, int hack_count);
