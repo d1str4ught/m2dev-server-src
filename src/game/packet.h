@@ -1,5 +1,4 @@
-﻿#ifndef __INC_PACKET_H__
-#define __INC_PACKET_H__
+﻿#pragma once
 
 enum
 {
@@ -2348,4 +2347,3 @@ typedef struct SPacketGCStateCheck
 } TPacketGCStateCheck;
 
 #pragma pack()
-#endif

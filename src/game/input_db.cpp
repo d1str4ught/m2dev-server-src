@@ -46,13 +46,7 @@
 
 #include "DragonSoul.h"
 
-#ifdef __AUCTION__
-#include "auction_manager.h"
-#endif
 extern BYTE		g_bAuthServer;
-#ifdef __AUCTION__
-extern int auction_server;
-#endif
 extern void gm_insert(const char * name, BYTE level);
 extern BYTE	gm_get_level(const char * name, const char * host, const char* account );
 extern void gm_host_insert(const char * host);
@@ -787,10 +781,7 @@ void CInputDB::Boot(const char* data)
 		for (WORD i = 0; i < size; ++i, ++kObj)
 			CManager::instance().LoadObject(kObj, true);
 	}
-#ifdef __AUCTION__	
-	// Auction
-	AuctionManager::instance().Boot(data);
-#endif
+	
 	set_global_time(*(time_t *) data);
 	data += sizeof(time_t);
 
@@ -2467,12 +2458,7 @@ int CInputDB::Analyze(LPDESC d, BYTE bHeader, const char * c_pData)
 	case HEADER_DG_RESPOND_CHANNELSTATUS:
 		RespondChannelStatus(DESC_MANAGER::instance().FindByHandle(m_dwHandle), c_pData);
 		break;
-#ifdef __AUCTION__
-	case HEADER_DG_AUCTION_RESULT:
-		if (auction_server)
-			AuctionManager::instance().recv_result_auction(m_dwHandle, (TPacketDGResultAuction*)c_pData);
-		break;
-#endif
+	
 	default:
 		return (-1);
 	}

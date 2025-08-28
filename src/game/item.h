@@ -234,11 +234,6 @@ class CItem : public CEntity
 		void		ClearMountAttributeAndAffect();
 		bool		IsNewMountItem();
 
-#ifdef __AUCTION__
-		// 경매장
-		bool		MoveToAuction ();
-		void		CopyToRawData (TPlayerItem* item);
-#endif
 		// 독일에서 기존 캐시 아이템과 같지만, 교환 가능한 캐시 아이템을 만든다고 하여,
 		// 오리지널 아이템에, 교환 금지 플래그만 삭제한 새로운 아이템들을 새로운 아이템 대역에 할당하였다.
 		// 문제는 새로운 아이템도 오리지널 아이템과 같은 효과를 내야하는데,

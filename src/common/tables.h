@@ -1,6 +1,4 @@
-﻿#ifndef __INC_TABLES_H__
-#define __INC_TABLES_H__
-
+﻿#pragma once
 #include "length.h"
 
 typedef	uint32_t IDENT;
@@ -137,12 +135,6 @@ enum
 
 	HEADER_GD_VALID_LOGOUT			= 134,
 
-	// AUCTION
-#ifdef __AUCTION__
-	HEADER_GD_GET_AUCTION_LIST		= 135,
-	HEADER_GD_COMMAND_AUCTION		= 136,
-#endif
-
 	HEADER_GD_REQUEST_CHARGE_CASH	= 137,
 
 	HEADER_GD_DELETE_AWARDID	= 138,	// delete gift notify icon
@@ -277,9 +269,7 @@ enum
 	HEADER_DG_ACK_HORSE_NAME		= 176,
 
 	HEADER_DG_NEED_LOGIN_LOG		= 177,
-#ifdef __AUCTION__
-	HEADER_DG_AUCTION_RESULT	=	178,
-#endif
+
 	HEADER_DG_RESULT_CHARGE_CASH	= 179,
 	HEADER_DG_ITEMAWARD_INFORMER	= 180,	//gift notify
 	HEADER_DG_RESPOND_CHANNELSTATUS		= 181,
@@ -1470,4 +1460,3 @@ typedef struct SChannelStatus
 } TChannelStatus;
 
 #pragma pack()
-#endif
