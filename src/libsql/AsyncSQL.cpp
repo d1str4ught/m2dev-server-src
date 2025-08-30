@@ -68,7 +68,7 @@ void CAsyncSQL::Destroy()
 		::DeleteCriticalSection(m_mtxResult);
 #endif
 		delete m_mtxResult;
-		m_mtxQuery = NULL;
+		m_mtxResult = NULL;
 	}
 }
 
