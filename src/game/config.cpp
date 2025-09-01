@@ -93,9 +93,6 @@ string g_stBlockDate = "30000705";
 
 extern string g_stLocale;
 
-char	teen_addr[ADDRESS_MAX_LEN + 1] = {0};
-WORD	teen_port	= 0;
-
 int SPEEDHACK_LIMIT_COUNT   = 50;
 int SPEEDHACK_LIMIT_BONUS   = 80;
 int g_iSyncHackLimitCount = 20; // 10 -> 20 2013 09 11 CYH
@@ -685,24 +682,6 @@ void config_init(const string& st_localeServiceName)
 				g_setQuestObjectDir.insert(dir);
 				sys_log(0, "QUEST_OBJECT_DIR INSERT : %s", dir.c_str());
 			}
-		}
-
-		TOKEN("teen_addr")
-		{
-			strlcpy(teen_addr, value_string, sizeof(teen_addr));
-
-			for (int n = 0; n < ADDRESS_MAX_LEN; ++n)
-			{
-				if (teen_addr[n] == ' ')
-					teen_addr[n] = '\0';
-			}
-
-			continue;
-		}
-
-		TOKEN("teen_port")
-		{
-			str_to_number(teen_port, value_string);
 		}
 
 		TOKEN("synchack_limit_count")

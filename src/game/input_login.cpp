@@ -1,6 +1,5 @@
 ﻿#include "stdafx.h"
 #include "constants.h"
-#include "common/teen_packet.h"
 #include "config.h"
 #include "utils.h"
 #include "input.h"
@@ -772,19 +771,6 @@ void CInputLogin::Entergame(LPDESC d, const char * data)
 			if (!test_server)
 				ch->WarpSet(EMPIRE_START_X(ch->GetEmpire()), EMPIRE_START_Y(ch->GetEmpire()));
 		}
-	}
-
-	// 청소년 보호
-	if (g_TeenDesc) // BufferedPacket 사용 금지
-	{
-		TPacketGTLogin p;
-
-		p.header = HEADER_GT_LOGIN;
-		p.empty = 0;
-		p.id = d->GetAccountTable().id;
-
-		g_TeenDesc->Packet(&p, sizeof(p));
-		sys_log(0, "TEEN_SEND: (%u, %s)", d->GetAccountTable().id, ch->GetName());
 	}
 
 	if (ch->GetHorseLevel() > 0)
