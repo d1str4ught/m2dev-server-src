@@ -70,8 +70,6 @@ BYTE		g_bAuthServer = false;
 bool		g_bCheckClientVersion = true;
 string	g_stClientVersion = "1215955205";
 
-BYTE		g_bBilling = false;
-
 string	g_stAuthMasterIP;
 WORD		g_wAuthMasterPort = 0;
 
@@ -655,11 +653,6 @@ void config_init(const string& st_localeServiceName)
 		{
 			str_to_number(g_bSkillDisable, value_string);
 			continue;
-		}
-
-		TOKEN("billing")
-		{
-			g_bBilling = true;
 		}
 
 		TOKEN("quest_dir")

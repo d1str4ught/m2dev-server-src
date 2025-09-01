@@ -176,9 +176,6 @@ class DESC
 
 		void			AssembleCRCMagicCube(BYTE bProcPiece, BYTE bFilePiece);
 
-		void			SetBillingExpireSecond(DWORD dwSec);
-		DWORD			GetBillingExpireSecond();
-
 		void			SetClientVersion(const char * c_pszTimestamp) { m_stClientVersion = c_pszTimestamp; }
 		const char *		GetClientVersion() { return m_stClientVersion.c_str(); }
 
@@ -251,7 +248,6 @@ class DESC
 		DWORD                   m_dwFileCRC;
 		bool			m_bHackCRCQuery;
 
-		DWORD			m_dwBillingExpireSecond;
 		std::string		m_stClientVersion;
 		std::string		m_stMatrixCode;
 

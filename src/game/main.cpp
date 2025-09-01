@@ -257,11 +257,6 @@ void heartbeat(LPHEART ht, int pulse)
 		else
 		{
 			DESC_MANAGER::instance().ProcessExpiredLoginKey();
-			DBManager::instance().FlushBilling();
-			/*
-			   if (!(pulse % (ht->passes_per_sec * 600)))
-			   DBManager::instance().CheckBilling();
-			 */
 		}
 
 		{
@@ -555,8 +550,6 @@ int main(int argc, char **argv)
 
 	if (g_bAuthServer)
 	{
-		DBManager::instance().FlushBilling(true);
-
 		int iLimit = DBManager::instance().CountQuery() / 50;
 		int i = 0;
 

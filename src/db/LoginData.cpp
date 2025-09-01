@@ -11,8 +11,6 @@ CLoginData::CLoginData()
 	memset(m_szIP, 0, sizeof(m_szIP));
 	m_bPlay = false;
 	m_bDeleted = false;
-	m_bBillType = 0;
-	m_dwBillID = 0;
 	m_lastPlayTime = 0;
 	m_dwLastPlayerID = 0;
 

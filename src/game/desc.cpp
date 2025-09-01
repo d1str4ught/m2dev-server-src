@@ -95,8 +95,6 @@ void DESC::Initialize()
 	m_dwFileCRC = 0;
 	m_bHackCRCQuery = 0;
 
-	m_dwBillingExpireSecond = 0;
-
 	m_outtime = 0;
 	m_playtime = 0;
 	m_offtime = 0;
@@ -1075,16 +1073,6 @@ void DESC::AssembleCRCMagicCube(BYTE bProcPiece, BYTE bFilePiece)
 		m_dwFileCRC = 0;
 		m_bCRCMagicCubeIdx = 0;
 	}
-}
-
-void DESC::SetBillingExpireSecond(DWORD dwSec)
-{
-	m_dwBillingExpireSecond = dwSec;
-}
-
-DWORD DESC::GetBillingExpireSecond()
-{
-	return m_dwBillingExpireSecond;
 }
 
 BYTE DESC::GetEmpire()

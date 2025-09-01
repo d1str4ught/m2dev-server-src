@@ -57,7 +57,6 @@ void CLIENT_DESC::Destroy()
 		CPartyManager::instance().DeleteAllParty();
 		CPartyManager::instance().DisablePCParty();
 		CGuildManager::instance().StopAllGuildWar();
-		DBManager::instance().StopAllBilling();
 	}
 
 	fdwatch_del_fd(m_lpFdw, m_sock);
