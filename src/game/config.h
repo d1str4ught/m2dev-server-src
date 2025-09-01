@@ -17,9 +17,6 @@ extern WORD p2p_port;
 extern char db_addr[ADDRESS_MAX_LEN + 1];
 extern WORD db_port;
 
-extern char passpod_addr[ADDRESS_MAX_LEN + 1];
-extern WORD passpod_port;
-
 extern int passes_per_sec;
 extern int save_event_second_cycle;
 extern int ping_event_second_cycle;

@@ -32,7 +32,6 @@ int		save_event_second_cycle = passes_per_sec * 120;	// 3분
 int		ping_event_second_cycle = passes_per_sec * 60;
 bool	g_bNoMoreClient = false;
 bool	g_bNoRegen = false;
-bool	g_bNoPasspod = false;
 
 // TRAFFIC_PROFILER
 bool		g_bTrafficProfileOn = false;

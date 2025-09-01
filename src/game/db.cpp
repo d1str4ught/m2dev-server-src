@@ -19,39 +19,7 @@
 #include "spam.h"
 #include "auth_brazil.h"
 
-extern bool g_bNoPasspod;
 extern std::string g_stBlockDate;
-
-//중국 passpod 전용 함수 
-bool CheckPasspod(const char * account)
-{
-	char szQuery[1024];
-
-	snprintf(szQuery, sizeof(szQuery), "SELECT ID FROM passpod WHERE Login='%s'", account); 
-	SQLMsg * pMsg = DBManager::instance().DirectQuery(szQuery);
- 	
-	if (!pMsg)
-	{
-		//fprintf(stderr, "cannot get the MATRIX\n");
-		sys_log(0, "cannot get the PASSPOD");
-		delete pMsg;
-		return false;
-	}
-
-	if (pMsg->Get()->uiNumRows == 0)
-	{
-		puts(szQuery);
-		sys_log(0, "[PASSPOD]DirectQuery failed(%s)", szQuery);
-
-		delete pMsg;
-		return false;
-	}
-
-	delete pMsg;
-
-	return true;
-}
-
 
 DBManager::DBManager() : m_bIsConnect(false)
 {
@@ -285,32 +253,8 @@ void DBManager::LoginPrepare(LPDESC d, uint32_t * pdwClientKey, int * paiPremium
 				MATRIX_CARD_COL(cols, 3) + 1,
 				d->GetMatrixCode());
 	}
-	else
-	{
-		if (LC_IsNewCIBN())
-		{
-			if (!g_bNoPasspod)
-			{
-				if (CheckPasspod(r.login))
-				{
-					BYTE id = HEADER_GC_REQUEST_PASSPOD;
-					d->Packet(&id, sizeof(BYTE));
-					sys_log(0, "%s request passpod", r.login);
-				}
-				else
-				{
-					SendAuthLogin(d);
 
-				}
-			}
-			else
-			{
-				SendAuthLogin(d);
-			}
-		}
-		else
-			SendAuthLogin(d);
-	}
+	SendAuthLogin(d);
 }
 
 void DBManager::AnalyzeReturnQuery(SQLMsg * pMsg)
