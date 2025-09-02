@@ -1,9 +1,5 @@
 ﻿#include "stdafx.h"
-#ifdef OS_FREEBSD
-#include <md5.h>
-#else
 #include "libthecore/xmd5.h"
-#endif
 
 #include "utils.h"
 #include "config.h"
