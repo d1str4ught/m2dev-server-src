@@ -336,7 +336,6 @@ class CInputP2P : public CInputProcessor
 		void		Disconnect(const char * c_pData);
 		void		MessengerAdd(const char * c_pData);
 		void		MessengerRemove(const char * c_pData);
-		void		MessengerMobile(const char * c_pData);
 		void		FindPosition(LPDESC d, const char* c_pData);
 		void		WarpCharacter(const char* c_pData);
 		void		GuildWarZoneMapIndex(const char* c_pData);

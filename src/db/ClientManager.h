@@ -317,7 +317,6 @@ class CClientManager : public CNetBase, public singleton<CClientManager>
 	void		QUERY_CHANGE_NAME(CPeer * peer, DWORD dwHandle, TPacketGDChangeName * p);
 	void		GetPlayerFromRes(TPlayerTable * player_table, MYSQL_RES* res);
 
-	void		QUERY_SMS(CPeer * pkPeer, TPacketGDSMS * p);
 	void		QUERY_LOGIN_KEY(CPeer * pkPeer, TPacketGDLoginKey * p);
 
 	void		AddGuildPriv(TPacketGiveGuildPriv* p);
