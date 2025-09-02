@@ -2,11 +2,15 @@
 #include <windows.h>
 #endif
 
+// #define LIBPOLY_STANDALONE
+#ifdef LIBPOLY_STANDALONE
+
 #include "Poly.h"
 
 #include <cstdlib>
 #include <ctime>
 #include <iostream>
+#include <unistd.h>
 
 using namespace std;
 
@@ -45,3 +49,4 @@ int main(int argc, char ** argv)
     return 0;
 }
 
+#endif
