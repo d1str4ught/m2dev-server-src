@@ -230,7 +230,7 @@ bool DESC::Setup(LPFDWATCH _fdw, socket_t _fd, const struct sockaddr_in & c_rSoc
 	//	m_lpOutputBuffer = buffer_new(DEFAULT_PACKET_BUFFER_SIZE * 2);
 	//else
 	//NOTE: 이걸 나라별로 다르게 잡아야할 이유가 있나?
-	m_lpOutputBuffer = buffer_new(DEFAULT_PACKET_BUFFER_SIZE * 2);
+	m_lpOutputBuffer = buffer_new(DEFAULT_PACKET_BUFFER_SIZE * 3); // Default: 2
 
 	m_iMinInputBufferLen = MAX_INPUT_LEN >> 1;
 	m_lpInputBuffer = buffer_new(MAX_INPUT_LEN);
@@ -418,6 +418,12 @@ void DESC::BufferedPacket(const void * c_pvData, int iSize)
 	if (!m_lpBufferedOutputBuffer)
 		m_lpBufferedOutputBuffer = buffer_new(MAX(1024, iSize));
 
+#ifdef _DEBUG
+	const std::string stName = GetCharacter() ? GetCharacter()->GetName() : GetHostName();
+	const auto kHeader = *(static_cast<const uint8_t*>(c_pvData));
+	sys_log(0, "[B] SENT HEADER : %u(0x%X) to %s  (size %d) ", kHeader, kHeader, stName.c_str(), iSize);
+#endif
+
 	buffer_write(m_lpBufferedOutputBuffer, c_pvData, iSize);
 }
 
@@ -434,6 +440,12 @@ void DESC::Packet(const void * c_pvData, int iSize)
 		SetPhase(PHASE_CLOSE);
 		return;
 	}
+
+#ifdef _DEBUG
+	const std::string stName = GetCharacter() ? GetCharacter()->GetName() : GetHostName();
+	const auto kHeader = *(static_cast<const uint8_t*>(c_pvData));
+	sys_log(0, "[N] SENT HEADER : %u(0x%X) to %s  (size %d) ", kHeader, kHeader, stName.c_str(), iSize);
+#endif
 
 	if (m_stRelayName.length() != 0)
 	{
