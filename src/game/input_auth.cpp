@@ -5,7 +5,6 @@
 #include "desc_client.h"
 #include "desc_manager.h"
 #include "protocol.h"
-#include "matrix_card.h"
 #include "locale_service.h"
 #include "auth_brazil.h"
 #include "db.h"
@@ -205,7 +204,7 @@ void CInputAuth::Login(LPDESC d, const char * c_pData)
 		sys_log(0, "ChannelServiceLogin [%s]", szLogin);
 
 		DBManager::instance().ReturnQuery(QID_AUTH_LOGIN, dwKey, p,
-				"SELECT '%s',password,securitycode,social_id,id,status,availDt - NOW() > 0,"
+				"SELECT '%s',password,social_id,id,status,availDt - NOW() > 0,"
 				"UNIX_TIMESTAMP(silver_expire),"
 				"UNIX_TIMESTAMP(gold_expire),"
 				"UNIX_TIMESTAMP(safebox_expire),"
@@ -222,7 +221,7 @@ void CInputAuth::Login(LPDESC d, const char * c_pData)
 	else
 	{
 		DBManager::instance().ReturnQuery(QID_AUTH_LOGIN, dwKey, p, 
-				"SELECT PASSWORD('%s'),password,securitycode,social_id,id,status,availDt - NOW() > 0,"
+				"SELECT PASSWORD('%s'),password,social_id,id,status,availDt - NOW() > 0,"
 				"UNIX_TIMESTAMP(silver_expire),"
 				"UNIX_TIMESTAMP(gold_expire),"
 				"UNIX_TIMESTAMP(safebox_expire),"

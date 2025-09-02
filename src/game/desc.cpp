@@ -78,9 +78,6 @@ void DESC::Initialize()
 
 	m_SequenceGenerator.seed(SEQUENCE_SEED);
 
-	m_dwMatrixRows = m_dwMatrixCols = 0;
-	m_bMatrixTryCount = 0;
-
 	m_pkLoginKey = NULL;
 	m_dwLoginKey = 0;
 	m_dwPanamaKey = 0;
@@ -966,30 +963,6 @@ void DESC::SendLoginSuccessPacket()
 //	this->Packet(&rp, sizeof(rp));
 //	//printf("STATE_CHECK PACKET PROCESSED.\n");
 //}
-
-void DESC::SetMatrixCardRowsAndColumns(unsigned long rows, unsigned long cols)
-{
-	m_dwMatrixRows = rows;
-	m_dwMatrixCols = cols;
-}
-
-unsigned long DESC::GetMatrixRows()
-{
-	return m_dwMatrixRows;
-}
-
-unsigned long DESC::GetMatrixCols()
-{
-	return m_dwMatrixCols;
-}
-
-bool DESC::CheckMatrixTryCount()
-{
-	if (++m_bMatrixTryCount >= 3)
-		return false;
-
-	return true;
-}
 
 void DESC::SetLoginKey(DWORD dwKey)
 {

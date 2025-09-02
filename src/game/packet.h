@@ -92,7 +92,6 @@ enum
 	// END_OF_SCRIPT_SELECT_ITEM
 	
 //	HEADER_CG_ROULETTE				= 200,
-//	HEADER_CG_RUNUP_MATRIX_ANSWER	= 201,
 
 	//NOTE : 이런 개XXX 정말 이거 Packet설계한 사람은 누구냐. 이렇게 코딩하고 밥이 넘어가나.
 	//enum을 별도로 구별을 하던가. 아님 namepsace로 구별을 하던가..
@@ -227,7 +226,6 @@ enum
 
 	HEADER_GC_NPC_POSITION			= 115,
 
-	HEADER_GC_MATRIX_CARD			= 116,
 	HEADER_GC_LOGIN_KEY				= 118,
 	HEADER_GC_REFINE_INFORMATION		= 119,
 	HEADER_GC_CHANNEL				= 121,
@@ -523,19 +521,6 @@ typedef struct command_login3
 	char	passwd[PASSWD_MAX_LEN + 1];
 	uint32_t	adwClientKey[4];
 } TPacketCGLogin3;
-
-typedef struct command_matrix_card
-{
-	uint8_t	bHeader;
-	char	szAnswer[MATRIX_ANSWER_MAX_LEN + 1];
-} TPacketCGMatrixCard;
-
-typedef struct packet_matrix_card
-{
-	uint8_t	bHeader;
-	uint32_t	dwRows;
-	uint32_t	dwCols;
-} TPacketGCMatrixCard;
 
 typedef struct packet_login_key
 {
@@ -2086,25 +2071,6 @@ typedef struct packet_damage_info
 	uint8_t flag;
 	int32_t damage;
 } TPacketGCDamageInfo;
-
-enum 
-{
-	RUNUP_MATRIX_ANSWER_MAX_LEN = 4,
-	RUNUP_MATRIX_QUIZ_MAX_LEN = 8 ,
-	
-};
-
-typedef struct packet_runup_matrix_quiz
-{
-	uint8_t    bHeader;
-	char    szQuiz[RUNUP_MATRIX_QUIZ_MAX_LEN + 1];
-} TPacketGCRunupMatrixQuiz;
-
-typedef struct command_runup_matrix_answer
-{
-	uint8_t    bHeader;
-	char    szAnswer[RUNUP_MATRIX_ANSWER_MAX_LEN + 1];
-} TPacketCGRunupMatrixAnswer;
 
 typedef struct tag_GGSiege
 {
