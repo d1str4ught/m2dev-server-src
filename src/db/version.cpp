@@ -1,6 +1,10 @@
 ﻿#include <stdio.h>
 #include <stdlib.h>
 
+#ifndef GIT_DESCRIBE
+#define GIT_DESCRIBE "unknown"
+#endif
+
 void WriteVersion()
 {
 #ifndef OS_WINDOWS
@@ -8,7 +12,7 @@ void WriteVersion()
 
 	if (NULL != fp)
 	{
-		fprintf(fp, "db revision: %s\n", __P4_VERSION__);
+		fprintf(fp, "db revision: %s\n", GIT_DESCRIBE);
 		//fprintf(fp, "%s@%s:%s\n", __USER__, __HOSTNAME__, __PWD__);
 		fclose(fp);
 	}

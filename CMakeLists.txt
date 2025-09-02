@@ -36,6 +36,34 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
+# Derive a version string from git for the db target
+find_package(Git QUIET)
+if(GIT_FOUND)
+	execute_process(
+		COMMAND ${GIT_EXECUTABLE} -C ${CMAKE_SOURCE_DIR} describe --always --dirty --tags
+		OUTPUT_VARIABLE GIT_DESCRIBE_VERSION
+		OUTPUT_STRIP_TRAILING_WHITESPACE
+		ERROR_QUIET
+	)
+endif()
+
+if(NOT GIT_DESCRIBE_VERSION)
+	if(GIT_FOUND)
+		execute_process(
+			COMMAND ${GIT_EXECUTABLE} -C ${CMAKE_SOURCE_DIR} rev-parse --short HEAD
+			OUTPUT_VARIABLE GIT_DESCRIBE_VERSION
+			OUTPUT_STRIP_TRAILING_WHITESPACE
+			ERROR_QUIET
+		)
+	else()
+		set(GIT_DESCRIBE_VERSION "unknown")
+	endif()
+endif()
+
+if(NOT GIT_DESCRIBE_VERSION)
+	set(GIT_DESCRIBE_VERSION "unknown")
+endif()
+
 add_definitions(-DNOMINMAX)
 add_definitions(-DWIN32_LEAN_AND_MEAN)
 
