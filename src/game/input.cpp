@@ -123,6 +123,7 @@ bool CInputProcessor::Process(LPDESC lpDesc, const void * c_pvOrig, int iBytes, 
 
 			if (iExtraPacketSize < 0)
 			{
+				LPCHARACTER ch = lpDesc->GetCharacter();
 				sys_err("Failed to analyze header(%u) size: %d phase: %d host %s from %s (%u) in: %u",
 					bHeader, iPacketLen, lpDesc->GetPhase(), lpDesc->GetHostName(),
 					ch ? ch->GetName() : "NO_CHAR", ch ? ch->GetPlayerID() : 0, ch ? ch->GetMapIndex() : 0
