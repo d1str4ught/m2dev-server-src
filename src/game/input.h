@@ -14,7 +14,6 @@ enum
 	INPROC_UDP,
 	INPROC_P2P,
 	INPROC_AUTH,
-	INPROC_TEEN,
 };
 
 void LoginFailure(LPDESC d, const char * c_pszStatus);
@@ -244,10 +243,6 @@ protected:
 
 	void		SetEventFlag(const char* c_pData);
 
-	void		BillingRepair(const char * c_pData);
-	void		BillingExpire(const char * c_pData);
-	void		BillingLogin(const char * c_pData);
-	void		BillingCheck(const char * c_pData);
 	void		VCard(const char * c_pData);
 
 	void		CreateObject(const char * c_pData);
@@ -367,26 +362,7 @@ class CInputAuth : public CInputProcessor
 
 	public:
 		void		Login(LPDESC d, const char * c_pData);
-		void		PasspodAnswer(LPDESC d, const char * c_pData );
 
-};
-
-class CInputTeen : public CInputProcessor
-{
-	public :
-		virtual BYTE GetType() { return INPROC_TEEN; }
-
-		void SetStep(int step);
-
-	protected :
-		virtual bool Process(LPDESC lpDesc, const void * c_pvOrig, int iBytes, int & r_iBytesProceed);
-		virtual int	Analyze(LPDESC d, BYTE bHeader, const char * c_pData) { return 0; };
-
-	private:
-		int	m_step;
-
-		bool ProcessHandshake(LPDESC lpDesc, const void * c_pvOrig, size_t uiBytes, int & r_iBytesProceed);
-		bool ProcessMain(LPDESC lpDesc, const void * c_pvOrig, size_t uiBytes, int & r_iBytesProceed);
 };
 
 #endif /* __INC_METIN_II_GAME_INPUT_PROCESSOR__ */

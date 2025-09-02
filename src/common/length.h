@@ -67,8 +67,6 @@ enum EMisc
 	//LIMIT_GOLD
 	GOLD_MAX = 2000000000,
 
-	MAX_PASSPOD = 8 ,
-
 		
 	//END_LIMIT_GOLD
 
@@ -664,16 +662,6 @@ enum SPECIAL_EFFECT
 	SE_EQUIP_HAPPINESS_RING,		// 크리스마스 행복의 반지(71143) 착용할 때 이펙트 (발동이펙트임, 지속이펙트 아님)
 	SE_EQUIP_LOVE_PENDANT,		// 발렌타인 사랑의 팬던트(71145) 착용할 때 이펙트 (발동이펙트임, 지속이펙트 아님)
 } ;
-
-enum ETeenFlags
-{
-	TEENFLAG_NONE = 0,
-	TEENFLAG_1HOUR,
-	TEENFLAG_2HOUR,
-	TEENFLAG_3HOUR,
-	TEENFLAG_4HOUR,
-	TEENFLAG_5HOUR,
-};
 
 #include "item_length.h"
 
