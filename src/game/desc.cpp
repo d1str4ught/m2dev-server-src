@@ -428,6 +428,13 @@ void DESC::Packet(const void * c_pvData, int iSize)
 	if (m_iPhase == PHASE_CLOSE) // 끊는 상태면 보내지 않는다.
 		return;
 
+	if (!m_lpOutputBuffer)
+	{
+		sys_err("DESC::Packet: Trying to send packet but output buffer is NULL! (DESC: %p)", this);
+		SetPhase(PHASE_CLOSE);
+		return;
+	}
+
 	if (m_stRelayName.length() != 0)
 	{
 		// Relay 패킷은 암호화하지 않는다.

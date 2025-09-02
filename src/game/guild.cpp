@@ -2013,13 +2013,13 @@ void CGuild::Invite( LPCHARACTER pchInviter, LPCHARACTER pchInvitee )
 
 	TPacketGCGuild p;
 	p.header	= HEADER_GC_GUILD;
-	p.size	= sizeof(p) + sizeof(DWORD) + GUILD_NAME_MAX_LEN + 1;
+	p.size	= sizeof(p) + sizeof(DWORD) + GUILD_NAME_MAX_LEN;
 	p.subheader	= GUILD_SUBHEADER_GC_GUILD_INVITE;
 
 	TEMP_BUFFER buf;
 	buf.write( &p, sizeof(p) );
 	buf.write( &gid, sizeof(DWORD) );
-	buf.write( GetName(), GUILD_NAME_MAX_LEN + 1 );
+	buf.write( GetName(), GUILD_NAME_MAX_LEN );
 
 	pchInvitee->GetDesc()->Packet( buf.read_peek(), buf.size() );
 }
