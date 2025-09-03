@@ -46,7 +46,6 @@ class LogManager : public singleton<LogManager>
 		void		ShoutLog(BYTE bChannel, BYTE bEmpire, const char * pszText);
 		void		LevelLog(LPCHARACTER pChar, unsigned int level, unsigned int playhour);
 		void		BootLog(const char * c_pszHostName, BYTE bChannel);
-		void		VCardLog(DWORD vcard_id, DWORD x, DWORD y, const char * hostname, const char * giver_name, const char * giver_ip, const char * taker_name, const char * taker_ip);
 		void		FishLog(DWORD dwPID, int prob_idx, int fish_id, int fish_level, DWORD dwMiliseconds, DWORD dwVnum = false, DWORD dwValue = 0);
 		void		QuestRewardLog(const char * c_pszQuestName, DWORD dwPID, DWORD dwLevel, int iValue1, int iValue2);
 		void		DetailLoginLog(bool isLogin, LPCHARACTER ch);
