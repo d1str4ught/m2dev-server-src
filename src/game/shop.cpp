@@ -345,13 +345,6 @@ int CShop::Buy(LPCHARACTER ch, BYTE pos)
 	{
 		m_pkPC->SyncQuickslot(QUICKSLOT_TYPE_ITEM, item->GetCell(), 255);
 
-		if (item->GetVnum() == 90008 || item->GetVnum() == 90009) // VCARD
-		{
-			VCardUse(m_pkPC, ch, item);
-			item = NULL;
-		}
-		else
-		{
 			char buf[512];
 
 			if (item->GetVnum() >= 80003 && item->GetVnum() <= 80007)
@@ -360,21 +353,19 @@ int CShop::Buy(LPCHARACTER ch, BYTE pos)
 				LogManager::instance().GoldBarLog(ch->GetPlayerID(), item->GetID(), SHOP_BUY, buf);
 				LogManager::instance().GoldBarLog(m_pkPC->GetPlayerID(), item->GetID(), SHOP_SELL, buf);
 			}
-			
+
 			item->RemoveFromCharacter();
 			if (item->IsDragonSoul())
 				item->AddToCharacter(ch, TItemPos(DRAGON_SOUL_INVENTORY, iEmptyPos));
 			else
 				item->AddToCharacter(ch, TItemPos(INVENTORY, iEmptyPos));
 			ITEM_MANAGER::instance().FlushDelayedSave(item);
-			
 
 			snprintf(buf, sizeof(buf), "%s %u(%s) %u %u", item->GetName(), m_pkPC->GetPlayerID(), m_pkPC->GetName(), dwPrice, item->GetCount());
 			LogManager::instance().ItemLog(ch, item, "SHOP_BUY", buf);
 
 			snprintf(buf, sizeof(buf), "%s %u(%s) %u %u", item->GetName(), ch->GetPlayerID(), ch->GetName(), dwPrice, item->GetCount());
 			LogManager::instance().ItemLog(m_pkPC, item, "SHOP_SELL", buf);
-		}
 
 		r_item.pkItem = NULL;
 		BroadcastUpdateItem(pos);
