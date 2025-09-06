@@ -1,7 +1,5 @@
 ﻿#include "stdafx.h"
 
-#ifndef OS_FREEBSD
-
 /*
  * luau (Lib Update/Auto-Update): Simple Update Library
  * Copyright (C) 2003  David Eklund
@@ -341,5 +339,3 @@ void MD5Transform(uint32_t buf[4], uint32_t const in[16])
     buf[2] += c;
     buf[3] += d;
 }
-
-#endif // #ifndef OS_FREEBSD

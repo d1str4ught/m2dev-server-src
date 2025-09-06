@@ -3195,7 +3195,7 @@ LPCHARACTER CHARACTER::GetNearestVictim(LPCHARACTER pkChr)
 
 		LPCHARACTER pAttacker = CHARACTER_MANAGER::instance().Find(c_VID);
 
-		if (!pAttacker)
+		if (!pAttacker || pAttacker->IsDead())
 			continue;
 
 		if (pAttacker->IsAffectFlag(AFF_EUNHYUNG) || 

@@ -1,5 +1,4 @@
-﻿#ifndef OS_FREEBSD
-
+﻿#pragma once
 /*
  * luau (Lib Update/Auto-Update): Simple Update Library
  * Copyright (C) 2003  David Eklund
@@ -65,5 +64,3 @@ char* MD5End(MD5_CTX *, char *);
 
 char* lutil_md5_file(const char *filename, char *buf);
 char* lutil_md5_data(const unsigned char *data, unsigned int len, char *buf);
-
-#endif // #ifndef OS_FREEBSD

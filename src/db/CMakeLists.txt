@@ -2,6 +2,8 @@
 
 add_executable(db ${DB_SOURCES})
 
+target_compile_definitions(db PRIVATE GIT_DESCRIBE="${GIT_DESCRIBE_VERSION}")
+
 target_link_libraries(db 
 	common
 	libgame 

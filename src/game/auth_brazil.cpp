@@ -13,11 +13,7 @@
 #endif
 #include <stdio.h>
 #include <string.h>
-#ifdef OS_FREEBSD
-#include <md5.h>
-#else
 #include "libthecore/xmd5.h"
-#endif
 
 #include "auth_brazil.h"
 

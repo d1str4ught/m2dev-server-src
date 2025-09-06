@@ -469,21 +469,31 @@ void ITEM_MANAGER::SaveSingleItem(LPITEM item)
 
 void ITEM_MANAGER::Update()
 {
-	std::unordered_set<LPITEM>::iterator it = m_set_pkItemForDelayedSave.begin();
-	std::unordered_set<LPITEM>::iterator this_it;
-
-	while (it != m_set_pkItemForDelayedSave.end())
+	for (auto it = m_set_pkItemForDelayedSave.begin(); it != m_set_pkItemForDelayedSave.end();)
 	{
-		this_it = it++;
-		LPITEM item = *this_it;
-
-		// SLOW_QUERY 플래그가 있는 것은 종료시에만 저장한다.
-		if (item->GetOwner() && IS_SET(item->GetFlag(), ITEM_FLAG_SLOW_QUERY))
+		LPITEM item = *it;
+		if (!item)
+		{
+			sys_err("nullptr item, erasing from delayed save.");
+			it = m_set_pkItemForDelayedSave.erase(it);
 			continue;
+		}
+
+		if (!FindByVID(item->GetVID()))
+		{
+			sys_err("Invalid item(%u), erasing from delayed save.", item->GetVID());
+			it = m_set_pkItemForDelayedSave.erase(it);
+			continue;
+		}
+
+		if (item->GetOwner() && IS_SET(item->GetFlag(), ITEM_FLAG_SLOW_QUERY))
+		{
+			++it; // just skip don't erase
+			continue;
+		}
 
 		SaveSingleItem(item);
-
-		m_set_pkItemForDelayedSave.erase(this_it);
+		it = m_set_pkItemForDelayedSave.erase(it);
 	}
 }
 
@@ -619,28 +629,29 @@ TItemTable * ITEM_MANAGER::GetTable(DWORD vnum)
 
 int ITEM_MANAGER::RealNumber(DWORD vnum)
 {
-	int bot, top, mid;
+	if (m_vec_prototype.empty())
+		return -1;
 
-	bot = 0;
-	top = m_vec_prototype.size();
+	int left = 0;
+	int right = m_vec_prototype.size() - 1;
 
-	TItemTable * pTable = &m_vec_prototype[0];
-
-	while (1)
+	while (left <= right)
 	{
-		mid = (bot + top) >> 1;
+		int mid = (left + right) / 2;
 
-		if ((pTable + mid)->dwVnum == vnum)
-			return (mid);
+		if (mid < 0 || mid >= static_cast<int>(m_vec_prototype.size()))
+			return -1;
 
-		if (bot >= top)
-			return (-1);
+		if (m_vec_prototype[mid].dwVnum == vnum)
+			return mid;
 
-		if ((pTable + mid)->dwVnum > vnum)
-			top = mid - 1;
-		else        
-			bot = mid + 1;
+		if (m_vec_prototype[mid].dwVnum > vnum)
+			right = mid - 1;
+		else
+			left = mid + 1;
 	}
+
+	return -1;
 }
 
 bool ITEM_MANAGER::GetVnum(const char * c_pszName, DWORD & r_dwVnum)

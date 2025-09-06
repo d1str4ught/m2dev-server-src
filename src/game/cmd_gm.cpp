@@ -4082,28 +4082,28 @@ ACMD (do_item_full_set)
 		{
 			
 			item = ITEM_MANAGER::instance().CreateItem(11699);
-			if (!item || !item->EquipTo(ch, item->FindEquipCell(ch)))
+			if (item && !item->EquipTo(ch, item->FindEquipCell(ch)))
 				M2_DESTROY_ITEM(item);
 			item = ITEM_MANAGER::instance().CreateItem(13049);
-			if (!item || !item->EquipTo(ch, item->FindEquipCell(ch)))
+			if (item && !item->EquipTo(ch, item->FindEquipCell(ch)))
 				M2_DESTROY_ITEM(item);
 			item = ITEM_MANAGER::instance().CreateItem(15189 );
-			if (!item || !item->EquipTo(ch, item->FindEquipCell(ch)))
+			if (item && !item->EquipTo(ch, item->FindEquipCell(ch)))
 				M2_DESTROY_ITEM(item);
 			item = ITEM_MANAGER::instance().CreateItem(189 );
-			if (!item || !item->EquipTo(ch, item->FindEquipCell(ch)))
+			if (item && !item->EquipTo(ch, item->FindEquipCell(ch)))
 				M2_DESTROY_ITEM(item);
 			item = ITEM_MANAGER::instance().CreateItem(12529 );
-			if (!item || !item->EquipTo(ch, item->FindEquipCell(ch)))
+			if (item && !item->EquipTo(ch, item->FindEquipCell(ch)))
 				M2_DESTROY_ITEM(item);
 			item = ITEM_MANAGER::instance().CreateItem(14109 );
-			if (!item || !item->EquipTo(ch, item->FindEquipCell(ch)))
+			if (item && !item->EquipTo(ch, item->FindEquipCell(ch)))
 				M2_DESTROY_ITEM(item);
 			item = ITEM_MANAGER::instance().CreateItem(17209 );
-			if (!item || !item->EquipTo(ch, item->FindEquipCell(ch)))
+			if (item && !item->EquipTo(ch, item->FindEquipCell(ch)))
 				M2_DESTROY_ITEM(item);
 			item = ITEM_MANAGER::instance().CreateItem(16209 );
-			if (!item || !item->EquipTo(ch, item->FindEquipCell(ch)))
+			if (item && !item->EquipTo(ch, item->FindEquipCell(ch)))
 				M2_DESTROY_ITEM(item);
 		}
 		break;
@@ -4111,28 +4111,28 @@ ACMD (do_item_full_set)
 		{
 			
 			item = ITEM_MANAGER::instance().CreateItem(11299);
-			if (!item || !item->EquipTo(ch, item->FindEquipCell(ch)))
+			if (item && !item->EquipTo(ch, item->FindEquipCell(ch)))
 				M2_DESTROY_ITEM(item);
 			item = ITEM_MANAGER::instance().CreateItem(13049);
-			if (!item || !item->EquipTo(ch, item->FindEquipCell(ch)))
+			if (item && !item->EquipTo(ch, item->FindEquipCell(ch)))
 				M2_DESTROY_ITEM(item);
 			item = ITEM_MANAGER::instance().CreateItem(15189 );
-			if (!item || !item->EquipTo(ch, item->FindEquipCell(ch)))
+			if (item && !item->EquipTo(ch, item->FindEquipCell(ch)))
 				M2_DESTROY_ITEM(item);
 			item = ITEM_MANAGER::instance().CreateItem(3159 );
-			if (!item || !item->EquipTo(ch, item->FindEquipCell(ch)))
+			if (item && !item->EquipTo(ch, item->FindEquipCell(ch)))
 				M2_DESTROY_ITEM(item);
 			item = ITEM_MANAGER::instance().CreateItem(12249 );
-			if (!item || !item->EquipTo(ch, item->FindEquipCell(ch)))
+			if (item && !item->EquipTo(ch, item->FindEquipCell(ch)))
 				M2_DESTROY_ITEM(item);
 			item = ITEM_MANAGER::instance().CreateItem(14109 );
-			if (!item || !item->EquipTo(ch, item->FindEquipCell(ch)))
+			if (item && !item->EquipTo(ch, item->FindEquipCell(ch)))
 				M2_DESTROY_ITEM(item);
 			item = ITEM_MANAGER::instance().CreateItem(17109 );
-			if (!item || !item->EquipTo(ch, item->FindEquipCell(ch)))
+			if (item && !item->EquipTo(ch, item->FindEquipCell(ch)))
 				M2_DESTROY_ITEM(item);
 			item = ITEM_MANAGER::instance().CreateItem(16109 );
-			if (!item || !item->EquipTo(ch, item->FindEquipCell(ch)))
+			if (item && !item->EquipTo(ch, item->FindEquipCell(ch)))
 				M2_DESTROY_ITEM(item);
 		}
 		break;
@@ -4140,28 +4140,28 @@ ACMD (do_item_full_set)
 		{
 			
 			item = ITEM_MANAGER::instance().CreateItem(11899);
-			if (!item || !item->EquipTo(ch, item->FindEquipCell(ch)))
+			if (item && !item->EquipTo(ch, item->FindEquipCell(ch)))
 				M2_DESTROY_ITEM(item);
 			item = ITEM_MANAGER::instance().CreateItem(13049);
-			if (!item || !item->EquipTo(ch, item->FindEquipCell(ch)))
+			if (item && !item->EquipTo(ch, item->FindEquipCell(ch)))
 				M2_DESTROY_ITEM(item);
 			item = ITEM_MANAGER::instance().CreateItem(15189 );
-			if (!item || !item->EquipTo(ch, item->FindEquipCell(ch)))
+			if (item && !item->EquipTo(ch, item->FindEquipCell(ch)))
 				M2_DESTROY_ITEM(item);
 			item = ITEM_MANAGER::instance().CreateItem(7159 );
-			if (!item || !item->EquipTo(ch, item->FindEquipCell(ch)))
+			if (item && !item->EquipTo(ch, item->FindEquipCell(ch)))
 				M2_DESTROY_ITEM(item);
 			item = ITEM_MANAGER::instance().CreateItem(12669 );
-			if (!item || !item->EquipTo(ch, item->FindEquipCell(ch)))
+			if (item && !item->EquipTo(ch, item->FindEquipCell(ch)))
 				M2_DESTROY_ITEM(item);
 			item = ITEM_MANAGER::instance().CreateItem(14109 );
-			if (!item || !item->EquipTo(ch, item->FindEquipCell(ch)))
+			if (item && !item->EquipTo(ch, item->FindEquipCell(ch)))
 				M2_DESTROY_ITEM(item);
 			item = ITEM_MANAGER::instance().CreateItem(17209 );
-			if (!item || !item->EquipTo(ch, item->FindEquipCell(ch)))
+			if (item && !item->EquipTo(ch, item->FindEquipCell(ch)))
 				M2_DESTROY_ITEM(item);
 			item = ITEM_MANAGER::instance().CreateItem(16209 );
-			if (!item || !item->EquipTo(ch, item->FindEquipCell(ch)))
+			if (item && !item->EquipTo(ch, item->FindEquipCell(ch)))
 				M2_DESTROY_ITEM(item);
 		}
 		break;
@@ -4169,30 +4169,34 @@ ACMD (do_item_full_set)
 		{
 			
 			item = ITEM_MANAGER::instance().CreateItem(11499);
-			if (!item || !item->EquipTo(ch, item->FindEquipCell(ch)))
+			if (item && !item->EquipTo(ch, item->FindEquipCell(ch)))
 				M2_DESTROY_ITEM(item);
 			item = ITEM_MANAGER::instance().CreateItem(13049);
-			if (!item || !item->EquipTo(ch, item->FindEquipCell(ch)))
+			if (item && !item->EquipTo(ch, item->FindEquipCell(ch)))
 				M2_DESTROY_ITEM(item);
 			item = ITEM_MANAGER::instance().CreateItem(15189 );
-			if (!item || !item->EquipTo(ch, item->FindEquipCell(ch)))
+			if (item && !item->EquipTo(ch, item->FindEquipCell(ch)))
 				M2_DESTROY_ITEM(item);
 			item = ITEM_MANAGER::instance().CreateItem(1139 );
-			if (!item || !item->EquipTo(ch, item->FindEquipCell(ch)))
+			if (item && !item->EquipTo(ch, item->FindEquipCell(ch)))
 				M2_DESTROY_ITEM(item);
 			item = ITEM_MANAGER::instance().CreateItem(12389 );
-			if (!item || !item->EquipTo(ch, item->FindEquipCell(ch)))
+			if (item && !item->EquipTo(ch, item->FindEquipCell(ch)))
 				M2_DESTROY_ITEM(item);
 			item = ITEM_MANAGER::instance().CreateItem(14109 );
-			if (!item || !item->EquipTo(ch, item->FindEquipCell(ch)))
+			if (item && !item->EquipTo(ch, item->FindEquipCell(ch)))
 				M2_DESTROY_ITEM(item);
 			item = ITEM_MANAGER::instance().CreateItem(17189 );
-			if (!item || !item->EquipTo(ch, item->FindEquipCell(ch)))
+			if (item && !item->EquipTo(ch, item->FindEquipCell(ch)))
 				M2_DESTROY_ITEM(item);
 			item = ITEM_MANAGER::instance().CreateItem(16189 );
-			if (!item || !item->EquipTo(ch, item->FindEquipCell(ch)))
+			if (item && !item->EquipTo(ch, item->FindEquipCell(ch)))
 				M2_DESTROY_ITEM(item);
 		}
+		break;
+
+	default:
+		ch->ChatPacket(CHAT_TYPE_INFO, "Full set is not available for your job");
 		break;
 	}
 }

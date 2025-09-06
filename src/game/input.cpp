@@ -81,14 +81,33 @@ bool CInputProcessor::Process(LPDESC lpDesc, const void * c_pvOrig, int iBytes, 
 			iPacketLen = 1;
 		else if (!m_pPacketInfo->Get(bHeader, &iPacketLen, &c_pszName))
 		{
-			sys_err("UNKNOWN HEADER: %d, LAST HEADER: %d(%d), REMAIN BYTES: %d, fd: %d",
-					bHeader, bLastHeader, iLastPacketLen, m_iBufferLeft, lpDesc->GetSocket());
-			//printdata((BYTE *) c_pvOrig, m_iBufferLeft);
+			LPCHARACTER ch = lpDesc->GetCharacter();
+
+			char szLogBuffer[1024];
+			snprintf(szLogBuffer, sizeof(szLogBuffer),
+				"UNKNOWN HEADER: %u(0x%X) LAST HEADER: %u(0x%X)[%u], REMAIN BYTES: %d, CHAR: %s, PHASE: %d, fd: %d host: %s",
+				bHeader, bHeader, bLastHeader, bLastHeader, iLastPacketLen, m_iBufferLeft,
+				ch ? ch->GetName() : "<none>",
+				lpDesc->GetPhase(), lpDesc->GetSocket(), lpDesc->GetHostName()
+			);
+
+			if (lpDesc->GetPhase() < PHASE_SELECT) // early phase
+				sys_log(0, szLogBuffer);
+			else
+				sys_err(szLogBuffer);
+
+#if defined(_DEBUG) && defined(_WIN32)
+			printdata((uint8_t*)c_pvOrig, m_iBufferLeft);
+#endif
 			lpDesc->SetPhase(PHASE_CLOSE);
 			return true;
 		}
 
-		sys_log(0, "PACKET %d (%s)", bHeader, c_pszName);
+#ifdef _DEBUG
+		const auto ch = lpDesc->GetCharacter();
+		const std::string stName = ch ? ch->GetName() : lpDesc->GetHostName();
+		sys_log(0, "RECEIVED HEADER : %u(0x%X) to %s  (size %d) ", bHeader, bHeader, stName.c_str(), iBytes);
+#endif
 
 		if (m_iBufferLeft < iPacketLen)
 			return true;
@@ -103,7 +122,14 @@ bool CInputProcessor::Process(LPDESC lpDesc, const void * c_pvOrig, int iBytes, 
 			int iExtraPacketSize = Analyze(lpDesc, bHeader, c_pData);
 
 			if (iExtraPacketSize < 0)
+			{
+				LPCHARACTER ch = lpDesc->GetCharacter();
+				sys_err("Failed to analyze header(%u) size: %d phase: %d host %s from %s (%u) in: %u",
+					bHeader, iPacketLen, lpDesc->GetPhase(), lpDesc->GetHostName(),
+					ch ? ch->GetName() : "NO_CHAR", ch ? ch->GetPlayerID() : 0, ch ? ch->GetMapIndex() : 0
+				);
 				return true;
+			}
 
 			iPacketLen += iExtraPacketSize;
 			lpDesc->Log("%s %d", c_pszName, iPacketLen);
