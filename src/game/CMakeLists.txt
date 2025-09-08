@@ -2,6 +2,8 @@
 
 add_executable(game ${GAME_SOURCES})
 
+target_compile_definitions(game PRIVATE GIT_DESCRIBE="${GIT_DESCRIBE_VERSION}")
+
 target_link_libraries(game 
 	common 
 	libgame 

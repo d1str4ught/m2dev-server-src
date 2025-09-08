@@ -5997,13 +5997,13 @@ void CHARACTER::EffectPacket(int enumEffectType)
 	PacketAround(&p, sizeof(TPacketGCSpecialEffect));
 }
 
-void CHARACTER::SpecificEffectPacket(const char filename[MAX_EFFECT_FILE_NAME])
+void CHARACTER::SpecificEffectPacket(const std::string& stEffectName)
 {
 	TPacketGCSpecificEffect p;
 
 	p.header = HEADER_GC_SPECIFIC_EFFECT;
 	p.vid = GetVID();
-	memcpy (p.effect_file, filename, MAX_EFFECT_FILE_NAME);
+	strlcpy(p.effect_file, stEffectName.c_str(), sizeof(p.effect_file));
 
 	PacketAround(&p, sizeof(TPacketGCSpecificEffect));
 }

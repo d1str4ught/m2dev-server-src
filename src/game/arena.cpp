@@ -76,11 +76,9 @@ bool CArenaManager::AddArena(DWORD mapIdx, WORD startA_X, WORD startA_Y, WORD st
 
 bool CArenaMap::AddArena(DWORD mapIdx, WORD startA_X, WORD startA_Y, WORD startB_X, WORD startB_Y)
 {
-	itertype(m_listArena) iter = m_listArena.begin();
-
-	for (; iter != m_listArena.end(); iter++)
+	for (const auto& arena : m_listArena)
 	{
-		if ((CArena*)(*iter)->CheckArea(startA_X, startA_Y, startB_X, startB_Y) == false)
+		if (arena->CheckArea(startA_X, startA_Y, startB_X, startB_Y) == false)
 		{
 			sys_log(0, "CArenaMap::AddArena - Same Start Position set. stA(%d, %d) stB(%d, %d)", startA_X, startA_Y, startB_X, startB_Y);
 			return false;

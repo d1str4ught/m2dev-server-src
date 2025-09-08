@@ -1089,7 +1089,7 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 
 		//	void			PotionPacket(int iPotionType);
 		void			EffectPacket(int enumEffectType);
-		void			SpecificEffectPacket(const char filename[128]);
+		void			SpecificEffectPacket(const std::string& stEffectName);
 
 		// ADD_MONSTER_REFINE
 		bool			DoRefine(LPITEM item, bool bMoneyOnly = false);
