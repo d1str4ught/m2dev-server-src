@@ -341,13 +341,13 @@ namespace marriage
 				if (it == m_mapRunningWedding.end())
 					continue;
 
-				TWedding& w = it->second;
+				TWedding w = it->second;
+				m_mapRunningWedding.erase(it);
 
 				TPacketWeddingEnd p;
 				p.dwPID1 = w.dwPID1;
 				p.dwPID2 = w.dwPID2;
 				CClientManager::instance().ForwardPacket(HEADER_DG_WEDDING_END, &p, sizeof(p));
-				m_mapRunningWedding.erase(it);
 
 				itertype(m_MarriageByPID) it_marriage = m_MarriageByPID.find(w.dwPID1);
 
