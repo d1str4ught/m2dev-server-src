@@ -2901,7 +2901,7 @@ int CHARACTER::GetPoint(BYTE type) const
 	}
 
 	if (val > max_val)
-		sys_err("POINT_ERROR: %s type %d val %d (max: %d)", GetName(), val, max_val);
+		sys_err("POINT_ERROR: %s type %d val %d (max: %d)", GetName(), type, val, max_val);
 
 	return (val);
 }
@@ -2953,7 +2953,7 @@ int CHARACTER::GetLimitPoint(BYTE type) const
 	}
 
 	if (val > max_val)
-		sys_err("POINT_ERROR: %s type %d val %d (max: %d)", GetName(), val, max_val);
+		sys_err("POINT_ERROR: %s type %d val %d (max: %d)", GetName(), type, val, max_val);
 
 	if (val > limit)
 		val = limit;
