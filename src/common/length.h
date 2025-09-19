@@ -16,8 +16,6 @@ enum EMisc
 	ABILITY_MAX_NUM			= 50,
 	EMPIRE_MAX_NUM			= 4,
 	BANWORD_MAX_LEN			= 24,
-	SMS_MAX_LEN				= 80,
-	MOBILE_MAX_LEN			= 32,
 	SOCIAL_ID_MAX_LEN		= 18,
 
 	GUILD_NAME_MAX_LEN		= 12,
@@ -95,12 +93,6 @@ enum EMisc
 	| 미사용                                               |
 	+------------------------------------------------------+ ??
 */
-};
-
-enum EMatrixCard
-{
-	MATRIX_CODE_MAX_LEN		= 192,
-	MATRIX_ANSWER_MAX_LEN	= 8,
 };
 
 enum EWearPositions

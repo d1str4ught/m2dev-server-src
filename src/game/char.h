@@ -789,8 +789,6 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 		DWORD			m_dwPlayStartTime;
 		BYTE			m_bAddChrState;
 		bool			m_bSkipSave;
-		std::string		m_stMobile;
-		char			m_szMobileAuth[5];
 		BYTE			m_bChatCounter;
 
 		// End of Basic Points
