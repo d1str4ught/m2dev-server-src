@@ -37,7 +37,7 @@ const char* first_han(const BYTE* str)
 {
     unsigned char high, low;
     int len, i;
-    char* p = "그외";
+    const char* p = "그외";
 
     static const char* wansung[] =
     {

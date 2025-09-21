@@ -638,7 +638,8 @@ int start(int argc, char **argv)
 	}
 #endif
 
-	while ((ch = getopt(argc, argv, "npverltI")) != -1)
+	char optstring[] = "npverltI";
+	while ((ch = getopt(argc, argv, optstring)) != -1)
 	{
 		char* ep = NULL;
 

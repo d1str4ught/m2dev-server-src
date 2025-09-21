@@ -18,9 +18,8 @@ struct CUBE_VALUE
 	DWORD	vnum;
 	int		count;
 
-	bool operator == (const CUBE_VALUE& b)
-	{
-		return (this->count == b.count) && (this->vnum == b.vnum);
+	bool operator == (const CUBE_VALUE& b) const {
+		return std::tie(vnum, count) == std::tie(b.vnum, b.count);
 	}
 };
 
