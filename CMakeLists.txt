@@ -30,6 +30,8 @@ endif()
 add_compile_definitions(
   $<$<PLATFORM_ID:Windows>:OS_WINDOWS>
   $<$<PLATFORM_ID:FreeBSD>:OS_FREEBSD>
+  $<$<PLATFORM_ID:Linux>:OS_LINUX>
+  $<$<PLATFORM_ID:Darwin>:OS_MACOS>
 )
 
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
