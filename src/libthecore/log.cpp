@@ -75,6 +75,9 @@ void log_destroy()
 
 void _sys_err(std::string_view str, const std::source_location& src_loc)
 {
+	if (!g_bLogInitialized)
+		return;
+
 	spdlog::source_loc loc;
 	loc.funcname = src_loc.function_name();
 	loc.line = src_loc.line();
@@ -85,6 +88,9 @@ void _sys_err(std::string_view str, const std::source_location& src_loc)
 
 void _sys_log(int level, std::string_view str)
 {
+	if (!g_bLogInitialized)
+		return;
+
 	spdlog::level::level_enum lvl = spdlog::level::info;
 	switch (level)
 	{
