@@ -25,12 +25,7 @@
 #include "sectree_manager.h"
 
 #undef sys_err
-#ifndef OS_WINDOWS
-#define sys_err(fmt, args...) quest::CQuestManager::instance().QuestError(__FUNCTION__, __LINE__, fmt, ##args)
-#else
-#define sys_err(fmt, ...) quest::CQuestManager::instance().QuestError(__FUNCTION__, __LINE__, fmt, __VA_ARGS__)
-
-#endif
+#define sys_err(fmt, ...) quest::CQuestManager::instance().QuestError(std::source_location::current(), fmt __VA_OPT__(, __VA_ARGS__))
 
 extern ACMD(do_block_chat);
 
@@ -802,7 +797,7 @@ namespace quest
 		return 1;
 	}
 
-	// »õ·Î¿î state¸¦ ¸¸µç´Ù.
+	// ï¿½ï¿½ï¿½Î¿ï¿½ stateï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½.
 	int _set_quest_state(lua_State* L)
 	{
 		if (!lua_isstring(L, 1) || !lua_isstring(L, 2))
@@ -962,7 +957,7 @@ namespace quest
 
 		event_create(warp_all_to_village_event, info, PASSES_PER_SEC(iSec));
 
-		SendNoticeMap(LC_TEXT("Àá½ÃÈÄ ¸ðµÎ ¸¶À»·Î ÀÌµ¿µË´Ï´Ù."), iMapIndex, false);
+		SendNoticeMap(LC_TEXT("ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ìµï¿½ï¿½Ë´Ï´ï¿½."), iMapIndex, false);
 
 		return 0;
 	}
@@ -1036,7 +1031,7 @@ namespace quest
 		return 0;
 	}
 
-	//ÁÖÀÇ: ¸÷ ¸®Á¨ÀÌ ¾ÈµÇ´Â ¸Ê¿¡¼­¸¸ »ç¿ë
+	//ï¿½ï¿½ï¿½ï¿½: ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ÈµÇ´ï¿½ ï¿½Ê¿ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
 	int _regen_in_map( lua_State * L )
 	{
 		int iMapIndex = static_cast<int>(lua_tonumber(L, 1));

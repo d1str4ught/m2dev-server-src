@@ -14,10 +14,12 @@ set(DEFAULT_SSL_VERIFY_SERVER_CERT OFF CACHE STRING "")
 
 add_subdirectory(mariadb-connector-c-3.4.5 EXCLUDE_FROM_ALL)
 add_subdirectory(cryptopp)
+add_subdirectory(spdlog-1.15.3)
 
 if (WIN32)
 	set_target_properties(ed25519_ref10 PROPERTIES FOLDER vendor)
 	set_target_properties(mariadb_obj PROPERTIES FOLDER vendor)
 	set_target_properties(mariadbclient PROPERTIES FOLDER vendor)
 	set_target_properties(cryptopp-static PROPERTIES FOLDER vendor)
+	set_target_properties(spdlog PROPERTIES FOLDER vendor)
 endif()

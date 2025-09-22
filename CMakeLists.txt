@@ -16,7 +16,10 @@ if(WIN32)
 	
 	set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 	
-	add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/utf-8>")
+	add_compile_options(
+		$<$<AND:$<CXX_COMPILER_ID:MSVC>,$<COMPILE_LANGUAGE:CXX>>:/utf-8>
+		$<$<AND:$<CXX_COMPILER_ID:MSVC>,$<COMPILE_LANGUAGE:CXX>>:/Zc:preprocessor>
+	)
 	
 	if (MSVC)
 		add_compile_options(/MP)

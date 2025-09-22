@@ -167,13 +167,7 @@ namespace quest
 			void		ClearError() { m_bError = false; }
 			bool		IsError() { return m_bError; }
 			void		WriteRunningStateToSyserr();
-#ifndef OS_WINDOWS
-			void		QuestError(const char* func, int line, const char* fmt, ...);
-#else
-			//void		QuestError(const char* fmt, ...);
-			void		QuestError(const char* func, int line, const char* fmt, ...);
-#endif
-
+			void		QuestError(const std::source_location& src_loc, const char* fmt, ...);
 			void		RegisterNPCVnum(DWORD dwVnum);
 
 		private:

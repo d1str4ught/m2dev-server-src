@@ -4,11 +4,7 @@
 #include "questmanager.h"
 
 #undef sys_err
-#ifndef OS_WINDOWS
-#define sys_err(fmt, args...) quest::CQuestManager::instance().QuestError(__FUNCTION__, __LINE__, fmt, ##args)
-#else
-#define sys_err(fmt, ...) quest::CQuestManager::instance().QuestError(__FUNCTION__, __LINE__, fmt, __VA_ARGS__)
-#endif
+#define sys_err(fmt, ...) quest::CQuestManager::instance().QuestError(std::source_location::current(), fmt __VA_OPT__(, __VA_ARGS__))
 
 namespace quest
 {

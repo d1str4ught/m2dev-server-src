@@ -60,6 +60,8 @@ void emergency_sig(int sig)
 
 int main()
 {
+	log_init();
+
 	WriteVersion();
 
 #ifdef OS_FREEBSD
@@ -111,6 +113,7 @@ int main()
 		sys_log(0, "WAITING_QUERY_COUNT %d", iCount);
 	}
 
+	log_destroy();
 	return 1;
 }
 
@@ -158,15 +161,6 @@ int Start()
 	{
 		fprintf(stderr, "Cannot find CLIENT_HEART_FPS configuration.\n");
 		return false;
-	}
-
-	log_set_expiration_days(3);
-
-	if (CConfig::instance().GetValue("LOG_KEEP_DAYS", &tmpValue))
-	{
-		tmpValue = MINMAX(3, tmpValue, 30);
-		log_set_expiration_days(tmpValue);
-		fprintf(stderr, "Setting log keeping days to %d\n", tmpValue);
 	}
 
 	thecore_init(heart_beat, emptybeat);

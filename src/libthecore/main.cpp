@@ -49,9 +49,11 @@ int thecore_init(int fps, HEARTFUNC heartbeat_func)
     srandom(time(0) + getpid() + getuid());
     srandomdev();
 #endif
+
+	log_init();
     signal_setup();
 
-	if (!log_init() || !pid_init())
+	if (!pid_init())
 		return false;
 
 	GOST_Init();

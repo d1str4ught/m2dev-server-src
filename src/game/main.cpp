@@ -426,6 +426,8 @@ static void CleanUpForEarlyExit() {
 
 int main(int argc, char **argv)
 {
+	log_init();
+
 #ifdef DEBUG_ALLOC
 	DebugAllocator::StaticSetUp();
 #endif
@@ -607,6 +609,7 @@ int main(int argc, char **argv)
 	DebugAllocator::StaticTearDown();
 #endif
 
+	log_destroy();
 	return 1;
 }
 
@@ -667,17 +670,6 @@ int start(int argc, char **argv)
 
 				optind++;
 				optreset = 1;
-				break;
-
-			case 'l':
-				{
-					long l = strtol(argv[optind], &ep, 10);
-
-					log_set_level(l);
-
-					optind++;
-					optreset = 1;
-				}
 				break;
 
 				// LOCALE_SERVICE
@@ -868,25 +860,11 @@ int idle()
 	if (!io_loop(main_fdw)) return 0;
 	s_dwProfiler[PROF_IO] += (get_dword_time() - t);
 
-	log_rotate();
-
 	gettimeofday(&now, (struct timezone *) 0);
 	++process_time_count;
 
 	if (now.tv_sec - pta.tv_sec > 0)
 	{
-		pt_log("[%3d] event %5d/%-5d idle %-4ld event %-4ld heartbeat %-4ld I/O %-4ld chrUpate %-4ld | WRITE: %-7d | PULSE: %d",
-				process_time_count,
-				num_events_called,
-				event_count(),
-				thecore_profiler[PF_IDLE],
-				s_dwProfiler[PROF_EVENT],
-				s_dwProfiler[PROF_HEARTBEAT],
-				s_dwProfiler[PROF_IO],
-				s_dwProfiler[PROF_CHR_UPDATE],
-				current_bytes_written,
-				thecore_pulse());
-
 		num_events_called = 0;
 		current_bytes_written = 0;
 

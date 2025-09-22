@@ -4,4 +4,5 @@ add_library(libthecore STATIC ${LIBTHECORE_SOURCES})
 
 target_link_libraries(libthecore 
 	common
+	spdlog
 )

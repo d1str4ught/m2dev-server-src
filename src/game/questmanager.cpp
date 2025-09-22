@@ -1649,8 +1649,7 @@ namespace quest
 			GetCurrentCharacterPtr()->ChatPacket(CHAT_TYPE_PARTY, "LUA_ERROR: quest %s.%s %s", GetCurrentQuestName().c_str(), state_name, event_index_name.c_str() );
 	}
 
-#ifndef OS_WINDOWS
-	void CQuestManager::QuestError(const char* func, int line, const char* fmt, ...)
+	void CQuestManager::QuestError(const std::source_location& src_loc, const char* fmt, ...)
 	{
 		char szMsg[4096];
 		va_list args;
@@ -1659,39 +1658,17 @@ namespace quest
 		vsnprintf(szMsg, sizeof(szMsg), fmt, args);
 		va_end(args);
 
-		_sys_err(func, line, "%s", szMsg);
+		_sys_err(szMsg, src_loc);
 		if (test_server)
 		{
 			LPCHARACTER ch = GetCurrentCharacterPtr();
 			if (ch)
 			{
-				ch->ChatPacket(CHAT_TYPE_PARTY, "error occurred on [%s:%d]", func,line);
+				ch->ChatPacket(CHAT_TYPE_PARTY, "error occurred on [%s:%d]", src_loc.function_name(), src_loc.line());
 				ch->ChatPacket(CHAT_TYPE_PARTY, "%s", szMsg);
 			}
 		}
 	}
-#else
-	void CQuestManager::QuestError(const char* func, int line, const char* fmt, ...)
-	{
-		char szMsg[4096];
-		va_list args;
-
-		va_start(args, fmt);
-		vsnprintf(szMsg, sizeof(szMsg), fmt, args);
-		va_end(args);
-
-		_sys_err(func, line, "%s", szMsg);
-		if (test_server)
-		{
-			LPCHARACTER ch = GetCurrentCharacterPtr();
-			if (ch)
-			{
-				ch->ChatPacket(CHAT_TYPE_PARTY, "error occurred on [%s:%d]", func,line);
-				ch->ChatPacket(CHAT_TYPE_PARTY, "%s", szMsg);
-			}
-		}
-	}
-#endif
 
 	void CQuestManager::AddServerTimer(const std::string& name, DWORD arg, LPEVENT event)
 	{

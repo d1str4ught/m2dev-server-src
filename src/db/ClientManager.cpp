@@ -189,8 +189,6 @@ void CClientManager::MainLoop()
 
 		if (!Process())
 			break;
-
-		log_rotate();
 	}
 
 	//
@@ -2774,17 +2772,6 @@ int CClientManager::Process()
 				if (!(thecore_heart->pulse % thecore_heart->passes_per_sec * 10))	
 					
 				{
-					pt_log("[%9d] return %d/%d/%d/%d async %d/%d/%d/%d",
-							thecore_heart->pulse,
-							CDBManager::instance().CountReturnQuery(SQL_PLAYER),
-							CDBManager::instance().CountReturnResult(SQL_PLAYER),
-							CDBManager::instance().CountReturnQueryFinished(SQL_PLAYER),
-							CDBManager::instance().CountReturnCopiedQuery(SQL_PLAYER),
-							CDBManager::instance().CountAsyncQuery(SQL_PLAYER),
-							CDBManager::instance().CountAsyncResult(SQL_PLAYER),
-							CDBManager::instance().CountAsyncQueryFinished(SQL_PLAYER),
-							CDBManager::instance().CountAsyncCopiedQuery(SQL_PLAYER));
-
 					if ((thecore_heart->pulse % 50) == 0) 
 						sys_log(0, "[%9d] return %d/%d/%d async %d/%d/%d",
 								thecore_heart->pulse,
@@ -2798,27 +2785,16 @@ int CClientManager::Process()
 			}
 			else
 			{
-				pt_log("[%9d] return %d/%d/%d/%d async %d/%d/%d%/%d",
+				if ((thecore_heart->pulse % 50) == 0) 
+					sys_log(0, "[%9d] return %d/%d/%d async %d/%d/%d",
 						thecore_heart->pulse,
 						CDBManager::instance().CountReturnQuery(SQL_PLAYER),
 						CDBManager::instance().CountReturnResult(SQL_PLAYER),
 						CDBManager::instance().CountReturnQueryFinished(SQL_PLAYER),
-						CDBManager::instance().CountReturnCopiedQuery(SQL_PLAYER),
 						CDBManager::instance().CountAsyncQuery(SQL_PLAYER),
 						CDBManager::instance().CountAsyncResult(SQL_PLAYER),
-						CDBManager::instance().CountAsyncQueryFinished(SQL_PLAYER),
-						CDBManager::instance().CountAsyncCopiedQuery(SQL_PLAYER));
-
-						if ((thecore_heart->pulse % 50) == 0) 
-						sys_log(0, "[%9d] return %d/%d/%d async %d/%d/%d",
-							thecore_heart->pulse,
-							CDBManager::instance().CountReturnQuery(SQL_PLAYER),
-							CDBManager::instance().CountReturnResult(SQL_PLAYER),
-							CDBManager::instance().CountReturnQueryFinished(SQL_PLAYER),
-							CDBManager::instance().CountAsyncQuery(SQL_PLAYER),
-							CDBManager::instance().CountAsyncResult(SQL_PLAYER),
-							CDBManager::instance().CountAsyncQueryFinished(SQL_PLAYER));
-						}
+						CDBManager::instance().CountAsyncQueryFinished(SQL_PLAYER));
+				}
 
 			CDBManager::instance().ResetCounter();
 
@@ -2881,7 +2857,6 @@ int CClientManager::Process()
 			pt_log("QUERY:\n%s-------------------- MAX : %d\n", buf, count);
 			g_query_info.Reset();
 			*/
-			pt_log("QUERY: MAIN[%d] ASYNC[%d]", g_query_count[0], g_query_count[1]);
 			g_query_count[0] = 0;
 			g_query_count[1] = 0;
 			/////////////////////////////////////////////////////////////////
@@ -2904,7 +2879,6 @@ int CClientManager::Process()
 			pt_log("ITEM:\n%s-------------------- MAX : %d\n", buf, count);
 			g_item_info.Reset();
 			*/
-			pt_log("ITEM:%d\n", g_item_count);
 			g_item_count = 0;
 			/////////////////////////////////////////////////////////////////
 		}

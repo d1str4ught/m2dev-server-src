@@ -533,14 +533,6 @@ void config_init(const string& st_localeServiceName)
 			continue;
 		}
 
-		TOKEN("log_keep_days")
-		{
-			int i = 0;
-			str_to_number(i, value_string);
-			log_set_expiration_days(MINMAX(1, i, 90));
-			continue;
-		}
-
 		TOKEN("passes_per_sec")
 		{
 			str_to_number(passes_per_sec, value_string);
@@ -1040,10 +1032,6 @@ void config_init(const string& st_localeServiceName)
 		}		
 	}
 	// END_SKILL_POWER_BY_LEVEL
-
-	// LOG_KEEP_DAYS_EXTEND
-	log_set_expiration_days(2);
-	// END_OF_LOG_KEEP_DAYS_EXTEND
 
 	while (fgets(buf, 256, fp))
 	{
