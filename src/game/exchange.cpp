@@ -439,12 +439,6 @@ bool CExchange::Done()
 
 		assert(empty_pos >= 0);
 
-		if (item->GetVnum() == 90008 || item->GetVnum() == 90009) // VCARD
-		{
-			VCardUse(m_pOwner, victim, item);
-			continue;
-		}
-
 		m_pOwner->SyncQuickslot(QUICKSLOT_TYPE_ITEM, item->GetCell(), 255);
 
 		item->RemoveFromCharacter();
