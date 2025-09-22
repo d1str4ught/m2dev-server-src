@@ -10,47 +10,8 @@
 #include "protocol.h"
 #include "messenger_manager.h"
 #include "p2p.h"
-#include "ip_ban.h"
 #include "dev_log.h"
 #include "ClientPackageCryptInfo.h"
-
-struct valid_ip
-{
-	const char *	ip;
-	BYTE	network;
-	BYTE	mask;
-};
-
-static struct valid_ip admin_ip[] =
-{
-	{ "210.123.10",     128,    128     },
-	{ "\n",             0,      0       }
-};
-
-int IsValidIP(struct valid_ip* ip_table, const char *host)
-{
-	int         i, j;
-	char        ip_addr[256];
-
-	for (i = 0; *(ip_table + i)->ip != '\n'; ++i)
-	{
-		j = 255 - (ip_table + i)->mask;
-
-		do
-		{
-			snprintf(ip_addr, sizeof(ip_addr), "%s.%d", (ip_table + i)->ip, (ip_table + i)->network + j);
-
-			if (!strcmp(ip_addr, host))
-				return TRUE;
-
-			if (!j)
-				break;
-		}
-		while (j--);
-	}
-
-	return FALSE;
-}
 
 DESC_MANAGER::DESC_MANAGER() : m_bDestroyed(false)
 {
@@ -157,26 +118,6 @@ LPDESC DESC_MANAGER::AcceptDesc(LPFDWATCH fdw, socket_t s)
 		return NULL;
 
 	strlcpy(host, inet_ntoa(peer.sin_addr), sizeof(host));
-
-	if (g_bAuthServer)
-	{
-		if (IsBanIP(peer.sin_addr))
-		{
-			sys_log(0, "connection from %s was banned.", host);
-			socket_close(desc);
-			return NULL;
-		}
-	}
-
-	if (!IsValidIP(admin_ip, host)) // admin_ip 에 등록된 IP 는 최대 사용자 수에 구애받지 않는다.
-	{
-		if (m_iSocketsConnected >= MAX_ALLOW_USER)
-		{
-			sys_err("max connection reached. MAX_ALLOW_USER = %d", MAX_ALLOW_USER);
-			socket_close(desc);
-			return NULL;
-		}
-	}
 
 	newd = M2_NEW DESC;
 	crc_t handshake = CreateHandshake();
