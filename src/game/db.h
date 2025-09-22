@@ -93,10 +93,6 @@ class DBManager : public singleton<DBManager>
 		DWORD			CountQueryResult()	{ return m_sql.CountResult(); }
 		void			ResetQueryResult()	{ m_sql.ResetQueryFinished(); }
 
-		// BLOCK EXCEPTION
-		void			RequestBlockException(const char *login, int cmd);
-		// BLOCK EXCEPTION
-
 		void			LoadDBString();
 		const std::string &	GetDBString(const std::string& key);
 		const std::vector<std::string> & GetGreetMessage();

@@ -528,7 +528,6 @@ class CClientManager : public CNetBase, public singleton<CClientManager>
 	//END_MONARCH
 
 	void ChangeMonarchLord(CPeer* peer, DWORD dwHandle, TPacketChangeMonarchLord* info);
-	void BlockException(TPacketBlockException *data);
 
 	void SendSpareItemIDRange(CPeer* peer);
 
