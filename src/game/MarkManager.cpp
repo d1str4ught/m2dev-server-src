@@ -4,6 +4,10 @@
 #include "crc32.h"
 
 #include <iterator>
+#include <fstream>
+#include <filesystem>
+#include <chrono>
+#include "lzo_manager.h"
 
 CGuildMarkImage * CGuildMarkManager::__NewImage()
 {
@@ -391,4 +395,362 @@ void CGuildMarkManager::UploadSymbol(DWORD guildID, int iSize, const BYTE* pbyDa
 		std::copy(pbyData, (pbyData + iSize), std::back_inserter(rSymbol.raw));
 		rSymbol.crc = GetCRC32(reinterpret_cast<const char*>(pbyData), iSize);
 	}
+}
+
+bool CGuildMarkManager::InitializeNewSystem(const std::string& directory) {
+	m_mark_directory = directory;
+	m_index_file = directory + "/index.dat";
+	m_shutdown = false;
+	m_next_id = 1;
+
+	if (!std::filesystem::exists(m_mark_directory)) {
+		std::filesystem::create_directories(m_mark_directory);
+	}
+
+	LoadIndex();
+
+	for (size_t i = 0; i < std::thread::hardware_concurrency(); ++i) {
+		m_workers.emplace_back([this] { WorkerThread(); });
+	}
+
+	return true;
+}
+
+void CGuildMarkManager::ShutdownNewSystem() {
+	m_shutdown = true;
+	m_upload_cv.notify_all();
+	m_download_cv.notify_all();
+
+	for (auto& worker : m_workers) {
+		if (worker.joinable()) {
+			worker.join();
+		}
+	}
+
+	SaveIndex();
+}
+
+std::future<bool> CGuildMarkManager::UploadAsync(uint32_t guild_id, const std::vector<uint8_t>& data, const std::string& format) {
+	auto request = std::make_unique<UploadRequest>(guild_id, data, format);
+	auto future = request->result.get_future();
+
+	{
+		std::lock_guard<std::mutex> lock(m_upload_mutex);
+		m_upload_queue.push(std::move(request));
+	}
+	m_upload_cv.notify_one();
+
+	return future;
+}
+
+std::future<std::shared_ptr<GuildMarkData>> CGuildMarkManager::DownloadAsync(uint32_t guild_id) {
+	auto request = std::make_unique<DownloadRequest>(guild_id);
+	auto future = request->result.get_future();
+
+	{
+		std::lock_guard<std::mutex> lock(m_download_mutex);
+		m_download_queue.push(std::move(request));
+	}
+	m_download_cv.notify_one();
+
+	return future;
+}
+
+bool CGuildMarkManager::GetMarkSync(uint32_t guild_id, GuildMarkData& data) {
+	std::lock_guard<std::mutex> lock(m_new_marks_mutex);
+	auto it = m_new_marks.find(guild_id);
+	if (it != m_new_marks.end()) {
+		data = *it->second;
+		return true;
+	}
+	return false;
+}
+
+bool CGuildMarkManager::HasMark(uint32_t guild_id) const {
+	std::lock_guard<std::mutex> lock(m_new_marks_mutex);
+	return m_new_marks.find(guild_id) != m_new_marks.end();
+}
+
+void CGuildMarkManager::DeleteMark(uint32_t guild_id) {
+	std::lock_guard<std::mutex> lock(m_new_marks_mutex);
+	auto it = m_new_marks.find(guild_id);
+	if (it != m_new_marks.end()) {
+		uint32_t mark_id = it->second->mark_id;
+		m_new_marks.erase(it);
+
+		std::string file_path = GetFilePath(mark_id);
+		if (std::filesystem::exists(file_path)) {
+			std::filesystem::remove(file_path);
+		}
+	}
+}
+
+void CGuildMarkManager::DeleteMarkAsync(uint32_t guild_id) {
+	// For async deletion, just call the sync version since file deletion is fast
+	DeleteMark(guild_id);
+}
+
+std::vector<uint32_t> CGuildMarkManager::GetAllGuilds() const {
+	std::lock_guard<std::mutex> lock(m_new_marks_mutex);
+	std::vector<uint32_t> guilds;
+	guilds.reserve(m_new_marks.size());
+
+	for (const auto& pair : m_new_marks) {
+		guilds.push_back(pair.first);
+	}
+
+	return guilds;
+}
+
+uint32_t CGuildMarkManager::GetNewMarkCount() const {
+	std::lock_guard<std::mutex> lock(m_new_marks_mutex);
+	return m_new_marks.size();
+}
+
+void CGuildMarkManager::WorkerThread() {
+	while (!m_shutdown) {
+		std::unique_ptr<UploadRequest> upload_req;
+		std::unique_ptr<DownloadRequest> download_req;
+
+		{
+			std::unique_lock<std::mutex> lock(m_upload_mutex);
+			m_upload_cv.wait(lock, [this] { return !m_upload_queue.empty() || m_shutdown; });
+
+			if (!m_upload_queue.empty()) {
+				upload_req = std::move(m_upload_queue.front());
+				m_upload_queue.pop();
+			}
+		}
+
+		if (upload_req) {
+			ProcessUpload(std::move(upload_req));
+			continue;
+		}
+
+		{
+			std::unique_lock<std::mutex> lock(m_download_mutex);
+			m_download_cv.wait(lock, [this] { return !m_download_queue.empty() || m_shutdown; });
+
+			if (!m_download_queue.empty()) {
+				download_req = std::move(m_download_queue.front());
+				m_download_queue.pop();
+			}
+		}
+
+		if (download_req) {
+			ProcessDownload(std::move(download_req));
+		}
+	}
+}
+
+void CGuildMarkManager::ProcessUpload(std::unique_ptr<UploadRequest> request) {
+	bool success = false;
+
+	if (ValidateFormat(request->image_data, request->format) &&
+		ValidateSize(request->image_data, request->format)) {
+
+		auto mark_data = std::make_shared<GuildMarkData>();
+		mark_data->guild_id = request->guild_id;
+		mark_data->mark_id = AllocateId();
+		mark_data->format = request->format;
+		mark_data->timestamp = GetTimestamp();
+		mark_data->original_size = request->image_data.size();
+
+		mark_data->data = Compress(request->image_data);
+		mark_data->compressed_size = mark_data->data.size();
+		mark_data->crc32 = CalcCRC32(request->image_data);
+
+		if (SaveToFile(*mark_data)) {
+			std::lock_guard<std::mutex> lock(m_new_marks_mutex);
+			m_new_marks[request->guild_id] = mark_data;
+			success = true;
+		}
+	}
+
+	request->result.set_value(success);
+}
+
+void CGuildMarkManager::ProcessDownload(std::unique_ptr<DownloadRequest> request) {
+	std::shared_ptr<GuildMarkData> result;
+
+	{
+		std::lock_guard<std::mutex> lock(m_new_marks_mutex);
+		auto it = m_new_marks.find(request->guild_id);
+		if (it != m_new_marks.end()) {
+			result = it->second;
+		}
+	}
+
+	request->result.set_value(result);
+}
+
+bool CGuildMarkManager::ValidateFormat(const std::vector<uint8_t>& data, const std::string& format) {
+	if (data.empty()) return false;
+
+	if (format == "png") {
+		return data.size() >= 8 &&
+			   data[0] == 0x89 && data[1] == 0x50 && data[2] == 0x4E && data[3] == 0x47;
+	}
+	else if (format == "jpg" || format == "jpeg") {
+		return data.size() >= 2 && data[0] == 0xFF && data[1] == 0xD8;
+	}
+	else if (format == "gif") {
+		return data.size() >= 6 &&
+			   data[0] == 0x47 && data[1] == 0x49 && data[2] == 0x46;
+	}
+	else if (format == "bmp") {
+		return data.size() >= 2 && data[0] == 0x42 && data[1] == 0x4D;
+	}
+
+	return false;
+}
+
+bool CGuildMarkManager::ValidateSize(const std::vector<uint8_t>& data, const std::string& format) {
+	return data.size() <= 1024 * 1024;
+}
+
+std::vector<uint8_t> CGuildMarkManager::Compress(const std::vector<uint8_t>& data) {
+	// Check if data is already compressed format (PNG/JPEG have built-in compression)
+	if (data.size() >= 8) {
+		// PNG signature
+		const uint8_t png_sig[] = {0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A};
+		if (memcmp(data.data(), png_sig, 8) == 0) {
+			return data; // PNG already compressed
+		}
+
+		// JPEG signature
+		if (data[0] == 0xFF && data[1] == 0xD8) {
+			return data; // JPEG already compressed
+		}
+
+		// GIF signatures
+		if (memcmp(data.data(), "GIF87a", 6) == 0 || memcmp(data.data(), "GIF89a", 6) == 0) {
+			return data; // GIF already compressed
+		}
+	}
+
+	// Only compress raw/uncompressed formats like BMP or TGA
+	lzo_uint max_size = LZOManager::Instance().GetMaxCompressedSize(data.size());
+	std::vector<uint8_t> compressed(max_size);
+	lzo_uint compressed_size = max_size;
+
+	if (LZOManager::Instance().Compress(data.data(), data.size(), compressed.data(), &compressed_size)) {
+		// Only use compression if it actually reduces size
+		if (compressed_size < data.size()) {
+			compressed.resize(compressed_size);
+			return compressed;
+		}
+	}
+
+	return data; // Return uncompressed if compression doesn't help
+}
+
+std::vector<uint8_t> CGuildMarkManager::Decompress(const std::vector<uint8_t>& data, uint32_t size) {
+	// Use LZO decompression like original guild mark system
+	std::vector<uint8_t> decompressed(size);
+	lzo_uint decompressed_size = size;
+
+	if (LZOManager::Instance().Decompress(data.data(), data.size(), decompressed.data(), &decompressed_size)) {
+		return decompressed;
+	}
+
+	return data; // Return original data if decompression fails
+}
+
+uint32_t CGuildMarkManager::CalcCRC32(const std::vector<uint8_t>& data) {
+	return GetCRC32(reinterpret_cast<const char*>(data.data()), data.size());
+}
+
+uint64_t CGuildMarkManager::GetTimestamp() {
+	auto now = std::chrono::system_clock::now();
+	return std::chrono::duration_cast<std::chrono::seconds>(now.time_since_epoch()).count();
+}
+
+std::string CGuildMarkManager::GetFilePath(uint32_t mark_id) const {
+	return m_mark_directory + "/mark_" + std::to_string(mark_id) + ".dat";
+}
+
+uint32_t CGuildMarkManager::AllocateId() {
+	return m_next_id++;
+}
+
+bool CGuildMarkManager::SaveToFile(const GuildMarkData& data) {
+	std::ofstream file(GetFilePath(data.mark_id), std::ios::binary);
+	if (!file) return false;
+
+	file.write(reinterpret_cast<const char*>(&data.guild_id), sizeof(data.guild_id));
+	file.write(reinterpret_cast<const char*>(&data.mark_id), sizeof(data.mark_id));
+	file.write(reinterpret_cast<const char*>(&data.crc32), sizeof(data.crc32));
+	file.write(reinterpret_cast<const char*>(&data.compressed_size), sizeof(data.compressed_size));
+	file.write(reinterpret_cast<const char*>(&data.original_size), sizeof(data.original_size));
+	file.write(reinterpret_cast<const char*>(&data.timestamp), sizeof(data.timestamp));
+
+	uint32_t format_len = data.format.length();
+	file.write(reinterpret_cast<const char*>(&format_len), sizeof(format_len));
+	file.write(data.format.c_str(), format_len);
+
+	file.write(reinterpret_cast<const char*>(data.data.data()), data.data.size());
+
+	return file.good();
+}
+
+bool CGuildMarkManager::LoadFromFile(uint32_t mark_id, GuildMarkData& data) {
+	std::ifstream file(GetFilePath(mark_id), std::ios::binary);
+	if (!file) return false;
+
+	file.read(reinterpret_cast<char*>(&data.guild_id), sizeof(data.guild_id));
+	file.read(reinterpret_cast<char*>(&data.mark_id), sizeof(data.mark_id));
+	file.read(reinterpret_cast<char*>(&data.crc32), sizeof(data.crc32));
+	file.read(reinterpret_cast<char*>(&data.compressed_size), sizeof(data.compressed_size));
+	file.read(reinterpret_cast<char*>(&data.original_size), sizeof(data.original_size));
+	file.read(reinterpret_cast<char*>(&data.timestamp), sizeof(data.timestamp));
+
+	uint32_t format_len;
+	file.read(reinterpret_cast<char*>(&format_len), sizeof(format_len));
+	data.format.resize(format_len);
+	file.read(&data.format[0], format_len);
+
+	data.data.resize(data.compressed_size);
+	file.read(reinterpret_cast<char*>(data.data.data()), data.compressed_size);
+
+	return file.good();
+}
+
+bool CGuildMarkManager::SaveIndex() {
+	std::ofstream file(m_index_file, std::ios::binary);
+	if (!file) return false;
+
+	std::lock_guard<std::mutex> lock(m_new_marks_mutex);
+	uint32_t count = m_new_marks.size();
+	file.write(reinterpret_cast<const char*>(&count), sizeof(count));
+	file.write(reinterpret_cast<const char*>(&m_next_id), sizeof(m_next_id));
+
+	for (const auto& pair : m_new_marks) {
+		file.write(reinterpret_cast<const char*>(&pair.first), sizeof(pair.first));
+		file.write(reinterpret_cast<const char*>(&pair.second->mark_id), sizeof(pair.second->mark_id));
+	}
+
+	return file.good();
+}
+
+bool CGuildMarkManager::LoadIndex() {
+	std::ifstream file(m_index_file, std::ios::binary);
+	if (!file) return false;
+
+	uint32_t count;
+	file.read(reinterpret_cast<char*>(&count), sizeof(count));
+	file.read(reinterpret_cast<char*>(&m_next_id), sizeof(m_next_id));
+
+	for (uint32_t i = 0; i < count; ++i) {
+		uint32_t guild_id, mark_id;
+		file.read(reinterpret_cast<char*>(&guild_id), sizeof(guild_id));
+		file.read(reinterpret_cast<char*>(&mark_id), sizeof(mark_id));
+
+		auto mark_data = std::make_shared<GuildMarkData>();
+		if (LoadFromFile(mark_id, *mark_data)) {
+			m_new_marks[guild_id] = mark_data;
+		}
+	}
+
+	return true;
 }

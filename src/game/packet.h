@@ -78,6 +78,10 @@ enum
 	HEADER_CG_MARK_UPLOAD			= 102,
 	HEADER_CG_MARK_IDXLIST			= 104,
 
+	HEADER_CG_GUILD_MARK_UPLOAD_NEW = 160,
+	HEADER_CG_GUILD_MARK_REQUEST = 161,
+	HEADER_CG_GUILD_MARK_DELETE = 162,
+
 	HEADER_CG_HACK					= 105,
 	HEADER_CG_CHANGE_NAME			= 106,
 	HEADER_CG_LOGIN2				= 109,
@@ -279,6 +283,10 @@ enum
 
 	HEADER_GC_DRAGON_SOUL_REFINE			= 209,
 	HEADER_GC_RESPOND_CHANNELSTATUS			= 210,
+
+	HEADER_GC_GUILD_MARK_UPLOAD_RESULT = 160,
+	HEADER_GC_GUILD_MARK_DATA = 161,
+	HEADER_GC_GUILD_MARK_UPDATE = 162,
 
 
 	/////////////////////////////////////////////////////////////////////////////
@@ -1794,6 +1802,63 @@ typedef struct packet_mark_block
 	uint32_t	count;
 	// 뒤에 64 x 48 x 픽셀크기(4바이트) = 12288만큼 데이터 붙음
 } TPacketGCMarkBlock;
+
+typedef struct packet_cg_guild_mark_upload {
+    uint8_t header;
+    uint32_t guild_id;
+    uint32_t data_size;
+    uint8_t format[8];
+    uint32_t crc32;
+} TPacketCGGuildMarkUpload;
+
+typedef struct packet_cg_guild_mark_request {
+    uint8_t header;
+    uint32_t guild_id;
+} TPacketCGGuildMarkRequest;
+
+typedef struct packet_cg_guild_mark_delete {
+    uint8_t header;
+    uint32_t guild_id;
+} TPacketCGGuildMarkDelete;
+
+typedef struct packet_gc_guild_mark_upload_result {
+    uint8_t header;
+    uint32_t guild_id;
+    uint8_t result;
+    uint32_t mark_id;
+} TPacketGCGuildMarkUploadResult;
+
+typedef struct packet_gc_guild_mark_data {
+    uint8_t header;
+    uint32_t guild_id;
+    uint32_t mark_id;
+    uint32_t compressed_size;
+    uint32_t original_size;
+    uint8_t format[8];
+    uint32_t crc32;
+    uint64_t timestamp;
+} TPacketGCGuildMarkData;
+
+typedef struct packet_gc_guild_mark_update {
+    uint8_t header;
+    uint32_t guild_id;
+    uint32_t mark_id;
+    uint8_t update_type;
+} TPacketGCGuildMarkUpdate;
+
+enum {
+    GUILD_MARK_UPLOAD_SUCCESS = 0,
+    GUILD_MARK_UPLOAD_INVALID_FORMAT = 1,
+    GUILD_MARK_UPLOAD_TOO_LARGE = 2,
+    GUILD_MARK_UPLOAD_SERVER_ERROR = 3,
+    GUILD_MARK_UPLOAD_NO_PERMISSION = 4,
+};
+
+enum {
+    GUILD_MARK_UPDATE_UPLOADED = 0,
+    GUILD_MARK_UPDATE_DELETED = 1,
+    GUILD_MARK_UPDATE_MODIFIED = 2,
+};
 
 typedef struct command_symbol_upload
 {

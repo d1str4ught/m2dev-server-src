@@ -17,12 +17,18 @@
 #include "priv_manager.h"
 #include "castle.h"
 #include "dev_log.h"
+#include "MarkManager.h"
+#include "guild.h"
 
 #ifndef OS_WINDOWS
 	#include "limit_time.h"
 #endif
 
 extern time_t get_global_time();
+
+int GuildMarkUpload(LPDESC d, const char* c_pData, int iBytes);
+int GuildMarkRequest(LPDESC d, const char* c_pData, int iBytes);
+int GuildMarkDelete(LPDESC d, const char* c_pData, int iBytes);
 
 bool IsEmptyAdminPage()
 {
@@ -601,6 +607,18 @@ dev_log(LOG_DEB0, "DC : '%s'", msg.c_str());
 		d->SetPhase(PHASE_LOGIN);
 		return 0;
 	}
+	else if (bHeader == HEADER_CG_GUILD_MARK_UPLOAD_NEW)
+	{
+		return GuildMarkUpload(d, c_pData, m_iBufferLeft);
+	}
+	else if (bHeader == HEADER_CG_GUILD_MARK_REQUEST)
+	{
+		return GuildMarkRequest(d, c_pData, m_iBufferLeft);
+	}
+	else if (bHeader == HEADER_CG_GUILD_MARK_DELETE)
+	{
+		return GuildMarkDelete(d, c_pData, m_iBufferLeft);
+	}
 	else if (bHeader == HEADER_CG_STATE_CHECKER)
 	{
 		if (d->isChannelStatusRequested()) {
@@ -647,6 +665,176 @@ dev_log(LOG_DEB0, "DC : '%s'", msg.c_str());
 		sys_err("Handshake phase does not handle packet %d (fd %d)", bHeader, d->GetSocket());
 
 	return 0;
+}
+
+int GuildMarkUpload(LPDESC d, const char* c_pData, int iBytes)
+{
+	if (!d->GetCharacter() || !d->GetCharacter()->GetGuild()) {
+		return 0;
+	}
+
+	TPacketCGGuildMarkUpload* packet = (TPacketCGGuildMarkUpload*)c_pData;
+
+	if (iBytes < sizeof(TPacketCGGuildMarkUpload))
+		return -1;
+
+	if (iBytes < sizeof(TPacketCGGuildMarkUpload) + packet->data_size)
+		return -1;
+
+	if (packet->data_size > 1024 * 1024) {
+		TPacketGCGuildMarkUploadResult result;
+		result.header = HEADER_GC_GUILD_MARK_UPLOAD_RESULT;
+		result.guild_id = packet->guild_id;
+		result.result = GUILD_MARK_UPLOAD_TOO_LARGE;
+		result.mark_id = 0;
+		d->Packet(&result, sizeof(result));
+		return sizeof(TPacketCGGuildMarkUpload) + packet->data_size;
+	}
+
+	LPCHARACTER ch = d->GetCharacter();
+	CGuild* guild = ch->GetGuild();
+
+	if (guild->GetID() != packet->guild_id) {
+		TPacketGCGuildMarkUploadResult result;
+		result.header = HEADER_GC_GUILD_MARK_UPLOAD_RESULT;
+		result.guild_id = packet->guild_id;
+		result.result = GUILD_MARK_UPLOAD_NO_PERMISSION;
+		result.mark_id = 0;
+		d->Packet(&result, sizeof(result));
+		return sizeof(TPacketCGGuildMarkUpload) + packet->data_size;
+	}
+
+	if (guild->GetMasterPID() != ch->GetPlayerID()) {
+		TPacketGCGuildMarkUploadResult result;
+		result.header = HEADER_GC_GUILD_MARK_UPLOAD_RESULT;
+		result.guild_id = packet->guild_id;
+		result.result = GUILD_MARK_UPLOAD_NO_PERMISSION;
+		result.mark_id = 0;
+		d->Packet(&result, sizeof(result));
+		return sizeof(TPacketCGGuildMarkUpload) + packet->data_size;
+	}
+
+	const char* image_data = c_pData + sizeof(TPacketCGGuildMarkUpload);
+	std::vector<uint8_t> mark_data(image_data, image_data + packet->data_size);
+	std::string format(reinterpret_cast<const char*>(packet->format), strnlen(reinterpret_cast<const char*>(packet->format), sizeof(packet->format)));
+
+	auto future = CGuildMarkManager::instance().UploadAsync(packet->guild_id, mark_data, format);
+
+	std::thread([d, guild_id = packet->guild_id, future = std::move(future)]() mutable {
+		try {
+			bool success = future.get();
+
+			TPacketGCGuildMarkUploadResult result;
+			result.header = HEADER_GC_GUILD_MARK_UPLOAD_RESULT;
+			result.guild_id = guild_id;
+			result.result = success ? GUILD_MARK_UPLOAD_SUCCESS : GUILD_MARK_UPLOAD_SERVER_ERROR;
+			result.mark_id = success ? guild_id : 0;
+
+			if (d->GetCharacter()) {
+				d->Packet(&result, sizeof(result));
+
+				if (success) {
+					TPacketGCGuildMarkUpdate update;
+					update.header = HEADER_GC_GUILD_MARK_UPDATE;
+					update.guild_id = guild_id;
+					update.mark_id = guild_id;
+					update.update_type = GUILD_MARK_UPDATE_UPLOADED;
+					const DESC_MANAGER::DESC_SET & c_ref_set = DESC_MANAGER::instance().GetClientSet();
+					for (auto it = c_ref_set.begin(); it != c_ref_set.end(); ++it) {
+						LPDESC d = *it;
+						if (d && d->GetCharacter()) {
+							d->Packet(&update, sizeof(update));
+						}
+					}
+				}
+			}
+		} catch (const std::exception& e) {
+			sys_err("Guild mark upload failed: %s", e.what());
+		}
+	}).detach();
+
+	return sizeof(TPacketCGGuildMarkUpload) + packet->data_size;
+}
+
+int GuildMarkRequest(LPDESC d, const char* c_pData, int iBytes)
+{
+	if (iBytes < sizeof(TPacketCGGuildMarkRequest))
+		return -1;
+
+	TPacketCGGuildMarkRequest* packet = (TPacketCGGuildMarkRequest*)c_pData;
+
+	auto future = CGuildMarkManager::instance().DownloadAsync(packet->guild_id);
+
+	std::thread([d, guild_id = packet->guild_id, future = std::move(future)]() mutable {
+		try {
+			auto mark_data = future.get();
+
+			if (mark_data && d->GetCharacter()) {
+				TPacketGCGuildMarkData packet;
+				packet.header = HEADER_GC_GUILD_MARK_DATA;
+				packet.guild_id = mark_data->guild_id;
+				packet.mark_id = mark_data->mark_id;
+				packet.compressed_size = mark_data->compressed_size;
+				packet.original_size = mark_data->original_size;
+				packet.crc32 = mark_data->crc32;
+				packet.timestamp = mark_data->timestamp;
+
+				strncpy(reinterpret_cast<char*>(packet.format), mark_data->format.c_str(), sizeof(packet.format));
+				packet.format[sizeof(packet.format) - 1] = '\0';
+
+				LPBUFFER buf = buffer_new(sizeof(packet) + mark_data->data.size());
+				buffer_write(buf, &packet, sizeof(packet));
+				buffer_write(buf, mark_data->data.data(), mark_data->data.size());
+
+				d->Packet(buffer_read_peek(buf), buffer_size(buf));
+				buffer_delete(buf);
+			}
+		} catch (const std::exception& e) {
+			sys_err("Guild mark request failed: %s", e.what());
+		}
+	}).detach();
+
+	return sizeof(TPacketCGGuildMarkRequest);
+}
+
+int GuildMarkDelete(LPDESC d, const char* c_pData, int iBytes)
+{
+	if (!d->GetCharacter() || !d->GetCharacter()->GetGuild()) {
+		return 0;
+	}
+
+	if (iBytes < sizeof(TPacketCGGuildMarkDelete))
+		return -1;
+
+	TPacketCGGuildMarkDelete* packet = (TPacketCGGuildMarkDelete*)c_pData;
+
+	LPCHARACTER ch = d->GetCharacter();
+	CGuild* guild = ch->GetGuild();
+
+	if (guild->GetID() != packet->guild_id) {
+		return sizeof(TPacketCGGuildMarkDelete);
+	}
+
+	if (guild->GetMasterPID() != ch->GetPlayerID()) {
+		return sizeof(TPacketCGGuildMarkDelete);
+	}
+
+	CGuildMarkManager::instance().DeleteMarkAsync(packet->guild_id);
+
+	TPacketGCGuildMarkUpdate update;
+	update.header = HEADER_GC_GUILD_MARK_UPDATE;
+	update.guild_id = packet->guild_id;
+	update.mark_id = 0;
+	update.update_type = GUILD_MARK_UPDATE_DELETED;
+	const DESC_MANAGER::DESC_SET & c_ref_set = DESC_MANAGER::instance().GetClientSet();
+	for (auto it = c_ref_set.begin(); it != c_ref_set.end(); ++it) {
+		LPDESC d = *it;
+		if (d && d->GetCharacter()) {
+			d->Packet(&update, sizeof(update));
+		}
+	}
+
+	return sizeof(TPacketCGGuildMarkDelete);
 }
 
 

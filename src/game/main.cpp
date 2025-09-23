@@ -819,6 +819,9 @@ void destroy()
 	sys_log(0, "<shutdown> event_destroy()...");
 	event_destroy();
 
+	sys_log(0, "<shutdown> Shutting down new guild mark system...");
+	CGuildMarkManager::instance().ShutdownNewSystem();
+
 	sys_log(0, "<shutdown> CTextFileLoader::DestroySystem()...");
 	CTextFileLoader::DestroySystem();
 

@@ -891,6 +891,7 @@ void CInputLogin::GuildSymbolCRC(LPDESC d, const char* c_pData)
 	}
 }
 
+// LEGACY: Old guild mark upload (16x12 TGA only) - kept for backward compatibility
 void CInputLogin::GuildMarkUpload(LPDESC d, const char* c_pData)
 {
 	TPacketCGMarkUpload * p = (TPacketCGMarkUpload *) c_pData;
@@ -920,11 +921,14 @@ void CInputLogin::GuildMarkUpload(LPDESC d, const char* c_pData)
 			isEmpty = false;
 
 	if (isEmpty)
-		rkMarkMgr.DeleteMark(p->gid);
-	else
-		rkMarkMgr.SaveMark(p->gid, p->image);
+		rkMarkMgr.DeleteMarkAsync(p->gid);
+	else {
+		std::vector<uint8_t> imageData(p->image, p->image + SGuildMark::SIZE * sizeof(DWORD));
+		rkMarkMgr.UploadAsync(p->gid, imageData, "legacy");
+	}
 }
 
+// LEGACY: Old guild mark index list - kept for backward compatibility
 void CInputLogin::GuildMarkIDXList(LPDESC d, const char* c_pData)
 {
 	CGuildMarkManager & rkMarkMgr = CGuildMarkManager::instance();
@@ -955,6 +959,7 @@ void CInputLogin::GuildMarkIDXList(LPDESC d, const char* c_pData)
 	sys_log(0, "MARK_SERVER: GuildMarkIDXList %d bytes sent.", p.bufSize);
 }
 
+// LEGACY: Old guild mark CRC list - kept for backward compatibility
 void CInputLogin::GuildMarkCRCList(LPDESC d, const char* c_pData)
 {
 	TPacketCGMarkCRCList * pCG = (TPacketCGMarkCRCList *) c_pData;
