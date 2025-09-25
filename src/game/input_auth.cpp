@@ -7,12 +7,7 @@
 #include "protocol.h"
 #include "matrix_card.h"
 #include "locale_service.h"
-#include "auth_brazil.h"
 #include "db.h"
-
-#ifndef OS_WINDOWS
-	#include "limit_time.h"
-#endif
 
 extern time_t get_global_time();
 
@@ -107,17 +102,6 @@ CInputAuth::CInputAuth()
 
 void CInputAuth::Login(LPDESC d, const char * c_pData)
 {
-	extern bool Metin2Server_IsInvalid();
-
-#ifdef ENABLE_LIMIT_TIME
-	if (Metin2Server_IsInvalid())
-	{
-		extern void ClearAdminPages();
-		ClearAdminPages();
-		exit(1);
-		return;
-	}
-#endif
 	TPacketCGLogin3 * pinfo = (TPacketCGLogin3 *) c_pData;
 
 	if (!g_bAuthServer)
@@ -169,26 +153,6 @@ void CInputAuth::Login(LPDESC d, const char * c_pData)
 	d->SetPanamaKey(dwPanamaKey);
 
 	sys_log(0, "InputAuth::Login : key %u:0x%x login %s", dwKey, dwPanamaKey, login);
-
-	// BRAZIL_AUTH
-	if (LC_IsBrazil() && !test_server)
-	{
-		int result = auth_brazil(login, passwd);
-
-		switch (result)
-		{
-			case AUTH_BRAZIL_SERVER_ERR:
-			case AUTH_BRAZIL_NOID:
-				LoginFailure(d, "NOID");
-				return;
-			case AUTH_BRAZIL_WRONGPWD:
-				LoginFailure(d, "WRONGPWD");
-				return;
-			case AUTH_BRAZIL_FLASHUSER:
-				LoginFailure(d, "FLASH");
-				return;
-		}
-	}
 
 	TPacketCGLogin3 * p = M2_NEW TPacketCGLogin3;
 	thecore_memcpy(p, pinfo, sizeof(TPacketCGLogin3));

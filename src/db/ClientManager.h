@@ -370,10 +370,6 @@ class CClientManager : public CNetBase, public singleton<CClientManager>
 	void		DeleteObject(DWORD dwID);
 	void		UpdateLand(DWORD * pdw);
 
-	// VCard
-	void 		VCard(TPacketGDVCard * p);
-	void		VCardProcess();
-
 	// BLOCK_CHAT
 	void		BlockChat(TPacketBlockChat * p);
 	// END_OF_BLOCK_CHAT
@@ -424,8 +420,6 @@ class CClientManager : public CNetBase, public singleton<CClientManager>
 	std::vector<building::TLand>		m_vec_kLandTable;
 	std::vector<building::TObjectProto>	m_vec_kObjectProto;
 	std::map<DWORD, building::TObject *>	m_map_pkObjectTable;
-
-	std::queue<TPacketGDVCard>		m_queue_vcard;
 
 	bool					m_bShutdowned;
 

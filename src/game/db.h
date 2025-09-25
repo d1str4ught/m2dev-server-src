@@ -158,9 +158,6 @@ typedef struct SHighscoreRegisterQueryInfo
 	bool    bOrder;
 } THighscoreRegisterQueryInfo;
 
-extern void VCardUse(LPCHARACTER CardOwner, LPCHARACTER CardTaker, LPITEM item);
-
-
 // ACCOUNT_DB
 class AccountDB : public singleton<AccountDB>
 {

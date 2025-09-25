@@ -17,7 +17,6 @@
 #include "login_data.h"
 #include "locale_service.h"
 #include "spam.h"
-#include "auth_brazil.h"
 
 extern std::string g_stBlockDate;
 
@@ -632,29 +631,6 @@ void DBManager::SendMoneyLog(BYTE type, DWORD vnum, int gold)
 	p.vnum = vnum;
 	p.gold = gold;
 	db_clientdesc->DBPacket(HEADER_GD_MONEY_LOG, 0, &p, sizeof(p));
-}
-
-void VCardUse(LPCHARACTER CardOwner, LPCHARACTER CardTaker, LPITEM item)
-{
-	TPacketGDVCard p;
-
-	p.dwID = item->GetSocket(0);
-	strlcpy(p.szSellCharacter, CardOwner->GetName(), sizeof(p.szSellCharacter));
-	strlcpy(p.szSellAccount, CardOwner->GetDesc()->GetAccountTable().login, sizeof(p.szSellAccount));
-	strlcpy(p.szBuyCharacter, CardTaker->GetName(), sizeof(p.szBuyCharacter));
-	strlcpy(p.szBuyAccount, CardTaker->GetDesc()->GetAccountTable().login, sizeof(p.szBuyAccount));
-
-	db_clientdesc->DBPacket(HEADER_GD_VCARD, 0, &p, sizeof(TPacketGDVCard));
-
-	CardTaker->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%d분의 결제시간이 추가 되었습니다. (결제번호 %d)"), item->GetSocket(1) / 60, item->GetSocket(0));
-
-	LogManager::instance().VCardLog(p.dwID, CardTaker->GetX(), CardTaker->GetY(), g_stHostname.c_str(),
-			CardOwner->GetName(), CardOwner->GetDesc()->GetHostName(),
-			CardTaker->GetName(), CardTaker->GetDesc()->GetHostName());
-
-	ITEM_MANAGER::instance().RemoveItem(item);
-
-	sys_log(0, "VCARD_TAKE: %u %s -> %s", p.dwID, CardOwner->GetName(), CardTaker->GetName());
 }
 
 size_t DBManager::EscapeString(char* dst, size_t dstSize, const char *src, size_t srcSize)

@@ -97,7 +97,6 @@ enum
 
 	HEADER_GD_AUTH_LOGIN		= 100,
 	HEADER_GD_LOGIN_BY_KEY		= 101,
-	HEADER_GD_VCARD				= 105,
 	HEADER_GD_MALL_LOAD			= 107,
 
 	HEADER_GD_MYSHOP_PRICELIST_UPDATE	= 108,		///< 가격정보 갱신 요청
@@ -219,8 +218,6 @@ enum
 	HEADER_DG_MONEY_LOG			= 126,
 
 	HEADER_DG_CHANGE_CHARACTER_PRIV	= 127,
-
-	HEADER_DG_VCARD			= 131,
 
 	HEADER_DG_CREATE_OBJECT		= 140,
 	HEADER_DG_DELETE_OBJECT		= 141,
@@ -1152,15 +1149,6 @@ typedef struct SPacketGDHammerOfTor
 	uint32_t 	key;
 	uint32_t	delay;
 } TPacketGDHammerOfTor;
-
-typedef struct SPacketGDVCard
-{
-	uint32_t	dwID;
-	char	szSellCharacter[CHARACTER_NAME_MAX_LEN + 1];
-	char	szSellAccount[LOGIN_MAX_LEN + 1];
-	char	szBuyCharacter[CHARACTER_NAME_MAX_LEN + 1];
-	char	szBuyAccount[LOGIN_MAX_LEN + 1];
-} TPacketGDVCard;
 
 typedef struct SGuildReserve
 {
