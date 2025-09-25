@@ -137,6 +137,12 @@ CPacketInfoCG::CPacketInfoCG()
 	Set(HEADER_CG_MARK_IDXLIST, sizeof(TPacketCGMarkIDXList), "MarkIdxList", false);
 	Set(HEADER_CG_MARK_CRCLIST, sizeof(TPacketCGMarkCRCList), "MarkCrcList", false);
 	Set(HEADER_CG_MARK_UPLOAD, sizeof(TPacketCGMarkUpload), "MarkUpload", false);
+
+	// New guild mark system
+	Set(HEADER_CG_GUILD_MARK_UPLOAD_NEW, sizeof(TPacketCGGuildMarkUpload), "GuildMarkUpload", false);
+	Set(HEADER_CG_GUILD_MARK_REQUEST, sizeof(TPacketCGGuildMarkRequest), "GuildMarkRequest", false);
+	Set(HEADER_CG_GUILD_MARK_DELETE, sizeof(TPacketCGGuildMarkDelete), "GuildMarkDelete", false);
+
 #ifdef _IMPROVED_PACKET_ENCRYPTION_
 	Set(HEADER_CG_KEY_AGREEMENT, sizeof(TPacketKeyAgreement), "KeyAgreement", false);
 #endif

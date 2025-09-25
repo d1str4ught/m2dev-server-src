@@ -220,13 +220,16 @@ void CGuildManager::Initialize()
 
 	CGuildMarkManager & rkMarkMgr = CGuildMarkManager::instance();
 
+	// Initialize old system for backward compatibility (symbols only)
 	rkMarkMgr.SetMarkPathPrefix("mark");
+	rkMarkMgr.LoadMarkIndex();
+	rkMarkMgr.LoadMarkImages();
+
+	// Initialize new guild mark system
+	rkMarkMgr.InitializeNewSystem("guild_marks");
 
 	extern bool GuildMarkConvert(const std::vector<DWORD> & vecGuildID);
 	GuildMarkConvert(vecGuildID);
-
-	rkMarkMgr.LoadMarkIndex();
-	rkMarkMgr.LoadMarkImages();
 	rkMarkMgr.LoadSymbol(GUILD_SYMBOL_FILENAME);
 }
 
@@ -256,7 +259,7 @@ void CGuildManager::DisbandGuild(DWORD guild_id)
 	M2_DELETE(it->second);
 	m_mapGuild.erase(it);
 
-	CGuildMarkManager::instance().DeleteMark(guild_id);
+	CGuildMarkManager::instance().DeleteMarkAsync(guild_id);
 }
 
 void CGuildManager::SkillRecharge()
