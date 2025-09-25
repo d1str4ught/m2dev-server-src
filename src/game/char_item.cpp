@@ -3744,11 +3744,6 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 								item->SetCount(item->GetCount()-1);
 								break;
 
-							case 90008: // VCARD
-							case 90009: // VCARD
-								VCardUse(this, this, item);
-								break;
-
 							case ITEM_ELK_VNUM: // 돈꾸러미
 								{
 									int iGold = item->GetSocket(0);
