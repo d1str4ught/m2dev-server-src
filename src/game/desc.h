@@ -10,7 +10,6 @@
 #include <pcg_random.hpp>
 
 #define SEQUENCE_SEED 0
-#define MAX_ALLOW_USER                  4096
 //#define MAX_INPUT_LEN			2048
 #define MAX_INPUT_LEN			65536
 

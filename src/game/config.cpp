@@ -12,7 +12,6 @@
 #include "item_manager.h"
 #include "p2p.h"
 #include "char.h"
-#include "ip_ban.h"
 #include "war_map.h"
 #include "locale_service.h"
 #include "config.h"
@@ -826,8 +825,6 @@ void config_init(const string& st_localeServiceName)
 			}
 
 			g_bAuthServer = true;
-
-			LoadBanIP("BANIP");
 
 			if (!strcasecmp(szIP, "master"))
 				fprintf(stdout, "AUTH_SERVER: I am the master\n");
