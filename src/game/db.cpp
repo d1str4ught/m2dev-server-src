@@ -17,7 +17,6 @@
 #include "login_data.h"
 #include "locale_service.h"
 #include "spam.h"
-#include "auth_brazil.h"
 
 extern std::string g_stBlockDate;
 
