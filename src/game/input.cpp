@@ -541,20 +541,6 @@ dev_log(LOG_DEB0, "DC : '%s'", msg.c_str());
 						}
 					}
 				}
-				else if (!stBuf.compare(0, 15, "BLOCK_EXCEPTION"))
-				{
-					// BLOCK_EXCEPTION cmd(add=1, del=2) login
-					std::istringstream is(stBuf);
-					std::string	dummy_string;
-					std::string	login_string;
-					int			cmd;
-
-					is >> dummy_string >> cmd >> login_string;
-
-					sys_log(0, "block_exception %s:%d", login_string.c_str(), cmd);
-					DBManager::instance().RequestBlockException(login_string.c_str(), cmd);
-					stResult = "BLOCK_EXCEPTION_YES";
-				}
 			}
 		}
 
