@@ -692,15 +692,6 @@ void CHARACTER_MANAGER::Update(int iPulse)
 		for (itertype(m_map_dwMobKillCount) it = m_map_dwMobKillCount.begin(); it != m_map_dwMobKillCount.end(); ++it)
 			DBManager::instance().SendMoneyLog(MONEY_LOG_MONSTER_KILL, it->first, it->second);
 
-#ifdef _USE_SERVER_KEY_
-		extern bool Metin2Server_IsInvalid();
-		extern bool g_bShutdown;
-		if (Metin2Server_IsInvalid())
-		{
-			g_bShutdown = true;
-		}
-#endif
-
 		m_map_dwMobKillCount.clear();
 	}
 

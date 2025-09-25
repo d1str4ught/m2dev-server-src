@@ -5,7 +5,6 @@
 
 #include "common/stl.h"
 #include "common/length.h"
-#include "IFileMonitor.h"
 
 class CLoginKey;
 class CClientPackageCryptInfo;

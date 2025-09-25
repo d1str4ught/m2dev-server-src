@@ -9,10 +9,6 @@
 #include "locale_service.h"
 #include "db.h"
 
-#ifndef OS_WINDOWS
-	#include "limit_time.h"
-#endif
-
 extern time_t get_global_time();
 
 bool FN_IS_VALID_LOGIN_STRING(const char *str)
@@ -106,17 +102,6 @@ CInputAuth::CInputAuth()
 
 void CInputAuth::Login(LPDESC d, const char * c_pData)
 {
-	extern bool Metin2Server_IsInvalid();
-
-#ifdef ENABLE_LIMIT_TIME
-	if (Metin2Server_IsInvalid())
-	{
-		extern void ClearAdminPages();
-		ClearAdminPages();
-		exit(1);
-		return;
-	}
-#endif
 	TPacketCGLogin3 * pinfo = (TPacketCGLogin3 *) c_pData;
 
 	if (!g_bAuthServer)

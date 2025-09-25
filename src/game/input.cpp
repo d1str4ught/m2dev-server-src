@@ -18,10 +18,6 @@
 #include "castle.h"
 #include "dev_log.h"
 
-#ifndef OS_WINDOWS
-	#include "limit_time.h"
-#endif
-
 extern time_t get_global_time();
 
 bool IsEmptyAdminPage()
@@ -37,14 +33,6 @@ bool IsAdminPage(const char * ip)
 			return 1; 
 	}	
 	return 0;
-}
-
-void ClearAdminPages()
-{
-	for (size_t n = 0; n < g_stAdminPageIP.size(); ++n)
-		g_stAdminPageIP[n].clear();
-
-	g_stAdminPageIP.clear();
 }
 
 CInputProcessor::CInputProcessor() : m_pPacketInfo(NULL), m_iBufferLeft(0)
@@ -174,17 +162,6 @@ bool CInputProcessor::Process(LPDESC lpDesc, const void * c_pvOrig, int iBytes, 
 void CInputProcessor::Pong(LPDESC d)
 {
 	d->SetPong(true);
-
-	extern bool Metin2Server_IsInvalid();
-
-#ifdef ENABLE_LIMIT_TIME
-	if (Metin2Server_IsInvalid())
-	{
-		extern bool g_bShutdown;
-		g_bShutdown = true;
-		ClearAdminPages();
-	}
-#endif
 }
 
 void CInputProcessor::Handshake(LPDESC d, const char * c_pData)

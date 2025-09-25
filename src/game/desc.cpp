@@ -192,16 +192,6 @@ EVENTFUNC(ping_event)
 		desc->SetPong(false);
 	}
 
-#ifdef ENABLE_LIMIT_TIME
-	if ((unsigned)get_global_time() >= GLOBAL_LIMIT_TIME)
-	{
-		extern void ClearAdminPages();
-		ClearAdminPages();
-		extern g_bShutdown;
-		g_bShutdown = true;
-	}
-#endif
-
 	desc->SendHandshake(get_dword_time(), 0);
 
 	return (ping_event_second_cycle);
