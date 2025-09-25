@@ -65,7 +65,7 @@ void SECTREE::Destroy()
 
 	if (!isClone && m_pkAttribute)
 	{
-		M2_DELETE(m_pkAttribute);
+		delete m_pkAttribute;
 		m_pkAttribute = NULL;
 	}
 }

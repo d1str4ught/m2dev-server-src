@@ -31,7 +31,7 @@ SECTREE_MAP::~SECTREE_MAP()
 
 	while (it != map_.end()) {
 		LPSECTREE sectree = (it++)->second;
-		M2_DELETE(sectree);
+		delete sectree;
 	}
 
 	map_.clear();
@@ -45,7 +45,7 @@ SECTREE_MAP::SECTREE_MAP(SECTREE_MAP & r)
 
 	while (it != r.map_.end())
 	{
-		LPSECTREE tree = M2_NEW SECTREE;
+		LPSECTREE tree = new SECTREE;
 
 		tree->m_id.coord = it->second->m_id.coord;
 		tree->CloneAttribute(it->second);
@@ -196,7 +196,7 @@ SECTREE_MANAGER::~SECTREE_MANAGER()
 
 	   while (it != m_map_pkSectree.end())
 	   {
-	   M2_DELETE(it->second);
+	   delete it->second;
 	   ++it;
 	   }
 	 */
@@ -282,7 +282,7 @@ int SECTREE_MANAGER::LoadSettingFile(long lMapIndex, const char * c_pszSettingFi
 
 LPSECTREE_MAP SECTREE_MANAGER::BuildSectreeFromSetting(TMapSetting & r_setting)
 {
-	LPSECTREE_MAP pkMapSectree = M2_NEW SECTREE_MAP;
+	LPSECTREE_MAP pkMapSectree = new SECTREE_MAP;
 
 	pkMapSectree->m_setting = r_setting;
 
@@ -293,7 +293,7 @@ LPSECTREE_MAP SECTREE_MANAGER::BuildSectreeFromSetting(TMapSetting & r_setting)
 	{
 		for (y = r_setting.iBaseY; y < r_setting.iBaseY + r_setting.iHeight; y += SECTREE_SIZE)
 		{
-			tree = M2_NEW SECTREE;
+			tree = new SECTREE;
 			tree->m_id.coord.x = x / SECTREE_SIZE;
 			tree->m_id.coord.y = y / SECTREE_SIZE;
 			pkMapSectree->Add(tree->m_id.package, tree);
@@ -303,7 +303,7 @@ LPSECTREE_MAP SECTREE_MANAGER::BuildSectreeFromSetting(TMapSetting & r_setting)
 
 	if ((r_setting.iBaseX + r_setting.iWidth) % SECTREE_SIZE)
 	{
-		tree = M2_NEW SECTREE;
+		tree = new SECTREE;
 		tree->m_id.coord.x = ((r_setting.iBaseX + r_setting.iWidth) / SECTREE_SIZE) + 1;
 		tree->m_id.coord.y = ((r_setting.iBaseY + r_setting.iHeight) / SECTREE_SIZE);
 		pkMapSectree->Add(tree->m_id.package, tree);
@@ -311,7 +311,7 @@ LPSECTREE_MAP SECTREE_MANAGER::BuildSectreeFromSetting(TMapSetting & r_setting)
 
 	if ((r_setting.iBaseY + r_setting.iHeight) % SECTREE_SIZE)
 	{
-		tree = M2_NEW SECTREE;
+		tree = new SECTREE;
 		tree->m_id.coord.x = ((r_setting.iBaseX + r_setting.iWidth) / SECTREE_SIZE);
 		tree->m_id.coord.y = ((r_setting.iBaseX + r_setting.iHeight) / SECTREE_SIZE) + 1;
 		pkMapSectree->Add(tree->m_id.package, tree);
@@ -470,9 +470,9 @@ bool SECTREE_MANAGER::LoadAttribute(LPSECTREE_MAP pkMapSectree, const char * c_p
 #ifndef _MSC_VER
 	BYTE abComp[maxMemSize];
 #else
-	BYTE* abComp = M2_NEW BYTE[maxMemSize];
+	BYTE* abComp = new BYTE[maxMemSize];
 #endif
-	DWORD * attr = M2_NEW DWORD[maxMemSize];
+	DWORD * attr = new DWORD[maxMemSize];
 
 	for (int y = 0; y < iHeight; ++y)
 		for (int x = 0; x < iWidth; ++x)
@@ -495,9 +495,9 @@ bool SECTREE_MANAGER::LoadAttribute(LPSECTREE_MAP pkMapSectree, const char * c_p
 				pkMapSectree->DumpAllToSysErr();
 				abort();
 
-				M2_DELETE_ARRAY(attr);
+				delete[] attr;
 #ifdef _MSC_VER
-				M2_DELETE_ARRAY(abComp);
+				delete[] abComp;
 #endif
 				return false;
 			}
@@ -509,9 +509,9 @@ bool SECTREE_MANAGER::LoadAttribute(LPSECTREE_MAP pkMapSectree, const char * c_p
 						tree->m_id.package, id.package);
 				fclose(fp);
 
-				M2_DELETE_ARRAY(attr);
+				delete[] attr;
 #ifdef _MSC_VER
-				M2_DELETE_ARRAY(abComp);
+				delete[] abComp;
 #endif
 				return false;
 			}
@@ -529,21 +529,21 @@ bool SECTREE_MANAGER::LoadAttribute(LPSECTREE_MAP pkMapSectree, const char * c_p
 						c_pszFileName, tree->m_id.coord.x, tree->m_id.coord.y, uiDestSize);
 				fclose(fp);
 
-				M2_DELETE_ARRAY(attr);
+				delete[] attr;
 #ifdef _MSC_VER
-				M2_DELETE_ARRAY(abComp);
+				delete[] abComp;
 #endif
 				return false;
 			}
 
-			tree->BindAttribute(M2_NEW CAttribute(attr, SECTREE_SIZE / CELL_SIZE, SECTREE_SIZE / CELL_SIZE));
+			tree->BindAttribute(new CAttribute(attr, SECTREE_SIZE / CELL_SIZE, SECTREE_SIZE / CELL_SIZE));
 		}
 
 	fclose(fp);
 
-	M2_DELETE_ARRAY(attr);
+	delete[] attr;
 #ifdef _MSC_VER
-	M2_DELETE_ARRAY(abComp);
+	delete[] abComp;
 #endif
 	return true;
 }
@@ -1056,7 +1056,7 @@ long SECTREE_MANAGER::CreatePrivateMap(long lMapIndex)
 	long lNewMapIndex = lMapIndex * 10000 + i;
 	*/
 
-	pkMapSectree = M2_NEW SECTREE_MAP(*pkMapSectree);
+	pkMapSectree = new SECTREE_MAP(*pkMapSectree);
 	m_map_pkSectree.insert(std::map<DWORD, LPSECTREE_MAP>::value_type(lNewMapIndex, pkMapSectree));
 
 	sys_log(0, "PRIVATE_MAP: %d created (original %d)", lNewMapIndex, lMapIndex);
@@ -1108,7 +1108,7 @@ void SECTREE_MANAGER::DestroyPrivateMap(long lMapIndex)
 	pkMapSectree->for_each(f);
 
 	m_map_pkSectree.erase(lMapIndex);
-	M2_DELETE(pkMapSectree);
+	delete pkMapSectree;
 
 	sys_log(0, "PRIVATE_MAP: %d destroyed", lMapIndex);
 }
@@ -1443,7 +1443,7 @@ bool SECTREE_MANAGER::SaveAttributeToImage(int lMapIndex, const char * c_pszFile
 
 	sys_log(0, "2 %p", pdwDest);
 
-	DWORD * pdwLine = M2_NEW DWORD[SECTREE_SIZE / CELL_SIZE];
+	DWORD * pdwLine = new DWORD[SECTREE_SIZE / CELL_SIZE];
 
 	for (y = 0; y < 4 * iMapHeight; ++y)
 	{
@@ -1469,7 +1469,7 @@ bool SECTREE_MANAGER::SaveAttributeToImage(int lMapIndex, const char * c_pszFile
 				if (!pdwLine)
 				{
 					sys_err("cannot get attribute line pointer");
-					M2_DELETE_ARRAY(pdwLine);
+					delete[] pdwLine;
 					continue;
 				}
 
@@ -1493,7 +1493,7 @@ bool SECTREE_MANAGER::SaveAttributeToImage(int lMapIndex, const char * c_pszFile
 		}
 	}
 
-	M2_DELETE_ARRAY(pdwLine);
+	delete[] pdwLine;
 	sys_log(0, "3");
 
 	if (image.Save(c_pszFileName))

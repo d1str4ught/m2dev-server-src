@@ -263,7 +263,7 @@ void CHARACTER::SetItem(TItemPos Cell, LPITEM pItem)
 {
 	WORD wCell = Cell.cell;
 	BYTE window_type = Cell.window_type;
-	if ((unsigned long)((CItem*)pItem) == 0xff || (unsigned long)((CItem*)pItem) == 0xffffffff)
+	if ((uintptr_t)pItem == 0xff || (uintptr_t)pItem == 0xffffffff)
 	{
 		sys_err("!!! FATAL ERROR !!! item == 0xff (char: %s cell: %u)", GetName(), wCell);
 		core_dump();
@@ -2765,7 +2765,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 												{
 													if (info[i].dwVnum == 50001)
 													{
-														DWORD * pdw = M2_NEW DWORD[2];
+														DWORD * pdw = new DWORD[2];
 
 														pdw[0] = info[i].dwVnum;
 														pdw[1] = info[i].count;
@@ -6283,14 +6283,14 @@ void CHARACTER::BuffOnAttr_ValueChange(BYTE bType, BYTE bOldValue, BYTE bNewValu
 				{
 					static BYTE abSlot[] = { WEAR_BODY, WEAR_HEAD, WEAR_FOOTS, WEAR_WRIST, WEAR_WEAPON, WEAR_NECK, WEAR_EAR, WEAR_SHIELD };
 					static std::vector <BYTE> vec_slots (abSlot, abSlot + _countof(abSlot));
-					pBuff = M2_NEW CBuffOnAttributes(this, bType, &vec_slots);
+					pBuff = new CBuffOnAttributes(this, bType, &vec_slots);
 				}
 				break;
 			case POINT_COSTUME_ATTR_BONUS:
 				{
 					static BYTE abSlot[] = { WEAR_COSTUME_BODY, WEAR_COSTUME_HAIR };
 					static std::vector <BYTE> vec_slots (abSlot, abSlot + _countof(abSlot));
-					pBuff = M2_NEW CBuffOnAttributes(this, bType, &vec_slots);
+					pBuff = new CBuffOnAttributes(this, bType, &vec_slots);
 				}
 				break;
 			default:

@@ -73,7 +73,7 @@ dev_log(LOG_DEB0, "BLOCK_EXCEPTION_DEL : %s", login);
 
 void add_blocked_country_ip(TPacketBlockCountryIp *data)
 {
-	T_BLOCK_IP	*block_ip = M2_NEW T_BLOCK_IP;
+	T_BLOCK_IP	*block_ip = new T_BLOCK_IP;
 
 	block_ip->ip_from	= data->ip_from;
 	block_ip->ip_to		= data->ip_to;

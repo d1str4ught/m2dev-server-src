@@ -189,7 +189,7 @@ void CPVPManager::Insert(LPCHARACTER pkChr, LPCHARACTER pkVictim)
 		return;
 	}
 
-	pkPVP = M2_NEW CPVP(kPVP);
+	pkPVP = new CPVP(kPVP);
 
 	pkPVP->SetVID(pkChr->GetPlayerID(), pkChr->GetVID());
 	pkPVP->SetVID(pkVictim->GetPlayerID(), pkVictim->GetVID());
@@ -294,7 +294,7 @@ void CPVPManager::GiveUp(LPCHARACTER pkChr, DWORD dwKillerPID) // This method is
 		m_map_pkPVP.erase(pkPVP->m_dwCRC);
 
 		pkPVP->Packet(true);
-		M2_DELETE(pkPVP);
+		delete pkPVP;
 		break;
 	}
 }
@@ -576,7 +576,7 @@ void CPVPManager::Delete(CPVP * pkPVP)
 	m_map_pkPVPSetByID[pkPVP->m_players[0].dwPID].erase(pkPVP);
 	m_map_pkPVPSetByID[pkPVP->m_players[1].dwPID].erase(pkPVP);
 
-	M2_DELETE(pkPVP);
+	delete pkPVP;
 }
 
 void CPVPManager::SendList(LPDESC d)

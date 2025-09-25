@@ -54,7 +54,7 @@ CGuildManager::~CGuildManager()
 {
 	for( TGuildMap::const_iterator iter = m_mapGuild.begin() ; iter != m_mapGuild.end() ; ++iter )
 	{
-		M2_DELETE(iter->second);
+		delete iter->second;
 	}
 
 	m_mapGuild.clear();
@@ -102,7 +102,7 @@ DWORD CGuildManager::CreateGuild(TGuildCreateParameter& gcp)
 
 	// new CGuild(gcp) queries guild tables and tell dbcache to notice other game servers.
 	// other game server calls CGuildManager::LoadGuild to load guild.
-	CGuild * pg = M2_NEW CGuild(gcp);
+	CGuild * pg = new CGuild(gcp);
 	m_mapGuild.insert(std::make_pair(pg->GetID(), pg));
 	return pg->GetID();
 }
@@ -165,7 +165,7 @@ CGuild* CGuildManager::TouchGuild(DWORD guild_id)
 
 	if (it == m_mapGuild.end())
 	{
-		m_mapGuild.insert(std::make_pair(guild_id, M2_NEW CGuild(guild_id)));
+		m_mapGuild.insert(std::make_pair(guild_id, new CGuild(guild_id)));
 		it = m_mapGuild.find(guild_id);
 
 		CHARACTER_MANAGER::instance().for_each_pc(FGuildNameSender(guild_id, it->second->GetName()));
@@ -236,7 +236,7 @@ void CGuildManager::LoadGuild(DWORD guild_id)
 
 	if (it == m_mapGuild.end())
 	{
-		m_mapGuild.insert(std::make_pair(guild_id, M2_NEW CGuild(guild_id)));
+		m_mapGuild.insert(std::make_pair(guild_id, new CGuild(guild_id)));
 	}
 	else
 	{
@@ -253,7 +253,7 @@ void CGuildManager::DisbandGuild(DWORD guild_id)
 
 	it->second->Disband();
 
-	M2_DELETE(it->second);
+	delete it->second;
 	m_mapGuild.erase(it);
 
 	CGuildMarkManager::instance().DeleteMark(guild_id);
@@ -875,7 +875,7 @@ void CGuildManager::ReserveWarAdd(TGuildWarReserve * p)
 		pkReserve = it->second;
 	else
 	{
-		pkReserve = M2_NEW CGuildWarReserveForGame;
+		pkReserve = new CGuildWarReserveForGame;
 
 		m_map_kReserveWar.insert(std::make_pair(p->dwID, pkReserve));
 		m_vec_kReserveWar.push_back(pkReserve);
@@ -928,7 +928,7 @@ void CGuildManager::ReserveWarDelete(DWORD dwID)
 			++it_vec;
 	}
 
-	M2_DELETE(it->second);
+	delete it->second;
 	m_map_kReserveWar.erase(it);
 }
 

@@ -5,33 +5,20 @@
  *      Author: 김한주 (aka. 비엽, Cronan), 송영진 (aka. myevan, 빗자루)
  */
 #include "stdafx.h"
-
 #include "event_queue.h"
 
 extern void ContinueOnFatalError();
 extern void ShutdownOnFatalError();
-
-#ifdef M2_USE_POOL
-MemoryPool event_info_data::pool_;
-static ObjectPool<EVENT> event_pool;
-#endif
 
 static CEventQueue cxx_q;
 
 /* 이벤트를 생성하고 리턴한다 */
 LPEVENT event_create_ex(TEVENTFUNC func, event_info_data* info, long when)
 {
-	LPEVENT new_event = NULL;
-
-	/* 반드시 다음 pulse 이상의 시간이 지난 후에 부르도록 한다. */
 	if (when < 1)
 		when = 1;
 
-#ifdef M2_USE_POOL
-	new_event = event_pool.Construct();
-#else
-	new_event = std::make_shared<event>();
-#endif
+	LPEVENT new_event = std::make_shared<event>();
 
 	assert(NULL != new_event);
 
@@ -209,10 +196,6 @@ void intrusive_ptr_add_ref(EVENT* p) {
 
 void intrusive_ptr_release(EVENT* p) {
 	if ( --(p->ref_count) == 0 ) {
-#ifdef M2_USE_POOL
-		event_pool.Destroy(p);
-#else
-		M2_DELETE(p);
-#endif
+		delete p;
 	}
 }

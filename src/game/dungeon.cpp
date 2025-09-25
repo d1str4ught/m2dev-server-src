@@ -407,7 +407,7 @@ void CDungeonManager::Destroy(CDungeon::IdType dungeon_id)
 	quest::CQuestManager::instance().CancelServerTimers(server_timer_arg);
 
 	SECTREE_MANAGER::instance().DestroyPrivateMap(lMapIndex);
-	M2_DELETE(pDungeon);
+	delete pDungeon;
 }
 
 LPDUNGEON CDungeonManager::Find(CDungeon::IdType dungeon_id)
@@ -443,10 +443,10 @@ LPDUNGEON CDungeonManager::Create(long lOriginalMapIndex)
 		id = next_id_++;
 	}
 
-	LPDUNGEON pDungeon = M2_NEW CDungeon(id, lOriginalMapIndex, lMapIndex);
+	LPDUNGEON pDungeon = new CDungeon(id, lOriginalMapIndex, lMapIndex);
 	if (!pDungeon)
 	{
-		sys_err("M2_NEW CDungeon failed");
+		sys_err("new CDungeon failed");
 		return NULL;
 	}
 	m_map_pkDungeon.insert(std::make_pair(id, pDungeon));
@@ -863,7 +863,7 @@ void CDungeon::ClearRegen()
 		LPREGEN regen = *it;
 
 		event_cancel(&regen->event);
-		M2_DELETE(regen);
+		delete regen;
 	}
 	m_regen.clear();
 }

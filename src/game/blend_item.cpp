@@ -42,7 +42,7 @@ bool	Blend_Item_init()
 	DO_ALL_BLEND_INFO(iter)
 	{
 		blend_item_info = *iter;
-		M2_DELETE(blend_item_info);
+		delete blend_item_info;
 	}
 	s_blend_info.clear();
 
@@ -81,7 +81,7 @@ bool	Blend_Item_load(char *file)
 
 		TOKEN("section")
 		{
-			blend_item_info = M2_NEW BLEND_ITEM_INFO;
+			blend_item_info = new BLEND_ITEM_INFO;
 			memset(blend_item_info, 0x00, sizeof(BLEND_ITEM_INFO));
 		}
 		else TOKEN("item_vnum")

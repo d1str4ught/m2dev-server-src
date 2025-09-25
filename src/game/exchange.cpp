@@ -94,8 +94,8 @@ bool CHARACTER::ExchangeStart(LPCHARACTER victim)
 		return false;
 	}
 
-	SetExchange(M2_NEW CExchange(this));
-	victim->SetExchange(M2_NEW CExchange(victim));
+	SetExchange(new CExchange(this));
+	victim->SetExchange(new CExchange(victim));
 
 	victim->GetExchange()->SetCompany(GetExchange());
 	GetExchange()->SetCompany(victim->GetExchange());
@@ -128,12 +128,12 @@ CExchange::CExchange(LPCHARACTER pOwner)
 	m_pOwner = pOwner;
 	pOwner->SetExchange(this);
 
-	m_pGrid = M2_NEW CGrid(4,3);
+	m_pGrid = new CGrid(4,3);
 }
 
 CExchange::~CExchange()
 {
-	M2_DELETE(m_pGrid);
+	delete m_pGrid;
 }
 
 bool CExchange::AddItem(TItemPos item_pos, BYTE display_pos)
@@ -603,6 +603,6 @@ void CExchange::Cancel()
 		GetCompany()->Cancel();
 	}
 
-	M2_DELETE(this);
+	delete this;
 }
 

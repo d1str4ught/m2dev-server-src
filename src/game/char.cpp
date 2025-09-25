@@ -458,7 +458,7 @@ void CHARACTER::Destroy()
 	{
 		if (party->GetLeaderPID() == GetVID() && !IsPC())
 		{
-			M2_DELETE(party);
+			delete party;
 		}
 		else
 		{
@@ -473,7 +473,7 @@ void CHARACTER::Destroy()
 
 	if (m_pkMobInst)
 	{
-		M2_DELETE(m_pkMobInst);
+		delete m_pkMobInst;
 		m_pkMobInst = NULL;
 	}
 
@@ -481,13 +481,13 @@ void CHARACTER::Destroy()
 
 	if (m_pkSafebox)
 	{
-		M2_DELETE(m_pkSafebox);
+		delete m_pkSafebox;
 		m_pkSafebox = NULL;
 	}
 
 	if (m_pkMall)
 	{
-		M2_DELETE(m_pkMall);
+		delete m_pkMall;
 		m_pkMall = NULL;
 	}
 
@@ -532,7 +532,7 @@ void CHARACTER::Destroy()
 	{
 		if (NULL != it->second)
 		{
-			M2_DELETE(it->second);
+			delete it->second;
 		}
 	}
 	m_map_buff_on_attrs.clear();
@@ -541,7 +541,7 @@ void CHARACTER::Destroy()
 
 	if (m_pSkillLevels)
 	{
-		M2_DELETE_ARRAY(m_pSkillLevels);
+		delete[] m_pSkillLevels;
 		m_pSkillLevels = NULL;
 	}
 
@@ -1736,9 +1736,9 @@ void CHARACTER::SetPlayerProto(const TPlayerTable * t)
 
 	// REMOVE_REAL_SKILL_LEVLES
 	if (m_pSkillLevels)
-		M2_DELETE_ARRAY(m_pSkillLevels);
+		delete[] m_pSkillLevels;
 
-	m_pSkillLevels = M2_NEW TPlayerSkill[SKILL_MAX_NUM];
+	m_pSkillLevels = new TPlayerSkill[SKILL_MAX_NUM];
 	thecore_memcpy(m_pSkillLevels, t->skills, sizeof(TPlayerSkill) * SKILL_MAX_NUM);
 	// END_OF_REMOVE_REAL_SKILL_LEVLES
 
@@ -1826,7 +1826,7 @@ void CHARACTER::SetPlayerProto(const TPlayerTable * t)
 		delete m_petSystem;
 	}
 
-	m_petSystem = M2_NEW CPetSystem(this);
+	m_petSystem = new CPetSystem(this);
 #endif
 }
 
@@ -1852,10 +1852,10 @@ EVENTFUNC(kill_ore_load_event)
 void CHARACTER::SetProto(const CMob * pkMob)
 {
 	if (m_pkMobInst)
-		M2_DELETE(m_pkMobInst);
+		delete m_pkMobInst;
 
 	m_pkMobData = pkMob;
-	m_pkMobInst = M2_NEW CMobInstance;
+	m_pkMobInst = new CMobInstance;
 
 	m_bPKMode = PK_MODE_FREE;
 
@@ -5582,7 +5582,7 @@ void CHARACTER::LoadSafebox(int iSize, DWORD dwGold, int iItemCount, TPlayerItem
 		bLoaded = true;
 
 	if (!m_pkSafebox)
-		m_pkSafebox = M2_NEW CSafebox(this, iSize, dwGold);
+		m_pkSafebox = new CSafebox(this, iSize, dwGold);
 	else
 		m_pkSafebox->ChangeSize(iSize);
 
@@ -5653,7 +5653,7 @@ void CHARACTER::CloseSafebox()
 
 	m_pkSafebox->Save();
 
-	M2_DELETE(m_pkSafebox);
+	delete m_pkSafebox;
 	m_pkSafebox = NULL;
 
 	ChatPacket(CHAT_TYPE_COMMAND, "CloseSafebox");
@@ -5677,7 +5677,7 @@ void CHARACTER::LoadMall(int iItemCount, TPlayerItem * pItems)
 		bLoaded = true;
 
 	if (!m_pkMall)
-		m_pkMall = M2_NEW CSafebox(this, 3 * SAFEBOX_PAGE_SIZE, 0);
+		m_pkMall = new CSafebox(this, 3 * SAFEBOX_PAGE_SIZE, 0);
 	else
 		m_pkMall->ChangeSize(3 * SAFEBOX_PAGE_SIZE);
 
@@ -5724,7 +5724,7 @@ void CHARACTER::CloseMall()
 
 	m_pkMall->Save();
 
-	M2_DELETE(m_pkMall);
+	delete m_pkMall;
 	m_pkMall = NULL;
 
 	ChatPacket(CHAT_TYPE_COMMAND, "CloseMall");

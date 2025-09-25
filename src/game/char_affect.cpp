@@ -397,7 +397,7 @@ EVENTFUNC(load_affect_login_event)
 
 	if (!ch)
 	{
-		M2_DELETE_ARRAY(info->data);
+		delete[] info->data;
 		return 0;
 	}
 
@@ -405,7 +405,7 @@ EVENTFUNC(load_affect_login_event)
 
 	if (!d)
 	{
-		M2_DELETE_ARRAY(info->data);
+		delete[] info->data;
 		return 0;
 	}
 
@@ -419,20 +419,20 @@ EVENTFUNC(load_affect_login_event)
 	}
 	else if (d->IsPhase(PHASE_CLOSE))
 	{
-		M2_DELETE_ARRAY(info->data);
+		delete[] info->data;
 		return 0;
 	}
 	else if (d->IsPhase(PHASE_GAME))
 	{
 		sys_log(1, "Affect Load by Event");
 		ch->LoadAffect(info->count, (TPacketAffectElement*)info->data);
-		M2_DELETE_ARRAY(info->data);
+		delete[] info->data;
 		return 0;
 	}
 	else
 	{
 		sys_err("input_db.cpp:quest_login_event INVALID PHASE pid %d", ch->GetPlayerID());
-		M2_DELETE_ARRAY(info->data);
+		delete[] info->data;
 		return 0;
 	}
 }
@@ -450,7 +450,7 @@ void CHARACTER::LoadAffect(DWORD dwCount, TPacketAffectElement * pElements)
 
 		info->pid = GetPlayerID();
 		info->count = dwCount;
-		info->data = M2_NEW char[sizeof(TPacketAffectElement) * dwCount];
+		info->data = new char[sizeof(TPacketAffectElement) * dwCount];
 		thecore_memcpy(info->data, pElements, sizeof(TPacketAffectElement) * dwCount);
 
 		event_create(load_affect_login_event, info, PASSES_PER_SEC(1));

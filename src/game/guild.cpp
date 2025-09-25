@@ -1043,7 +1043,7 @@ void CGuild::DeleteComment(LPCHARACTER ch, DWORD comment_id)
 	else
 		RefreshCommentForce(ch->GetPlayerID());
 
-	M2_DELETE(pmsg);
+	delete pmsg;
 }
 
 void CGuild::RefreshComment(LPCHARACTER ch)

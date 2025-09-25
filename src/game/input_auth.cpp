@@ -190,7 +190,7 @@ void CInputAuth::Login(LPDESC d, const char * c_pData)
 		}
 	}
 
-	TPacketCGLogin3 * p = M2_NEW TPacketCGLogin3;
+	TPacketCGLogin3 * p = new TPacketCGLogin3;
 	thecore_memcpy(p, pinfo, sizeof(TPacketCGLogin3));
 
 	char szPasswd[PASSWD_MAX_LEN * 2 + 1];

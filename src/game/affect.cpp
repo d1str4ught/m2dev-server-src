@@ -3,11 +3,11 @@
 
 CAffect* CAffect::Acquire()
 {
-	return M2_NEW CAffect;
+	return new CAffect;
 }
 
 void CAffect::Release(CAffect* p)
 {
-	M2_DELETE(p);
+	delete p;
 }
 

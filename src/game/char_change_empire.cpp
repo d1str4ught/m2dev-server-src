@@ -75,7 +75,7 @@ int CHARACTER::ChangeEmpire(BYTE empire)
 
 					if (pGuild[i] != NULL)
 					{
-						M2_DELETE(pMsg);
+						delete pMsg;
 						return 2;
 					}
 				}
@@ -85,7 +85,7 @@ int CHARACTER::ChangeEmpire(BYTE empire)
 					pGuild[i] = NULL;
 				}
 
-				M2_DELETE(pMsg);
+				delete pMsg;
 			}
 		}
 	}
@@ -135,7 +135,7 @@ int CHARACTER::GetChangeEmpireCount() const
 	{
 		if (pMsg->Get()->uiNumRows == 0)
 		{
-			M2_DELETE(pMsg);
+			delete pMsg;
 			return 0;
 		}
 
@@ -144,7 +144,7 @@ int CHARACTER::GetChangeEmpireCount() const
 		DWORD count = 0;
 		str_to_number(count, row[0]);
 
-		M2_DELETE(pMsg);
+		delete pMsg;
 
 		return count;
 	}
@@ -190,7 +190,7 @@ DWORD CHARACTER::GetAID() const
 	{
 		if (pMsg->Get()->uiNumRows == 0)
 		{
-			M2_DELETE(pMsg);
+			delete pMsg;
 			return 0;
 		}
 
@@ -198,7 +198,7 @@ DWORD CHARACTER::GetAID() const
 
 		str_to_number(dwAID, row[0]);
 
-		M2_DELETE(pMsg);
+		delete pMsg;
 
 		return dwAID;
 	}

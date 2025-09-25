@@ -12,12 +12,12 @@
 
 CGuildMarkImage * NewMarkImage()
 {
-	return M2_NEW CGuildMarkImage;
+	return new CGuildMarkImage;
 }
 
 void DeleteMarkImage(CGuildMarkImage * pkImage)
 {
-	M2_DELETE(pkImage);
+	delete pkImage;
 }
 
 CGuildMarkImage::CGuildMarkImage()

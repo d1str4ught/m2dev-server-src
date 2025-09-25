@@ -178,13 +178,13 @@ LPDESC DESC_MANAGER::AcceptDesc(LPFDWATCH fdw, socket_t s)
 		}
 	}
 
-	newd = M2_NEW DESC;
+	newd = new DESC;
 	crc_t handshake = CreateHandshake();
 
 	if (!newd->Setup(fdw, desc, peer, ++m_iHandleCount, handshake))
 	{
 		socket_close(desc);
-		M2_DELETE(newd);
+		delete newd;
 		return NULL;
 	}
 
@@ -207,13 +207,13 @@ LPDESC DESC_MANAGER::AcceptP2PDesc(LPFDWATCH fdw, socket_t bind_fd)
 
 	strlcpy(host, inet_ntoa(peer.sin_addr), sizeof(host));
 
-	LPDESC_P2P pkDesc = M2_NEW DESC_P2P;
+	LPDESC_P2P pkDesc = new DESC_P2P;
 
 	if (!pkDesc->Setup(fdw, fd, host, peer.sin_port))
 	{     
 		sys_err("DESC_MANAGER::AcceptP2PDesc : Setup failed");
 		socket_close(fd);
-		M2_DELETE(pkDesc);
+		delete pkDesc;
 		return NULL;
 	}
 
@@ -253,7 +253,7 @@ void DESC_MANAGER::DestroyDesc(LPDESC d, bool bEraseFromSet)
 	// Explicit call to the virtual function Destroy()
 	d->Destroy();
 
-	M2_DELETE(d);
+	delete d;
 	--m_iSocketsConnected;
 }
 
@@ -338,7 +338,7 @@ LPCLIENT_DESC DESC_MANAGER::CreateConnectionDesc(LPFDWATCH fdw, const char * hos
 {
 	LPCLIENT_DESC newd;
 
-	newd = M2_NEW CLIENT_DESC;
+	newd = new CLIENT_DESC;
 
 	newd->Setup(fdw, host, port);
 	newd->Connect(iPhaseWhenSucceed);
@@ -480,7 +480,7 @@ DWORD DESC_MANAGER::CreateLoginKey(LPDESC d)
 		if (m_map_pkLoginKey.find(dwKey) != m_map_pkLoginKey.end())
 			continue;
 
-		CLoginKey * pkKey = M2_NEW CLoginKey(dwKey, d);
+		CLoginKey * pkKey = new CLoginKey(dwKey, d);
 		d->SetLoginKey(pkKey);
 		m_map_pkLoginKey.insert(std::make_pair(dwKey, pkKey));
 		break;
@@ -506,7 +506,7 @@ void DESC_MANAGER::ProcessExpiredLoginKey()
 
 		if (dwCurrentTime - it2->second->m_dwExpireTime > 60000)
 		{
-			M2_DELETE(it2->second);
+			delete it2->second;
 			m_map_pkLoginKey.erase(it2);
 		}
 	}

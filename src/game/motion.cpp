@@ -139,7 +139,7 @@ static void LoadMotion(CMotionSet* pMotionSet, TMobTable* mob_table, EPublicMoti
 		return;
 	}
 
-	CMotion* pMotion = M2_NEW CMotion;
+	CMotion* pMotion = new CMotion;
 
 	if (pMotion->LoadFromFile(cpFileName) == true)
 	{
@@ -151,7 +151,7 @@ static void LoadMotion(CMotionSet* pMotionSet, TMobTable* mob_table, EPublicMoti
 	}
 	else
 	{
-		M2_DELETE(pMotion);
+		delete pMotion;
 		sys_err("Motion: Load failed vnum(%d) motion(%d) file(%s)", mob_table->dwVnum, motion, cpFileName);
 	}
 }
@@ -179,7 +179,7 @@ static void LoadSkillMotion(CMotionSet* pMotionSet, CMob* pMob, EPublicMotion mo
 	const char* cpFileName = GetMotionFileName(mob_table, motion);
 	if (cpFileName == NULL) return;
 
-	CMotion* pMotion = M2_NEW CMotion;
+	CMotion* pMotion = new CMotion;
 
 	if (pMotion->LoadMobSkillFromFile(cpFileName, pMob, idx) == true)
 	{
@@ -192,7 +192,7 @@ static void LoadSkillMotion(CMotionSet* pMotionSet, CMob* pMob, EPublicMotion mo
 			sys_err("Motion: Skill exist but no motion data for index %d mob %u skill %u",
 				   	idx, mob_table->dwVnum, mob_table->Skills[idx].dwVnum);
 		}
-		M2_DELETE(pMotion);
+		delete pMotion;
 	}
 }
 
@@ -204,7 +204,7 @@ CMotionManager::~CMotionManager()
 {
 	iterator it = m_map_pkMotionSet.begin();
 	for ( ; it != m_map_pkMotionSet.end(); ++it) {
-		M2_DELETE(it->second);
+		delete it->second;
 	}
 }
 
@@ -277,7 +277,7 @@ bool CMotionManager::Build()
 	
 	for (int i = 0; i < MAIN_RACE_MAX_NUM; ++i)
 	{
-		CMotionSet * pkMotionSet = M2_NEW CMotionSet;
+		CMotionSet * pkMotionSet = new CMotionSet;
 		m_map_pkMotionSet.insert(TContainer::value_type(i, pkMotionSet));
 
 		char sz[256];
@@ -332,7 +332,7 @@ bool CMotionManager::Build()
 
 		if ('\0' != t->szFolder[0])
 		{
-			CMotionSet * pkMotionSet = M2_NEW CMotionSet;
+			CMotionSet * pkMotionSet = new CMotionSet;
 			m_map_pkMotionSet.insert(TContainer::value_type(t->dwVnum, pkMotionSet));
 
 			LoadMotion(pkMotionSet, t, MOTION_WALK);
@@ -364,7 +364,7 @@ CMotionSet::~CMotionSet()
 {
 	iterator it = m_map_pkMotion.begin();
 	for ( ; it != m_map_pkMotion.end(); ++it) {
-		M2_DELETE(it->second);
+		delete it->second;
 	}
 }
 
@@ -385,11 +385,11 @@ void CMotionSet::Insert(DWORD dwKey, CMotion * pkMotion)
 
 bool CMotionSet::Load(const char * szFileName, int mode, int motion)
 {
-	CMotion * pkMotion = M2_NEW CMotion;
+	CMotion * pkMotion = new CMotion;
 
 	if (!pkMotion->LoadFromFile(szFileName))
 	{
-		M2_DELETE(pkMotion);
+		delete pkMotion;
 		return false;
 	}
 

@@ -1596,7 +1596,7 @@ namespace quest
 
 		sys_log(0, "TRY GIVE LOTTO TO pid %u", ch->GetPlayerID());
 
-		DWORD * pdw = M2_NEW DWORD[3];
+		DWORD * pdw = new DWORD[3];
 
 		pdw[0] = 50001;
 		pdw[1] = 1;
@@ -2127,7 +2127,7 @@ teleport_area:
 
 		snprintf(szQuery, sizeof(szQuery), "UPDATE player%s SET name='%s' WHERE id=%u", get_table_postfix(), szName, pid);
 		SQLMsg * msg = DBManager::instance().DirectQuery(szQuery);
-		M2_DELETE(msg);
+		delete msg;
 
 		ch->SetNewName(szName);
 		lua_pushnumber(L, 4);

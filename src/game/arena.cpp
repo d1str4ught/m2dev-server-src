@@ -57,7 +57,7 @@ bool CArenaManager::AddArena(DWORD mapIdx, WORD startA_X, WORD startA_Y, WORD st
 
 	if (iter == m_mapArenaMap.end())
 	{
-		pArenaMap = M2_NEW CArenaMap;
+		pArenaMap = new CArenaMap;
 		m_mapArenaMap.insert(std::make_pair(mapIdx, pArenaMap));
 	}
 	else
@@ -87,7 +87,7 @@ bool CArenaMap::AddArena(DWORD mapIdx, WORD startA_X, WORD startA_Y, WORD startB
 
 	m_dwMapIndex = mapIdx;
 
-	CArena *pArena = M2_NEW CArena(startA_X, startA_Y, startB_X, startB_Y);
+	CArena *pArena = new CArena(startA_X, startA_Y, startB_X, startB_Y);
 	m_listArena.push_back(pArena);
 
 	return true;
@@ -102,7 +102,7 @@ void CArenaManager::Destroy()
 		CArenaMap* pArenaMap = iter->second;
 		pArenaMap->Destroy();
 
-		M2_DELETE(pArenaMap);
+		delete pArenaMap;
 	}
 	m_mapArenaMap.clear();
 }
@@ -118,7 +118,7 @@ void CArenaMap::Destroy()
 		CArena* pArena = *iter;
 		pArena->EndDuel();
 
-		M2_DELETE(pArena);
+		delete pArena;
 	}
 	m_listArena.clear();
 }

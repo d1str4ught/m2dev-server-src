@@ -1,10 +1,6 @@
 ﻿#ifndef __INC_METIN_II_GAME_CHARACTER_MANAGER_H__
 #define __INC_METIN_II_GAME_CHARACTER_MANAGER_H__
 
-#ifdef M2_USE_POOL
-#include "pool.h"
-#endif
-
 #include "common/stl.h"
 #include "common/length.h"
 
@@ -137,10 +133,6 @@ class CHARACTER_MANAGER : public singleton<CHARACTER_MANAGER>
 
 		bool				m_bUsePendingDestroy;
 		CHARACTER_SET		m_set_pkChrPendingDestroy;
-
-#ifdef M2_USE_POOL
-		ObjectPool<CHARACTER> pool_;
-#endif
 };
 
 	template<class Func>	

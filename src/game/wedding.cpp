@@ -316,7 +316,7 @@ namespace marriage
 			return 0;
 		}
 
-		m_mapWedding.insert(make_pair(dwMapIndex, M2_NEW WeddingMap(dwMapIndex, dwPID1, dwPID2)));
+		m_mapWedding.insert(make_pair(dwMapIndex, new WeddingMap(dwMapIndex, dwPID1, dwPID2)));
 
 
 		// LOCALE_SERVICE
@@ -348,7 +348,7 @@ namespace marriage
 		pMap->DestroyAll();
 		m_mapWedding.erase(pMap->GetMapIndex());
 		SECTREE_MANAGER::instance().DestroyPrivateMap(pMap->GetMapIndex());
-		M2_DELETE(pMap);
+		delete pMap;
 	}
 
 	bool WeddingManager::End(DWORD dwMapIndex)

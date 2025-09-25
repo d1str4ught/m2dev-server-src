@@ -13,7 +13,7 @@ namespace quest
 
 		if (info)
 		{
-			M2_DELETE_ARRAY(info->name);
+			delete[] info->name;
 			info->name = NULL;
 		}
 
@@ -38,7 +38,7 @@ namespace quest
 		if (0 == info->time_cycle)	// 루프가 아니라면 종료 시킨다.
 		{
 			q.ClearServerTimerNotCancel(info->name, info->arg);
-			M2_DELETE_ARRAY(info->name);
+			delete[] info->name;
 			info->name = NULL;
 		}
 
@@ -75,7 +75,7 @@ END_OF_TIMER_EVENT:
 			else
 				sys_err("quest::PC pointer null. player_id: %u", info->player_id);
 
-			M2_DELETE_ARRAY(info->name);
+			delete[] info->name;
 			info->name = NULL;
 			return 0;
 		}
@@ -94,7 +94,7 @@ END_OF_TIMER_EVENT:
 		info->npc_id = timernpc;
 		info->time_cycle = loop ? ltime_cycle : 0;
 		info->arg = arg;
-		info->name		= M2_NEW char[nameCapacity];
+		info->name		= new char[nameCapacity];
 
 		if (info->name)
 			strlcpy(info->name, name, nameCapacity);
@@ -112,7 +112,7 @@ END_OF_TIMER_EVENT:
 
 		info->player_id		= player_id;
 		info->npc_id		= npc_id;
-		info->name		= M2_NEW char[nameCapacity];
+		info->name		= new char[nameCapacity];
 
 		if (info->name)
 			strlcpy(info->name, name, nameCapacity);

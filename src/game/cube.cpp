@@ -359,7 +359,7 @@ void Cube_init()
 	for (iter = s_cube_proto.begin(); iter!=s_cube_proto.end(); iter++)
 	{
 		p_cube = *iter;
-		M2_DELETE(p_cube);
+		delete p_cube;
 	}
 
 	s_cube_proto.clear();
@@ -405,7 +405,7 @@ bool Cube_load (const char *file)
 
 		TOKEN("section")
 		{
-			cube_data = M2_NEW CUBE_DATA;
+			cube_data = new CUBE_DATA;
 		}
 		else TOKEN("npc")
 		{
@@ -440,7 +440,7 @@ bool Cube_load (const char *file)
 			if (false == FN_check_cube_data(cube_data))
 			{
 				dev_log(LOG_DEB0, "something wrong");
-				M2_DELETE(cube_data);
+				delete cube_data;
 				continue;
 			}
 			s_cube_proto.push_back(cube_data);

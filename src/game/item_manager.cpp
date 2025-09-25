@@ -38,11 +38,7 @@ void ITEM_MANAGER::Destroy()
 {
 	itertype(m_VIDMap) it = m_VIDMap.begin();
 	for ( ; it != m_VIDMap.end(); ++it) {
-#ifdef M2_USE_POOL
-		pool_.Destroy(it->second);
-#else
-		M2_DELETE(it->second);
-#endif
+		delete it->second;
 	}
 	m_VIDMap.clear();
 }
@@ -195,11 +191,7 @@ LPITEM ITEM_MANAGER::CreateItem(DWORD vnum, DWORD count, DWORD id, bool bTryMagi
 	}
 
 	//아이템 하나 할당하고
-#ifdef M2_USE_POOL
-	item = pool_.Construct();
-#else
-	item = M2_NEW CItem(vnum);
-#endif
+	item = new CItem(vnum);
 
 	bool bIsNewItem = (0 == id);
 
@@ -576,15 +568,7 @@ void ITEM_MANAGER::DestroyItem(LPITEM item, const char* file, size_t line)
 
 	m_VIDMap.erase(item->GetVID());
 
-#ifdef M2_USE_POOL
-	pool_.Destroy(item);
-#else
-#ifndef DEBUG_ALLOC
-	M2_DELETE(item);
-#else
-	M2_DELETE_EX(item, file, line);
-#endif
-#endif
+	delete item;
 }
 
 LPITEM ITEM_MANAGER::Find(DWORD id)
@@ -1041,7 +1025,7 @@ bool ITEM_MANAGER::CreateDropItem(LPCHARACTER pkChr, LPCHARACTER pkKiller, std::
 
 	if (GetDropPerKillPct(100, 1000, iDeltaPercent, "lotto_drop") >= number(1, iRandRange))
 	{
-		DWORD * pdw = M2_NEW DWORD[3];
+		DWORD * pdw = new DWORD[3];
 
 		pdw[0] = 50001;
 		pdw[1] = 1;

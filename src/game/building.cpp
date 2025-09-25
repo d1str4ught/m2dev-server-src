@@ -331,7 +331,7 @@ void CLand::Destroy()
 	{
 		LPOBJECT pkObj = (it++)->second;
 		CManager::instance().UnregisterObject(pkObj);
-		M2_DELETE(pkObj);
+		delete pkObj;
 	}
 
 	m_map_pkObject.clear();
@@ -468,7 +468,7 @@ void CLand::DeleteObject(DWORD dwID)
 	m_map_pkObject.erase(dwID);
 	m_map_pkObjectByVID.erase(dwID);
 
-	M2_DELETE(pkObj);
+	delete pkObj;
 }
 
 struct FIsIn
@@ -639,7 +639,7 @@ void CManager::Destroy()
 {
 	itertype(m_map_pkLand) it = m_map_pkLand.begin();
 	for ( ; it != m_map_pkLand.end(); ++it) {
-		M2_DELETE(it->second);
+		delete it->second;
 	}
 	m_map_pkLand.clear();
 }
@@ -697,7 +697,7 @@ bool CManager::LoadLand(TLand * pTable) // from DB
 	//if (!map_allow_find(pTable->lMapIndex))
 	//	return false;
 
-	CLand * pkLand = M2_NEW CLand(pTable);
+	CLand * pkLand = new CLand(pTable);
 	m_map_pkLand.insert(std::make_pair(pkLand->GetID(), pkLand));
 
 	sys_log(0, "LAND: %u map %d %dx%d w %u h %u", 
@@ -836,7 +836,7 @@ bool CManager::LoadObject(TObject * pTable, bool isBoot) // from DB
 
 	sys_log(0, "OBJ: id %u vnum %u map %d pos %dx%d", pTable->dwID, pTable->dwVnum, pTable->lMapIndex, pTable->x, pTable->y);
 
-	LPOBJECT pkObj = M2_NEW CObject(pTable, pkProto);
+	LPOBJECT pkObj = new CObject(pTable, pkProto);
 
 	DWORD dwVID = CHARACTER_MANAGER::instance().AllocVID();
 	pkObj->SetVID(dwVID);

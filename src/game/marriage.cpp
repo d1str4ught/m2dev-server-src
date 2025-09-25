@@ -58,7 +58,7 @@ namespace marriage
 			ch1->ChatPacket(CHAT_TYPE_COMMAND, "lover_divorce");
 			ch2->ChatPacket(CHAT_TYPE_COMMAND, "lover_divorce");
 		}
-		M2_DELETE(pWeddingInfo);
+		delete pWeddingInfo;
 		pWeddingInfo = NULL;
 	}
 
@@ -571,7 +571,7 @@ namespace marriage
 			std::swap(szName1, szName2);
 		}
 
-		TMarriage* pMarriage = M2_NEW TMarriage(dwPID1, dwPID2, 0, tMarryTime, szName1, szName2);
+		TMarriage* pMarriage = new TMarriage(dwPID1, dwPID2, 0, tMarryTime, szName1, szName2);
 		m_Marriages.insert(pMarriage);
 		m_MarriageByPID.insert(make_pair(dwPID1, pMarriage));
 		m_MarriageByPID.insert(make_pair(dwPID2, pMarriage));
@@ -639,7 +639,7 @@ namespace marriage
 		m_MarriageByPID.erase(dwPID1);
 		m_MarriageByPID.erase(dwPID2);
 
-		M2_DELETE(pMarriage);
+		delete pMarriage;
 	}
 
 	void CManager::Login(LPCHARACTER ch)
@@ -682,7 +682,7 @@ namespace marriage
 			pwi = pMarriage->pWeddingInfo;
 		else
 		{
-			pwi = M2_NEW TWeddingInfo;
+			pwi = new TWeddingInfo;
 			pMarriage->pWeddingInfo = pwi;
 		}
 
@@ -734,7 +734,7 @@ namespace marriage
 				return;
 			}
 
-		M2_DELETE(pMarriage->pWeddingInfo);
+		delete pMarriage->pWeddingInfo;
 		pMarriage->pWeddingInfo = NULL;
 
 		m_setWedding.erase(make_pair(dwPID1, dwPID2));

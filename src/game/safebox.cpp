@@ -14,7 +14,7 @@ CSafebox::CSafebox(LPCHARACTER pkChrOwner, int iSize, DWORD dwGold) : m_pkChrOwn
 	memset(m_pkItems, 0, sizeof(m_pkItems));
 
 	if (m_iSize)
-		m_pkGrid = M2_NEW CGrid(5, m_iSize);
+		m_pkGrid = new CGrid(5, m_iSize);
 	else
 		m_pkGrid = NULL;
 
@@ -47,7 +47,7 @@ void CSafebox::__Destroy()
 
 	if (m_pkGrid)
 	{
-		M2_DELETE(m_pkGrid);
+		delete m_pkGrid;
 		m_pkGrid = NULL;
 	}
 }
@@ -150,9 +150,9 @@ void CSafebox::ChangeSize(int iSize)
 	CGrid * pkOldGrid = m_pkGrid;
 
 	if (pkOldGrid)
-		m_pkGrid = M2_NEW CGrid(pkOldGrid, 5, m_iSize);
+		m_pkGrid = new CGrid(pkOldGrid, 5, m_iSize);
 	else
-		m_pkGrid = M2_NEW CGrid(5, m_iSize);
+		m_pkGrid = new CGrid(5, m_iSize);
 }
 
 LPITEM CSafebox::GetItem(BYTE bCell)

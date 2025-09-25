@@ -222,7 +222,7 @@ namespace quest
 	{
 		CQuestManager & q = CQuestManager::instance();
 
-		THighscoreRegisterQueryInfo * qi = M2_NEW THighscoreRegisterQueryInfo;
+		THighscoreRegisterQueryInfo * qi = new THighscoreRegisterQueryInfo;
 
 		strlcpy(qi->szBoard, lua_tostring(L, 1), sizeof(qi->szBoard));
 		qi->dwPID = q.GetCurrentCharacterPtr()->GetPlayerID();

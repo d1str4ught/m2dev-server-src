@@ -23,7 +23,7 @@
 CShop::CShop()
 	: m_dwVnum(0), m_dwNPCVnum(0), m_pkPC(NULL)
 {
-	m_pGrid = M2_NEW CGrid(5, 9);
+	m_pGrid = new CGrid(5, 9);
 }
 
 CShop::~CShop()
@@ -47,7 +47,7 @@ CShop::~CShop()
 		++it;
 	}
 
-	M2_DELETE(m_pGrid);
+	delete m_pGrid;
 }
 
 void CShop::SetPCShop(LPCHARACTER ch)

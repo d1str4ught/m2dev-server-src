@@ -43,11 +43,11 @@ bool CShopManager::Initialize(TShopTable * table, int size)
 
 	for (i = 0; i < size; ++i, ++table)
 	{
-		LPSHOP shop = M2_NEW CShop;
+		LPSHOP shop = new CShop;
 
 		if (!shop->Create(table->dwVnum, table->dwNPCVnum, table->items))
 		{
-			M2_DELETE(shop);
+			delete shop;
 			continue;
 		}
 
@@ -68,7 +68,7 @@ void CShopManager::Destroy()
 
 	while (it != m_map_pkShop.end())
 	{
-		M2_DELETE(it->second);
+		delete it->second;
 		++it;
 	}
 
@@ -163,7 +163,7 @@ LPSHOP CShopManager::CreatePCShop(LPCHARACTER ch, TShopItemTable * pTable, BYTE 
 	if (FindPCShop(ch->GetVID()))
 		return NULL;
 
-	LPSHOP pkShop = M2_NEW CShop;
+	LPSHOP pkShop = new CShop;
 	pkShop->SetPCShop(ch);
 	pkShop->SetShopItems(pTable, bItemCount);
 
@@ -183,7 +183,7 @@ void CShopManager::DestroyPCShop(LPCHARACTER ch)
 	//END_PREVENT_ITEM_COPY
 	
 	m_map_pkShopByPC.erase(ch->GetVID());
-	M2_DELETE(pkShop);
+	delete pkShop;
 }
 
 // 상점 거래를 종료
@@ -558,7 +558,7 @@ bool CShopManager::ReadShopTableEx(const char* stFileName)
 		LPSHOPEX pkShopEx = NULL;
 		if (m_map_pkShopByNPCVnum.end() == shop_it)
 		{
-			pkShopEx = M2_NEW CShopEx;
+			pkShopEx = new CShopEx;
 			pkShopEx->Create(0, npcVnum);
 			m_map_pkShopByNPCVnum.insert(TShopMap::value_type(npcVnum, pkShopEx));
 		}

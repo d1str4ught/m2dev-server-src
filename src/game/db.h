@@ -128,7 +128,7 @@ template <class Functor> void DBManager::FuncQuery(Functor f, const char* c_pszF
 	vsnprintf(szQuery, 4096, c_pszFormat, args);
 	va_end(args);
 
-	CFuncQueryInfo * p = M2_NEW CFuncQueryInfo;
+	CFuncQueryInfo * p = new CFuncQueryInfo;
 
 	p->iQueryType = QUERY_TYPE_FUNCTION;
 	p->f = f;
@@ -145,7 +145,7 @@ template <class Functor> void DBManager::FuncAfterQuery(Functor f, const char* c
 	vsnprintf(szQuery, 4096, c_pszFormat, args);
 	va_end(args);
 
-	CFuncAfterQueryInfo * p = M2_NEW CFuncAfterQueryInfo;
+	CFuncAfterQueryInfo * p = new CFuncAfterQueryInfo;
 
 	p->iQueryType = QUERY_TYPE_AFTER_FUNCTION;
 	p->f = f;

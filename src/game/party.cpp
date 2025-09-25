@@ -104,7 +104,7 @@ LPPARTY CPartyManager::P2PCreateParty(DWORD pid)
 	if (it != m_map_pkParty.end())
 		return it->second;
 
-	LPPARTY pParty = M2_NEW CParty;
+	LPPARTY pParty = new CParty;
 
 	m_set_pkPCParty.insert(pParty);
 
@@ -122,7 +122,7 @@ void CPartyManager::P2PDeleteParty(DWORD pid)
 	if (it != m_map_pkParty.end())
 	{
 		m_set_pkPCParty.erase(it->second);
-		M2_DELETE(it->second);
+		delete it->second;
 	}
 	else
 		sys_err("PARTY P2PDeleteParty Cannot find party [%u]", pid);
@@ -133,7 +133,7 @@ LPPARTY CPartyManager::CreateParty(LPCHARACTER pLeader)
 	if (pLeader->GetParty())
 		return pLeader->GetParty();
 
-	LPPARTY pParty = M2_NEW CParty;
+	LPPARTY pParty = new CParty;
 
 	if (pLeader->IsPC())
 	{
@@ -176,7 +176,7 @@ void CPartyManager::DeleteParty(LPPARTY pParty)
 	db_clientdesc->DBPacket(HEADER_GD_PARTY_DELETE, 0, &p, sizeof(TPacketPartyDelete));
 
 	m_set_pkPCParty.erase(pParty);
-	M2_DELETE(pParty);
+	delete pParty;
 }
 
 void CPartyManager::SetPartyMember(DWORD dwPID, LPPARTY pParty)

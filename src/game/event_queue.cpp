@@ -30,11 +30,7 @@ void CEventQueue::Destroy()
 
 TQueueElement * CEventQueue::Enqueue(LPEVENT pvData, int duration, int pulse)
 {
-#ifdef M2_USE_POOL
-	TQueueElement * pElem = pool_.Construct();
-#else
-	TQueueElement * pElem = M2_NEW TQueueElement;
-#endif
+	TQueueElement * pElem = new TQueueElement;
 
 	pElem->pvData = pvData;
 	pElem->iStartTime = pulse;
@@ -57,11 +53,7 @@ TQueueElement * CEventQueue::Dequeue()
 
 void CEventQueue::Delete(TQueueElement * pElem)
 {
-#ifdef M2_USE_POOL
-	pool_.Destroy(pElem);
-#else
-	M2_DELETE(pElem);
-#endif
+	delete pElem;
 }
 
 int CEventQueue::GetTopKey()

@@ -73,11 +73,8 @@ LPCHARACTER CHARACTER_MANAGER::CreateCharacter(const char * name, DWORD dwPID)
 {
 	DWORD dwVID = AllocVID();
 
-#ifdef M2_USE_POOL
-	LPCHARACTER ch = pool_.Construct();
-#else
-	LPCHARACTER ch = M2_NEW CHARACTER;
-#endif
+	LPCHARACTER ch = new CHARACTER();
+
 	ch->Create(name, dwVID, dwPID ? true : false);
 
 	m_map_pkChrByVID.insert(std::make_pair(dwVID, ch));
@@ -153,15 +150,7 @@ void CHARACTER_MANAGER::DestroyCharacter(LPCHARACTER ch, const char* file, size_
 
 	RemoveFromStateList(ch);
 
-#ifdef M2_USE_POOL
-	pool_.Destroy(ch);
-#else
-#ifndef DEBUG_ALLOC
-	M2_DELETE(ch);
-#else
-	M2_DELETE_EX(ch, file, line);
-#endif
-#endif
+	delete ch;
 }
 
 LPCHARACTER CHARACTER_MANAGER::Find(DWORD dwVID)

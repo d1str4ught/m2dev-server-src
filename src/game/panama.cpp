@@ -46,7 +46,7 @@ size_t PanamaLoad()
 
 			sys_log(0, "PANAMA: %s %s", szPackName, szHex);
 
-			s_panamaVector.push_back(std::make_pair(szPackName, M2_NEW BYTE[32]));
+			s_panamaVector.push_back(std::make_pair(szPackName, new BYTE[32]));
 			memcpy(s_panamaVector[s_panamaVector.size() - 1].second, abIV, 32);
 		}
 
@@ -62,7 +62,7 @@ void PanamaDestroy()
 	PanamaVectorType::iterator it = s_panamaVector.begin();
 
 	while (it != s_panamaVector.end()) {
-		M2_DELETE_ARRAY(it->second);
+		delete[] it->second;
 		++it;
 	}
 }

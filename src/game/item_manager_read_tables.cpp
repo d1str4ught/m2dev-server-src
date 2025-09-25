@@ -79,7 +79,7 @@ bool ITEM_MANAGER::ReadCommonDropItemFile(const char * c_pszFileName)
 
 			if (!ITEM_MANAGER::instance().GetVnumByOriginalName(d[i].szItemName, dwItemVnum))
 			{
-				// ÀÌ¸§À¸·Î ¸øÃ£À¸¸é ¹øÈ£·Î °Ë»ö
+				// ï¿½Ì¸ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ã£ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È£ï¿½ï¿½ ï¿½Ë»ï¿½
 				str_to_number(dwItemVnum, d[i].szItemName);
 				if (!ITEM_MANAGER::instance().GetTable(dwItemVnum))
 				{
@@ -168,7 +168,7 @@ bool ITEM_MANAGER::ReadSpecialDropItemFile(const char * c_pszFileName)
 
 		if ("attr" == stType)
 		{
-			CSpecialAttrGroup * pkGroup = M2_NEW CSpecialAttrGroup(iVnum);
+			CSpecialAttrGroup * pkGroup = new CSpecialAttrGroup(iVnum);
 			for (int k = 1; k < 256; ++k)
 			{
 				char buf[4];
@@ -192,7 +192,7 @@ bool ITEM_MANAGER::ReadSpecialDropItemFile(const char * c_pszFileName)
 					if (apply_type > MAX_APPLY_NUM)
 					{
 						sys_err ("Invalid APPLY_TYPE %u in Special Item Group Vnum %d", apply_type, iVnum);
-						M2_DELETE(pkGroup);
+						delete pkGroup;
 						return false;
 					}
 					pkGroup->m_vecAttrs.push_back(CSpecialAttrGroup::CSpecialAttrInfo(apply_type, apply_value));
@@ -211,7 +211,7 @@ bool ITEM_MANAGER::ReadSpecialDropItemFile(const char * c_pszFileName)
 		}
 		else
 		{
-			CSpecialItemGroup * pkGroup = M2_NEW CSpecialItemGroup(iVnum, type);
+			CSpecialItemGroup * pkGroup = new CSpecialItemGroup(iVnum, type);
 			for (int k = 1; k < 256; ++k)
 			{
 				char buf[4];
@@ -224,7 +224,7 @@ bool ITEM_MANAGER::ReadSpecialDropItemFile(const char * c_pszFileName)
 
 					if (!GetVnumByOriginalName(name.c_str(), dwVnum))
 					{
-						if (name == "°æÇèÄ¡" || name == "exp")
+						if (name == "ï¿½ï¿½ï¿½ï¿½Ä¡" || name == "exp")
 						{
 							dwVnum = CSpecialItemGroup::EXP;
 						}
@@ -254,7 +254,7 @@ bool ITEM_MANAGER::ReadSpecialDropItemFile(const char * c_pszFileName)
 							if (!ITEM_MANAGER::instance().GetTable(dwVnum))
 							{
 								sys_err("ReadSpecialDropItemFile : there is no item %s : node %s", name.c_str(), stName.c_str());
-								M2_DELETE(pkGroup);
+								delete pkGroup;
 
 								return false;
 							}
@@ -373,7 +373,7 @@ bool ITEM_MANAGER::ConvSpecialDropItemFile()
 
 				if (!GetVnumByOriginalName(name.c_str(), dwVnum))
 				{
-					if (	name == "°æÇèÄ¡" ||
+					if (	name == "ï¿½ï¿½ï¿½ï¿½Ä¡" ||
 						name == "mob" ||
 						name == "slow" ||
 						name == "drain_hp" ||
@@ -406,7 +406,7 @@ bool ITEM_MANAGER::ConvSpecialDropItemFile()
 					str_to_number(iRarePct, pTok->at(3).c_str());
 				}
 
-				//    1   "±â¼ú ¼ö·Ã¼­"   1   100
+				//    1   "ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ã¼ï¿½"   1   100
 				if (0 == dwVnum)
 					fprintf(fp, "	%d	%s	%d	%d\n", k, name.c_str(), iCount, iProb);
 				else
@@ -567,7 +567,7 @@ bool ITEM_MANAGER::ReadMonsterDropItemGroup(const char * c_pszFileName)
 
 		if (strType == "kill")
 		{
-			CMobItemGroup * pkGroup = M2_NEW CMobItemGroup(iMobVnum, iKillDrop, stName);
+			CMobItemGroup * pkGroup = new CMobItemGroup(iMobVnum, iKillDrop, stName);
 
 			for (int k = 1; k < 256; ++k)
 			{
@@ -629,7 +629,7 @@ bool ITEM_MANAGER::ReadMonsterDropItemGroup(const char * c_pszFileName)
 			itertype(m_map_pkDropItemGroup) it = m_map_pkDropItemGroup.find (iMobVnum);
 			if (it == m_map_pkDropItemGroup.end())
 			{
-				pkGroup = M2_NEW CDropItemGroup(0, iMobVnum, stName);
+				pkGroup = new CDropItemGroup(0, iMobVnum, stName);
 			}
 			else
 			{
@@ -653,7 +653,7 @@ bool ITEM_MANAGER::ReadMonsterDropItemGroup(const char * c_pszFileName)
 						if (!ITEM_MANAGER::instance().GetTable(dwVnum))
 						{
 							sys_err("ReadDropItemGroup : there is no item %s : node %s", name.c_str(), stName.c_str());
-							M2_DELETE(pkGroup);
+							delete pkGroup;
 
 							return false;
 						}
@@ -665,7 +665,7 @@ bool ITEM_MANAGER::ReadMonsterDropItemGroup(const char * c_pszFileName)
 					if (iCount < 1)
 					{
 						sys_err("ReadMonsterDropItemGroup : there is no count for item %s : node %s", name.c_str(), stName.c_str());
-						M2_DELETE(pkGroup);
+						delete pkGroup;
 
 						return false;
 					}
@@ -688,7 +688,7 @@ bool ITEM_MANAGER::ReadMonsterDropItemGroup(const char * c_pszFileName)
 		}
 		else if ( strType == "limit" )
 		{
-			CLevelItemGroup* pkLevelItemGroup = M2_NEW CLevelItemGroup(iLevelLimit);
+			CLevelItemGroup* pkLevelItemGroup = new CLevelItemGroup(iLevelLimit);
 
 			for ( int k=1; k < 256; k++ )
 			{
@@ -705,7 +705,7 @@ bool ITEM_MANAGER::ReadMonsterDropItemGroup(const char * c_pszFileName)
 						str_to_number(dwItemVnum, name.c_str());
 						if ( !ITEM_MANAGER::instance().GetTable(dwItemVnum) )
 						{
-							M2_DELETE(pkLevelItemGroup);
+							delete pkLevelItemGroup;
 							return false;
 						}
 					}
@@ -715,7 +715,7 @@ bool ITEM_MANAGER::ReadMonsterDropItemGroup(const char * c_pszFileName)
 
 					if (iCount < 1)
 					{
-						M2_DELETE(pkLevelItemGroup);
+						delete pkLevelItemGroup;
 						return false;
 					}
 
@@ -734,7 +734,7 @@ bool ITEM_MANAGER::ReadMonsterDropItemGroup(const char * c_pszFileName)
 		}
 		else if (strType == "thiefgloves")
 		{
-			CBuyerThiefGlovesItemGroup* pkGroup = M2_NEW CBuyerThiefGlovesItemGroup(0, iMobVnum, stName);
+			CBuyerThiefGlovesItemGroup* pkGroup = new CBuyerThiefGlovesItemGroup(0, iMobVnum, stName);
 
 			for (int k = 1; k < 256; ++k)
 			{
@@ -752,7 +752,7 @@ bool ITEM_MANAGER::ReadMonsterDropItemGroup(const char * c_pszFileName)
 						if (!ITEM_MANAGER::instance().GetTable(dwVnum))
 						{
 							sys_err("ReadDropItemGroup : there is no item %s : node %s", name.c_str(), stName.c_str());
-							M2_DELETE(pkGroup);
+							delete pkGroup;
 
 							return false;
 						}
@@ -764,7 +764,7 @@ bool ITEM_MANAGER::ReadMonsterDropItemGroup(const char * c_pszFileName)
 					if (iCount < 1)
 					{
 						sys_err("ReadMonsterDropItemGroup : there is no count for item %s : node %s", name.c_str(), stName.c_str());
-						M2_DELETE(pkGroup);
+						delete pkGroup;
 
 						return false;
 					}
@@ -838,7 +838,7 @@ bool ITEM_MANAGER::ReadDropItemGroup(const char * c_pszFileName)
 		CDropItemGroup* pkGroup;
 
 		if (it == m_map_pkDropItemGroup.end())
-			pkGroup = M2_NEW CDropItemGroup(iVnum, iMobVnum, stName);
+			pkGroup = new CDropItemGroup(iVnum, iMobVnum, stName);
 		else
 			pkGroup = it->second;
 
@@ -860,7 +860,7 @@ bool ITEM_MANAGER::ReadDropItemGroup(const char * c_pszFileName)
 						sys_err("ReadDropItemGroup : there is no item %s : node %s", name.c_str(), stName.c_str());
 
 						if (it == m_map_pkDropItemGroup.end())
-							M2_DELETE(pkGroup);
+							delete pkGroup;
 
 						return false;
 					}
@@ -879,7 +879,7 @@ bool ITEM_MANAGER::ReadDropItemGroup(const char * c_pszFileName)
 					sys_err("ReadDropItemGroup : there is no count for item %s : node %s", name.c_str(), stName.c_str());
 
 					if (it == m_map_pkDropItemGroup.end())
-						M2_DELETE(pkGroup);
+						delete pkGroup;
 
 					return false;
 				}

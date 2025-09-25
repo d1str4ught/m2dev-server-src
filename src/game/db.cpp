@@ -84,7 +84,7 @@ void DBManager::ReturnQuery(int iType, DWORD dwIdent, void * pvData, const char 
 	vsnprintf(szQuery, sizeof(szQuery), c_pszFormat, args);
 	va_end(args);
 
-	CReturnQueryInfo * p = M2_NEW CReturnQueryInfo;
+	CReturnQueryInfo * p = new CReturnQueryInfo;
 
 	p->iQueryType = QUERY_TYPE_RETURN;
 	p->iType = iType;
@@ -122,7 +122,7 @@ void DBManager::Process()
 					{
 						CFuncQueryInfo* qi = reinterpret_cast<CFuncQueryInfo*>( pMsg->pvUserData );
 						qi->f(pMsg);
-						M2_DELETE(qi);
+						delete qi;
 					}
 					break;
 
@@ -130,7 +130,7 @@ void DBManager::Process()
 					{
 						CFuncAfterQueryInfo* qi = reinterpret_cast<CFuncAfterQueryInfo*>( pMsg->pvUserData );
 						qi->f();
-						M2_DELETE(qi);
+						delete qi;
 					}
 					break;
 			}
@@ -164,7 +164,7 @@ void DBManager::DeleteLoginData(CLoginData * pkLD)
 
 	sys_log(0, "DeleteLoginData %s %p", pkLD->GetLogin(), pkLD);
 
-	M2_DELETE(it->second);
+	delete it->second;
 	m_map_pkLoginData.erase(it);
 }
 
@@ -214,7 +214,7 @@ void DBManager::LoginPrepare(LPDESC d, uint32_t * pdwClientKey, int * paiPremium
 {
 	const TAccountTable & r = d->GetAccountTable();
 
-	CLoginData * pkLD = M2_NEW CLoginData;
+	CLoginData * pkLD = new CLoginData;
 
 	pkLD->SetKey(d->GetLoginKey());
 	pkLD->SetLogin(r.login);
@@ -270,7 +270,7 @@ void DBManager::AnalyzeReturnQuery(SQLMsg * pMsg)
 
 				if (!d)
 				{
-					M2_DELETE(pinfo);
+					delete pinfo;
 					break;
 				}
 				//위치 변경 - By SeMinZ
@@ -282,7 +282,7 @@ void DBManager::AnalyzeReturnQuery(SQLMsg * pMsg)
 				{
 					sys_log(0, "   NOID");
 					LoginFailure(d, "NOID");
-					M2_DELETE(pinfo);
+					delete pinfo;
 				}
 				else
 				{
@@ -300,7 +300,7 @@ void DBManager::AnalyzeReturnQuery(SQLMsg * pMsg)
 					if (!row[col]) 
 					{ 
 						sys_err("error column %d", col);
-						M2_DELETE(pinfo);
+						delete pinfo;
 					   	break; 
 					}
 					
@@ -309,7 +309,7 @@ void DBManager::AnalyzeReturnQuery(SQLMsg * pMsg)
 					if (!row[col]) 
 					{
 					   	sys_err("error column %d", col);
-						M2_DELETE(pinfo);
+						delete pinfo;
 					   	break;
 				   	}
 				
@@ -328,7 +328,7 @@ void DBManager::AnalyzeReturnQuery(SQLMsg * pMsg)
 					if (!row[col])
 				   	{ 
 						sys_err("error column %d", col); 
-						M2_DELETE(pinfo);
+						delete pinfo;
 						break;
 				   	}
 
@@ -337,7 +337,7 @@ void DBManager::AnalyzeReturnQuery(SQLMsg * pMsg)
 					if (!row[col])
 				   	{
 					   	sys_err("error column %d", col);
-						M2_DELETE(pinfo);
+						delete pinfo;
 					   	break;
 				   	}
 				
@@ -346,7 +346,7 @@ void DBManager::AnalyzeReturnQuery(SQLMsg * pMsg)
 					if (!row[col]) 
 					{
 					   	sys_err("error column %d", col); 
-						M2_DELETE(pinfo);
+						delete pinfo;
 						break;
 				   	}
 
@@ -406,25 +406,25 @@ void DBManager::AnalyzeReturnQuery(SQLMsg * pMsg)
 					{
 						LoginFailure(d, "WRONGPWD");
 						sys_log(0, "   WRONGPWD");
-						M2_DELETE(pinfo);
+						delete pinfo;
 					}
 					else if (bNotAvail)
 					{
 						LoginFailure(d, "NOTAVAIL");
 						sys_log(0, "   NOTAVAIL");
-						M2_DELETE(pinfo);
+						delete pinfo;
 					}
 					else if (DESC_MANAGER::instance().FindByLoginName(pinfo->login))
 					{
 						LoginFailure(d, "ALREADY");
 						sys_log(0, "   ALREADY");
-						M2_DELETE(pinfo);
+						delete pinfo;
 					}
 					else if (strcmp(szStatus, "OK"))
 					{
 						LoginFailure(d, szStatus);
 						sys_log(0, "   STATUS: %s", szStatus);
-						M2_DELETE(pinfo);
+						delete pinfo;
 					}
 					else
 					{
@@ -435,7 +435,7 @@ void DBManager::AnalyzeReturnQuery(SQLMsg * pMsg)
 							{
 								LoginFailure(d, "BLKLOGIN");
 								sys_log(0, "   BLKLOGIN");
-								M2_DELETE(pinfo);
+								delete pinfo;
 								break;
 							}
 
@@ -455,7 +455,7 @@ void DBManager::AnalyzeReturnQuery(SQLMsg * pMsg)
 						d->SetMatrixCode(szMatrixCode);
 
 						LoginPrepare(d, pinfo->adwClientKey, aiPremiumTimes);
-						M2_DELETE(pinfo);
+						delete pinfo;
 
 						sys_log(0, "QID_AUTH_LOGIN: SUCCESS %s", pinfo->login);
 					}
@@ -536,7 +536,7 @@ void DBManager::AnalyzeReturnQuery(SQLMsg * pMsg)
 					}
 				}
 
-				M2_DELETE_ARRAY(pdw);
+				delete[] pdw;
 			}
 			break;
 
@@ -564,7 +564,7 @@ void DBManager::AnalyzeReturnQuery(SQLMsg * pMsg)
 					Query("REPLACE INTO highscore%s VALUES('%s', %u, %d)",
 							get_table_postfix(), info->szBoard, info->dwPID, info->iValue);
 
-				M2_DELETE(info);
+				delete info;
 			}
 			break;
 
@@ -601,7 +601,7 @@ void DBManager::AnalyzeReturnQuery(SQLMsg * pMsg)
 			break;
 	}
 
-	M2_DELETE(qi);
+	delete qi;
 }
 
 void DBManager::LoadDBString()
@@ -728,7 +728,7 @@ void AccountDB::ReturnQuery(int iType, DWORD dwIdent, void * pvData, const char 
 	vsnprintf(szQuery, sizeof(szQuery), c_pszFormat, args);
 	va_end(args);
 
-	CReturnQueryInfo * p = M2_NEW CReturnQueryInfo;
+	CReturnQueryInfo * p = new CReturnQueryInfo;
 
 	p->iQueryType = QUERY_TYPE_RETURN;
 	p->iType = iType;
@@ -825,5 +825,5 @@ void AccountDB::AnalyzeReturnQuery(SQLMsg * pMsg)
 			break;
 	}
 
-	M2_DELETE(qi);
+	delete qi;
 }

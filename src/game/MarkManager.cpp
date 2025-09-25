@@ -7,12 +7,12 @@
 
 CGuildMarkImage * CGuildMarkManager::__NewImage()
 {
-	return M2_NEW CGuildMarkImage;
+	return new CGuildMarkImage;
 }
 
 void CGuildMarkManager::__DeleteImage(CGuildMarkImage * pkImgDel)
 {
-	M2_DELETE(pkImgDel);
+	delete pkImgDel;
 }
 
 CGuildMarkManager::CGuildMarkManager()

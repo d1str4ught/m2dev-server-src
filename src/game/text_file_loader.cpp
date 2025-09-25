@@ -42,12 +42,12 @@ bool CTextFileLoader::Load(const char * c_szFileName)
 	const size_t fileSize = ftell(fp);
 	fseek(fp, 0, SEEK_SET);
 
-	char * pData = M2_NEW char[fileSize];
+	char * pData = new char[fileSize];
 	fread(pData, fileSize, 1, fp);
 	fclose(fp);
 
 	m_fileLoader.Bind(fileSize, pData);
-	M2_DELETE_ARRAY(pData);
+	delete[] pData;
 
 	LoadGroup(&m_globalNode);
 	return true;

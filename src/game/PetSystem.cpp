@@ -545,7 +545,7 @@ CPetActor* CPetSystem::Summon(DWORD mobVnum, LPITEM pSummonItem, const char* pet
 	// 등록된 펫이 아니라면 새로 생성 후 관리 목록에 등록함.
 	if (0 == petActor)
 	{
-		petActor = M2_NEW CPetActor(m_pkOwner, mobVnum, options);
+		petActor = new CPetActor(m_pkOwner, mobVnum, options);
 		m_petActorMap.insert(std::make_pair(mobVnum, petActor));
 	}
 

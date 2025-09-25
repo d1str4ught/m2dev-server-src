@@ -115,7 +115,7 @@ EVENTFUNC( DragonLair_Collapse_Event )
 	else
 	{
 		SECTREE_MANAGER::instance().DestroyPrivateMap( pInfo->InstanceMapIndex );
-		M2_DELETE(pInfo->pLair);
+		delete pInfo->pLair;
 	}
 
 	return 0;
@@ -197,7 +197,7 @@ bool CDragonLairManager::Start(long MapIndexFrom, long BaseMapIndex, DWORD Guild
 
 			pMap->for_each( f );
 
-			LairMap_.insert( std::make_pair(GuildID, M2_NEW CDragonLair(GuildID, BaseMapIndex, instanceMapIndex)) );
+			LairMap_.insert( std::make_pair(GuildID, new CDragonLair(GuildID, BaseMapIndex, instanceMapIndex)) );
 
 			std::string strMapBasePath( LocaleService_GetMapPath() );
 

@@ -63,7 +63,7 @@ bool CMobManager::Initialize(TMobTable * pTable, int iSize)
 
 	for (int i = 0; i < iSize; ++i, ++t)
 	{
-		CMob * pkMob = M2_NEW CMob;
+		CMob * pkMob = new CMob;
 
 		thecore_memcpy(&pkMob->m_table, t, sizeof(TMobTable));
 
@@ -271,7 +271,7 @@ bool CMobManager::LoadGroupGroup(const char * c_pszFileName)
 
 		TTokenVector * pTok;
 
-		CMobGroupGroup * pkGroup = M2_NEW CMobGroupGroup(iVnum);
+		CMobGroupGroup * pkGroup = new CMobGroupGroup(iVnum);
 
 		for (int k = 1; k < 256; ++k)
 		{
@@ -346,7 +346,7 @@ bool CMobManager::LoadGroup(const char * c_pszFileName)
 			continue;
 		}
 
-		CMobGroup * pkGroup = M2_NEW CMobGroup;
+		CMobGroup * pkGroup = new CMobGroup;
 
 		pkGroup->Create(iVnum, stName);
 		DWORD vnum = 0;

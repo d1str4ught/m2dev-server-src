@@ -80,7 +80,7 @@ char *locale_convert(const char *src, int len)
 	if (!len)
 		return NULL;
 
-	buf = M2_NEW char[len + 1];
+	buf = new char[len + 1];
 
 	for (j = i = 0, tmp = src, dest = buf; i < len; i++, tmp++)
 	{
@@ -119,7 +119,7 @@ ENCODE:
 
 	if (!j)
 	{
-		M2_DELETE_ARRAY(buf);
+		delete[] buf;
 		return NULL;
 	}
 
@@ -142,7 +142,7 @@ void locale_init(const char *filename)
 
 	i++;
 
-	buf = M2_NEW char[i];
+	buf = new char[i];
 
 	memset(buf, 0, i);
 
@@ -197,7 +197,7 @@ void locale_init(const char *filename)
 
 			for (i = 0; i < NUM_LOCALES; i++)
 				if (strings[i])
-					M2_DELETE_ARRAY(strings[i]);
+					delete[] strings[i];
 		}
 		else
 		{
@@ -209,6 +209,6 @@ void locale_init(const char *filename)
 	}
 	while (tmp && *tmp);
 
-	M2_DELETE_ARRAY(buf);
+	delete[] buf;
 }
 

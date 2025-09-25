@@ -22,6 +22,11 @@ inline void stl_lowers(std::string& rstRet)
 		rstRet[i] = tolower(rstRet[i]);
 }
 
+template<typename T>
+T* get_pointer(T* p) {
+	return p;
+}
+
 struct stringhash       
 {
 	size_t operator () (const std::string & str) const
