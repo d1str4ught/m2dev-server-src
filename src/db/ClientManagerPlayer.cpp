@@ -762,7 +762,7 @@ void CClientManager::RESULT_QUEST_LOAD(CPeer * peer, MYSQL_RES * pRes, DWORD dwH
 		str_to_number(r.lValue, row[3]);
 	}
 
-	sys_log(0, "QUEST_LOAD: count %d PID %u", s_table.size(), s_table[0].dwPID);
+	sys_log(0, "QUEST_LOAD: count %d PID %u", s_table.size(), pid);
 
 	DWORD dwCount = s_table.size();
 

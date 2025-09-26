@@ -510,6 +510,7 @@ void CClientManager::RESULT_SAFEBOX_LOAD(CPeer * pkPeer, SQLMsg * msg)
 			if (strcmp("000000", szSafeboxPassword))
 			{
 				pkPeer->EncodeHeader(HEADER_DG_SAFEBOX_WRONG_PASSWORD, dwHandle, 0);
+				delete pSafebox;
 				delete pi;
 				return;
 			}
@@ -523,6 +524,7 @@ void CClientManager::RESULT_SAFEBOX_LOAD(CPeer * pkPeer, SQLMsg * msg)
 				((row[2] && *row[2]) && strcmp(row[2], szSafeboxPassword)))
 			{
 				pkPeer->EncodeHeader(HEADER_DG_SAFEBOX_WRONG_PASSWORD, dwHandle, 0);
+				delete pSafebox;
 				delete pi;
 				return;
 			}
@@ -859,7 +861,7 @@ void CClientManager::RESULT_SAFEBOX_CHANGE_PASSWORD(CPeer * pkPeer, SQLMsg * msg
 	{
 		MYSQL_ROW row = mysql_fetch_row(msg->Get()->pSQLResult);
 
-		if (row[0] && *row[0] && !strcasecmp(row[0], p->login) || (!row[0] || !*row[0]) && !strcmp("000000", p->login))
+		if ((row[0] && *row[0] && !strcasecmp(row[0], p->login)) || ((!row[0] || !*row[0]) && !strcmp("000000", p->login)))
 		{
 			char szQuery[QUERY_MAX_LEN];
 			char escape_pwd[64];
@@ -907,6 +909,9 @@ void CClientManager::RESULT_PRICELIST_LOAD(CPeer* peer, SQLMsg* pMsg)
 
 	while ((row = mysql_fetch_row(pMsg->Get()->pSQLResult)))
 	{
+		if (table.byCount >= SHOP_PRICELIST_MAX_NUM)
+			break;
+
 		str_to_number(table.aPriceInfo[table.byCount].dwVnum, row[0]);
 		str_to_number(table.aPriceInfo[table.byCount].dwPrice, row[1]);
 		table.byCount++;
@@ -950,6 +955,9 @@ void CClientManager::RESULT_PRICELIST_LOAD_FOR_UPDATE(SQLMsg* pMsg)
 
 	while ((row = mysql_fetch_row(pMsg->Get()->pSQLResult)))
 	{
+		if (table.byCount >= SHOP_PRICELIST_MAX_NUM)
+			break;
+
 		str_to_number(table.aPriceInfo[table.byCount].dwVnum, row[0]);
 		str_to_number(table.aPriceInfo[table.byCount].dwPrice, row[1]);
 		table.byCount++;
@@ -1991,7 +1999,7 @@ void CClientManager::WeddingEnd(TPacketWeddingEnd * p)
 // Fixed code:
 void CClientManager::MyshopPricelistUpdate(const TItemPriceListTable* pPacket)
 {
-	if (pPacket->byCount > SHOP_PRICELIST_MAX_NUM)
+	if (pPacket->byCount >= SHOP_PRICELIST_MAX_NUM)
 	{
 		sys_err("count overflow!");
 		return;

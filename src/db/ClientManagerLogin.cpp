@@ -97,7 +97,7 @@ void CClientManager::QUERY_LOGIN_BY_KEY(CPeer * pkPeer, DWORD dwHandle, TPacketG
 	{
 		sys_log(0, "LOGIN_BY_KEY already login %s %lu", r.login, p->dwLoginKey);
 		TPacketDGLoginAlready ptog;
-		strlcpy(ptog.szLogin, szLogin, sizeof(ptog.szLogin));
+		strlcpy(ptog.szLogin, r.login, sizeof(ptog.szLogin));
 		pkPeer->EncodeHeader(HEADER_DG_LOGIN_ALREADY, dwHandle, sizeof(TPacketDGLoginAlready));
 		pkPeer->Encode(&ptog, sizeof(TPacketDGLoginAlready));
 		return;
