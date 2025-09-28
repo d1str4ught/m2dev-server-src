@@ -396,6 +396,7 @@ void CInputDB::PlayerLoad(LPDESC d, const char * data)
 	if (NULL != CHARACTER_MANAGER::Instance().FindPC(pTab->name))
 	{
 		sys_err("InputDB: PlayerLoad : %s already exist in game", pTab->name);
+		d->SetPhase(PHASE_CLOSE);
 		return;
 	}
 
@@ -1411,7 +1412,7 @@ void CInputDB::GuildSkillRecharge()
 
 void CInputDB::GuildExpUpdate(const char* c_pData)
 {
-	TPacketGuildSkillUpdate * p = (TPacketGuildSkillUpdate *) c_pData;
+	TPacketGuildExpUpdate * p = (TPacketGuildExpUpdate *) c_pData;
 	sys_log(1, "GuildExpUpdate %d", p->amount);
 
 	CGuild * g = CGuildManager::instance().TouchGuild(p->guild_id);

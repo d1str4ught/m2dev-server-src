@@ -197,6 +197,12 @@ void CInputLogin::ChangeName(LPDESC d, const char * data)
 		return;
 	}
 
+	if (p->index < 0 || p->index >= PLAYER_PER_ACCOUNT)
+	{
+		sys_err("index overflow %d, login: %s", p->index, c_r.login);
+		return;
+	}
+
 	if (!c_r.players[p->index].bChangeName)
 		return;
 
@@ -229,9 +235,16 @@ void CInputLogin::CharacterSelect(LPDESC d, const char * data)
 		return;
 	}
 
-	if (pinfo->index >= PLAYER_PER_ACCOUNT)
+	if (pinfo->index < 0 || pinfo->index >= PLAYER_PER_ACCOUNT)
 	{
 		sys_err("index overflow %d, login: %s", pinfo->index, c_r.login);
+		return;
+	}
+
+	if (c_r.players[pinfo->index].dwID == 0)
+	{
+		sys_err("player index(%d) is null. login %s", 
+				pinfo->index, c_r.login);
 		return;
 	}
 
@@ -431,6 +444,13 @@ void CInputLogin::CharacterCreate(LPDESC d, const char * data)
 		return;
 	}
 
+	if (pinfo->index < 0 || pinfo->index >= PLAYER_PER_ACCOUNT)
+	{
+		sys_err("index overflow %d, login: %s", pinfo->index, d->GetAccountTable().login);
+		d->Packet(&packFailure, sizeof(packFailure));
+		return;
+	}
+
 	// 사용할 수 없는 이름이거나, 잘못된 평상복이면 생설 실패
 	if (!check_name(pinfo->name) || pinfo->shape > 1)
 	{
@@ -502,7 +522,7 @@ void CInputLogin::CharacterDelete(LPDESC d, const char * data)
 
 	sys_log(0, "PlayerDelete: login: %s index: %d, social_id %s", c_rAccountTable.login, pinfo->index, pinfo->private_code);
 
-	if (pinfo->index >= PLAYER_PER_ACCOUNT)
+	if (pinfo->index < 0 || pinfo->index >= PLAYER_PER_ACCOUNT)
 	{
 		sys_err("PlayerDelete: index overflow %d, login: %s", pinfo->index, c_rAccountTable.login);
 		return;
