@@ -457,13 +457,6 @@ bool DESC_MANAGER::LoadClientPackageCryptInfo(const char* pDirName)
 {
 	return m_pPackageCrypt->LoadPackageCryptInfo(pDirName);
 }
-#ifdef OS_FREEBSD
-void DESC_MANAGER::NotifyClientPackageFileChanged( const std::string& dirName, eFileUpdatedOptions eUpdateOption )
-{
-	 Instance().LoadClientPackageCryptInfo(dirName.c_str());
-}
-#endif 
-
 
 void DESC_MANAGER::SendClientPackageCryptKey( LPDESC desc )
 {
