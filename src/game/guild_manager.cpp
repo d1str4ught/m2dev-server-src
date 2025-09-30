@@ -586,13 +586,13 @@ void CGuildManager::WaitStartWar(DWORD guild_id1, DWORD guild_id2)
 
 struct FSendWarList
 {
-	FSendWarList(BYTE subheader, DWORD guild_id1, DWORD guild_id2)
+	FSendWarList(BYTE subheader, uint32_t guild_id1, uint32_t guild_id2)
 	{
 		gid1 = guild_id1;
 		gid2 = guild_id2;
 
 		p.header	= HEADER_GC_GUILD;
-		p.size		= sizeof(p) + sizeof(DWORD) * 2;
+		p.size		= sizeof(p) + sizeof(uint32_t) * 2;
 		p.subheader	= subheader;
 	}
 
@@ -603,12 +603,12 @@ struct FSendWarList
 		if (d)
 		{
 			d->BufferedPacket(&p, sizeof(p));
-			d->BufferedPacket(&gid1, sizeof(DWORD));
-			d->Packet(&gid2, sizeof(DWORD));
+			d->BufferedPacket(&gid1, sizeof(uint32_t));
+			d->Packet(&gid2, sizeof(uint32_t));
 		}
 	}
 
-	DWORD gid1, gid2;
+	uint32_t gid1, gid2;
 	TPacketGCGuild p;
 };
 
@@ -798,13 +798,14 @@ void CGuildManager::SendGuildWar(LPCHARACTER ch)
 	TPacketGCGuild p;
 	p.header= HEADER_GC_GUILD;
 	p.subheader = GUILD_SUBHEADER_GC_GUILD_WAR_LIST;
-	p.size = sizeof(p) + (sizeof(DWORD) * 2) * m_GuildWar.size();
+	p.size = sizeof(p) + (sizeof(uint32_t) * 2) * m_GuildWar.size();
 	buf.write(&p, sizeof(p));
 
 	for (auto it = m_GuildWar.begin(); it != m_GuildWar.end(); ++it)
 	{
-		buf.write(&it->first, sizeof(DWORD));
-		buf.write(&it->second, sizeof(DWORD));
+		uint32_t a = it->first, b = it->first;
+		buf.write(&a, sizeof(uint32_t));
+		buf.write(&b, sizeof(uint32_t));
 	}
 
 	ch->GetDesc()->Packet(buf.read_peek(), buf.size());

@@ -28,11 +28,11 @@ namespace
 {
 	struct FGuildNameSender
 	{
-		FGuildNameSender(DWORD id, const char* guild_name) : id(id), name(guild_name)
+		FGuildNameSender(uint32_t id, const char* guild_name) : id(id), name(guild_name)
 		{
 			p.header = HEADER_GC_GUILD;
 			p.subheader = GUILD_SUBHEADER_GC_GUILD_NAME;
-			p.size = sizeof(p) + sizeof(DWORD) + GUILD_NAME_MAX_LEN;
+			p.size = sizeof(p) + sizeof(uint32_t) + GUILD_NAME_MAX_LEN;
 		}
 
 		void operator() (LPCHARACTER ch)
@@ -47,7 +47,7 @@ namespace
 			}
 		}
 
-		DWORD id;
+		uint32_t id;
 		const char * name;
 		TPacketGCGuild p;
 	};
@@ -319,7 +319,7 @@ void CGuild::LogoutMember(LPCHARACTER ch)
 	}
 }
 
-void CGuild::SendOnlineRemoveOnePacket(DWORD pid)
+void CGuild::SendOnlineRemoveOnePacket(uint32_t pid)
 {
 	TPacketGCGuild pack;
 	pack.header = HEADER_GC_GUILD;
@@ -396,15 +396,20 @@ void CGuild::SendListOneToAll(DWORD pid)
 		if (!d) 
 			continue;
 
+		TGuildMemberPacketData p;
+		p.pid = cit->second.pid;
+		p.grade = cit->second.grade;
+		p.is_general = cit->second.is_general;
+		p.job = cit->second.job;
+		p.level = cit->second.level;
+		p.offer = cit->second.offer_exp;
+		p.name_flag = 1;
+		strlcpy(p.name, cit->second.name.c_str(), sizeof(p.name));
+
+
 		TEMP_BUFFER buf;
-
 		buf.write(&pack, sizeof(pack));
-
-		cit->second._dummy = 1;
-
-		buf.write(&(cit->second), sizeof(DWORD) * 3 +1);
-		buf.write(cit->second.name.c_str(), cit->second.name.length());
-		buf.write(c, CHARACTER_NAME_MAX_LEN + 1 - cit->second.name.length());
+		buf.write(&p, sizeof(p));
 		d->Packet(buf.read_peek(), buf.size());
 	}
 }
@@ -435,20 +440,20 @@ void CGuild::SendListPacket(LPCHARACTER ch)
 	pack.size += sizeof(TGuildMemberPacketData) * m_member.size();
 
 	TEMP_BUFFER buf;
-
 	buf.write(&pack,sizeof(pack));
-
-	char c[CHARACTER_NAME_MAX_LEN+1];
 
 	for (TGuildMemberContainer::iterator it = m_member.begin(); it != m_member.end(); ++it)
 	{
-		it->second._dummy = 1;
-
-		buf.write(&(it->second), sizeof(DWORD)*3+1);
-
-		strlcpy(c, it->second.name.c_str(), MIN(sizeof(c), it->second.name.length() + 1));
-
-		buf.write(c, CHARACTER_NAME_MAX_LEN+1 );
+		TGuildMemberPacketData p;
+		p.pid = it->second.pid;
+		p.grade = it->second.grade;
+		p.is_general = it->second.is_general;
+		p.job = it->second.job;
+		p.level = it->second.level;
+		p.offer = it->second.offer_exp;
+		p.name_flag = 1;
+		strlcpy(p.name, it->second.name.c_str(), sizeof(p.name));
+		buf.write(&p, sizeof(p));
 
 		if ( test_server )
 			sys_log(0 ,"name %s job %d  ", it->second.name.c_str(), it->second.job );
@@ -473,7 +478,7 @@ void CGuild::SendLoginPacket(LPCHARACTER ch, LPCHARACTER chLogin)
 	SendLoginPacket(ch, chLogin->GetPlayerID());
 }
 
-void CGuild::SendLoginPacket(LPCHARACTER ch, DWORD pid)
+void CGuild::SendLoginPacket(LPCHARACTER ch, uint32_t pid)
 {
 	/*
 	   Login Packet
@@ -502,7 +507,7 @@ void CGuild::SendLogoutPacket(LPCHARACTER ch, LPCHARACTER chLogout)
 	SendLogoutPacket(ch, chLogout->GetPlayerID());
 }
 
-void CGuild::SendLogoutPacket(LPCHARACTER ch, DWORD pid)
+void CGuild::SendLogoutPacket(LPCHARACTER ch, uint32_t pid)
 {
 	/*
 	   Logout Packet
@@ -1098,7 +1103,7 @@ void CGuild::RefreshCommentForce(DWORD player_id)
 	}
 }
 
-bool CGuild::ChangeMemberGeneral(DWORD pid, BYTE is_general)
+bool CGuild::ChangeMemberGeneral(uint32_t pid, BYTE is_general)
 {
 	if (is_general && GetGeneralCount() >= GetMaxGeneralCount())
 		return false;
@@ -1144,7 +1149,7 @@ bool CGuild::ChangeMemberGeneral(DWORD pid, BYTE is_general)
 	return true;
 }
 
-void CGuild::ChangeMemberGrade(DWORD pid, BYTE grade)
+void CGuild::ChangeMemberGrade(uint32_t pid, BYTE grade)
 {
 	if (grade == 1)
 		return;
@@ -1552,7 +1557,9 @@ void CGuild::GuildPointChange(BYTE type, int amount, bool save)
 			TEMP_BUFFER buf;
 			buf.write(&pack,sizeof(pack));
 			buf.write(&m_data.level,1);
-			buf.write(&m_data.exp,4);
+
+			uint32_t exp = m_data.exp;
+			buf.write(&exp,4);
 
 			for (TGuildMemberOnlineContainer::iterator it = m_memberOnline.begin(); it != m_memberOnline.end(); ++it)
 			{
@@ -1873,12 +1880,13 @@ void CGuild::RecvMoneyChange(int iGold)
 	p.size = sizeof(p) + sizeof(int);
 	p.subheader = GUILD_SUBHEADER_GC_MONEY_CHANGE;
 
+	uint32_t gold = iGold;
 	for (itertype(m_memberOnline) it = m_memberOnline.begin(); it != m_memberOnline.end(); ++it)
 	{
 		LPCHARACTER ch = *it;
 		LPDESC d = ch->GetDesc();
 		d->BufferedPacket(&p, sizeof(p));
-		d->Packet(&iGold, sizeof(int));
+		d->Packet(&gold, sizeof(uint32_t));
 	}
 }
 
@@ -2009,16 +2017,16 @@ void CGuild::Invite( LPCHARACTER pchInviter, LPCHARACTER pchInvitee )
 	// 초대 받는 character 에게 초대 패킷 전송
 	// 
 
-	DWORD gid = GetID();
+	uint32_t gid = GetID();
 
 	TPacketGCGuild p;
 	p.header	= HEADER_GC_GUILD;
-	p.size	= sizeof(p) + sizeof(DWORD) + GUILD_NAME_MAX_LEN;
+	p.size	= sizeof(p) + sizeof(uint32_t) + GUILD_NAME_MAX_LEN;
 	p.subheader	= GUILD_SUBHEADER_GC_GUILD_INVITE;
 
 	TEMP_BUFFER buf;
 	buf.write( &p, sizeof(p) );
-	buf.write( &gid, sizeof(DWORD) );
+	buf.write( &gid, sizeof(uint32_t) );
 	buf.write( GetName(), GUILD_NAME_MAX_LEN );
 
 	pchInvitee->GetDesc()->Packet( buf.read_peek(), buf.size() );

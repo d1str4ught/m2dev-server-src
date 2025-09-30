@@ -47,27 +47,27 @@ typedef struct SGuildMember
 #pragma pack(1)
 typedef struct SGuildMemberPacketData
 {   
-	DWORD pid;
-	BYTE grade;
-	BYTE is_general;
-	BYTE job;
-	BYTE level;
-	DWORD offer;
-	BYTE name_flag;
+	uint32_t pid;
+	uint8_t grade;
+	uint8_t is_general;
+	uint8_t job;
+	uint8_t level;
+	uint32_t offer;
+	uint8_t name_flag;
 	char name[CHARACTER_NAME_MAX_LEN+1];
 } TGuildMemberPacketData;
 
 typedef struct packet_guild_sub_info
 {
-	WORD member_count;
-	WORD max_member_count;
-	DWORD guild_id;
-	DWORD master_pid;
-	DWORD exp;
-	BYTE level;
+	uint16_t member_count;
+	uint16_t max_member_count;
+	uint32_t guild_id;
+	uint32_t master_pid;
+	uint32_t exp;
+	uint8_t level;
 	char name[GUILD_NAME_MAX_LEN+1];
-	DWORD gold;
-	BYTE has_land;
+	uint32_t gold;
+	uint8_t has_land;
 } TPacketGCGuildInfo;
 
 typedef struct SGuildGrade
@@ -182,7 +182,7 @@ class CGuild
 		void		LogoutMember(LPCHARACTER ch);
 		void		P2PLogoutMember(DWORD pid);
 
-		void		ChangeMemberGrade(DWORD pid, BYTE grade);
+		void		ChangeMemberGrade(uint32_t pid, BYTE grade);
 		bool		OfferExp(LPCHARACTER ch, int amount);
 		void		LevelChange(DWORD pid, BYTE level);
 		void		ChangeMemberData(DWORD pid, DWORD offer, BYTE level, BYTE grade);
@@ -191,21 +191,21 @@ class CGuild
 		void		ChangeGradeAuth(BYTE grade, BYTE auth);
 		void		P2PChangeGrade(BYTE grade);
 
-		bool		ChangeMemberGeneral(DWORD pid, BYTE is_general);
+		bool		ChangeMemberGeneral(uint32_t pid, BYTE is_general);
 
 		bool		ChangeMasterTo(DWORD dwPID);
 
 		void		Packet(const void* buf, int size);
 
-		void		SendOnlineRemoveOnePacket(DWORD pid);
+		void		SendOnlineRemoveOnePacket(uint32_t pid);
 		void		SendAllGradePacket(LPCHARACTER ch);
 		void		SendListPacket(LPCHARACTER ch);
 		void		SendListOneToAll(DWORD pid);
 		void		SendListOneToAll(LPCHARACTER ch);
 		void		SendLoginPacket(LPCHARACTER ch, LPCHARACTER chLogin);
 		void		SendLogoutPacket(LPCHARACTER ch, LPCHARACTER chLogout);
-		void		SendLoginPacket(LPCHARACTER ch, DWORD pid);
-		void		SendLogoutPacket(LPCHARACTER ch, DWORD pid);
+		void		SendLoginPacket(LPCHARACTER ch, uint32_t pid);
+		void		SendLogoutPacket(LPCHARACTER ch, uint32_t pid);
 		void		SendGuildInfoPacket(LPCHARACTER ch);
 		void		SendGuildDataUpdateToAllMember(SQLMsg* pmsg);
 
