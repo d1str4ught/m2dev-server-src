@@ -97,12 +97,6 @@ enum EMisc
 */
 };
 
-enum EMatrixCard
-{
-	MATRIX_CODE_MAX_LEN		= 192,
-	MATRIX_ANSWER_MAX_LEN	= 8,
-};
-
 enum EWearPositions
 {
 	WEAR_BODY,		// 0
