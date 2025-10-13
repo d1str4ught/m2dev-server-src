@@ -1,4 +1,4 @@
-﻿#ifndef __INC_METIN_II_GAME_DESC_H__
+#ifndef __INC_METIN_II_GAME_DESC_H__
 #define __INC_METIN_II_GAME_DESC_H__
 
 #include "constants.h"
@@ -121,8 +121,8 @@ class DESC
 
 		// 핸드쉐이크 (시간 동기화)
 		void			StartHandshake(DWORD _dw);
-		void			SendHandshake(DWORD dwCurTime, long lNewDelta);
-		bool			HandshakeProcess(DWORD dwTime, long lDelta, bool bInfiniteRetry=false);
+		void			SendHandshake(DWORD dwCurTime, int32_t lNewDelta);
+		bool			HandshakeProcess(DWORD dwTime, int32_t lDelta, bool bInfiniteRetry=false);
 		bool			IsHandshaking();
 
 		DWORD			GetHandshake() const	{ return m_dwHandshake; }
