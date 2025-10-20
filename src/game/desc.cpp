@@ -406,7 +406,14 @@ void DESC::BufferedPacket(const void * c_pvData, int iSize)
 		return;
 
 	if (!m_lpBufferedOutputBuffer)
-		m_lpBufferedOutputBuffer = buffer_new(MAX(1024, iSize));
+	{
+		// 20251010 <Owsap> : Prevent constant buffer reallocations on large packets.
+		// Dynamically create the output buffer based on the first packet size.
+		// Starts at 1KB minimum and adds 8KB of headroom to reduce reallocations
+		// for moderately large packets (e.g. shop data).
+		// The realloc system remains functional for exceptionally large sends.
+		m_lpBufferedOutputBuffer = buffer_new(MINMAX(1024, iSize + 8192, 64 * 1024));
+	}
 
 #ifdef _DEBUG
 	const std::string stName = GetCharacter() ? GetCharacter()->GetName() : GetHostName();
