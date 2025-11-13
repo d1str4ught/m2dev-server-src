@@ -1,4 +1,4 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "config.h"
 #include "utils.h"
 #include "desc.h"
@@ -642,7 +642,7 @@ void DESC::StartHandshake(DWORD _handshake)
 	m_iHandshakeRetry = 0;
 }
 
-void DESC::SendHandshake(DWORD dwCurTime, long lNewDelta)
+void DESC::SendHandshake(DWORD dwCurTime, int32_t lNewDelta)
 {
 	TPacketGCHandshake pack;
 
@@ -657,13 +657,13 @@ void DESC::SendHandshake(DWORD dwCurTime, long lNewDelta)
 	m_bHandshaking = true;
 }
 
-bool DESC::HandshakeProcess(DWORD dwTime, long lDelta, bool bInfiniteRetry)
+bool DESC::HandshakeProcess(DWORD dwTime, int32_t lDelta, bool bInfiniteRetry)
 {
 	DWORD dwCurTime = get_dword_time();
 
 	if (lDelta < 0)
 	{
-		sys_err("Desc::HandshakeProcess : value error (lDelta %d, ip %s)", lDelta, m_stHost.c_str());
+		sys_err("Desc::HandshakeProcess : value error (lDelta %" PRId32 ", ip %s)", lDelta, m_stHost.c_str());
 		return false;
 	}
 
@@ -687,7 +687,7 @@ bool DESC::HandshakeProcess(DWORD dwTime, long lDelta, bool bInfiniteRetry)
 		return true; 
 	}
 
-	long lNewDelta = (long) (dwCurTime - dwTime) / 2;
+	int32_t lNewDelta = (int32_t) (dwCurTime - dwTime) / 2;
 
 	if (lNewDelta < 0)
 	{
@@ -695,7 +695,7 @@ bool DESC::HandshakeProcess(DWORD dwTime, long lDelta, bool bInfiniteRetry)
 		lNewDelta = (dwCurTime - m_dwHandshakeSentTime) / 2;
 	}
 
-	sys_log(1, "Handshake: ServerTime %u dwTime %u lDelta %d SentTime %u lNewDelta %d", dwCurTime, dwTime, lDelta, m_dwHandshakeSentTime, lNewDelta);
+	sys_log(1, "Handshake: ServerTime %u dwTime %u lDelta %" PRId32 " SentTime %u lNewDelta %" PRId32, dwCurTime, dwTime, lDelta, m_dwHandshakeSentTime, lNewDelta);
 
 	if (!bInfiniteRetry)
 		if (++m_iHandshakeRetry > HANDSHAKE_RETRY_LIMIT)
