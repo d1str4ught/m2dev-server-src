@@ -1073,6 +1073,11 @@ int CInputLogin::Analyze(LPDESC d, BYTE bHeader, const char * c_pData)
 			break;
 			/////////////////////////////////////
 
+#ifdef FIX_HEADER_CG_MARK_LOGIN
+		case HEADER_CG_MARK_LOGIN:
+			break;
+#endif
+
 		case HEADER_CG_HACK:
 			break;
 
