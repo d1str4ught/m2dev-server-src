@@ -1,4 +1,4 @@
-﻿
+
 #include "stdafx.h"
 
 #include "ClientManager.h"
@@ -893,7 +893,8 @@ void CClientManager::__QUERY_PLAYER_CREATE(CPeer *peer, DWORD dwHandle, TPlayerC
 			packet->player_table.ht, 
 			packet->player_table.job);
 
-	static char text[4096 + 1];
+	//tw1x1: Buffer overflow (14.11.2025 / 21:08 GMT)
+	static char text[8192 + 1];
 
 	CDBManager::instance().EscapeString(text, packet->player_table.skills, sizeof(packet->player_table.skills));
 	queryLen += snprintf(queryStr + queryLen, sizeof(queryStr) - queryLen, "'%s', ", text);
