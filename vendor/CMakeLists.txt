@@ -12,9 +12,9 @@ set(CLIENT_PLUGIN_MYSQL_CLEAR_PASSWORD OFF CACHE STRING "")
 set(CLIENT_PLUGIN_PVIO_SHMEM STATIC CACHE STRING "")
 set(DEFAULT_SSL_VERIFY_SERVER_CERT OFF CACHE STRING "")
 
-add_subdirectory(mariadb-connector-c-3.4.5 EXCLUDE_FROM_ALL)
+add_subdirectory(mariadb-connector-c EXCLUDE_FROM_ALL)
 add_subdirectory(cryptopp)
-add_subdirectory(spdlog-1.15.3)
+add_subdirectory(spdlog)
 
 if (WIN32)
 	set_target_properties(ed25519_ref10 PROPERTIES FOLDER vendor)

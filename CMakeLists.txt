@@ -7,6 +7,9 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # ASan support
 option(ENABLE_ASAN "Enable AddressSanitizer" OFF)
 
+#Use System Installed Libs
+option(USE_SIL "Use the system's installed libraries (must exist locally)" OFF)
+
 set(CMAKE_MODULE_PATH
 	${CMAKE_MODULE_PATH}
 	"${CMAKE_CURRENT_SOURCE_DIR}/buildtool"
@@ -46,6 +49,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 # Derive a version string from git for the db target
 find_package(Git QUIET)
+
 if(GIT_FOUND)
 	execute_process(
 		COMMAND ${GIT_EXECUTABLE} -C ${CMAKE_SOURCE_DIR} describe --always --dirty --tags
@@ -54,6 +58,42 @@ if(GIT_FOUND)
 		ERROR_QUIET
 	)
 endif()
+
+# ====================================================================
+# [START] Centralized Dependency Initialization (Python Script)
+# ====================================================================
+
+# Ensure this is a Git repository before proceeding
+if (EXISTS "${CMAKE_SOURCE_DIR}/.git")
+	# 1. Locate the Python interpreter (Required to run depinit.py)
+	find_package(Python3 REQUIRED COMPONENTS Interpreter)
+
+	# 2. Execute the dependency initialization script
+	message(STATUS "Running server dependency initialization script (depinit.py)...")
+
+	execute_process(
+		COMMAND ${Python3_EXECUTABLE} "${CMAKE_CURRENT_SOURCE_DIR}/depinit.py"
+		# Ensure execution happens in the project root for Git commands
+		WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}" 
+		RESULT_VARIABLE DEP_INIT_RESULT
+		OUTPUT_VARIABLE DEP_INIT_OUTPUT
+		ERROR_VARIABLE DEP_INIT_OUTPUT
+	)
+
+	# 3. Print the script output
+	message(STATUS "${DEP_INIT_OUTPUT}")
+
+	# 4. Check the return code and halt if the script failed
+	if (DEP_INIT_RESULT)
+		message(FATAL_ERROR "Server dependency initialization script failed! See messages above.")
+	endif()
+
+	message(STATUS "All server dependencies are ready.")
+endif()
+
+# ====================================================================
+# [END] Centralized Dependency Initialization (Python Script)
+# ====================================================================
 
 if(NOT GIT_DESCRIBE_VERSION)
 	if(GIT_FOUND)
@@ -92,8 +132,8 @@ include_directories(src)
 include_directories(include)
 
 # MariDB includes
-include_directories(${CMAKE_BINARY_DIR}/vendor/mariadb-connector-c-3.4.5/include)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/vendor/mariadb-connector-c-3.4.5/include)
+include_directories(${CMAKE_BINARY_DIR}/vendor/mariadb-connector-c/include)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/vendor/mariadb-connector-c/include)
 
 add_subdirectory(src)
 add_subdirectory(vendor)
