@@ -135,5 +135,18 @@ include_directories(include)
 include_directories(${CMAKE_BINARY_DIR}/vendor/mariadb-connector-c/include)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/vendor/mariadb-connector-c/include)
 
+# For MSVC we must ensure Crypto++ is built as static-only and avoid its asm duplicates.
+# This forces the vendor/cryptopp subproject to:
+#  - disable asm (avoids x64dll.asm duplicate symbols on MSVC toolchains),
+#  - build only the static library (prevents building a separate shared cryptopp lib).
+if (WIN32 AND MSVC)
+  # Disable Crypto++ assembly on MSVC (avoids duplicate symbol issues)
+  set(DISABLE_ASM ON CACHE BOOL "Disable Crypto++ ASM on MSVC to avoid duplicate symbols" FORCE)
+
+  # Force Crypto++ to build static-only (no cryptopp shared target)
+  set(BUILD_SHARED OFF CACHE BOOL "Force Crypto++ shared build OFF on MSVC" FORCE)
+  set(BUILD_STATIC ON CACHE BOOL "Force Crypto++ static build ON on MSVC" FORCE)
+endif()
+
 add_subdirectory(src)
 add_subdirectory(vendor)
