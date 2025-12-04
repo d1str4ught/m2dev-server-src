@@ -99,6 +99,8 @@ if (USE_SIL AND NOT WIN32)
 	# Dependency libs for MariaDB
 	find_library(SSL_LIB NAMES ssl HINTS /usr/local/lib)
 	find_library(CRYPTO_LIB NAMES crypto HINTS /usr/local/lib)
+	find_library(ZLIB_LIB NAMES z zlib HINTS /usr/local/lib)
+	find_library(FMT_LIB NAMES fmt HINTS /usr/local/lib)
 
 	# 3. Aggregate all found system libraries for later linking
 	set(SYSTEM_LIBS 
@@ -109,10 +111,12 @@ if (USE_SIL AND NOT WIN32)
 		# --- ADDED NECESSARY LIBS ---
 		${SSL_LIB} 	# cd /usr/ports/security/openssl && make install clean
 		${CRYPTO_LIB} 	# cd /usr/ports/security/openssl && make install clean
+		${ZLIB_LIB} 	# cd /usr/ports/security/openssl && make install clean
+		${FMT_LIB} 	# cd /usr/ports/security/openssl && make install clean
 		# You may need to add system dependencies (e.g., ZLIB, PTHREAD, etc.) here!
 	)
 	
-	if (NOT CRYPTOPP_LIB OR NOT MARIADB_LIB OR NOT SPDLOG_LIB OR NOT SSL_LIB OR NOT CRYPTO_LIB)
+	if (NOT CRYPTOPP_LIB OR NOT MARIADB_LIB OR NOT SPDLOG_LIB OR NOT SSL_LIB OR NOT CRYPTO_LIB OR ZLIB_LIB OR FMT_LIB)
 		message(FATAL_ERROR "FATAL: USE_SIL is ON, but one or more required system libraries/include headers were not found.")
 	endif()
 # --- B. Vendor Dependencies (LEGACY or MODERN) ---
