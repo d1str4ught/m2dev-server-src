@@ -96,6 +96,10 @@ if (USE_SIL AND NOT WIN32)
 	# Spdlog (Dynamic: libspdlog.so)
 	find_library(SPDLOG_LIB NAMES spdlog HINTS /usr/local/lib)
 
+	# Dependency libs for MariaDB
+	find_library(SSL_LIB NAMES ssl HINTS /usr/local/lib)
+	find_library(CRYPTO_LIB NAMES crypto HINTS /usr/local/lib)
+
 	# 3. Aggregate all found system libraries for later linking
 	set(SYSTEM_LIBS 
 		${CRYPTOPP_LIB} 	# cd /usr/ports/security/cryptopp && make install clean
