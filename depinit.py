@@ -100,12 +100,26 @@ def handle_extraction(dep):
 	clone_command = ["git", "clone", "--depth", "1", repo_url, str(tmp_path)]
 	run_git_command(clone_command)
 
-	# 3. Handle CryptoPP Custom Extraction (Same as client, but simpler without backup)
+	# --- 3. Handle CryptoPP Custom Extraction (WITH CMakeLists.txt Protection) ---
 	if name == "cryptopp":
+		cmakelists_file = target_dir / "CMakeLists.txt"
+		backup_path = PROJECT_ROOT / ".tmp_cmakelists_cryptopp_server" # Use a unique temp name
+
+		# 3a. BACKUP: Move your custom CMakeLists.txt to a safe location
+		if cmakelists_file.exists():
+			print(" -> [BK] Backing up custom CMakeLists.txt...")
+			try:
+				shutil.move(cmakelists_file, backup_path)
+			except Exception as e:
+				print(f" -> ERROR during CMakeLists.txt backup: {e}")
+				raise
+
+		# 3b. AGGRESSIVE CLEANUP: Delete the entire vendor/cryptopp directory
 		print(" -> Aggressively cleaning up old CryptoPP directory...")
 		if target_dir.exists():
 			shutil.rmtree(target_dir, onerror=handle_remove_readonly)
 		
+		# 3c. RESTORE & COPY: Recreate the directory and copy content
 		target_dir.mkdir(parents=True, exist_ok=True)
 		
 		print(" -> Copying ALL contents from temp repo to target dir.")
@@ -119,6 +133,11 @@ def handle_extraction(dep):
 				shutil.copytree(item, destination, dirs_exist_ok=True)
 			elif item.is_file():
 				shutil.copy2(item, destination)
+
+		# 3d. RESTORE: Move the custom CMakeLists.txt back
+		if backup_path.exists():
+			print(" ->  restoring custom CMakeLists.txt...")
+			shutil.move(backup_path, cmakelists_file)
 
 	# 4. Handle Header-Only Extraction (STB, PCG-CPP)
 	elif dep['copy']:
