@@ -61,41 +61,86 @@ if(GIT_FOUND)
 endif()
 
 # ====================================================================
-# [START] Centralized Dependency Initialization (Python Script)
+# [START] Dependency Initialization & Configuration Logic
 # ====================================================================
 
-# Ensure this is a Git repository before proceeding
-if (NOT USE_LEGDEPS)
-	if (EXISTS "${CMAKE_SOURCE_DIR}/.git")
-		# 1. Locate the Python interpreter (Required to run depinit.py)
-		find_package(Python3 REQUIRED COMPONENTS Interpreter)
+# --- A. System Installed Libraries (SIL) ---
+if (USE_SIL AND NOT WIN32)
+	message(STATUS "Configuring to use System Installed Libraries (SIL).")
+	
+	# 1. Include Paths (Updated to reflect specific directory locations)
+	
+	# PCG-CPP (Homeless headers, directly in /usr/local/include)
+	include_directories("/usr/local/include") 
+	
+	# Cryptopp
+	include_directories("/usr/local/include/cryptopp") 
+	
+	# MariaDB
+	include_directories("/usr/local/include/mysql")
+	
+	# Spdlog
+	include_directories("/usr/local/include/spdlog") 
+	
+	# STB
+	include_directories("/usr/local/include/stb") 
 
-		# 2. Execute the dependency initialization script
-		message(STATUS "Running server dependency initialization script (depinit.py)...")
+	# 2. Find and Link Libraries (Finds the .a or .so files)
+	
+	# Cryptopp (Static: libcryptopp.a)
+	find_library(CRYPTOPP_LIB NAMES cryptopp HINTS /usr/local/lib)
+	
+	# MariaDB (Static: libmariadbclient.a)
+	find_library(MARIADB_LIB NAMES mariadbclient HINTS /usr/local/lib/mysql) # Explicit path due to nesting
+	
+	# Spdlog (Dynamic: libspdlog.so)
+	find_library(SPDLOG_LIB NAMES spdlog HINTS /usr/local/lib)
 
-		execute_process(
-			COMMAND ${Python3_EXECUTABLE} "${CMAKE_CURRENT_SOURCE_DIR}/depinit.py"
-			# Ensure execution happens in the project root for Git commands
-			WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}" 
-			RESULT_VARIABLE DEP_INIT_RESULT
-			OUTPUT_VARIABLE DEP_INIT_OUTPUT
-			ERROR_VARIABLE DEP_INIT_OUTPUT
-		)
+	# 3. Aggregate all found system libraries for later linking
+	set(SYSTEM_LIBS 
+		${CRYPTOPP_LIB} 
+		${MARIADB_LIB} 
+		${SPDLOG_LIB}
+		# You may need to add system dependencies (e.g., ZLIB, PTHREAD, etc.) here!
+	)
+	
+	if (NOT CRYPTOPP_LIB OR NOT MARIADB_LIB OR NOT SPDLOG_LIB)
+		message(FATAL_ERROR "FATAL: USE_SIL is ON, but one or more required system libraries/include headers were not found.")
+	endif()
+# --- B. Vendor Dependencies (LEGACY or MODERN) ---
+else()
+	if (NOT USE_LEGDEPS)
+		if (EXISTS "${CMAKE_SOURCE_DIR}/.git")
+			# 1. Locate the Python interpreter (Required to run depinit.py)
+			find_package(Python3 REQUIRED COMPONENTS Interpreter)
 
-		# 3. Print the script output
-		message(STATUS "${DEP_INIT_OUTPUT}")
+			# 2. Execute the dependency initialization script
+			message(STATUS "Running server dependency initialization script (depinit.py)...")
 
-		# 4. Check the return code and halt if the script failed
-		if (DEP_INIT_RESULT)
-			message(FATAL_ERROR "Server dependency initialization script failed! See messages above.")
+			execute_process(
+				COMMAND ${Python3_EXECUTABLE} "${CMAKE_CURRENT_SOURCE_DIR}/depinit.py"
+				# Ensure execution happens in the project root for Git commands
+				WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}" 
+				RESULT_VARIABLE DEP_INIT_RESULT
+				OUTPUT_VARIABLE DEP_INIT_OUTPUT
+				ERROR_VARIABLE DEP_INIT_OUTPUT
+			)
+
+			# 3. Print the script output
+			message(STATUS "${DEP_INIT_OUTPUT}")
+
+			# 4. Check the return code and halt if the script failed
+			if (DEP_INIT_RESULT)
+				message(FATAL_ERROR "Server dependency initialization script failed! See messages above.")
+			endif()
+
+			message(STATUS "All server dependencies are ready.")
 		endif()
-
-		message(STATUS "All server dependencies are ready.")
 	endif()
 endif()
 
 # ====================================================================
-# [END] Centralized Dependency Initialization (Python Script)
+# [END] Dependency Initialization & Configuration Logic
 # ====================================================================
 
 if(NOT GIT_DESCRIBE_VERSION)
@@ -133,40 +178,44 @@ add_definitions(-DWIN32_LEAN_AND_MEAN)
 
 include_directories(src)
 
-if (USE_LEGDEPS)
-	include_directories("include/legacy")
-else()
-	include_directories("include/latest")
-endif()
+if (NOT USE_SIL)
+	if (USE_LEGDEPS)
+		include_directories("include/legacy")
+	else()
+		include_directories("include/latest")
+	endif()
 
-# MariDB includes
-if (NOT USE_LEGDEPS)
-	include_directories(${CMAKE_BINARY_DIR}/vendor/latest/mariadb-connector-c/include)
-	include_directories(${CMAKE_CURRENT_SOURCE_DIR}/vendor/latest/mariadb-connector-c/include)
-else()
-	include_directories(${CMAKE_BINARY_DIR}/vendor/legacy/mariadb-connector-c-3.4.5/include)
-	include_directories(${CMAKE_CURRENT_SOURCE_DIR}/vendor/legacy/mariadb-connector-c-3.4.5/include)
-endif()
+	# MariDB includes
+	if (NOT USE_LEGDEPS)
+		include_directories(${CMAKE_BINARY_DIR}/vendor/latest/mariadb-connector-c/include)
+		include_directories(${CMAKE_CURRENT_SOURCE_DIR}/vendor/latest/mariadb-connector-c/include)
+	else()
+		include_directories(${CMAKE_BINARY_DIR}/vendor/legacy/mariadb-connector-c-3.4.5/include)
+		include_directories(${CMAKE_CURRENT_SOURCE_DIR}/vendor/legacy/mariadb-connector-c-3.4.5/include)
+	endif()
 
-# For MSVC we must ensure Crypto++ is built as static-only and avoid its asm duplicates.
-# This forces the vendor/cryptopp subproject to:
-#  - disable asm (avoids x64dll.asm duplicate symbols on MSVC toolchains),
-#  - build only the static library (prevents building a separate shared cryptopp lib).
-if (NOT USE_LEGDEPS)
-	if (WIN32 AND MSVC)
-	  # Disable Crypto++ assembly on MSVC (avoids duplicate symbol issues)
-	  set(DISABLE_ASM ON CACHE BOOL "Disable Crypto++ ASM on MSVC to avoid duplicate symbols" FORCE)
+	# For MSVC we must ensure Crypto++ is built as static-only and avoid its asm duplicates.
+	# This forces the vendor/cryptopp subproject to:
+	#  - disable asm (avoids x64dll.asm duplicate symbols on MSVC toolchains),
+	#  - build only the static library (prevents building a separate shared cryptopp lib).
+	if (NOT USE_LEGDEPS)
+		if (WIN32 AND MSVC)
+		  # Disable Crypto++ assembly on MSVC (avoids duplicate symbol issues)
+		  set(DISABLE_ASM ON CACHE BOOL "Disable Crypto++ ASM on MSVC to avoid duplicate symbols" FORCE)
 
-	  # Force Crypto++ to build static-only (no cryptopp shared target)
-	  set(BUILD_SHARED OFF CACHE BOOL "Force Crypto++ shared build OFF on MSVC" FORCE)
-	  set(BUILD_STATIC ON CACHE BOOL "Force Crypto++ static build ON on MSVC" FORCE)
+		  # Force Crypto++ to build static-only (no cryptopp shared target)
+		  set(BUILD_SHARED OFF CACHE BOOL "Force Crypto++ shared build OFF on MSVC" FORCE)
+		  set(BUILD_STATIC ON CACHE BOOL "Force Crypto++ static build ON on MSVC" FORCE)
+		endif()
 	endif()
 endif()
 
 add_subdirectory(src)
 
-if (USE_LEGDEPS)
-	add_subdirectory("vendor/legacy")
-else()
-	add_subdirectory("vendor/latest")
+if (NOT USE_SIL)
+	if (USE_LEGDEPS)
+		add_subdirectory("vendor/legacy")
+	else()
+		add_subdirectory("vendor/latest")
+	endif()
 endif()

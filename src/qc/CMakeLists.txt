@@ -7,7 +7,7 @@ target_link_libraries(qc
 )
 
 if (WIN32)
-	target_link_libraries(db ws2_32)
+	target_link_libraries(qc ws2_32)
 else()
-	target_link_libraries(db pthread md)
+	target_link_libraries(qc pthread md)
 endif()

@@ -12,8 +12,14 @@ target_link_libraries(db
 	libthecore
 
 	# external
-	mariadbclient
+	#mariadbclient
 )
+
+if (USE_SIL AND NOT WIN32)
+	target_link_libraries(db ${MARIADB_LIB})
+else()
+	target_link_libraries(db mariadbclient)
+endif()
 
 if (WIN32)
 	target_link_libraries(db ws2_32)
