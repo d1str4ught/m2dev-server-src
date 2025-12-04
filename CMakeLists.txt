@@ -7,7 +7,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # ASan support
 option(ENABLE_ASAN "Enable AddressSanitizer" OFF)
 
-#Use System Installed Libs
+# Custom options
+option(USE_LEGDEPS "Use preincluded legacy dependencies (vendor/legacy instead of git submodules installation via depinit)" ON)
 option(USE_SIL "Use the system's installed libraries (must exist locally)" OFF)
 
 set(CMAKE_MODULE_PATH
@@ -64,31 +65,33 @@ endif()
 # ====================================================================
 
 # Ensure this is a Git repository before proceeding
-if (EXISTS "${CMAKE_SOURCE_DIR}/.git")
-	# 1. Locate the Python interpreter (Required to run depinit.py)
-	find_package(Python3 REQUIRED COMPONENTS Interpreter)
+if (NOT USE_LEGDEPS)
+	if (EXISTS "${CMAKE_SOURCE_DIR}/.git")
+		# 1. Locate the Python interpreter (Required to run depinit.py)
+		find_package(Python3 REQUIRED COMPONENTS Interpreter)
 
-	# 2. Execute the dependency initialization script
-	message(STATUS "Running server dependency initialization script (depinit.py)...")
+		# 2. Execute the dependency initialization script
+		message(STATUS "Running server dependency initialization script (depinit.py)...")
 
-	execute_process(
-		COMMAND ${Python3_EXECUTABLE} "${CMAKE_CURRENT_SOURCE_DIR}/depinit.py"
-		# Ensure execution happens in the project root for Git commands
-		WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}" 
-		RESULT_VARIABLE DEP_INIT_RESULT
-		OUTPUT_VARIABLE DEP_INIT_OUTPUT
-		ERROR_VARIABLE DEP_INIT_OUTPUT
-	)
+		execute_process(
+			COMMAND ${Python3_EXECUTABLE} "${CMAKE_CURRENT_SOURCE_DIR}/depinit.py"
+			# Ensure execution happens in the project root for Git commands
+			WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}" 
+			RESULT_VARIABLE DEP_INIT_RESULT
+			OUTPUT_VARIABLE DEP_INIT_OUTPUT
+			ERROR_VARIABLE DEP_INIT_OUTPUT
+		)
 
-	# 3. Print the script output
-	message(STATUS "${DEP_INIT_OUTPUT}")
+		# 3. Print the script output
+		message(STATUS "${DEP_INIT_OUTPUT}")
 
-	# 4. Check the return code and halt if the script failed
-	if (DEP_INIT_RESULT)
-		message(FATAL_ERROR "Server dependency initialization script failed! See messages above.")
+		# 4. Check the return code and halt if the script failed
+		if (DEP_INIT_RESULT)
+			message(FATAL_ERROR "Server dependency initialization script failed! See messages above.")
+		endif()
+
+		message(STATUS "All server dependencies are ready.")
 	endif()
-
-	message(STATUS "All server dependencies are ready.")
 endif()
 
 # ====================================================================
@@ -129,7 +132,12 @@ add_definitions(-DNOMINMAX)
 add_definitions(-DWIN32_LEAN_AND_MEAN)
 
 include_directories(src)
-include_directories(include)
+
+if (USE_LEGDEPS)
+	include_directories("extern/include/legacy")
+else()
+	include_directories("extern/include/latest")
+endif()
 
 # MariDB includes
 include_directories(${CMAKE_BINARY_DIR}/vendor/mariadb-connector-c/include)
@@ -139,13 +147,15 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/vendor/mariadb-connector-c/inclu
 # This forces the vendor/cryptopp subproject to:
 #  - disable asm (avoids x64dll.asm duplicate symbols on MSVC toolchains),
 #  - build only the static library (prevents building a separate shared cryptopp lib).
-if (WIN32 AND MSVC)
-  # Disable Crypto++ assembly on MSVC (avoids duplicate symbol issues)
-  set(DISABLE_ASM ON CACHE BOOL "Disable Crypto++ ASM on MSVC to avoid duplicate symbols" FORCE)
+if (NOT USE_LEGDEPS)
+	if (WIN32 AND MSVC)
+	  # Disable Crypto++ assembly on MSVC (avoids duplicate symbol issues)
+	  set(DISABLE_ASM ON CACHE BOOL "Disable Crypto++ ASM on MSVC to avoid duplicate symbols" FORCE)
 
-  # Force Crypto++ to build static-only (no cryptopp shared target)
-  set(BUILD_SHARED OFF CACHE BOOL "Force Crypto++ shared build OFF on MSVC" FORCE)
-  set(BUILD_STATIC ON CACHE BOOL "Force Crypto++ static build ON on MSVC" FORCE)
+	  # Force Crypto++ to build static-only (no cryptopp shared target)
+	  set(BUILD_SHARED OFF CACHE BOOL "Force Crypto++ shared build OFF on MSVC" FORCE)
+	  set(BUILD_STATIC ON CACHE BOOL "Force Crypto++ static build ON on MSVC" FORCE)
+	endif()
 endif()
 
 add_subdirectory(src)

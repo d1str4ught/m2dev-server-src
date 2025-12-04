@@ -10,10 +10,10 @@
 
 # -------------------------------------------------------------------
 # 3. AGGRESSIVE VENDOR AND INCLUDE IGNORE
-# Ignore everything in the vendor/legacy and include/legacy directory by default.
+# Ignore everything in the vendor/latest and include/latest directory by default.
 # -------------------------------------------------------------------
-/vendor/*
-/include/*
+/vendor/latest/*
+/include/latest/*
 
 # -------------------------------------------------------------------
 # 4. ESSENTIAL RE-INCLUSIONS (Submodules & Custom Files)
@@ -24,14 +24,14 @@
 # -------------------------------------------------------------------
 
 # Re-include Submodule Folders (Git automatically handles the contents)
-!/vendor/cryptopp/
-!/vendor/mariadb-connector-c/
-!/vendor/spdlog/
-!/include/
+!/vendor/latest/cryptopp/
+!/vendor/latest/mariadb-connector-c/
+!/vendor/latest/spdlog/
+!/include/latest
 
 # Re-include Custom CMake Files (The specific files you want tracked)
-!/vendor/CMakeLists.txt
-!/vendor/cryptopp/CMakeLists.txt
+!/vendor/latest/CMakeLists.txt
+!/vendor/latest/cryptopp/CMakeLists.txt
 
 # -------------------------------------------------------------------
 # 5. EXTERN/INCLUDE FILES (Extracted files must be tracked)

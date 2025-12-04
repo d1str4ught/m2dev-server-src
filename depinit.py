@@ -8,33 +8,33 @@ import stat
 
 # Use this error handler for shutil.rmtree on Windows (required for robust cleanup)
 def handle_remove_readonly(func, path, exc_info):
-    """If the file is readonly, change its permission and retry."""
-    if func in (os.rmdir, os.remove, os.unlink) and exc_info[1].winerror == 5:
-        os.chmod(path, stat.S_IWUSR | stat.S_IREAD)
-        func(path)
-    else:
-        # Re-raise the exception if it's not a permission issue
-        raise
+	"""If the file is readonly, change its permission and retry."""
+	if func in (os.rmdir, os.remove, os.unlink) and exc_info[1].winerror == 5:
+		os.chmod(path, stat.S_IWUSR | stat.S_IREAD)
+		func(path)
+	else:
+		# Re-raise the exception if it's not a permission issue
+		raise
 
 # --- Configuration ---
 # All paths are relative to the project root.
 PROJECT_ROOT = Path(__file__).parent
-INCLUDE_DIR = PROJECT_ROOT / "include"
+INCLUDE_DIR = PROJECT_ROOT / "include/latest"
 
 # Define all dependencies, their Git URLs, and which files need copying.
 # NOTE: Removed cryptopp/src and added top-level cryptopp as extraction
 DEPS_INFO = [
-    # Full Submodules (Clone and leave intact)
-    {"name": "spdlog", "type": "submodule", "path": "vendor/spdlog", "url": "https://github.com/gabime/spdlog.git", "copy": []},
-    {"name": "mariadb-connector-c", "type": "submodule", "path": "vendor/mariadb-connector-c", "url": "https://github.com/MariaDB/mariadb-connector-c.git", "copy": []},
-    
-    # Library Extraction (Custom Source Copy)
-    # NOTE: Assuming you want to replace the old CMake submodule update with the new client-style extraction
-    {"name": "cryptopp", "type": "extract", "path": "vendor/cryptopp", "url": "https://github.com/weidai11/cryptopp.git", "copy": []},
+	# Full Submodules (Clone and leave intact)
+	{"name": "spdlog", "type": "submodule", "path": "vendor/latest/spdlog", "url": "https://github.com/gabime/spdlog.git", "copy": []},
+	{"name": "mariadb-connector-c", "type": "submodule", "path": "vendor/mariadb-connector-c", "url": "https://github.com/MariaDB/mariadb-connector-c.git", "copy": []},
+	
+	# Library Extraction (Custom Source Copy)
+	# NOTE: Assuming you want to replace the old CMake submodule update with the new client-style extraction
+	{"name": "cryptopp", "type": "extract", "path": "vendor/latest/cryptopp", "url": "https://github.com/weidai11/cryptopp.git", "copy": []},
 
-    # Header-Only Extraction (Temporary Clone, Copy Headers, Clean up vendor directory)
-    {"name": "stb", "type": "extract", "path": "vendor/stb", "url": "https://github.com/nothings/stb.git", "copy": [("stb_image.h", "."), ("stb_image_write.h", ".")]},
-    {"name": "pcg-cpp", "type": "extract", "path": "vendor/pcg-cpp", "url": "https://github.com/imneme/pcg-cpp.git", "copy": [("include/pcg_random.hpp", "."), ("include/pcg_extras.hpp", "."), ("include/pcg_uint128.hpp", ".")]},
+	# Header-Only Extraction (Temporary Clone, Copy Headers, Clean up vendor directory)
+	{"name": "stb", "type": "extract", "path": "vendor/stb", "url": "https://github.com/nothings/stb.git", "copy": [("stb_image.h", "."), ("stb_image_write.h", ".")]},
+	{"name": "pcg-cpp", "type": "extract", "path": "vendor/latest/pcg-cpp", "url": "https://github.com/imneme/pcg-cpp.git", "copy": [("include/pcg_random.hpp", "."), ("include/pcg_extras.hpp", "."), ("include/pcg_uint128.hpp", ".")]},
 ]
 
 # --- Utility Functions ---
@@ -114,7 +114,7 @@ def handle_extraction(dep):
 				print(f" -> ERROR during CMakeLists.txt backup: {e}")
 				raise
 
-		# 3b. AGGRESSIVE CLEANUP: Delete the entire vendor/cryptopp directory
+		# 3b. AGGRESSIVE CLEANUP: Delete the entire vendor/latest/cryptopp directory
 		print(" -> Aggressively cleaning up old CryptoPP directory...")
 		if target_dir.exists():
 			shutil.rmtree(target_dir, onerror=handle_remove_readonly)
@@ -141,14 +141,14 @@ def handle_extraction(dep):
 
 	# 4. Handle Header-Only Extraction (STB, PCG-CPP)
 	elif dep['copy']:
-		# a. Clean up old destination (the vendor/stb or vendor/pcg-cpp directory)
+		# a. Clean up old destination (the vendor/latest/stb or vendor/latest/pcg-cpp directory)
 		if target_dir.exists():
 			shutil.rmtree(target_dir, onerror=handle_remove_readonly)
-        
+		
 		# b. Ensure the final INCLUDE directory exists
 		INCLUDE_DIR.mkdir(parents=True, exist_ok=True)
 
-		print(f" -> Copying headers for {name} to include/...")
+		print(f" -> Copying headers for {name} to include/latest/...")
 		
 		# c. Copy files
 		for src_in_repo, dest_in_target in dep["copy"]:
