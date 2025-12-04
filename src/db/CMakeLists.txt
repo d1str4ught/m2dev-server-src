@@ -16,7 +16,7 @@ target_link_libraries(db
 )
 
 if (USE_SIL AND NOT WIN32)
-	target_link_libraries(db ${MARIADB_LIB})
+	target_link_libraries(db ${MARIADB_LIB} ${SSL_LIB} ${CRYPTO_LIB})
 else()
 	target_link_libraries(db mariadbclient)
 endif()

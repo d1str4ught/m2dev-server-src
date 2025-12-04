@@ -98,13 +98,17 @@ if (USE_SIL AND NOT WIN32)
 
 	# 3. Aggregate all found system libraries for later linking
 	set(SYSTEM_LIBS 
-		${CRYPTOPP_LIB} 
-		${MARIADB_LIB} 
-		${SPDLOG_LIB}
+		${CRYPTOPP_LIB} 	# cd /usr/ports/security/cryptopp && make install clean
+		${MARIADB_LIB} 	# cd /usr/ports/databases/mariadbXX-client (or mariadb-connector-c) && make install clean
+		${SPDLOG_LIB}	# cd /usr/ports/devel/spdlog && make install clean
+		
+		# --- ADDED NECESSARY LIBS ---
+		${SSL_LIB} 	# cd /usr/ports/security/openssl && make install clean
+		${CRYPTO_LIB} 	# cd /usr/ports/security/openssl && make install clean
 		# You may need to add system dependencies (e.g., ZLIB, PTHREAD, etc.) here!
 	)
 	
-	if (NOT CRYPTOPP_LIB OR NOT MARIADB_LIB OR NOT SPDLOG_LIB)
+	if (NOT CRYPTOPP_LIB OR NOT MARIADB_LIB OR NOT SPDLOG_LIB OR NOT SSL_LIB OR NOT CRYPTO_LIB)
 		message(FATAL_ERROR "FATAL: USE_SIL is ON, but one or more required system libraries/include headers were not found.")
 	endif()
 # --- B. Vendor Dependencies (LEGACY or MODERN) ---
