@@ -116,8 +116,24 @@ if (USE_SIL AND NOT WIN32)
 		# You may need to add system dependencies (e.g., ZLIB, PTHREAD, etc.) here!
 	)
 	
-	if (NOT CRYPTOPP_LIB OR NOT MARIADB_LIB OR NOT SPDLOG_LIB OR NOT SSL_LIB OR NOT CRYPTO_LIB OR ZLIB_LIB OR FMT_LIB)
-		message(FATAL_ERROR "FATAL: USE_SIL is ON, but one or more required system libraries/include headers were not found.")
+	if (NOT CRYPTOPP_LIB OR NOT MARIADB_LIB OR NOT SPDLOG_LIB OR 
+		NOT SSL_LIB OR NOT CRYPTO_LIB OR NOT ZLIB_LIB OR NOT FMT_LIB)
+		
+		message(STATUS "--- Mandatory Library Check FAILED ---")
+		message(STATUS "CRYPTOPP_LIB: ${CRYPTOPP_LIB}")
+		message(STATUS "MARIADB_LIB:  ${MARIADB_LIB}")
+		message(STATUS "SPDLOG_LIB:   ${SPDLOG_LIB}")
+		message(STATUS "SSL_LIB:      ${SSL_LIB}")
+		message(STATUS "CRYPTO_LIB:   ${CRYPTO_LIB}")
+		message(STATUS "ZLIB_LIB:     ${ZLIB_LIB}")
+		message(STATUS "FMT_LIB:      ${FMT_LIB}")
+		message(STATUS "------------------------------------")
+		
+		# Check again and terminate only if a critical library is missing
+		if(NOT CRYPTOPP_LIB OR NOT MARIADB_LIB OR NOT SPDLOG_LIB OR NOT SSL_LIB OR NOT CRYPTO_LIB)
+			message(FATAL_ERROR "FATAL: One of the five core libraries (Cryptopp, MariaDB, Spdlog, SSL, Crypto) was not found.")
+		endif()
+		
 	endif()
 # --- B. Vendor Dependencies (LEGACY or MODERN) ---
 else()
