@@ -13,9 +13,18 @@ target_link_libraries(game
 	liblua
 
 	# external
-	mariadbclient
-	cryptopp-static
+	#mariadbclient
+	#cryptopp-static
 )
+
+if (USE_SIL AND NOT WIN32)
+	target_link_libraries(game ${MARIADB_LIB} ${CRYPTOPP_LIB})
+else()
+	target_link_libraries(game
+		mariadbclient
+		cryptopp-static
+	)
+endif()
 
 if (WIN32)
 	target_link_libraries(game ws2_32)
