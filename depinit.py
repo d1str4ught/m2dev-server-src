@@ -173,7 +173,7 @@ def main():
 			print(e)
 			return 1
 
-	print("\n✅ All dependencies successfully checked and prepared.")
+	print("\n[DONE] All dependencies successfully checked and prepared.")
 	return 0
 
 if __name__ == "__main__":
