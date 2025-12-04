@@ -26,7 +26,7 @@ INCLUDE_DIR = PROJECT_ROOT / "include/latest"
 DEPS_INFO = [
 	# Full Submodules (Clone and leave intact)
 	{"name": "spdlog", "type": "submodule", "path": "vendor/latest/spdlog", "url": "https://github.com/gabime/spdlog.git", "copy": []},
-	{"name": "mariadb-connector-c", "type": "submodule", "path": "vendor/mariadb-connector-c", "url": "https://github.com/MariaDB/mariadb-connector-c.git", "copy": []},
+	{"name": "mariadb-connector-c", "type": "submodule", "path": "vendor/latest/mariadb-connector-c", "url": "https://github.com/MariaDB/mariadb-connector-c.git", "copy": []},
 	
 	# Library Extraction (Custom Source Copy)
 	# NOTE: Assuming you want to replace the old CMake submodule update with the new client-style extraction
