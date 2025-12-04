@@ -111,8 +111,8 @@ if (USE_SIL AND NOT WIN32)
 		# --- ADDED NECESSARY LIBS ---
 		${SSL_LIB} 	# cd /usr/ports/security/openssl && make install clean
 		${CRYPTO_LIB} 	# cd /usr/ports/security/openssl && make install clean
-		${ZLIB_LIB} 	# cd /usr/ports/security/openssl && make install clean
-		${FMT_LIB} 	# cd /usr/ports/security/openssl && make install clean
+		${ZLIB_LIB} 	# cd /usr/ports/archivers/libzip && make install clean
+		${FMT_LIB} 	# cd /usr/ports/devel/libfmt && make install clean
 		# You may need to add system dependencies (e.g., ZLIB, PTHREAD, etc.) here!
 	)
 	
