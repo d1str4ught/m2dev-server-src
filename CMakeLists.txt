@@ -159,4 +159,9 @@ if (NOT USE_LEGDEPS)
 endif()
 
 add_subdirectory(src)
-add_subdirectory(vendor)
+
+if (USE_LEGDEPS)
+	include_directories("vendor/legacy")
+else()
+	include_directories("vendor/latest")
+endif()
