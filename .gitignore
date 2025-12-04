@@ -1,16 +1,39 @@
-﻿/build/
-/include/
+﻿# -------------------------------------------------------------------
+# 1. BUILD ARTIFACTS
+# -------------------------------------------------------------------
+/build/
 
-/vendor/spdlog/*
-/vendor/mariadb-connector-c/*
-/vendor/cryptopp/src/*
-/vendor/stb/*
-/vendor/pcg-cpp/*
+# -------------------------------------------------------------------
+# 2. TEMPORARY SOURCE CACHES (Used by depinit.py for extraction)
+# -------------------------------------------------------------------
+.tmp_*
 
-!/vendor/spdlog
-!/vendor/pcg-cpp
-!/vendor/cryptopp/src
-!/vendor/mariadb-connector-c
-!/vendor/stb
+# -------------------------------------------------------------------
+# 3. AGGRESSIVE VENDOR AND INCLUDE IGNORE
+# Ignore everything in the vendor/legacy and include/legacy directory by default.
+# -------------------------------------------------------------------
+/vendor/*
+/include/*
+
+# -------------------------------------------------------------------
+# 4. ESSENTIAL RE-INCLUSIONS (Submodules & Custom Files)
+# These folders/files MUST be tracked by Git.
+#
+# NOTE: To re-include a file inside an aggressively ignored folder,
+# you must re-include ALL parent folders first.
+# -------------------------------------------------------------------
+
+# Re-include Submodule Folders (Git automatically handles the contents)
+!/vendor/cryptopp/
+!/vendor/mariadb-connector-c/
+!/vendor/spdlog/
+!/include/
+
+# Re-include Custom CMake Files (The specific files you want tracked)
 !/vendor/CMakeLists.txt
 !/vendor/cryptopp/CMakeLists.txt
+
+# -------------------------------------------------------------------
+# 5. EXTERN/INCLUDE FILES (Extracted files must be tracked)
+# Since depinit.py copies these, they must NOT be ignored.
+# -------------------------------------------------------------------
