@@ -88,13 +88,13 @@ if (USE_SIL AND NOT WIN32)
 	# 2. Find and Link Libraries (Finds the .a or .so files)
 	
 	# Cryptopp (Static: libcryptopp.a)
-	find_library(CRYPTOPP_LIB NAMES cryptopp HINTS /usr/local/lib)
+	find_library(CRYPTOPP_LIB NAMES cryptopp HINTS /usr/local/lib NO_SHARED_LIBS)
 	
 	# MariaDB (Static: libmariadbclient.a)
-	find_library(MARIADB_LIB NAMES mariadbclient HINTS /usr/local/lib/mysql) # Explicit path due to nesting
+	find_library(MARIADB_LIB NAMES mariadbclient HINTS /usr/local/lib/mysql NO_SHARED_LIBS) # Explicit path due to nesting
 	
 	# Spdlog (Dynamic: libspdlog.so)
-	find_library(SPDLOG_LIB NAMES spdlog HINTS /usr/local/lib)
+	find_library(SPDLOG_LIB NAMES spdlog HINTS /usr/local/lib NO_SHARED_LIBS)
 
 	# Dependency libs for MariaDB
 	find_library(SSL_LIB NAMES ssl HINTS /usr/local/lib)
