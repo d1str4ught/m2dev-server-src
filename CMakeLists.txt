@@ -144,8 +144,8 @@ if (NOT USE_LEGDEPS)
 	include_directories(${CMAKE_BINARY_DIR}/vendor/latest/mariadb-connector-c/include)
 	include_directories(${CMAKE_CURRENT_SOURCE_DIR}/vendor/latest/mariadb-connector-c/include)
 else()
-	include_directories(${CMAKE_BINARY_DIR}/vendor/legacy/mariadb-connector-c-c-3.4.5/include)
-	include_directories(${CMAKE_CURRENT_SOURCE_DIR}/vendor/legacy/mariadb-connector-c-c-3.4.5/include)
+	include_directories(${CMAKE_BINARY_DIR}/vendor/legacy/mariadb-connector-c-3.4.5/include)
+	include_directories(${CMAKE_CURRENT_SOURCE_DIR}/vendor/legacy/mariadb-connector-c-3.4.5/include)
 endif()
 
 # For MSVC we must ensure Crypto++ is built as static-only and avoid its asm duplicates.
