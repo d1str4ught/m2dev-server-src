@@ -472,7 +472,7 @@ bool DSManager::PullOut(LPCHARACTER ch, TItemPos DestCell, LPITEM& pItem, LPITEM
 			}
 			else
 			{
-				sprintf(buf, "dice(%d) prob(%d)", fDice, fProb);
+				sprintf(buf, "dice(%f) prob(%f)", fDice, fProb);
 			}
 			LogManager::instance().ItemLog(ch, pItem, "DS_PULL_OUT_SUCCESS", buf);
 			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("용혼석 추출에 성공하였습니다."));
@@ -1131,7 +1131,7 @@ void DSManager::RefreshDragonSoulState(LPCHARACTER ch)
 {
 	if (NULL == ch)
 		return ;
-	for (int i = WEAR_MAX_NUM; i < WEAR_MAX_NUM + DS_SLOT_MAX * DRAGON_SOUL_DECK_MAX_NUM; i++)
+	for (int i = WEAR_MAX_NUM; i < WEAR_MAX_NUM + (int)DS_SLOT_MAX * (int)DRAGON_SOUL_DECK_MAX_NUM; i++)
 	{
 		LPITEM pItem = ch->GetWear(i);
 		if (pItem != NULL)

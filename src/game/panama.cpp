@@ -19,7 +19,7 @@ size_t PanamaLoad()
 	while (fgets(buf, 256, fp))
 	{
 		char szPackName[256];
-		char szIVFileName[256];
+		char szIVFileName[512];
 		char szIVFileNameConfig[256];
 
 		sscanf(buf, " %s %s ", szPackName, szIVFileNameConfig);

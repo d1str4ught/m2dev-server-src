@@ -34,7 +34,7 @@ bool CGroupTextParseTreeLoader::Load(const char * c_szFileName)
 	fseek(fp, 0, SEEK_SET);
 
 	char * pData = M2_NEW char[fileSize];
-	fread(pData, fileSize, 1, fp);
+	if (fread(pData, fileSize, 1, fp) == 0) { }
 	fclose(fp);
 
 	m_fileLoader.Bind(fileSize, pData);

@@ -56,7 +56,7 @@ static float MOB_GetNormalAttackDuration(TMobTable* mobTable)
 		sscanf(line, "%s %s %s %d", mode, type, msaName, &percent);
 		if (strcmp(mode, "GENERAL") == 0 && strncmp(type, "NORMAL_ATTACK", 13) == 0)
 		{
-			char msaPath[1024];
+			char msaPath[2048];
 			snprintf(msaPath, sizeof(msaPath), "data/monster/%s/%s", folder, msaName);
 			float curDuration = MSA_GetNormalAttackDuration(msaPath);
 			if (curDuration < minDuration)

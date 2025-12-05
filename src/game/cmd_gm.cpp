@@ -2524,7 +2524,7 @@ ACMD(do_priv_guild)
 		else
 		{
 			char buf[1024+1];
-			snprintf(buf, sizeof(buf), msg, g->GetID());
+			snprintf(buf, sizeof(buf), "%u", g->GetID());
 
 			using namespace quest;
 			PC * pc = CQuestManager::instance().GetPC(ch->GetPlayerID());
