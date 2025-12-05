@@ -8,6 +8,7 @@
     Rights:  See end of file.
     
 */
+#ifdef OS_WINDOWS
 
 typedef struct DIR DIR;
 
@@ -35,3 +36,7 @@ void          rewinddir(DIR *);
     But that said, if there are any problems please get in touch.
 
 */
+#else
+// On Linux and FreeBSD, use system dirent.h
+#include <dirent.h>
+#endif

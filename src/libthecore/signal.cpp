@@ -1,10 +1,5 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 
-#ifdef OS_WINDOWS
-void signal_setup() {}
-void signal_timer_disable() {}
-void signal_timer_enable(int timeout_seconds) {}
-#elif OS_FREEBSD
 #define RETSIGTYPE void
 
 RETSIGTYPE reap(int sig)
@@ -13,18 +8,16 @@ RETSIGTYPE reap(int sig)
     signal(SIGCHLD, reap);
 }
 
-
 RETSIGTYPE checkpointing(int sig)
 {
     if (!tics)
     {
-	sys_err("CHECKPOINT shutdown: tics did not updated.");
-	abort();
+        sys_err("CHECKPOINT shutdown: tics did not updated.");
+        abort();
     }
     else
-	tics = 0;
+        tics = 0;
 }
-
 
 RETSIGTYPE hupsig(int sig)
 {
@@ -41,13 +34,10 @@ void signal_timer_disable(void)
 {
     struct itimerval itime;
     struct timeval interval;
-
     interval.tv_sec	= 0;
     interval.tv_usec	= 0;
-
     itime.it_interval = interval;
     itime.it_value = interval;
-
     setitimer(ITIMER_VIRTUAL, &itime, NULL);
 }
 
@@ -55,23 +45,17 @@ void signal_timer_enable(int sec)
 {
     struct itimerval itime;
     struct timeval interval;
-
     interval.tv_sec	= sec;
     interval.tv_usec	= 0;
-
     itime.it_interval = interval;
     itime.it_value = interval;
-
     setitimer(ITIMER_VIRTUAL, &itime, NULL);
 }
 
 void signal_setup(void)
 {
     signal_timer_enable(30);
-
     signal(SIGVTALRM, checkpointing);
-
-    /* just to be on the safe side: */
     signal(SIGHUP, hupsig);
     signal(SIGCHLD, reap);
     signal(SIGINT, hupsig);
@@ -80,5 +64,3 @@ void signal_setup(void)
     signal(SIGALRM, SIG_IGN);
     signal(SIGUSR1, usrsig);
 }
-
-#endif

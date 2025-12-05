@@ -18,7 +18,7 @@ extern "C"
 #include <sstream>
 #include <utility>
 #include <vector>
-
+#include <cstring>
 #ifndef OS_WINDOWS
 #include <unistd.h>
 #else
