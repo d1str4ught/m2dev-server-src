@@ -74,7 +74,7 @@ if (USE_SIL AND NOT WIN32)
 	include_directories("/usr/local/include") 
 	
 	# Cryptopp
-	include_directories("/usr/local/include/cryptopp") 
+	#include_directories("/usr/local/include/cryptopp") 
 	
 	# MariaDB
 	include_directories("/usr/local/include/mysql")
@@ -86,9 +86,11 @@ if (USE_SIL AND NOT WIN32)
 	include_directories("/usr/local/include/stb") 
 
 	# 2. Find and Link Libraries (Finds the .a or .so files)
-	
+	# Prefer .a over .so
+	#set(CMAKE_FIND_LIBRARY_SUFFIXES ".a" ".so")
+
 	# Cryptopp (Static: libcryptopp.a)
-	find_library(CRYPTOPP_LIB NAMES cryptopp HINTS /usr/local/lib NO_SHARED_LIBS)
+	#find_library(CRYPTOPP_LIB NAMES cryptopp HINTS /usr/local/lib NO_DEFAULT_PATH)
 	
 	# MariaDB (Static: libmariadbclient.a)
 	find_library(MARIADB_LIB NAMES mariadbclient HINTS /usr/local/lib/mysql NO_SHARED_LIBS) # Explicit path due to nesting
@@ -120,7 +122,7 @@ if (USE_SIL AND NOT WIN32)
 		NOT SSL_LIB OR NOT CRYPTO_LIB OR NOT ZLIB_LIB OR NOT FMT_LIB)
 		
 		message(STATUS "--- Mandatory Library Check FAILED ---")
-		message(STATUS "CRYPTOPP_LIB: ${CRYPTOPP_LIB}")
+		#message(STATUS "CRYPTOPP_LIB: ${CRYPTOPP_LIB}")
 		message(STATUS "MARIADB_LIB:  ${MARIADB_LIB}")
 		message(STATUS "SPDLOG_LIB:   ${SPDLOG_LIB}")
 		message(STATUS "SSL_LIB:      ${SSL_LIB}")
@@ -130,7 +132,7 @@ if (USE_SIL AND NOT WIN32)
 		message(STATUS "------------------------------------")
 		
 		# Check again and terminate only if a critical library is missing
-		if(NOT CRYPTOPP_LIB OR NOT MARIADB_LIB OR NOT SPDLOG_LIB OR NOT SSL_LIB OR NOT CRYPTO_LIB)
+		if(NOT MARIADB_LIB OR NOT SPDLOG_LIB OR NOT SSL_LIB OR NOT CRYPTO_LIB)
 			message(FATAL_ERROR "FATAL: One of the five core libraries (Cryptopp, MariaDB, Spdlog, SSL, Crypto) was not found.")
 		endif()
 		
@@ -206,7 +208,7 @@ add_definitions(-DWIN32_LEAN_AND_MEAN)
 
 include_directories(src)
 
-if (NOT USE_SIL)
+if (NOT USE_SIL OR WIN32)
 	if (USE_LEGDEPS)
 		include_directories("include/legacy")
 	else()
@@ -240,7 +242,15 @@ endif()
 
 add_subdirectory(src)
 
-if (NOT USE_SIL)
+# TMP
+if (USE_LEGDEPS)
+	add_subdirectory("vendor/legacy/cryptopp")
+else()
+	add_subdirectory("vendor/latest/cryptopp")
+endif()
+# TMP--!
+
+if (NOT USE_SIL OR WIN32)
 	if (USE_LEGDEPS)
 		add_subdirectory("vendor/legacy")
 	else()
