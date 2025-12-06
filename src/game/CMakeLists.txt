@@ -14,11 +14,17 @@ target_link_libraries(game
 
 	# external
 	#mariadbclient
-	#cryptopp-static
+	cryptopp-static
 )
 
 if (USE_SIL AND NOT WIN32)
-	target_link_libraries(game ${MARIADB_LIB} ${CRYPTOPP_LIB} ${SSL_LIB} ${CRYPTO_LIB} ${ZLIB_LIB})
+	target_link_libraries(game
+		${MARIADB_LIB}
+		#${CRYPTOPP_LIB}
+		${SSL_LIB}
+		${CRYPTO_LIB}
+		${ZLIB_LIB}
+	)
 else()
 	target_link_libraries(game
 		mariadbclient
