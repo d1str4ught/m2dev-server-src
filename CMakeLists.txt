@@ -138,36 +138,36 @@ if (USE_SIL AND NOT WIN32)
 		
 	endif()
 # --- B. Vendor Dependencies (LEGACY or MODERN) ---
-else()
-	if (NOT USE_LEGDEPS)
-		if (EXISTS "${CMAKE_SOURCE_DIR}/.git")
-			# 1. Locate the Python interpreter (Required to run depinit.py)
-			find_package(Python3 REQUIRED COMPONENTS Interpreter)
+#else()
+if (NOT USE_LEGDEPS OR USE_SIL)
+	if (EXISTS "${CMAKE_SOURCE_DIR}/.git")
+		# 1. Locate the Python interpreter (Required to run depinit.py)
+		find_package(Python3 REQUIRED COMPONENTS Interpreter)
 
-			# 2. Execute the dependency initialization script
-			message(STATUS "Running server dependency initialization script (depinit.py)...")
+		# 2. Execute the dependency initialization script
+		message(STATUS "Running server dependency initialization script (depinit.py)...")
 
-			execute_process(
-				COMMAND ${Python3_EXECUTABLE} "${CMAKE_CURRENT_SOURCE_DIR}/depinit.py"
-				# Ensure execution happens in the project root for Git commands
-				WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}" 
-				RESULT_VARIABLE DEP_INIT_RESULT
-				OUTPUT_VARIABLE DEP_INIT_OUTPUT
-				ERROR_VARIABLE DEP_INIT_OUTPUT
-			)
+		execute_process(
+			COMMAND ${Python3_EXECUTABLE} "${CMAKE_CURRENT_SOURCE_DIR}/depinit.py"
+			# Ensure execution happens in the project root for Git commands
+			WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}" 
+			RESULT_VARIABLE DEP_INIT_RESULT
+			OUTPUT_VARIABLE DEP_INIT_OUTPUT
+			ERROR_VARIABLE DEP_INIT_OUTPUT
+		)
 
-			# 3. Print the script output
-			message(STATUS "${DEP_INIT_OUTPUT}")
+		# 3. Print the script output
+		message(STATUS "${DEP_INIT_OUTPUT}")
 
-			# 4. Check the return code and halt if the script failed
-			if (DEP_INIT_RESULT)
-				message(FATAL_ERROR "Server dependency initialization script failed! See messages above.")
-			endif()
-
-			message(STATUS "All server dependencies are ready.")
+		# 4. Check the return code and halt if the script failed
+		if (DEP_INIT_RESULT)
+			message(FATAL_ERROR "Server dependency initialization script failed! See messages above.")
 		endif()
+
+		message(STATUS "All server dependencies are ready.")
 	endif()
 endif()
+#endif()
 
 # ====================================================================
 # [END] Dependency Initialization & Configuration Logic
