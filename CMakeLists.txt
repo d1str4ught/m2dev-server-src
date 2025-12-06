@@ -137,6 +137,7 @@ if (USE_SIL AND NOT WIN32)
 		endif()
 		
 	endif()
+endif() # Remove before activating else() below
 # --- B. Vendor Dependencies (LEGACY or MODERN) ---
 #else()
 if (NOT USE_LEGDEPS OR USE_SIL)
