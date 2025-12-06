@@ -243,18 +243,14 @@ endif()
 
 add_subdirectory(src)
 
-# TMP
-if (USE_LEGDEPS)
-	add_subdirectory("vendor/legacy/cryptopp")
-else()
-	add_subdirectory("vendor/latest/cryptopp")
-endif()
-# TMP--!
-
 if (NOT USE_SIL OR WIN32)
 	if (USE_LEGDEPS)
 		add_subdirectory("vendor/legacy")
 	else()
 		add_subdirectory("vendor/latest")
 	endif()
+# TMP
+else()
+	add_subdirectory("vendor/latest/cryptopp")
+# TMP--!
 endif()
