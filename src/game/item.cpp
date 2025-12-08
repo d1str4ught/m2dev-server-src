@@ -477,7 +477,7 @@ int CItem::FindEquipCell(LPCHARACTER ch, int iCandidateCell)
 		return -1;
 
 	// 용혼석 슬롯을 WEAR로 처리할 수가 없어서(WEAR는 최대 32개까지 가능한데 용혼석을 추가하면 32가 넘는다.)
-	// 인벤토리의 특정 위치((INVENTORY_MAX_NUM + WEAR_MAX_NUM)부터 (INVENTORY_MAX_NUM + WEAR_MAX_NUM + (int)DRAGON_SOUL_DECK_MAX_NUM * (int)DS_SLOT_MAX - 1)까지)를
+	// 인벤토리의 특정 위치((INVENTORY_MAX_NUM + WEAR_MAX_NUM)부터 (INVENTORY_MAX_NUM + WEAR_MAX_NUM + DRAGON_SOUL_DECK_MAX_NUM * DS_SLOT_MAX - 1)까지)를
 	// 용혼석 슬롯으로 정함.
 	// return 할 때에, INVENTORY_MAX_NUM을 뺀 이유는,
 	// 본래 WearCell이 INVENTORY_MAX_NUM를 빼고 return 하기 때문.
@@ -686,12 +686,12 @@ void CItem::ModifyPoints(bool bAdd)
 			{
 				if (bAdd)
 				{
-					if (m_wCell == (int)INVENTORY_MAX_NUM + (int)WEAR_WEAPON)
+					if (m_wCell == INVENTORY_MAX_NUM + WEAR_WEAPON)
 						m_pOwner->SetPart(PART_WEAPON, GetVnum());
 				}
 				else
 				{
-					if (m_wCell == (int)INVENTORY_MAX_NUM + (int)WEAR_WEAPON)
+					if (m_wCell == INVENTORY_MAX_NUM + WEAR_WEAPON)
 						m_pOwner->SetPart(PART_WEAPON, m_pOwner->GetOriginalPart(PART_WEAPON));
 				}
 			}
@@ -701,12 +701,12 @@ void CItem::ModifyPoints(bool bAdd)
 			{
 				if (bAdd)
 				{
-					if (m_wCell == (int)INVENTORY_MAX_NUM + (int)WEAR_WEAPON)
+					if (m_wCell == INVENTORY_MAX_NUM + WEAR_WEAPON)
 						m_pOwner->SetPart(PART_WEAPON, GetVnum());
 				}
 				else
 				{
-					if (m_wCell == (int)INVENTORY_MAX_NUM + (int)WEAR_WEAPON)
+					if (m_wCell == INVENTORY_MAX_NUM + WEAR_WEAPON)
 						m_pOwner->SetPart(PART_WEAPON, m_pOwner->GetOriginalPart(PART_WEAPON));
 				}
 			}
@@ -824,7 +824,7 @@ bool CItem::EquipTo(LPCHARACTER ch, BYTE bWearCell)
 	// 용혼석 슬롯 index는 WEAR_MAX_NUM 보다 큼.
 	if (IsDragonSoul())
 	{
-		if (bWearCell < WEAR_MAX_NUM || bWearCell >= WEAR_MAX_NUM + (int)DRAGON_SOUL_DECK_MAX_NUM * (int)DS_SLOT_MAX)
+		if (bWearCell < WEAR_MAX_NUM || bWearCell >= WEAR_MAX_NUM + DRAGON_SOUL_DECK_MAX_NUM * DS_SLOT_MAX)
 		{
 			sys_err("EquipTo: invalid dragon soul cell (this: #%d %s wearflag: %d cell: %d)", GetOriginalVnum(), GetName(), GetSubType(), bWearCell - WEAR_MAX_NUM);
 			return false;
@@ -1423,7 +1423,6 @@ EVENTFUNC(real_time_expire_event)
 	{
 		switch (item->GetVnum())
 		{
-            break;
 			if(item->IsNewMountItem())
 			{
 				if (item->GetSocket(2) != 0)

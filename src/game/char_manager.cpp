@@ -329,14 +329,14 @@ LPCHARACTER CHARACTER_MANAGER::SpawnMobRandomPosition(DWORD dwVnum, long lMapInd
 	if (!ch->Show(lMapIndex, x, y, 0, false))
 	{
 		M2_DESTROY_CHARACTER(ch);
-		sys_err("SpawnMobRandomPosition: cannot show monster");
+		sys_err(0, "SpawnMobRandomPosition: cannot show monster");
 		return NULL;
 	}
 
 	char buf[512+1];
 	long local_x = x - pkSectreeMap->m_setting.iBaseX;
 	long local_y = y - pkSectreeMap->m_setting.iBaseY;
-	snprintf(buf, sizeof(buf), "spawn %s[%d] random position at %ld %ld %ld %ld (time: %ld)", ch->GetName(), dwVnum, x, y, local_x, local_y, get_global_time());
+	snprintf(buf, sizeof(buf), "spawn %s[%d] random position at %ld %ld %ld %ld (time: %d)", ch->GetName(), dwVnum, x, y, local_x, local_y, get_global_time());
 	
 	if (test_server)
 		SendNotice(buf);

@@ -242,7 +242,7 @@ ACMD(do_shutdown)
 {
 	if (NULL == ch)
 	{
-		if (ch) sys_err("Accept shutdown command from %s.", ch->GetName());
+		sys_err("Accept shutdown command from %s.", ch->GetName());
 	}
 	TPacketGGShutdown p;
 	p.bHeader = HEADER_GG_SHUTDOWN;

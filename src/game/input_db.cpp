@@ -1055,7 +1055,7 @@ EVENTFUNC(quest_login_event)
 	}
 	else
 	{
-		sys_err("input_db.cpp:quest_login_event INVALID PHASE pid %d", ch->GetPlayerID());
+		sys_err(0, "input_db.cpp:quest_login_event INVALID PHASE pid %d", ch->GetPlayerID());
 		return 0;
 	}
 }

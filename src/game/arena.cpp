@@ -151,8 +151,8 @@ void CArenaMap::SendArenaMapListTo(LPCHARACTER pChar, DWORD mapIdx)
 	for (; iter != m_listArena.end(); iter++)
 	{
 		pChar->ChatPacket(CHAT_TYPE_INFO, "ArenaMapInfo Map: %d stA(%d, %d) stB(%d, %d)", mapIdx, 
-				(long)(*iter)->GetStartPointA().x, (long)(*iter)->GetStartPointA().y,
-				(long)(*iter)->GetStartPointB().x, (long)(*iter)->GetStartPointB().y);
+				(CArena*)(*iter)->GetStartPointA().x, (CArena*)(*iter)->GetStartPointA().y,
+				(CArena*)(*iter)->GetStartPointB().x, (CArena*)(*iter)->GetStartPointB().y);
 	}
 }
 

@@ -29,13 +29,13 @@ bool LoadEmpireTextConvertTable(DWORD dwEmpireID, const char* c_szFileName)
 
 	STextConvertTable& rkTextConvTable=g_aTextConvTable[dwEmpireID-1];
 
-	if (fread(rkTextConvTable.acUpper, 1, dwEngCount, fp) == 0) { }
-	if (fread(rkTextConvTable.acLower, 1, dwEngCount, fp) == 0) { }
-	if (fread(rkTextConvTable.aacHan, 1, dwHanSize, fp) == 0) { }
+	fread(rkTextConvTable.acUpper, 1, dwEngCount, fp);
+	fread(rkTextConvTable.acLower, 1, dwEngCount, fp);
+	fread(rkTextConvTable.aacHan, 1, dwHanSize, fp);
 
-	if (fread(rkTextConvTable.aacJaum, 1, 60, fp) == 0) { }
-	if (fread(rkTextConvTable.aacMoum, 1, 42, fp) == 0) { }
-
+	fread(rkTextConvTable.aacJaum, 1, 60, fp);
+	fread(rkTextConvTable.aacMoum, 1, 42, fp);
+	
 	fclose(fp);
 
 	return true;
