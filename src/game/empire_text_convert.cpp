@@ -35,7 +35,7 @@ bool LoadEmpireTextConvertTable(DWORD dwEmpireID, const char* c_szFileName)
 
 	fread(rkTextConvTable.aacJaum, 1, 60, fp);
 	fread(rkTextConvTable.aacMoum, 1, 42, fp);
-	
+
 	fclose(fp);
 
 	return true;
