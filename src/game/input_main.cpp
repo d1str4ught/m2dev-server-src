@@ -977,6 +977,14 @@ int CInputMain::Messenger(LPCHARACTER ch, const char* c_pData, size_t uiBytes)
 				char name[CHARACTER_NAME_MAX_LEN + 1];
 				strlcpy(name, c_pData, sizeof(name));
 
+#ifdef FIX_MESSENGER_ACTION_SYNC
+				if (MessengerManager::instance().IsInList(ch->GetName(), name))
+				{
+					ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("[Friends] You are already friends with %s."), name);
+					return CHARACTER_NAME_MAX_LEN;
+				}
+#endif
+
 				if (ch->GetGMLevel() == GM_PLAYER && gm_get_level(name) != GM_PLAYER)
 				{
 					ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<메신져> 운영자는 메신져에 추가할 수 없습니다."));
@@ -986,11 +994,31 @@ int CInputMain::Messenger(LPCHARACTER ch, const char* c_pData, size_t uiBytes)
 				LPCHARACTER tch = CHARACTER_MANAGER::instance().FindPC(name);
 
 				if (!tch)
+				{
+#ifdef CROSS_CHANNEL_FRIEND_REQUEST
+					const CCI* pkCCI = P2P_MANAGER::instance().Find(name);
+
+					if (!pkCCI)
+					{
+						ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%s 님은 접속되 있지 않습니다."), name);
+						return CHARACTER_NAME_MAX_LEN;
+					}
+
+					// P2P request
+					MessengerManager::instance().P2PRequestToAdd_Stage1(ch, name);
+#else
 					ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%s 님은 접속되 있지 않습니다."), name);
+#endif
+				}
 				else
 				{
 					if (tch == ch) // 자신은 추가할 수 없다.
+					{
+#ifdef FIX_MESSENGER_ACTION_SYNC
+						ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("[Friends] You cannot add yourself as a friend."));
+#endif
 						return CHARACTER_NAME_MAX_LEN;
+					}
 
 					if (tch->IsBlockMode(BLOCK_MESSENGER_INVITE) == true)
 					{
@@ -1014,6 +1042,9 @@ int CInputMain::Messenger(LPCHARACTER ch, const char* c_pData, size_t uiBytes)
 				char char_name[CHARACTER_NAME_MAX_LEN + 1];
 				strlcpy(char_name, c_pData, sizeof(char_name));
 				MessengerManager::instance().RemoveFromList(ch->GetName(), char_name);
+#ifdef FIX_MESSENGER_ACTION_SYNC
+        		MessengerManager::instance().RemoveFromList(char_name, ch->GetName());//friend removed from companion too.
+#endif
 			}
 			return CHARACTER_NAME_MAX_LEN;
 
@@ -3032,7 +3063,7 @@ void CInputMain::Refine(LPCHARACTER ch, const char* c_pData)
 				}
 				else
 				{
-					ch->ChatPacket(CHAT_TYPE_INFO, "사귀 타워 완료 보상은 한번까지 사용가능합니다.");
+					ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("사귀 타워 완료 보상은 한번까지 사용가능합니다."));
 				}
 			}
 		}

@@ -128,7 +128,18 @@ int CDBManager::Connect(int iSlot, const char * db_address, const int db_port, c
 
 SQLMsg * CDBManager::DirectQuery(const char * c_pszQuery, int iSlot)
 {
-	return m_directSQL[iSlot]->DirectQuery(c_pszQuery);
+	//return m_directSQL[iSlot]->DirectQuery(c_pszQuery);
+
+	// DirectQuery LPHeart debuging trace 15/11/2015 06:38AM GMT
+	DWORD t = get_dword_time();
+	SQLMsg* p = m_directSQL[iSlot]->DirectQuery(c_pszQuery);
+	DWORD dt = get_dword_time() - t;
+
+	if (dt > 200) {
+		sys_err("[SLOW-DB] DirectQuery(%d) took %u ms: %s", iSlot, dt, c_pszQuery);
+	}
+
+	return p;
 }
 
 extern CPacketInfo g_query_info;

@@ -1,1 +1,63 @@
 ﻿/build/
+
+# =======================================================
+# FULLY CASE-INSENSITIVE BACKUP EXCLUSIONS
+# Matches all files and folders ending in:
+# _BK, _BAK, .BK, .BAK (and all case permutations)
+# =======================================================
+
+# -------------------------------------------------------
+# 1. EXCLUSIONS ENDING IN .BK / _BK
+# -------------------------------------------------------
+
+# Files/Folders ending in _BK (e.g., File_Bk, Folder_bK)
+*_BK
+*_Bk
+*_bK
+*_bk
+
+# Files ending in .BK (e.g., File.BK, File.bK)
+*.BK
+*.Bk
+*.bK
+*.bk
+
+# Files ending in "double extension" .X.BK (e.g., File.txt.Bk)
+*.*.BK
+*.*.Bk
+*.*.bK
+*.*.bk
+
+# -------------------------------------------------------
+# 2. EXCLUSIONS ENDING IN .BAK / _BAK
+# -------------------------------------------------------
+
+# Files/Folders ending in _BAK (e.g., File_BAK, Folder_bak)
+*_BAK
+*_BAk
+*_BaK
+*_Bak
+*_bAK
+*_bAk
+*_baK
+*_bak
+
+# Files ending in .BAK (e.g., File.BAK, File.bak)
+*.BAK
+*.BAk
+*.BaK
+*.Bak
+*.bAK
+*.bAk
+*.baK
+*.bak
+
+# Files ending in "double extension" .X.BAK (e.g., File.txt.Bak)
+*.*.BAK
+*.*.BAk
+*.*.BaK
+*.*.Bak
+*.*.bAK
+*.*.bAk
+*.*.baK
+*.*.bak

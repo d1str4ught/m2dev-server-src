@@ -148,7 +148,11 @@ int CalculateDuration(int iSpd, int iDur)
 }
 double uniform_random(double a, double b)
 {
-	return thecore_random() / (RAND_MAX + 1.f) * (b - a) + a;
+	// Uses 64-bit precision and the full range of the 32-bit DWORD
+    const double MAX_DIVISOR = 4294967296.0; 
+    
+    return (static_cast<double>(thecore_random()) / MAX_DIVISOR) * (b - a) + a;
+	//return thecore_random() / (RAND_MAX + 1.f) * (b - a) + a;
 }
 
 float gauss_random(float avg, float sigma)

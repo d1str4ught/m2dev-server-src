@@ -101,15 +101,18 @@ bool CSpeedServerEmpireExp::WriteExpTable()
 	FILE *fp;
 
 	sys_log (0, "write");
-	if (0==file_name || 0==file_name[0])
+
+	// if (0 == file_name || 0 == file_name[0])
+	if (0 == file_name[0])
 		return false;
 
-	if ((fp = fopen(file_name, "w"))==0)
+	if ((fp = fopen(file_name, "w")) == 0)
 	{
 		return false;
 	}
 
 	char wday_name[7][4] = {"SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"};
+
 	for (int i = 0; i < 7; i++)
 	{
 		fprintf (fp, "%s", wday_name[i]);
@@ -141,7 +144,9 @@ bool CSpeedServerEmpireExp::LoadExpTable()
 	const char	*delim = " \t\r\n";
 
 	sys_log (0, "load");
-	if (0==file_name || 0==file_name[0])
+
+	// if (0 == file_name || 0 == file_name[0])
+	if (file_name[0] == '\0')
 		return false;
 
 	if ((fp = fopen(file_name, "r"))==0)

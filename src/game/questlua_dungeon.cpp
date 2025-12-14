@@ -1277,7 +1277,7 @@ namespace quest
 		else
 		{
 			sys_err("not in a dungeon");
-			lua_pushnumber(L, LONG_MAX);
+			lua_pushnumber(L, static_cast<lua_Number>(LONG_MAX));
 		}
 
 		return 1;

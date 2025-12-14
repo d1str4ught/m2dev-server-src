@@ -1,12 +1,14 @@
 ﻿#include "stdafx.h"
 #include "memory.h"
 
+#include <atomic>
+
 extern void GOST_Init();
 
 LPHEART		thecore_heart = NULL;
 
-volatile int	shutdowned = FALSE;
-volatile int	tics = 0;
+std::atomic<int> shutdowned = FALSE;
+std::atomic<int> tics = 0;
 unsigned int	thecore_profiler[NUM_PF];
 
 static int pid_init(void)
@@ -64,14 +66,14 @@ int thecore_init(int fps, HEARTFUNC heartbeat_func)
 
 void thecore_shutdown()
 {
-    shutdowned = TRUE;
+    shutdowned.store(TRUE);
 }
 
 int thecore_idle(void)
 {
     thecore_tick();
 
-    if (shutdowned)
+    if (shutdowned.load())
 		return 0;
 
 	int pulses;
@@ -110,7 +112,7 @@ float thecore_time(void)
 
 int thecore_is_shutdowned(void)
 {
-	return shutdowned;
+	return shutdowned.load();
 }
 
 void thecore_tick(void)

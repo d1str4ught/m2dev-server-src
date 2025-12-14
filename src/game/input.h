@@ -342,6 +342,10 @@ class CInputP2P : public CInputProcessor
 		void		LoginPing(LPDESC d, const char * c_pData);
 		void		BlockChat(const char * c_pData);
 		void		IamAwake(LPDESC d, const char * c_pData);
+#ifdef CROSS_CHANNEL_FRIEND_REQUEST
+		void		MessengerRequestAdd(const char* c_pData);
+		void		MessengerResponse(const char* c_pData);
+#endif
 
 	protected:
 		CPacketInfoGG 	m_packetInfoGG;

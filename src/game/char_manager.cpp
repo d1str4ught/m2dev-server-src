@@ -336,7 +336,7 @@ LPCHARACTER CHARACTER_MANAGER::SpawnMobRandomPosition(DWORD dwVnum, long lMapInd
 	char buf[512+1];
 	long local_x = x - pkSectreeMap->m_setting.iBaseX;
 	long local_y = y - pkSectreeMap->m_setting.iBaseY;
-	snprintf(buf, sizeof(buf), "spawn %s[%d] random position at %ld %ld %ld %ld (time: %d)", ch->GetName(), dwVnum, x, y, local_x, local_y, get_global_time());
+	snprintf(buf, sizeof(buf), "spawn %s[%d] random position at %ld %ld %ld %ld (time: %ld)", ch->GetName(), dwVnum, x, y, local_x, local_y, get_global_time());
 	
 	if (test_server)
 		SendNotice(buf);

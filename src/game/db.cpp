@@ -64,7 +64,18 @@ SQLMsg * DBManager::DirectQuery(const char * c_pszFormat, ...)
 	vsnprintf(szQuery, sizeof(szQuery), c_pszFormat, args);
 	va_end(args);
 
-	return m_sql_direct.DirectQuery(szQuery);
+	//return m_sql_direct.DirectQuery(szQuery);
+
+	// DirectQuery LPHeart debuging trace 15/11/2015 06:38AM GMT
+	DWORD t = get_dword_time();
+	SQLMsg* p = m_sql_direct.DirectQuery(szQuery);
+	DWORD dt = get_dword_time() - t;
+
+	if (dt > 200) {
+		sys_err("[SLOW-GAME] DirectQuery took %u ms: %s", dt, szQuery);
+	}
+
+	return p;
 }
 
 bool DBManager::IsConnected()

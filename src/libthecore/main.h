@@ -1,7 +1,9 @@
 ﻿#pragma once
 
-extern volatile int	tics;
-extern volatile int shutdowned;
+#include <atomic>
+
+extern std::atomic<int> tics;
+extern std::atomic<int> shutdowned;
 
 #include "heart.h"
 

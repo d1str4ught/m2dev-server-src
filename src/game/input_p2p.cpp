@@ -20,6 +20,9 @@
 #include "skill.h"
 #include "threeway_war.h"
 
+#ifdef CROSS_CHANNEL_FRIEND_REQUEST
+#include "crc32.h"
+#endif
 
 ////////////////////////////////////////////////////////////////////////////////
 // Input Processor
@@ -258,18 +261,84 @@ void CInputP2P::Setup(LPDESC d, const char * c_pData)
 	d->SetP2P(d->GetHostName(), p->wPort, p->bChannel);
 }
 
+
+#ifdef CROSS_CHANNEL_FRIEND_REQUEST
+void CInputP2P::MessengerRequestAdd(const char* c_pData)
+{
+	TPacketGGMessengerRequest* p = (TPacketGGMessengerRequest*)c_pData;
+	sys_log(0, "P2P: Messenger: Friend Request from %s to %s", p->account, p->target);
+
+	LPCHARACTER tch = CHARACTER_MANAGER::Instance().FindPC(p->target);
+	MessengerManager::Instance().P2PRequestToAdd_Stage2(p->account, tch);
+}
+
+void CInputP2P::MessengerResponse(const char* c_pData)
+{
+    TPacketGGMessengerResponse* p = (TPacketGGMessengerResponse*)c_pData;
+    
+    LPCHARACTER ch = CHARACTER_MANAGER::instance().FindPC(p->szRequester);
+    
+    if (!ch)
+        return;
+    
+    switch (p->bResponseType)
+    {
+        case 0: // already_sent
+            ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("[Friends] You already sent a friend request to %s."), p->szTarget);
+            break;
+            
+        case 1: // already_received_reverse
+            ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("[Friends] %s has already sent you a friend request."), p->szTarget);
+            break;
+            
+        case 2: // quest_running
+            ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("상대방이 친구 추가를 받을 수 없는 상태입니다."));
+            break;
+			
+		case 3: // blocking_requests
+			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("상대방이 메신져 추가 거부 상태입니다."));
+			break;
+    }
+}
+#endif
+
 void CInputP2P::MessengerAdd(const char * c_pData)
 {
 	TPacketGGMessenger * p = (TPacketGGMessenger *) c_pData;
 	sys_log(0, "P2P: Messenger Add %s %s", p->szAccount, p->szCompanion);
 	MessengerManager::instance().__AddToList(p->szAccount, p->szCompanion);
+#ifdef FIX_MESSENGER_ACTION_SYNC
+	MessengerManager::instance().__AddToList(p->szCompanion, p->szAccount, false);
+#endif
 }
 
 void CInputP2P::MessengerRemove(const char * c_pData)
 {
 	TPacketGGMessenger * p = (TPacketGGMessenger *) c_pData;
 	sys_log(0, "P2P: Messenger Remove %s %s", p->szAccount, p->szCompanion);
+
+#ifdef FIX_MESSENGER_ACTION_SYNC
+    // Send removal packet to the person being removed (deletee)
+    LPCHARACTER deletee = CHARACTER_MANAGER::instance().FindPC(p->szCompanion);
+	
+    if (deletee && deletee->GetDesc())
+    {
+        TPacketGCMessenger pack;
+        pack.header = HEADER_GC_MESSENGER;
+        pack.subheader = MESSENGER_SUBHEADER_GC_REMOVE_FRIEND;
+        pack.size = sizeof(TPacketGCMessenger) + sizeof(BYTE) + strlen(p->szAccount);
+
+        BYTE bLen = strlen(p->szAccount);
+        deletee->GetDesc()->BufferedPacket(&pack, sizeof(pack));
+        deletee->GetDesc()->BufferedPacket(&bLen, sizeof(BYTE));
+        deletee->GetDesc()->Packet(p->szAccount, strlen(p->szAccount));
+    }
+#endif
+
 	MessengerManager::instance().__RemoveFromList(p->szAccount, p->szCompanion);
+#ifdef FIX_MESSENGER_ACTION_SYNC
+	MessengerManager::instance().__RemoveFromList(p->szCompanion, p->szAccount, false);
+#endif
 }
 
 void CInputP2P::FindPosition(LPDESC d, const char* c_pData)
@@ -452,6 +521,16 @@ int CInputP2P::Analyze(LPDESC d, BYTE bHeader, const char * c_pData)
 		case HEADER_GG_MESSENGER_ADD:
 			MessengerAdd(c_pData);
 			break;
+
+#ifdef CROSS_CHANNEL_FRIEND_REQUEST
+		case HEADER_GG_MESSENGER_REQUEST_ADD:
+			MessengerRequestAdd(c_pData);
+			break;
+
+		case HEADER_GG_MESSENGER_RESPONSE:
+			MessengerResponse(c_pData);
+			break;
+#endif
 
 		case HEADER_GG_MESSENGER_REMOVE:
 			MessengerRemove(c_pData);

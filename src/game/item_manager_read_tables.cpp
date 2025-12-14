@@ -1,4 +1,4 @@
-ï»¿#include "stdafx.h"
+#include "stdafx.h"
 #include "utils.h"
 #include "config.h"
 #include "char.h"
@@ -79,7 +79,7 @@ bool ITEM_MANAGER::ReadCommonDropItemFile(const char * c_pszFileName)
 
 			if (!ITEM_MANAGER::instance().GetVnumByOriginalName(d[i].szItemName, dwItemVnum))
 			{
-				// ÀÌ¸§À¸·Î ¸øÃ£À¸¸é ¹øÈ£·Î °Ë»ö
+				// ï¿½Ì¸ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ã£ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È£ï¿½ï¿½ ï¿½Ë»ï¿½
 				str_to_number(dwItemVnum, d[i].szItemName);
 				if (!ITEM_MANAGER::instance().GetTable(dwItemVnum))
 				{
@@ -224,7 +224,7 @@ bool ITEM_MANAGER::ReadSpecialDropItemFile(const char * c_pszFileName)
 
 					if (!GetVnumByOriginalName(name.c_str(), dwVnum))
 					{
-						if (name == "°æÇèÄ¡" || name == "exp")
+						if (name == "exp")
 						{
 							dwVnum = CSpecialItemGroup::EXP;
 						}
@@ -373,7 +373,8 @@ bool ITEM_MANAGER::ConvSpecialDropItemFile()
 
 				if (!GetVnumByOriginalName(name.c_str(), dwVnum))
 				{
-					if (	name == "°æÇèÄ¡" ||
+					//if (	name == "ï¿½ï¿½ï¿½ï¿½Ä¡" ||
+					if (name == "exp" ||
 						name == "mob" ||
 						name == "slow" ||
 						name == "drain_hp" ||
@@ -406,7 +407,7 @@ bool ITEM_MANAGER::ConvSpecialDropItemFile()
 					str_to_number(iRarePct, pTok->at(3).c_str());
 				}
 
-				//    1   "±â¼ú ¼ö·Ã¼­"   1   100
+				//    1   "ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ã¼ï¿½"   1   100
 				if (0 == dwVnum)
 					fprintf(fp, "	%d	%s	%d	%d\n", k, name.c_str(), iCount, iProb);
 				else

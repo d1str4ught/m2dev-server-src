@@ -774,6 +774,7 @@ void CHARACTER::Reward(bool bItemDrop)
 	if (pkAttacker->IsPC())
 	{
 		if (GetLevel() - pkAttacker->GetLevel() >= -10)
+		{
 			if (pkAttacker->GetRealAlignment() < 0)
 			{
 				if (pkAttacker->IsEquipUniqueItem(UNIQUE_ITEM_FASTER_ALIGNMENT_UP_BY_KILL))
@@ -782,7 +783,10 @@ void CHARACTER::Reward(bool bItemDrop)
 					pkAttacker->UpdateAlignment(7);
 			}
 			else
+			{
 				pkAttacker->UpdateAlignment(2);
+			}
+		}
 
 		pkAttacker->SetQuestNPCID(GetVID());
 		quest::CQuestManager::instance().Kill(pkAttacker->GetPlayerID(), GetRaceNum());
@@ -2287,6 +2291,10 @@ bool CHARACTER::Damage(LPCHARACTER pAttacker, int dam, EDamageType type) // retu
 	//
 	if (!cannot_dead)
 	{
+#ifdef FIX_NEG_HP
+		if (GetHP() - dam <= 0)
+			dam = GetHP();
+#endif
 		PointChange(POINT_HP, -dam, false);
 	}
 

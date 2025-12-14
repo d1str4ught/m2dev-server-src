@@ -1003,6 +1003,11 @@ void CHARACTER::UpdatePacket()
 {
 	if (GetSectree() == NULL) return;
 
+#ifdef CHAR_SELECT_STATS_IMPROVEMENT
+	if (IsPC() && (!GetDesc() || !GetDesc()->GetCharacter()))
+		return;
+#endif
+
 	TPacketGCCharacterUpdate pack;
 	TPacketGCCharacterUpdate pack2;
 
@@ -1389,6 +1394,18 @@ void CHARACTER::Disconnect(const char * c_pszReason)
 
 	if (GetDesc())
 	{
+#ifdef CHAR_SELECT_STATS_IMPROVEMENT
+		PointsPacket();
+
+		packet_point_change pack;
+		pack.header = HEADER_GC_CHARACTER_POINT_CHANGE;
+		pack.dwVID = m_vid;
+		pack.type = POINT_PLAYTIME;
+		pack.value = GetRealPoint(POINT_PLAYTIME) + (get_dword_time() - m_dwPlayStartTime) / 60000;
+		pack.amount = 0;
+
+		GetDesc()->Packet(&pack, sizeof(struct packet_point_change));
+#endif
 		GetDesc()->BindCharacter(NULL);
 //		BindDesc(NULL);
 	}
@@ -1603,8 +1620,16 @@ void CHARACTER::PointsPacket()
 	pack.points[POINT_STAMINA]		= GetStamina();
 	pack.points[POINT_MAX_STAMINA]	= GetMaxStamina();
 
+#ifdef CHAR_SELECT_STATS_IMPROVEMENT
+	for (int i = POINT_ST; i < POINT_IQ + 1; ++i)
+		pack.points[i] = GetRealPoint(i);
+
+	for (int i = POINT_IQ + 1; i < POINT_MAX_NUM; ++i)
+		pack.points[i] = GetPoint(i);
+#else
 	for (int i = POINT_ST; i < POINT_MAX_NUM; ++i)
 		pack.points[i] = GetPoint(i);
+#endif
 
 	GetDesc()->Packet(&pack, sizeof(TPacketGCPoints));
 }
@@ -1782,9 +1807,15 @@ void CHARACTER::SetPlayerProto(const TPlayerTable * t)
 
 	ComputePoints();
 
+#ifdef FIX_NEG_HP
+	SetHP(GetMaxHP());
+	SetSP(GetMaxSP());
+	SetStamina(GetMaxStamina());
+#else
 	SetHP(t->hp);
 	SetSP(t->sp);
 	SetStamina(t->stamina);
+#endif
 
 	//GM일때 보호모드  
 	if (!test_server)
