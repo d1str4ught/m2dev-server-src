@@ -1126,57 +1126,6 @@ void CHARACTER::StateBattle()
 	}
 }
 
-#ifdef FIX_POS_SYNC
-void CHARACTER::StateSyncing()
-{
-	if (IsStone() || IsDoor()) {
-		StopConcurrentState();
-
-		return;
-	}
-
-	DWORD dwElapsedTime = get_dword_time() - m_dwSyncStartTime;
-	float fRate = (float)dwElapsedTime / (float)m_dwSyncDuration;
-
-	if (fRate > 1.0f)
-		fRate = 1.0f;
-
-	int x = (int)((float)(m_posDest.x - m_posStart.x) * fRate + m_posStart.x);
-	int y = (int)((float)(m_posDest.y - m_posStart.y) * fRate + m_posStart.y);
-
-
-	Sync(x, y);
-
-	if (1.0f == fRate)
-	{
-		StopConcurrentState();
-	}
-}
-
-///////////////////
-////// To use to gradually "move" the entity on the desired position while it can do whatever it wants (to use when receiving HEADER_CG_ATTACK)
-bool CHARACTER::BlendSync(long x, long y, unsigned int unDuration)
-{
-	// TODO distance check required
-	// No need to go the same side as the position (automatic success)
-	if (GetX() == x && GetY() == y)
-		return false;
-
-	m_posDest.x = m_posStart.x = GetX();
-	m_posDest.y = m_posStart.y = GetY();
-
-	m_posDest.x = x;
-	m_posDest.y = y;
-
-	m_dwSyncStartTime = get_dword_time();
-	m_dwSyncDuration = unDuration;
-	m_dwStateDuration = 1;
-
-	ConcurrentState(m_stateSyncing);
-	return true;
-}
-#endif
-
 void CHARACTER::StateFlag()
 {
 	m_dwStateDuration = (DWORD) PASSES_PER_SEC(0.5);

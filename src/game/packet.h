@@ -603,37 +603,7 @@ typedef struct command_attack
 	uint32_t	dwVID;
 	uint8_t	bCRCMagicCubeProcPiece;
 	uint8_t	bCRCMagicCubeFilePiece;
-#ifdef FIX_POS_SYNC
-	BOOL    bPacket;
-	LONG    lSX;
-	LONG    lSY;
-	LONG    lX;
-	LONG    lY;
-	float    fSyncDestX;
-	float    fSyncDestY;
-	DWORD    dwBlendDuration;
-	DWORD    dwComboMotion;
-	DWORD    dwTime;
-#endif
 } TPacketCGAttack;
-
-#ifdef FIX_POS_SYNC
-typedef struct packet_attack
-{
-	BYTE    bHeader;
-	BYTE    bType;
-	DWORD    dwAttacakerVID;
-	DWORD    dwVID;
-	BOOL    bPacket;
-	LONG    lSX;
-	LONG    lSY;
-	LONG    lX;
-	LONG    lY;
-	float    fSyncDestX;
-	float    fSyncDestY;
-	DWORD    dwBlendDuration;
-} TPacketGCAttack;
-#endif
 
 enum EMoveFuncType
 {

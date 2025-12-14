@@ -522,17 +522,10 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 		CStateTemplate<CHARACTER>	m_stateMove;
 		CStateTemplate<CHARACTER>	m_stateBattle;
 		CStateTemplate<CHARACTER>	m_stateIdle;
-#ifdef FIX_POS_SYNC
-		CStateTemplate<CHARACTER>	m_stateSyncing;
-#endif
 
 	public:
 		virtual void		StateMove();
 		virtual void		StateBattle();
-#ifdef FIX_POS_SYNC
-		virtual void		StateSyncing();
-		virtual bool		BlendSync(long x, long y, unsigned int unDuration);
-#endif
 		virtual void		StateIdle();
 		virtual void		StateFlag();
 		virtual void		StateFlagBase();

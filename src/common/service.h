@@ -15,6 +15,5 @@
 #define CROSS_CHANNEL_FRIEND_REQUEST	// Allow friend requests across different channels
 #define FIX_REFRESH_SKILL_COOLDOWN	// Fix cooldown display time on skill slots
 #define FIX_BOOK_READING_FOR_MAX_LEVEL	// Disable experience point deduction for reading a book when in max level
-//#define FIX_POS_SYNC				// Fix position synching between clients
 
 #endif
