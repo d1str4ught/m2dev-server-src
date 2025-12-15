@@ -1031,7 +1031,6 @@ namespace quest
 		return 0;
 	}
 
-	//    :            ȵǴ   ʿ         
 	int _regen_in_map( lua_State * L )
 	{
 		int iMapIndex = static_cast<int>(lua_tonumber(L, 1));
