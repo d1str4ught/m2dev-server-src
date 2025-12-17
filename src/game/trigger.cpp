@@ -64,7 +64,7 @@ class FuncFindMobVictim
 		FuncFindMobVictim(LPCHARACTER pkChr, int iMaxDistance) :
 			m_pkChr(pkChr),
 			//m_iMinDistance(~(1L << 31)),
-			m_iMinDistance(INT32_MIN),
+			m_iMinDistance(INT_MAX),
 			m_iMaxDistance(iMaxDistance),
 			m_lx(pkChr->GetX()),
 			m_ly(pkChr->GetY()),
