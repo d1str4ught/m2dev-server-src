@@ -2489,6 +2489,11 @@ bool CHARACTER::UseSkill(DWORD dwVnum, LPCHARACTER pkVictim, bool bUseGrandMaste
 	if (!pkSk)
 		return false;
 
+	if (IsPC() && IS_SET(pkSk->dwFlag, SKILL_FLAG_ATTACK))
+	{
+		EnterCombat();
+	}
+
 	if (bCanUseHorseSkill && pkSk->dwType != SKILL_TYPE_HORSE)
 		return BATTLE_NONE;
 
