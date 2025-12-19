@@ -361,9 +361,7 @@ void CHARACTER::Initialize()
 	m_bIsLoadedAffect = false;
 	cannot_dead = false;
 
-#ifdef FIX_BATTLE_INACTIVITY_TIMEOUT
 	m_dwLastCombatTime = 0;
-#endif
 
 #ifdef __PET_SYSTEM__
 	m_petSystem = 0;
@@ -4064,7 +4062,6 @@ void CHARACTER::UpdateStateMachine(DWORD dwPulse)
 	if (IsDead())
 		return;
 
-#ifdef FIX_BATTLE_INACTIVITY_TIMEOUT
 	if (IsPC() && IsPosition(POS_FIGHTING))
 	{
 		const DWORD now = get_dword_time();
@@ -4076,7 +4073,6 @@ void CHARACTER::UpdateStateMachine(DWORD dwPulse)
 		if (now - m_dwLastCombatTime >= 10000)
 			SetVictim(NULL); // triggers battle_end() -> POS_STANDING
 	}
-#endif
 
 	Update();
 	m_dwNextStatePulse = dwPulse + m_dwStateDuration;
