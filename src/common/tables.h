@@ -380,14 +380,14 @@ typedef struct SPlayerTable
 	int16_t	st, ht, dx, iq;
 
 	uint32_t	exp;
-	INT		gold;
+	int32_t		gold;
 
-	uint8_t	dir;
-	INT		x, y, z;
-	INT		lMapIndex;
+	uint8_t		dir;
+	int32_t		x, y, z;
+	int32_t		lMapIndex;
 
-	int32_t	lExitX, lExitY;
-	int32_t	lExitMapIndex;
+	int32_t		lExitX, lExitY;
+	int32_t		lExitMapIndex;
 
 	// int16_t	hp;
 	// int16_t	sp;
