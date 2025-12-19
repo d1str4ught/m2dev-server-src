@@ -35,5 +35,6 @@ It builds as it is, without external dependencies.
 	* An aggressive skill is being used on the character.
 	* The character uses an aggressive skill to a mob/stone, without killing the instance.
 	* A boss uses a skill on the character.
+	All credits go to @tw1x1 for this amazing and smoothly executed fix!
 
 
