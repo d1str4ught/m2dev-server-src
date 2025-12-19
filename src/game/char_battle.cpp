@@ -1600,6 +1600,22 @@ void CHARACTER::SendDamagePacket(LPCHARACTER pAttacker, int Damage, BYTE DamageF
 	}
 }
 
+void CHARACTER::EnterCombat()
+{
+	if (!IsPC())
+		return;
+
+	if (!IsPosition(POS_FIGHTING))
+	{
+		SetPosition(POS_FIGHTING);
+		SetNextStatePulse(1);
+	}
+
+	// Start the 10s window if it hasn't started yet.
+	if (m_dwLastCombatTime == 0)
+		m_dwLastCombatTime = get_dword_time();
+}
+
 //
 // CHARACTER::Damage 메소드는 this가 데미지를 입게 한다.
 //
@@ -2312,13 +2328,9 @@ bool CHARACTER::Damage(LPCHARACTER pAttacker, int dam, EDamageType type) // retu
 	//
 	if (!cannot_dead)
 	{
-#ifdef FIX_NEG_HP
-		if (GetHP() - dam <= 0)
-			dam = GetHP();
-#endif
 
-#ifdef FIX_BATTLE_INACTIVITY_TIMEOUT
-		// tw1x1: POS_FIGHTING timer fix
+    dam = std::min<int32_t>(GetHP(), dam);
+
 		// REAL combat activity only: final damage > 0
 		if (dam > 0)
 		{
@@ -2333,9 +2345,7 @@ bool CHARACTER::Damage(LPCHARACTER pAttacker, int dam, EDamageType type) // retu
 				pAttacker->EnterCombat();
 			}
 		}
-		// tw1x1: end
-#endif
-
+    
 		PointChange(POINT_HP, -dam, false);
 	}
 

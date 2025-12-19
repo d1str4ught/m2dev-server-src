@@ -2045,8 +2045,6 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 		int m_iLastPMPulse;
 		int m_iPMCounter;
 
-#ifdef FIX_BATTLE_INACTIVITY_TIMEOUT
-	// tw1x1: POS_FIGHTING timer fix
 	public:
 		void EnterCombat();
 		void UpdateLastCombatTime() { m_dwLastCombatTime = get_dword_time(); }
@@ -2054,8 +2052,6 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 
 	private:
 		DWORD m_dwLastCombatTime;
-	// tw1x1: end
-#endif
 };
 
 ESex GET_SEX(LPCHARACTER ch);
