@@ -1608,7 +1608,7 @@ void CHARACTER::EnterCombat()
 	if (m_dwLastCombatTime == 0)
 		m_dwLastCombatTime = get_dword_time();
 }
-#ifdef FIX_BATTLE_INACTIVITY_TIMEOUT
+#endif
 
 //
 // CHARACTER::Damage 메소드는 this가 데미지를 입게 한다.
