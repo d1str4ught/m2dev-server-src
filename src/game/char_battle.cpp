@@ -2312,12 +2312,9 @@ bool CHARACTER::Damage(LPCHARACTER pAttacker, int dam, EDamageType type) // retu
 	//
 	if (!cannot_dead)
 	{
-#ifdef FIX_NEG_HP
 		if (GetHP() - dam <= 0)
 			dam = GetHP();
-#endif
-
-#ifdef FIX_BATTLE_INACTIVITY_TIMEOUT
+			
 		// tw1x1: POS_FIGHTING timer fix
 		// REAL combat activity only: final damage > 0
 		if (dam > 0)
@@ -2334,7 +2331,6 @@ bool CHARACTER::Damage(LPCHARACTER pAttacker, int dam, EDamageType type) // retu
 			}
 		}
 		// tw1x1: end
-#endif
 
 		PointChange(POINT_HP, -dam, false);
 	}

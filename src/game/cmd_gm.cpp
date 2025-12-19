@@ -574,11 +574,8 @@ ACMD(do_mob_coward)
 
 	if (!*arg1)
 	{
-#ifdef FIX_NEG_CMD_CORE_DOWNER
 		ch->ChatPacket(CHAT_TYPE_INFO, "Usage: /mc <vnum> <count>");
-#else
-		ch->ChatPacket(CHAT_TYPE_INFO, "Usage: /mc <vnum>");
-#endif
+
 		return;
 	}
 
@@ -601,11 +598,8 @@ ACMD(do_mob_coward)
 
 	if (vnum == 0)
 	{
-#ifdef FIX_NEG_CMD_CORE_DOWNER
 		ch->ChatPacket(CHAT_TYPE_INFO, "No such mob (%s) by that vnum", arg1);
-#else
-		ch->ChatPacket(CHAT_TYPE_INFO, "No such mob by that vnum");
-#endif
+
 		return;
 	}
 
@@ -614,9 +608,7 @@ ACMD(do_mob_coward)
 	if (*arg2)
 	{
 		str_to_number(iCount, arg2);
-#ifdef FIX_NEG_CMD_CORE_DOWNER
 		iCount = MINMAX(1, iCount, 40);
-#endif
 	}
 	else
 		iCount = 1;
@@ -669,11 +661,8 @@ ACMD(do_mob_aggresive)
 
 	if (!*arg1)
 	{
-#ifdef FIX_NEG_CMD_CORE_DOWNER
 		ch->ChatPacket(CHAT_TYPE_INFO, "Usage: /mob <mob vnum> <mob count>");
-#else
-		ch->ChatPacket(CHAT_TYPE_INFO, "Usage: /mob <mob vnum>");
-#endif
+
 		return;
 	}
 
@@ -696,11 +685,8 @@ ACMD(do_mob_aggresive)
 
 	if (vnum == 0)
 	{
-#ifdef FIX_NEG_CMD_CORE_DOWNER
 		ch->ChatPacket(CHAT_TYPE_INFO, "No such mob (%s) by that vnum", arg1);
-#else
-		ch->ChatPacket(CHAT_TYPE_INFO, "No such mob by that vnum");
-#endif
+		
 		return;
 	}
 
@@ -709,9 +695,7 @@ ACMD(do_mob_aggresive)
 	if (*arg2)
 	{
 		str_to_number(iCount, arg2);
-#ifdef FIX_NEG_CMD_CORE_DOWNER
 		iCount = MINMAX(1, iCount, 40);
-#endif
 	}
 	else
 		iCount = 1;
@@ -742,11 +726,8 @@ ACMD(do_mob)
 
 	if (!*arg1)
 	{
-#ifdef FIX_NEG_CMD_CORE_DOWNER
 		ch->ChatPacket(CHAT_TYPE_INFO, "Usage: /mob <mob vnum> <mob count>");
-#else
-		ch->ChatPacket(CHAT_TYPE_INFO, "Usage: /mob <mob vnum>");
-#endif
+		
 		return;
 	}
 
@@ -769,11 +750,8 @@ ACMD(do_mob)
 
 	if (vnum == 0)
 	{
-#ifdef FIX_NEG_CMD_CORE_DOWNER
 		ch->ChatPacket(CHAT_TYPE_INFO, "No such mob (%s) by that vnum", arg1);
-#else
-		ch->ChatPacket(CHAT_TYPE_INFO, "No such mob by that vnum");
-#endif
+		
 		return;
 	}
 
@@ -782,9 +760,7 @@ ACMD(do_mob)
 	if (*arg2)
 	{
 		str_to_number(iCount, arg2);
-#ifdef FIX_NEG_CMD_CORE_DOWNER
 		iCount = MINMAX(1, iCount, 40);
-#endif
 	}
 	else
 		iCount = 1;
@@ -816,11 +792,8 @@ ACMD(do_mob_ld)
 
 	if (!*arg1)
 	{
-#ifdef FIX_NEG_CMD_CORE_DOWNER
 		ch->ChatPacket(CHAT_TYPE_INFO, "Usage: /mob <mob vnum> <mob count>");
-#else
-		ch->ChatPacket(CHAT_TYPE_INFO, "Usage: /mob <mob vnum>");
-#endif
+		
 		return;
 	}
 
@@ -1457,14 +1430,12 @@ ACMD(do_set)
 					LogManager::instance().CharLog(tch, gold, "ZERO_GOLD", "GM");
 				}
 				
-#ifdef FIX_NEG_CMD_CORE_DOWNER
 				if (after_gold > GOLD_MAX)
 				{
 					int difference = after_gold - GOLD_MAX; // If you use extended yang limit, change this int with long long int!!! - [MT2Dev Note] - 19/04/2024
 					tch->PointChange (POINT_GOLD, -difference, true);
 					after_gold = GOLD_MAX;
 				}
-#endif
 			}
 			break;
 
@@ -1688,34 +1659,28 @@ ACMD(do_fishing_simul)
 	int level = 100;
 
 	ch->ChatPacket(CHAT_TYPE_INFO, "Usage: /fishing_simul <level> <prob index> <count>");
-#ifdef FIX_NEG_CMD_CORE_DOWNER
 	ch->ChatPacket(CHAT_TYPE_INFO, "Limit: <level 0-100> <prob 0-100> <count 0-100000>");
-#endif
 
 	if (*arg1)
 	{
-#ifdef FIX_NEG_CMD_CORE_DOWNER
 		if (level > 100)
 			return;
-#endif
+
 		str_to_number(level, arg1);
 	}
 
 	if (*arg2)
 	{
-#ifdef FIX_NEG_CMD_CORE_DOWNER
 		if (prob_idx > 100)
 			return;
-#endif
 		str_to_number(prob_idx, arg2);
 	}
 
 	if (*arg3)
 	{
-#ifdef FIX_NEG_CMD_CORE_DOWNER
 		if (count < 0 || count > 100000)
 			return;
-#endif
+			
 		str_to_number(count, arg3);
 	}
 

@@ -12,10 +12,8 @@
 #include "char_manager.h"
 #include "questmanager.h"
 
-#ifdef FIX_MESSENGER_ACTION_SYNC
 static char __account[CHARACTER_NAME_MAX_LEN * 2 + 1];
 static char __companion[CHARACTER_NAME_MAX_LEN * 2 + 1];
-#endif
 
 MessengerManager::MessengerManager()
 {
@@ -48,12 +46,10 @@ void MessengerManager::Login(MessengerManager::keyA account)
 	if (m_set_loginAccount.find(account) != m_set_loginAccount.end())
 		return;
 
-#ifdef FIX_MESSENGER_ACTION_SYNC
 	DBManager::instance().EscapeString(__account, sizeof(__account), account.c_str(), account.size());
 
 	if (account.compare(__account))
 		return;
-#endif
 
 	DBManager::instance().FuncQuery(std::bind(&MessengerManager::LoadList, this, std::placeholders::_1),
 			"SELECT account, companion FROM messenger_list%s WHERE account='%s'", get_table_postfix(), account.c_str());
@@ -123,13 +119,10 @@ void MessengerManager::Logout(MessengerManager::keyA account)
 	m_Relation.erase(account);
 	//m_map_stMobile.erase(account);
 
-#ifdef FIX_MESSENGER_ACTION_SYNC
 	// remove any pending requests from/to this account so they don't get stuck
 	EraseRequestsForAccount(account);
-#endif
 }
 
-#ifdef CROSS_CHANNEL_FRIEND_REQUEST
 void MessengerManager::RegisterRequestToAdd(const char* name, const char* targetName)
 {
 	uint32_t dw1 = GetCRC32(name, strlen(name));
@@ -141,7 +134,6 @@ void MessengerManager::RegisterRequestToAdd(const char* name, const char* target
 
 	uint32_t dwComplex = GetCRC32(buf, strlen(buf));
 
-#ifdef FIX_MESSENGER_ACTION_SYNC
 	// Check if this requester already sent the same request
 	if (m_set_requestToAdd.find(dwComplex) != m_set_requestToAdd.end())
 	{
@@ -158,9 +150,6 @@ void MessengerManager::RegisterRequestToAdd(const char* name, const char* target
     // Clear any old incoming requests for this target before adding new one
     EraseIncomingRequestsForTarget(targetName);
 	RegisterRequestComplex(dw1, dw2, dwComplex);
-#else
-	m_set_requestToAdd.insert(dwComplex);
-#endif
 }
 
 // stage 1: starts on the core where "ch" resides. Validate ch and move to stage 2
@@ -240,7 +229,6 @@ void MessengerManager::P2PRequestToAdd_Stage2(const char* characterName, LPCHARA
 	MessengerManager::Instance().RegisterRequestToAdd(characterName, target->GetName());
 	target->ChatPacket(CHAT_TYPE_COMMAND, "messenger_auth %s", characterName);
 }
-#endif
 
 void MessengerManager::RequestToAdd(LPCHARACTER ch, LPCHARACTER target)
 {
@@ -263,7 +251,6 @@ void MessengerManager::RequestToAdd(LPCHARACTER ch, LPCHARACTER target)
 	snprintf(buf, sizeof(buf), "%u:%u", dw1, dw2);
 	DWORD dwComplex = GetCRC32(buf, strlen(buf));
 
-#ifdef FIX_MESSENGER_ACTION_SYNC
 	std::string requester = ch->GetName();
 	std::string companion = target->GetName();
 
@@ -297,9 +284,6 @@ void MessengerManager::RequestToAdd(LPCHARACTER ch, LPCHARACTER target)
     EraseIncomingRequestsForTarget(target->GetName());
 	// register complex indexed mappings so we can erase them on disconnect
 	RegisterRequestComplex(dw1, dw2, dwComplex);
-#else
-	m_set_requestToAdd.insert(dwComplex);
-#endif
 
 	target->ChatPacket(CHAT_TYPE_COMMAND, "messenger_auth %s", ch->GetName());
 }
@@ -343,9 +327,6 @@ bool MessengerManager::AuthToAdd(MessengerManager::keyA account, MessengerManage
 		return false;
 	}
 
-#ifndef FIX_MESSENGER_ACTION_SYNC
-	m_set_requestToAdd.erase(dwComplex);
-#else
 	RemoveComplex(dwComplex);
 
 	// In-memory quick check (fast, works if lists are loaded)
@@ -358,7 +339,6 @@ bool MessengerManager::AuthToAdd(MessengerManager::keyA account, MessengerManage
 
 		return false;
 	}
-#endif
 
 	if (!bDeny)
 	{
@@ -369,7 +349,6 @@ bool MessengerManager::AuthToAdd(MessengerManager::keyA account, MessengerManage
 	return true;
 }
 
-#ifdef FIX_MESSENGER_ACTION_SYNC
 void MessengerManager::RegisterRequestComplex(DWORD dw1, DWORD dw2, DWORD dwComplex)
 {
 	// avoid duplicates
@@ -482,9 +461,6 @@ void MessengerManager::EraseIncomingRequestsForTarget(const char* targetName)
 }
 
 void MessengerManager::__AddToList(MessengerManager::keyA account, MessengerManager::keyA companion, bool isRequester)
-#else
-void MessengerManager::__AddToList(MessengerManager::keyA account, MessengerManager::keyA companion)
-#endif
 {
 	m_Relation[account].insert(companion);
 	m_InverseRelation[companion].insert(account);
@@ -492,22 +468,14 @@ void MessengerManager::__AddToList(MessengerManager::keyA account, MessengerMana
 	LPCHARACTER ch = CHARACTER_MANAGER::instance().FindPC(account.c_str());
 	LPDESC d = ch ? ch->GetDesc() : NULL;
 
-#ifdef FIX_MESSENGER_ACTION_SYNC
 	if (d && isRequester)
-#else
-	if (d)
-#endif
 	{
 		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<메신져> %s 님을 친구로 추가하였습니다."), companion.c_str());
 	}
 
 	LPCHARACTER tch = CHARACTER_MANAGER::instance().FindPC(companion.c_str());
 
-#ifdef CROSS_CHANNEL_FRIEND_REQUEST
 	if (tch || P2P_MANAGER::Instance().Find(companion.c_str()))
-#else
-	if (tch)
-#endif
 		SendLogin(account, companion);
 	else
 		SendLogout(account, companion);
@@ -521,13 +489,11 @@ void MessengerManager::AddToList(MessengerManager::keyA account, MessengerManage
 	if (m_Relation[account].find(companion) != m_Relation[account].end())
 		return;
 
-#ifdef FIX_MESSENGER_ACTION_SYNC
 	DBManager::instance().EscapeString(__account, sizeof(__account), account.c_str(), account.size());
 	DBManager::instance().EscapeString(__companion, sizeof(__companion), companion.c_str(), companion.size());
 
 	if (account.compare(__account) || companion.compare(__companion))
 		return;
-#endif
 
 	sys_log(0, "Messenger Add %s %s", account.c_str(), companion.c_str());
 
@@ -544,30 +510,19 @@ void MessengerManager::AddToList(MessengerManager::keyA account, MessengerManage
 	P2P_MANAGER::instance().Send(&p2ppck, sizeof(TPacketGGMessenger));
 }
 
-#ifdef FIX_MESSENGER_ACTION_SYNC
 void MessengerManager::__RemoveFromList(MessengerManager::keyA account, MessengerManager::keyA companion, bool isRequester)
-#else
-void MessengerManager::__RemoveFromList(MessengerManager::keyA account, MessengerManager::keyA companion)
-#endif
 {
 	m_Relation[account].erase(companion);
 	m_InverseRelation[companion].erase(account);
-#ifdef FIX_MESSENGER_ACTION_SYNC
 	m_Relation[companion].erase(account);
 	m_InverseRelation[account].erase(companion);
-#endif
 
 	LPCHARACTER ch = CHARACTER_MANAGER::instance().FindPC(account.c_str());
 	LPDESC d = ch ? ch->GetDesc() : NULL;
 
-#ifdef FIX_MESSENGER_ACTION_SYNC
 	if (d && isRequester)
-#else
-	if (d)
-#endif
 		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<메신져> %s 님을 메신저에서 삭제하였습니다."), companion.c_str());
 
-#ifdef FIX_MESSENGER_ACTION_SYNC
 	LPCHARACTER tch = CHARACTER_MANAGER::Instance().FindPC(companion.c_str());
 
 	if (tch && tch->GetDesc())
@@ -583,7 +538,6 @@ void MessengerManager::__RemoveFromList(MessengerManager::keyA account, Messenge
 		tch->GetDesc()->BufferedPacket(&bLen, sizeof(BYTE));
 		tch->GetDesc()->Packet(account.c_str(), account.size());
 	}
-#endif
 }
 
 bool MessengerManager::IsInList(MessengerManager::keyA account, MessengerManager::keyA companion) // Fix
@@ -608,31 +562,17 @@ void MessengerManager::RemoveFromList(MessengerManager::keyA account, MessengerM
 	if (!IsInList(account, companion)) // Fix
 		return;
 	
-#ifdef FIX_MESSENGER_ACTION_SYNC
 	DBManager::instance().EscapeString(__account, sizeof(__account), account.c_str(), account.size());
     DBManager::instance().EscapeString(__companion, sizeof(__companion), companion.c_str(), companion.size());
   
     if (account.compare(__account) || companion.compare(__companion))
         return;
-#else
-	char companionEscaped[CHARACTER_NAME_MAX_LEN * 2 + 1];
-
-	DBManager::instance().EscapeString(companionEscaped, sizeof(companionEscaped), companion.c_str(), companion.length());
-#endif
 
 	sys_log(1, "Messenger Remove %s %s", account.c_str(), companion.c_str());
-	
-	// DBManager::instance().Query("DELETE FROM messenger_list%s WHERE account='%s' AND companion = '%s'",
-			// get_table_postfix(), account.c_str(), companion.c_str());
 
 	// Fix
-#ifdef FIX_MESSENGER_ACTION_SYNC
 	DBManager::instance().Query("DELETE FROM messenger_list%s WHERE (account='%s' AND companion = '%s') OR (account = '%s' AND companion = '%s')",
 			get_table_postfix(), account.c_str(), companion.c_str(), companion.c_str(), account.c_str());
-#else
-	DBManager::instance().Query("DELETE FROM messenger_list%s WHERE account='%s' AND companion = '%s'",
-			get_table_postfix(), account.c_str(), companion.c_str());
-#endif
 
 	__RemoveFromList(account, companion);
 
@@ -648,12 +588,10 @@ void MessengerManager::RemoveAllList(keyA account)
 {
 	std::set<keyT>	company(m_Relation[account]);
 
-#ifdef FIX_MESSENGER_ACTION_SYNC
     DBManager::instance().EscapeString(__account, sizeof(__account), account.c_str(), account.size());
 
 	if (account.compare(__account))
         	return;
-#endif
 
 	/* SQL Data 삭제 */
 	DBManager::instance().Query("DELETE FROM messenger_list%s WHERE account='%s' OR companion='%s'",
@@ -665,9 +603,7 @@ void MessengerManager::RemoveAllList(keyA account)
 			iter++ )
 	{
 		this->RemoveFromList(account, *iter);
-#ifdef FIX_MESSENGER_ACTION_SYNC
 		this->RemoveFromList(*iter, account);
-#endif
 	}
 
 	/* 복사한 데이타 삭제 */
