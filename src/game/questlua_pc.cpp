@@ -864,7 +864,11 @@ namespace quest
 			ch->PointChange(POINT_SUB_SKILL, newLevel < 10 ? 0 : newLevel - MAX(ch->GetLevel(), 9));
 			ch->PointChange(POINT_STAT, ((MINMAX(1, newLevel, 90) - ch->GetLevel()) * 3) + ch->GetPoint(POINT_LEVEL_STEP));
 			//레벨
+#if defined(__BL_LEVEL_FIX__)
+			ch->PointChange(POINT_LEVEL, newLevel - ch->GetLevel(), false, true);
+#else
 			ch->PointChange(POINT_LEVEL, newLevel - ch->GetLevel());
+#endif
 			//HP, SP
 			ch->SetRandomHP((newLevel - 1) * number(JobInitialPoints[ch->GetJob()].hp_per_lv_begin, JobInitialPoints[ch->GetJob()].hp_per_lv_end));
 			ch->SetRandomSP((newLevel - 1) * number(JobInitialPoints[ch->GetJob()].sp_per_lv_begin, JobInitialPoints[ch->GetJob()].sp_per_lv_end));

@@ -10,6 +10,7 @@
 
 #include <limits.h>
 #include <stddef.h>
+#include <stdint.h>
 
 
 #include "lua.h"
@@ -69,7 +70,7 @@ typedef unsigned char lu_byte;
 ** this is for hashing only; there is no problem if the integer
 ** cannot hold the whole pointer value
 */
-#define IntPoint(p)  ((lu_hash)(p))
+#define IntPoint(p)  ((lu_hash)(uintptr_t)(p))
 
 
 

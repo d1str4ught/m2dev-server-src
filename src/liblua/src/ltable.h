@@ -10,7 +10,7 @@
 #include "lobject.h"
 
 
-#define gnode(t,i)	(&(t)->node[i])
+#define gnode(t,i)	(&(t)->node[(i)])
 #define gkey(n)		(&(n)->i_key)
 #define gval(n)		(&(n)->i_val)
 

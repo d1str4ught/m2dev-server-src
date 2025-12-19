@@ -1,4 +1,4 @@
-
+﻿
 #include "stdafx.h"
 
 #include "ClientManager.h"
@@ -126,9 +126,9 @@ size_t CreatePlayerSaveQuery(char * pszQuery, size_t querySize, TPlayerTable * p
 		pkTab->y,
 		pkTab->z,
 		pkTab->lMapIndex,
-		pkTab->lExitX,
-		pkTab->lExitY,
-		pkTab->lExitMapIndex,
+		static_cast<long>(pkTab->lExitX),
+		static_cast<long>(pkTab->lExitY),
+		static_cast<long>(pkTab->lExitMapIndex),
 		pkTab->hp,
 		pkTab->sp,
 		pkTab->stamina,
@@ -151,7 +151,7 @@ size_t CreatePlayerSaveQuery(char * pszQuery, size_t querySize, TPlayerTable * p
 		pkTab->parts[PART_MAIN],
 		pkTab->parts[PART_HAIR],
 		pkTab->skill_group,
-		pkTab->lAlignment,
+		static_cast<long>(pkTab->lAlignment),
 		pkTab->horse.bLevel,
 		pkTab->horse.bRiding,
 		pkTab->horse.sHealth,
@@ -414,28 +414,34 @@ void CClientManager::ItemAward(CPeer * peer,char* login)
 		TItemAward * pItemAward = *(it++);		
 		char* whyStr = pItemAward->szWhy;	//why 콜룸 읽기
 		char cmdStr[100] = "";	//why콜룸에서 읽은 값을 임시 문자열에 복사해둠
-		strcpy(cmdStr,whyStr);	//명령어 얻는 과정에서 토큰쓰면 원본도 토큰화 되기 때문
+		strcpy(cmdStr, whyStr);	//명령어 얻는 과정에서 토큰쓰면 원본도 토큰화 되기 때문
+
 		char command[20] = "";
-		strcpy(command,GetCommand(cmdStr));	// command 얻기		
-		if( !(strcmp(command,"GIFT") ))	// command 가 GIFT이면
+		strcpy(command,GetCommand(cmdStr));	// command 얻기
+
+		if (!(strcmp(command,"GIFT")))	// command 가 GIFT이면
 		{
 			TPacketItemAwardInfromer giftData;
 			strcpy(giftData.login, pItemAward->szLogin);	//로그인 아이디 복사
 			strcpy(giftData.command, command);					//명령어 복사
 			giftData.vnum = pItemAward->dwVnum;				//아이템 vnum도 복사
-			ForwardPacket(HEADER_DG_ITEMAWARD_INFORMER,&giftData,sizeof(TPacketItemAwardInfromer));
+			ForwardPacket(HEADER_DG_ITEMAWARD_INFORMER, &giftData, sizeof(TPacketItemAwardInfromer));
 		}
 	}
 }
 char* CClientManager::GetCommand(char* str)
 {
-	char command[20] = "";
+	static char command[20] = "";
 	char* tok;
 
-	if( str[0] == '[' )
+	if (str[0] == '[')
 	{
-		tok = strtok(str,"]");			
-		strcat(command,&tok[1]);		
+		tok = strtok(str, "]");			
+		strlcpy(command, &tok[1], sizeof(command));		
+	}
+	else
+	{
+		command[0] = '\0';	
 	}
 
 	return command;
@@ -579,12 +585,15 @@ void CClientManager::RESULT_COMPOSITE_PLAYER(CPeer * peer, SQLMsg * pMsg, DWORD 
 				if (temp1 == NULL)
 					break;
 				
-				CLoginData* pLoginData1 = GetLoginDataByAID(temp1->account_id);	//				
+				CLoginData* pLoginData1 = GetLoginDataByAID(temp1->account_id);
+
+				if (pLoginData1 == NULL)
+					break;
+
 				//독일 선물 기능
-				if( pLoginData1->GetAccountRef().login == NULL)
+				if (pLoginData1->GetAccountRef().login[0] == '\0')
 					break;
-				if( pLoginData1 == NULL )
-					break;
+
 				sys_log(0,"info of pLoginData1 before call ItemAwardfunction %d",pLoginData1);
 				ItemAward(peer,pLoginData1->GetAccountRef().login);
 			}
@@ -893,7 +902,6 @@ void CClientManager::__QUERY_PLAYER_CREATE(CPeer *peer, DWORD dwHandle, TPlayerC
 			packet->player_table.ht, 
 			packet->player_table.job);
 
-	//tw1x1: Buffer overflow (14.11.2025 / 21:08 GMT)
 	static char text[8192 + 1];
 
 	CDBManager::instance().EscapeString(text, packet->player_table.skills, sizeof(packet->player_table.skills));
@@ -1191,10 +1199,10 @@ void CClientManager::QUERY_ADD_AFFECT(CPeer * peer, TPacketGDAddAffect * p)
 			p->dwPID,
 			p->elem.dwType,
 			p->elem.bApplyOn,
-			p->elem.lApplyValue,
+			static_cast<long>(p->elem.lApplyValue),
 			p->elem.dwFlag,
-			p->elem.lDuration,
-			p->elem.lSPCost);
+			static_cast<long>(p->elem.lDuration),
+			static_cast<long>(p->elem.lSPCost));
 
 	CDBManager::instance().AsyncQuery(queryStr);
 }

@@ -515,7 +515,7 @@ void parse(char * filename)
 
 					if (lexstate.lookahead.token == TK_OR)
 					{
-						// ´ÙÁß when name
+						// ï¿½ï¿½ï¿½ï¿½ when name
 						// push to somewhere -.-
 						ps = ST_WHEN_NAME;
 						when_name_arg_vector.push_back(make_pair(current_when_name, current_when_argument));
@@ -535,7 +535,7 @@ void parse(char * filename)
 					current_when_condition = "";
 					if (t.token == TK_WITH)
 					{
-						// here comes Á¶°Ç½Ä
+						// here comes ï¿½ï¿½ï¿½Ç½ï¿½
 						next(&lexstate);
 						ostringstream os;
 						os << (lexstate.t);
@@ -580,7 +580,7 @@ void parse(char * filename)
 					string callname;
 					bool registered = false;
 					if (prev.t.token == '.')
-						prev.t.token == TK_DO; // any token
+						prev.t.token = TK_DO; // any token
 					while (1)
 					{
 						if (lexstate.t.token == TK_DO || lexstate.t.token == TK_IF /*|| lexstate.t.token == TK_FOR*/ || lexstate.t.token == TK_BEGIN || lexstate.t.token == TK_FUNCTION)
@@ -844,7 +844,7 @@ void parse(char * filename)
 			}
 		}
 
-		// quest functionµéÀ» ±â·Ï
+		// quest functionï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
 		ouf << all_functions;
 
 		ouf << "}";

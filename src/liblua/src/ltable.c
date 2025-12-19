@@ -67,7 +67,7 @@
 ** for some types, it is better to avoid modulus by power of 2, as
 ** they tend to have many 2 factors.
 */
-#define hashmod(t,n)	(gnode(t, ((n) % ((sizenode(t)-1)|1))))
+#define hashmod(t,n)	(gnode(t, (lu_hash)((n) % ((sizenode(t)-1)|1))))
 
 
 #define hashpointer(t,p)	hashmod(t, IntPoint(p))

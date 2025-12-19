@@ -150,9 +150,14 @@ void CArenaMap::SendArenaMapListTo(LPCHARACTER pChar, DWORD mapIdx)
 
 	for (; iter != m_listArena.end(); iter++)
 	{
+		// The iterator (*iter) is already a pointer to the container's element.
+		// We assume the element is a pointer type that needs to be treated as CArena*.
+		
+		CArena* pArena = (CArena*)(*iter); // Cast and assign the pointer once
+		
 		pChar->ChatPacket(CHAT_TYPE_INFO, "ArenaMapInfo Map: %d stA(%d, %d) stB(%d, %d)", mapIdx, 
-				(CArena*)(*iter)->GetStartPointA().x, (CArena*)(*iter)->GetStartPointA().y,
-				(CArena*)(*iter)->GetStartPointB().x, (CArena*)(*iter)->GetStartPointB().y);
+				pArena->GetStartPointA().x, pArena->GetStartPointA().y,
+				pArena->GetStartPointB().x, pArena->GetStartPointB().y);
 	}
 }
 

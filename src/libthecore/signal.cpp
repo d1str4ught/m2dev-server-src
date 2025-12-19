@@ -16,13 +16,13 @@ RETSIGTYPE reap(int sig)
 
 RETSIGTYPE checkpointing(int sig)
 {
-    if (!tics)
+    if (!tics.load())
     {
-	sys_err("CHECKPOINT shutdown: tics did not updated.");
-	abort();
+        sys_err("CHECKPOINT shutdown: tics did not updated.");
+        abort();
     }
     else
-	tics = 0;
+	    tics.store(0);
 }
 
 

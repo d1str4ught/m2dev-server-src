@@ -282,7 +282,7 @@ static void read_string (LexState *LS, int del, SemInfo *seminfo) {
 	  else
 	  {
 		  switch (b_current) {
-      case EOZ:
+      case (unsigned char)EOZ:
         save(LS, '\0', l);
         luaX_lexerror(LS, "unfinished string", TK_EOS);
         break;  /* to avoid warnings */

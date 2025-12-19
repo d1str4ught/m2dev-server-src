@@ -243,6 +243,10 @@ CPacketInfoGG::CPacketInfoGG()
 	Set(HEADER_GG_SHOUT,		sizeof(TPacketGGShout),		"Shout", false);
 	Set(HEADER_GG_DISCONNECT,	    	sizeof(TPacketGGDisconnect),	"Disconnect", false);
 	Set(HEADER_GG_MESSENGER_ADD,	sizeof(TPacketGGMessenger),	"MessengerAdd", false);
+#ifdef CROSS_CHANNEL_FRIEND_REQUEST
+	Set(HEADER_GG_MESSENGER_REQUEST_ADD, sizeof(TPacketGGMessengerRequest), "MessengerRequestAdd", false);
+	Set(HEADER_GG_MESSENGER_RESPONSE, sizeof(TPacketGGMessengerResponse), "MessengerResponse", false);
+#endif
 	Set(HEADER_GG_MESSENGER_REMOVE,	sizeof(TPacketGGMessenger),	"MessengerRemove", false);
 	Set(HEADER_GG_FIND_POSITION,	sizeof(TPacketGGFindPosition),	"FindPosition", false);
 	Set(HEADER_GG_WARP_CHARACTER,	sizeof(TPacketGGWarpCharacter),	"WarpCharacter", false);
@@ -258,6 +262,7 @@ CPacketInfoGG::CPacketInfoGG()
 	// BLOCK_CHAT
 	Set(HEADER_GG_BLOCK_CHAT,		sizeof(TPacketGGBlockChat),	"BlockChat", false);
 	// END_OF_BLOCK_CHAT
+
 	Set(HEADER_GG_SIEGE,	sizeof(TPacketGGSiege),	"Siege", false);
 
 	Set(HEADER_GG_MONARCH_NOTICE,		sizeof(TPacketGGMonarchNotice),	"MonarchNotice", false);

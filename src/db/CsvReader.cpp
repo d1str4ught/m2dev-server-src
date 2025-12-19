@@ -6,7 +6,7 @@
 #ifndef Assert
     #include <assert.h>
     #define Assert assert
-    #define LogToFile (void)(0);
+    #define LogToFile(...) ((void)0)
 #endif
 
 namespace

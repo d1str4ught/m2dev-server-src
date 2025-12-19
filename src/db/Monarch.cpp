@@ -129,7 +129,7 @@ bool CMonarch::AddMoney(int Empire, int64_t Money)
 	int64_t Money64 = m_MonarchInfo.money[Empire];
 
 	char szQuery[1024];	
-	snprintf(szQuery, sizeof(szQuery), "UPDATE monarch set money=%lld where empire=%d", Money64, Empire);
+	snprintf(szQuery, sizeof(szQuery), "UPDATE monarch set money=%lld where empire=%d", static_cast<long long>(Money64), Empire);
 
 	CDBManager::instance().AsyncQuery(szQuery);
 
@@ -145,7 +145,7 @@ bool CMonarch::DecMoney(int Empire, int64_t Money)
 	int64_t Money64 = m_MonarchInfo.money[Empire];
 
 	char szQuery[1024];	
-	snprintf(szQuery, sizeof(szQuery), "UPDATE monarch set money=%lld where empire=%d", Money64, Empire);
+	snprintf(szQuery, sizeof(szQuery), "UPDATE monarch set money=%lld where empire=%d", static_cast<long long>(Money64), Empire);
 
 	CDBManager::instance().AsyncQuery(szQuery);
 	return true;
@@ -163,12 +163,12 @@ bool CMonarch::TakeMoney(int Empire, DWORD pid, int64_t Money)
 
 	char szQuery[1024];	
 	snprintf(szQuery, sizeof(szQuery), 
-			"UPDATE monarch set money=%lld; where empire=%d", m_MonarchInfo.money[Empire], Empire);
+			"UPDATE monarch set money=%lld where empire=%d", static_cast<long long>(m_MonarchInfo.money[Empire]), Empire);
 
 	CDBManager::instance().AsyncQuery(szQuery);
 
 	if (g_test_server)
-		sys_log(0, "[MONARCH] Take money empire(%d) money(%lld)", Empire, m_MonarchInfo.money[Empire]);
+		sys_log(0, "[MONARCH] Take money empire(%d) money(%lld)", Empire, static_cast<long long>(m_MonarchInfo.money[Empire]));
 	return true;
 }
 
@@ -198,7 +198,7 @@ bool CMonarch::LoadMonarch()
 		strlcpy(p->date[Empire], row[idx++], sizeof(p->date[Empire]));
 
 		if (g_test_server)
-        	sys_log(0, "[LOAD_MONARCH] Empire %d pid %d money %lld windate %s", Empire, p->pid[Empire], p->money[Empire], p->date[Empire]);
+        	sys_log(0, "[LOAD_MONARCH] Empire %d pid %d money %lld windate %s", Empire, p->pid[Empire], static_cast<long long>(p->money[Empire]), p->date[Empire]);
     }
 
     delete pMsg;
@@ -231,13 +231,13 @@ bool CMonarch::SetMonarch(const char * name)
         p->money[Empire] = atoll(row[idx++]);
 	
 		if (g_test_server)
-			sys_log(0, "[Set_MONARCH] Empire %d pid %d money %lld windate %s", Empire, p->pid[Empire], p->money[Empire], p->date[Empire]);
+			sys_log(0, "[Set_MONARCH] Empire %d pid %d money %lld windate %s", Empire, p->pid[Empire], static_cast<long long>(p->money[Empire]), p->date[Empire]);
     }
     delete pMsg;
 
 	//db¿¡ ÀÔ·Â
 	snprintf(szQuery, sizeof(szQuery),
-					"REPLACE INTO monarch (empire, name, windate, money) VALUES(%d, %d, now(), %lld)", Empire, p->pid[Empire], p->money[Empire]);
+					"REPLACE INTO monarch (empire, name, windate, money) VALUES(%d, %d, now(), %lld)", Empire, p->pid[Empire], static_cast<long long>(p->money[Empire]));
 
  	CDBManager::instance().AsyncQuery(szQuery, SQL_PLAYER);	
     return true;

@@ -457,7 +457,7 @@ ACMD(do_item)
 
 	if (!*arg1)
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, "Usage: item <item vnum>");
+		ch->ChatPacket(CHAT_TYPE_INFO, "Usage: /item <item vnum>");
 		return;
 	}
 
@@ -500,7 +500,7 @@ ACMD(do_item)
 				M2_DESTROY_ITEM(item);
 				if (!ch->DragonSoul_IsQualified())
 				{
-					ch->ChatPacket(CHAT_TYPE_INFO, "인벤이 활성화 되지 않음.");
+					ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("인벤이 활성화 되지 않음."));
 				}
 				else
 					ch->ChatPacket(CHAT_TYPE_INFO, "Not enough inventory space.");
@@ -574,7 +574,11 @@ ACMD(do_mob_coward)
 
 	if (!*arg1)
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, "Usage: mc <vnum>");
+#ifdef FIX_NEG_CMD_CORE_DOWNER
+		ch->ChatPacket(CHAT_TYPE_INFO, "Usage: /mc <vnum> <count>");
+#else
+		ch->ChatPacket(CHAT_TYPE_INFO, "Usage: /mc <vnum>");
+#endif
 		return;
 	}
 
@@ -597,14 +601,23 @@ ACMD(do_mob_coward)
 
 	if (vnum == 0)
 	{
+#ifdef FIX_NEG_CMD_CORE_DOWNER
+		ch->ChatPacket(CHAT_TYPE_INFO, "No such mob (%s) by that vnum", arg1);
+#else
 		ch->ChatPacket(CHAT_TYPE_INFO, "No such mob by that vnum");
+#endif
 		return;
 	}
 
 	int iCount = 0;
 
 	if (*arg2)
+	{
 		str_to_number(iCount, arg2);
+#ifdef FIX_NEG_CMD_CORE_DOWNER
+		iCount = MINMAX(1, iCount, 40);
+#endif
+	}
 	else
 		iCount = 1;
 
@@ -632,7 +645,7 @@ ACMD(do_mob_map)
 
 	if (!*arg1)
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, "Syntax: mm <vnum>");
+		ch->ChatPacket(CHAT_TYPE_INFO, "Syntax: /mm <vnum>");
 		return;
 	}
 
@@ -656,7 +669,11 @@ ACMD(do_mob_aggresive)
 
 	if (!*arg1)
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, "Usage: mob <mob vnum>");
+#ifdef FIX_NEG_CMD_CORE_DOWNER
+		ch->ChatPacket(CHAT_TYPE_INFO, "Usage: /mob <mob vnum> <mob count>");
+#else
+		ch->ChatPacket(CHAT_TYPE_INFO, "Usage: /mob <mob vnum>");
+#endif
 		return;
 	}
 
@@ -679,14 +696,23 @@ ACMD(do_mob_aggresive)
 
 	if (vnum == 0)
 	{
+#ifdef FIX_NEG_CMD_CORE_DOWNER
+		ch->ChatPacket(CHAT_TYPE_INFO, "No such mob (%s) by that vnum", arg1);
+#else
 		ch->ChatPacket(CHAT_TYPE_INFO, "No such mob by that vnum");
+#endif
 		return;
 	}
 
 	int iCount = 0;
 
 	if (*arg2)
+	{
 		str_to_number(iCount, arg2);
+#ifdef FIX_NEG_CMD_CORE_DOWNER
+		iCount = MINMAX(1, iCount, 40);
+#endif
+	}
 	else
 		iCount = 1;
 
@@ -716,7 +742,11 @@ ACMD(do_mob)
 
 	if (!*arg1)
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, "Usage: mob <mob vnum>");
+#ifdef FIX_NEG_CMD_CORE_DOWNER
+		ch->ChatPacket(CHAT_TYPE_INFO, "Usage: /mob <mob vnum> <mob count>");
+#else
+		ch->ChatPacket(CHAT_TYPE_INFO, "Usage: /mob <mob vnum>");
+#endif
 		return;
 	}
 
@@ -739,14 +769,23 @@ ACMD(do_mob)
 
 	if (vnum == 0)
 	{
+#ifdef FIX_NEG_CMD_CORE_DOWNER
+		ch->ChatPacket(CHAT_TYPE_INFO, "No such mob (%s) by that vnum", arg1);
+#else
 		ch->ChatPacket(CHAT_TYPE_INFO, "No such mob by that vnum");
+#endif
 		return;
 	}
 
 	int iCount = 0;
 
 	if (*arg2)
+	{
 		str_to_number(iCount, arg2);
+#ifdef FIX_NEG_CMD_CORE_DOWNER
+		iCount = MINMAX(1, iCount, 40);
+#endif
+	}
 	else
 		iCount = 1;
 
@@ -777,7 +816,11 @@ ACMD(do_mob_ld)
 
 	if (!*arg1)
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, "Usage: mob <mob vnum>");
+#ifdef FIX_NEG_CMD_CORE_DOWNER
+		ch->ChatPacket(CHAT_TYPE_INFO, "Usage: /mob <mob vnum> <mob count>");
+#else
+		ch->ChatPacket(CHAT_TYPE_INFO, "Usage: /mob <mob vnum>");
+#endif
 		return;
 	}
 
@@ -1300,7 +1343,7 @@ ACMD(do_disconnect)
 
 	if (!*arg1)
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, "ex) /dc <player name>");
+		ch->ChatPacket(CHAT_TYPE_INFO, "(ex) /dc <player name>");
 		return;
 	}
 
@@ -1329,7 +1372,7 @@ ACMD(do_kill)
 
 	if (!*arg1)
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, "ex) /kill <player name>");
+		ch->ChatPacket(CHAT_TYPE_INFO, "(ex) /kill <player name>");
 		return;
 	}
 
@@ -1408,10 +1451,20 @@ ACMD(do_set)
 				int before_gold = tch->GetGold();
 				tch->PointChange(POINT_GOLD, gold, true);
 				int after_gold = tch->GetGold();
+				
 				if (0 == after_gold && 0 != before_gold)
 				{
 					LogManager::instance().CharLog(tch, gold, "ZERO_GOLD", "GM");
 				}
+				
+#ifdef FIX_NEG_CMD_CORE_DOWNER
+				if (after_gold > GOLD_MAX)
+				{
+					int difference = after_gold - GOLD_MAX; // If you use extended yang limit, change this int with long long int!!! - [MT2Dev Note] - 19/04/2024
+					tch->PointChange (POINT_GOLD, -difference, true);
+					after_gold = GOLD_MAX;
+				}
+#endif
 			}
 			break;
 
@@ -1510,12 +1563,12 @@ ACMD(do_respawn)
 
 	if (*arg1 && !strcasecmp(arg1, "all"))
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, "Respaw everywhere");
+		ch->ChatPacket(CHAT_TYPE_INFO, "Respawn everywhere");
 		regen_reset(0, 0);
 	}
 	else
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, "Respaw around");
+		ch->ChatPacket(CHAT_TYPE_INFO, "Respawn around");
 		regen_reset(ch->GetX(), ch->GetY());
 	}
 }
@@ -1634,16 +1687,37 @@ ACMD(do_fishing_simul)
 	int prob_idx = 0;
 	int level = 100;
 
-	ch->ChatPacket(CHAT_TYPE_INFO, "Usage: fishing_simul <level> <prob index> <count>");
+	ch->ChatPacket(CHAT_TYPE_INFO, "Usage: /fishing_simul <level> <prob index> <count>");
+#ifdef FIX_NEG_CMD_CORE_DOWNER
+	ch->ChatPacket(CHAT_TYPE_INFO, "Limit: <level 0-100> <prob 0-100> <count 0-100000>");
+#endif
 
 	if (*arg1)
+	{
+#ifdef FIX_NEG_CMD_CORE_DOWNER
+		if (level > 100)
+			return;
+#endif
 		str_to_number(level, arg1);
+	}
 
 	if (*arg2)
+	{
+#ifdef FIX_NEG_CMD_CORE_DOWNER
+		if (prob_idx > 100)
+			return;
+#endif
 		str_to_number(prob_idx, arg2);
+	}
 
 	if (*arg3)
+	{
+#ifdef FIX_NEG_CMD_CORE_DOWNER
+		if (count < 0 || count > 100000)
+			return;
+#endif
 		str_to_number(count, arg3);
+	}
 
 	fishing::Simulation(level, count, prob_idx, ch);
 }

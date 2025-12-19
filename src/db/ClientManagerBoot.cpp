@@ -347,6 +347,7 @@ bool CClientManager::InitializeMobTable()
 				
 			mob_table->dwDropItemVnum = tempTable->dwDropItemVnum;
 			mob_table->dwResurrectionVnum = tempTable->dwResurrectionVnum;
+
 			for (int i = 0; i < MOB_ENCHANTS_MAX_NUM; ++i)
 				mob_table->cEnchants[i] = tempTable->cEnchants[i];
 				
@@ -357,7 +358,6 @@ bool CClientManager::InitializeMobTable()
 			mob_table->dwSummonVnum = tempTable->dwSummonVnum;
 			mob_table->dwDrainSP = tempTable->dwDrainSP;
 			mob_table->dwPolymorphItemVnum = tempTable->dwPolymorphItemVnum;
-				
 			
 			mob_table->Skills[0].bLevel = tempTable->Skills[0].bLevel;
 			mob_table->Skills[0].dwVnum = tempTable->Skills[0].dwVnum;
@@ -400,20 +400,22 @@ bool CClientManager::InitializeMobTable()
 	//파일 다시 읽어오기.
 	test_data.Destroy();
 	isTestFile = true;
-	test_data;
-	if(!test_data.Load("mob_proto_test.txt",'\t'))
+
+	if (!test_data.Load("mob_proto_test.txt",'\t'))
 	{
 		fprintf(stderr, "테스트 파일이 없습니다. 그대로 진행합니다.\n");
 		isTestFile = false;
 	}
-	if(isTestFile) {
+	
+	if (isTestFile) {
 		test_data.Next();	//설명 로우 넘어가기.
 
 		while (test_data.Next())	//테스트 데이터 각각을 훑어나가며,새로운 것을 추가한다.
 		{
 			//중복되는 부분이면 넘어간다.
 			set<int>::iterator itVnum;
-			itVnum=vnumSet.find(atoi(test_data.AsStringByIndex(0)));
+			itVnum = vnumSet.find(atoi(test_data.AsStringByIndex(0)));
+			
 			if (itVnum != vnumSet.end()) {
 				continue;
 			}

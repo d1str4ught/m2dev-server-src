@@ -1291,6 +1291,21 @@ ACMD(do_messenger_auth)
 
 		if (tch)
 			tch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%s 님으로 부터 친구 등록을 거부 당했습니다."), ch->GetName());
+#ifdef CROSS_CHANNEL_FRIEND_REQUEST
+		else
+		{
+			CCI* pkCCI = P2P_MANAGER::Instance().Find(arg2);
+
+			if (pkCCI)
+			{
+				LPDESC pkDesc = pkCCI->pkDesc;
+
+				pkDesc->SetRelay(arg2);
+				pkDesc->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%s 님으로 부터 친구 등록을 거부 당했습니다."), ch->GetName());
+				pkDesc->SetRelay("");
+			}
+		}
+#endif
 	}
 
 	//MessengerManager::instance().AuthToAdd(ch->GetName(), arg2, answer == 'y' ? false : true); // DENY

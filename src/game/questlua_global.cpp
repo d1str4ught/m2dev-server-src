@@ -797,7 +797,7 @@ namespace quest
 		return 1;
 	}
 
-	// ���ο� state�� �����.
+	//    ο  state        .
 	int _set_quest_state(lua_State* L)
 	{
 		if (!lua_isstring(L, 1) || !lua_isstring(L, 2))
@@ -957,7 +957,7 @@ namespace quest
 
 		event_create(warp_all_to_village_event, info, PASSES_PER_SEC(iSec));
 
-		SendNoticeMap(LC_TEXT("����� ��� ������ �̵��˴ϴ�."), iMapIndex, false);
+		SendNoticeMap(LC_TEXT("잠시후 모두 마을로 이동됩니다."), iMapIndex, false);
 
 		return 0;
 	}
@@ -1031,7 +1031,6 @@ namespace quest
 		return 0;
 	}
 
-	//����: �� ������ �ȵǴ� �ʿ����� ���
 	int _regen_in_map( lua_State * L )
 	{
 		int iMapIndex = static_cast<int>(lua_tonumber(L, 1));

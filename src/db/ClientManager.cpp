@@ -458,7 +458,7 @@ void CClientManager::QUERY_QUEST_SAVE(CPeer * pkPeer, TQuestTable * pTable, DWOR
 		{
 			snprintf(szQuery, sizeof(szQuery),
 					"REPLACE INTO quest%s (dwPID, szName, szState, lValue) VALUES(%d, '%s', '%s', %ld)",
-					GetTablePostfix(), pTable->dwPID, pTable->szName, pTable->szState, pTable->lValue);
+					GetTablePostfix(), pTable->dwPID, pTable->szName, pTable->szState, static_cast<long>(pTable->lValue));
 		}
 
 		CDBManager::instance().ReturnQuery(szQuery, QID_QUEST_SAVE, pkPeer->GetHandle(), NULL);
@@ -683,7 +683,7 @@ void CClientManager::RESULT_SAFEBOX_LOAD(CPeer * pkPeer, SQLMsg * msg)
 
 							dwSkillVnum = m_vec_skillTable[dwSkillIdx].dwVnum;
 
-							if (!dwSkillVnum > 120)
+							if (dwSkillVnum > 120)
 								continue;
 
 							break;
@@ -1297,9 +1297,9 @@ void CClientManager::QUERY_ITEM_SAVE(CPeer * pkPeer, const char * c_pData)
 			p->pos,
 			p->count,
 			p->vnum,
-			p->alSockets[0],
-			p->alSockets[1],
-			p->alSockets[2],
+			static_cast<long>(p->alSockets[0]),
+			static_cast<long>(p->alSockets[1]),
+			static_cast<long>(p->alSockets[2]),
 			p->aAttr[0].bType, p->aAttr[0].sValue,
 			p->aAttr[1].bType, p->aAttr[1].sValue,
 			p->aAttr[2].bType, p->aAttr[2].sValue,

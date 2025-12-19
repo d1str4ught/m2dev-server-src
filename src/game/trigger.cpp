@@ -7,6 +7,8 @@
 #include "affect.h"
 #include "shop_manager.h"
 
+#include <cstdint>
+
 int	OnClickShop(TRIGGERPARAM);
 int	OnClickTalk(TRIGGERPARAM);
 
@@ -61,7 +63,8 @@ class FuncFindMobVictim
 	public:
 		FuncFindMobVictim(LPCHARACTER pkChr, int iMaxDistance) :
 			m_pkChr(pkChr),
-			m_iMinDistance(~(1L << 31)),
+			//m_iMinDistance(~(1L << 31)),
+			m_iMinDistance(INT_MAX),
 			m_iMaxDistance(iMaxDistance),
 			m_lx(pkChr->GetX()),
 			m_ly(pkChr->GetY()),

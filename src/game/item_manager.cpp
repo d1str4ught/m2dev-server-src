@@ -836,7 +836,7 @@ bool ITEM_MANAGER::GetDropPct(LPCHARACTER pkChr, LPCHARACTER pkKiller, OUT int& 
 	iRandRange = iRandRange * 100 / 
 		(100 + 
 		 CPrivManager::instance().GetPriv(pkKiller, PRIV_ITEM_DROP) + 
-		 pkKiller->IsEquipUniqueItem(UNIQUE_ITEM_DOUBLE_ITEM)?100:0);
+		 (pkKiller->IsEquipUniqueItem(UNIQUE_ITEM_DOUBLE_ITEM) ? 100 : 0));
 
 	if (distribution_test_server) iRandRange /= 3;
 

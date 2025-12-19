@@ -444,7 +444,7 @@ void CHARACTER::SetItem(TItemPos Cell, LPITEM pItem)
 LPITEM CHARACTER::GetWear(BYTE bCell) const
 {
 	// > WEAR_MAX_NUM : 용혼석 슬롯들.
-	if (bCell >= WEAR_MAX_NUM + DRAGON_SOUL_DECK_MAX_NUM * DS_SLOT_MAX)
+	if (bCell >= WEAR_MAX_NUM + (DWORD)DRAGON_SOUL_DECK_MAX_NUM * (DWORD)DS_SLOT_MAX)
 	{
 		sys_err("CHARACTER::GetWear: invalid wear cell %d", bCell);
 		return NULL;
@@ -456,7 +456,7 @@ LPITEM CHARACTER::GetWear(BYTE bCell) const
 void CHARACTER::SetWear(BYTE bCell, LPITEM item)
 {
 	// > WEAR_MAX_NUM : 용혼석 슬롯들.
-	if (bCell >= WEAR_MAX_NUM + DRAGON_SOUL_DECK_MAX_NUM * DS_SLOT_MAX)
+	if (bCell >= WEAR_MAX_NUM + (DWORD)DRAGON_SOUL_DECK_MAX_NUM * (DWORD)DS_SLOT_MAX)
 	{
 		sys_err("CHARACTER::SetItem: invalid item cell %d", bCell);
 		return;
@@ -479,6 +479,19 @@ void CHARACTER::ClearItem()
 {
 	int		i;
 	LPITEM	item;
+    
+    // Clear equipment slots first
+    for (i = 0; i < WEAR_MAX_NUM + (DWORD)DRAGON_SOUL_DECK_MAX_NUM * (DWORD)DS_SLOT_MAX; ++i)
+    {
+        if ((item = GetWear(i)))
+        {
+            item->SetSkipSave(true);
+            ITEM_MANAGER::instance().FlushDelayedSave(item);
+
+            item->RemoveFromCharacter();
+            M2_DESTROY_ITEM(item);
+        }
+    }
 	
 	for (i = 0; i < INVENTORY_AND_EQUIP_SLOT_MAX; ++i)
 	{
@@ -510,46 +523,76 @@ bool CHARACTER::IsEmptyItemGrid(TItemPos Cell, BYTE bSize, int iExceptionCell) c
 {
 	switch (Cell.window_type)
 	{
-	case INVENTORY:
-		{
-			BYTE bCell = Cell.cell;
-
-			// bItemCell은 0이 false임을 나타내기 위해 + 1 해서 처리한다.
-			// 따라서 iExceptionCell에 1을 더해 비교한다.
-			++iExceptionCell;
-
-			if (Cell.IsBeltInventoryPosition())
+		case INVENTORY:
 			{
-				LPITEM beltItem = GetWear(WEAR_BELT);
+				BYTE bCell = Cell.cell;
 
-				if (NULL == beltItem)
-					return false;
+				// bItemCell은 0이 false임을 나타내기 위해 + 1 해서 처리한다.
+				// 따라서 iExceptionCell에 1을 더해 비교한다.
+				++iExceptionCell;
 
-				if (false == CBeltInventoryHelper::IsAvailableCell(bCell - BELT_INVENTORY_SLOT_START, beltItem->GetValue(0)))
+				if (Cell.IsBeltInventoryPosition())
+				{
+					LPITEM beltItem = GetWear(WEAR_BELT);
+
+					if (NULL == beltItem)
+						return false;
+
+					if (false == CBeltInventoryHelper::IsAvailableCell(bCell - BELT_INVENTORY_SLOT_START, beltItem->GetValue(0)))
+						return false;
+
+					if (m_pointsInstant.bItemGrid[bCell])
+					{
+						if (m_pointsInstant.bItemGrid[bCell] == iExceptionCell)
+							return true;
+
+						return false;
+					}
+
+					if (bSize == 1)
+						return true;
+
+				}
+				else if (bCell >= INVENTORY_MAX_NUM)
 					return false;
 
 				if (m_pointsInstant.bItemGrid[bCell])
 				{
 					if (m_pointsInstant.bItemGrid[bCell] == iExceptionCell)
-						return true;
+					{
+						if (bSize == 1)
+							return true;
 
-					return false;
+						int j = 1;
+						BYTE bPage = bCell / (INVENTORY_MAX_NUM / 2);
+
+						do
+						{
+							BYTE p = bCell + (5 * j);
+
+							if (p >= INVENTORY_MAX_NUM)
+								return false;
+
+							if (p / (INVENTORY_MAX_NUM / 2) != bPage)
+								return false;
+
+							if (m_pointsInstant.bItemGrid[p])
+								if (m_pointsInstant.bItemGrid[p] != iExceptionCell)
+									return false;
+						}
+						while (++j < bSize);
+
+						return true;
+					}
+					else
+						return false;
 				}
 
-				if (bSize == 1)
+				// 크기가 1이면 한칸을 차지하는 것이므로 그냥 리턴
+				if (1 == bSize)
 					return true;
-
-			}
-			else if (bCell >= INVENTORY_MAX_NUM)
-				return false;
-
-			if (m_pointsInstant.bItemGrid[bCell])
-			{
-				if (m_pointsInstant.bItemGrid[bCell] == iExceptionCell)
+				else
 				{
-					if (bSize == 1)
-						return true;
-
 					int j = 1;
 					BYTE bPage = bCell / (INVENTORY_MAX_NUM / 2);
 
@@ -571,65 +614,61 @@ bool CHARACTER::IsEmptyItemGrid(TItemPos Cell, BYTE bSize, int iExceptionCell) c
 
 					return true;
 				}
-				else
+			}
+			break;
+		case DRAGON_SOUL_INVENTORY:
+			{
+				WORD wCell = Cell.cell;
+				if (wCell >= DRAGON_SOUL_INVENTORY_MAX_NUM)
 					return false;
-			}
 
-			// 크기가 1이면 한칸을 차지하는 것이므로 그냥 리턴
-			if (1 == bSize)
-				return true;
-			else
-			{
-				int j = 1;
-				BYTE bPage = bCell / (INVENTORY_MAX_NUM / 2);
+				// bItemCell은 0이 false임을 나타내기 위해 + 1 해서 처리한다.
+				// 따라서 iExceptionCell에 1을 더해 비교한다.
+				iExceptionCell++;
 
-				do
+				if (m_pointsInstant.wDSItemGrid[wCell])
 				{
-					BYTE p = bCell + (5 * j);
+					if (m_pointsInstant.wDSItemGrid[wCell] == iExceptionCell)
+					{
+						if (bSize == 1)
+							return true;
 
-					if (p >= INVENTORY_MAX_NUM)
-						return false;
+						int j = 1;
 
-					if (p / (INVENTORY_MAX_NUM / 2) != bPage)
-						return false;
+						do
+						{
+							WORD p = wCell + (DRAGON_SOUL_BOX_COLUMN_NUM * j);
 
-					if (m_pointsInstant.bItemGrid[p])
-						if (m_pointsInstant.bItemGrid[p] != iExceptionCell)
-							return false;
-				}
-				while (++j < bSize);
+							if (p >= DRAGON_SOUL_INVENTORY_MAX_NUM)
+								return false;
 
-				return true;
-			}
-		}
-		break;
-	case DRAGON_SOUL_INVENTORY:
-		{
-			WORD wCell = Cell.cell;
-			if (wCell >= DRAGON_SOUL_INVENTORY_MAX_NUM)
-				return false;
+							if (m_pointsInstant.wDSItemGrid[p])
+								if (m_pointsInstant.wDSItemGrid[p] != iExceptionCell)
+									return false;
+						}
+						while (++j < bSize);
 
-			// bItemCell은 0이 false임을 나타내기 위해 + 1 해서 처리한다.
-			// 따라서 iExceptionCell에 1을 더해 비교한다.
-			iExceptionCell++;
-
-			if (m_pointsInstant.wDSItemGrid[wCell])
-			{
-				if (m_pointsInstant.wDSItemGrid[wCell] == iExceptionCell)
-				{
-					if (bSize == 1)
 						return true;
+					}
+					else
+						return false;
+				}
 
+				// 크기가 1이면 한칸을 차지하는 것이므로 그냥 리턴
+				if (1 == bSize)
+					return true;
+				else
+				{
 					int j = 1;
 
 					do
 					{
-						BYTE p = wCell + (DRAGON_SOUL_BOX_COLUMN_NUM * j);
+						WORD p = wCell + (DRAGON_SOUL_BOX_COLUMN_NUM * j);
 
 						if (p >= DRAGON_SOUL_INVENTORY_MAX_NUM)
 							return false;
 
-						if (m_pointsInstant.wDSItemGrid[p])
+						if (m_pointsInstant.bItemGrid[p])
 							if (m_pointsInstant.wDSItemGrid[p] != iExceptionCell)
 								return false;
 					}
@@ -637,33 +676,10 @@ bool CHARACTER::IsEmptyItemGrid(TItemPos Cell, BYTE bSize, int iExceptionCell) c
 
 					return true;
 				}
-				else
-					return false;
 			}
-
-			// 크기가 1이면 한칸을 차지하는 것이므로 그냥 리턴
-			if (1 == bSize)
-				return true;
-			else
-			{
-				int j = 1;
-
-				do
-				{
-					BYTE p = wCell + (DRAGON_SOUL_BOX_COLUMN_NUM * j);
-
-					if (p >= DRAGON_SOUL_INVENTORY_MAX_NUM)
-						return false;
-
-					if (m_pointsInstant.bItemGrid[p])
-						if (m_pointsInstant.wDSItemGrid[p] != iExceptionCell)
-							return false;
-				}
-				while (++j < bSize);
-
-				return true;
-			}
-		}
+			break;
+		default:
+			return false;
 	}
 }
 
@@ -2022,7 +2038,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 				{
 					if (GetLevel() < 15)
 					{
-						ChatPacket(CHAT_TYPE_INFO, "15레벨 이하에서는 사용할 수 없습니다.");
+						ChatPacket(CHAT_TYPE_INFO, LC_TEXT("15레벨 이하에서는 사용할 수 없습니다."));
 						return false;
 					}
 				}
@@ -2364,7 +2380,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 									}
 									else
 									{
-										sprintf(buf, "Inc %ds by item{VN:%d VAL%d:%d}", ret, item->GetVnum(), ITEM_VALUE_CHARGING_AMOUNT_IDX, item->GetValue(ITEM_VALUE_CHARGING_AMOUNT_IDX));
+										sprintf(buf, "Inc %ds by item{VN:%d VAL%d:%ld}", ret, item->GetVnum(), ITEM_VALUE_CHARGING_AMOUNT_IDX, item->GetValue(ITEM_VALUE_CHARGING_AMOUNT_IDX));
 									}
 
 									ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%d초 만큼 충전되었습니다."), ret);
@@ -2380,7 +2396,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 									}
 									else
 									{
-										sprintf(buf, "No change by item{VN:%d VAL%d:%d}", item->GetVnum(), ITEM_VALUE_CHARGING_AMOUNT_IDX, item->GetValue(ITEM_VALUE_CHARGING_AMOUNT_IDX));
+										sprintf(buf, "No change by item{VN:%d VAL%d:%ld}", item->GetVnum(), ITEM_VALUE_CHARGING_AMOUNT_IDX, item->GetValue(ITEM_VALUE_CHARGING_AMOUNT_IDX));
 									}
 
 									ChatPacket(CHAT_TYPE_INFO, LC_TEXT("충전할 수 없습니다."));
@@ -2407,7 +2423,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 								if (ret)
 								{
 									ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%d초 만큼 충전되었습니다."), ret);
-									sprintf(buf, "Increase %ds by item{VN:%d VAL%d:%d}", ret, item->GetVnum(), ITEM_VALUE_CHARGING_AMOUNT_IDX, item->GetValue(ITEM_VALUE_CHARGING_AMOUNT_IDX));
+									sprintf(buf, "Increase %ds by item{VN:%d VAL%d:%ld}", ret, item->GetVnum(), ITEM_VALUE_CHARGING_AMOUNT_IDX, item->GetValue(ITEM_VALUE_CHARGING_AMOUNT_IDX));
 									LogManager::instance().ItemLog(this, item, "DS_CHARGING_SUCCESS", buf);
 									item->SetCount(item->GetCount() - 1);
 									return true;
@@ -2415,7 +2431,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 								else
 								{
 									ChatPacket(CHAT_TYPE_INFO, LC_TEXT("충전할 수 없습니다."));
-									sprintf(buf, "No change by item{VN:%d VAL%d:%d}", item->GetVnum(), ITEM_VALUE_CHARGING_AMOUNT_IDX, item->GetValue(ITEM_VALUE_CHARGING_AMOUNT_IDX));
+									sprintf(buf, "No change by item{VN:%d VAL%d:%ld}", item->GetVnum(), ITEM_VALUE_CHARGING_AMOUNT_IDX, item->GetValue(ITEM_VALUE_CHARGING_AMOUNT_IDX));
 									LogManager::instance().ItemLog(this, item, "DS_CHARGING_FAILED", buf);
 									return false;
 								}
@@ -5262,9 +5278,11 @@ bool CHARACTER::UseItem(TItemPos Cell, TItemPos DestCell)
 
 			if (nDistant > nDist)
 			{
-				ChatPacket(CHAT_TYPE_INFO, LC_TEXT("이동 되어질 위치와 너무 가까워 귀환부를 사용할수 없습니다."));				
+				ChatPacket(CHAT_TYPE_INFO, LC_TEXT("이동 되어질 위치와 너무 가까워 귀환부를 사용할수 없습니다."));
+
 				if (test_server)
-					ChatPacket(CHAT_TYPE_INFO, "PossibleDistant %f nNowDist %f", nDistant,nDist); 
+					ChatPacket(CHAT_TYPE_INFO, "PossibleDistant %f nNowDist %f", nDistant,nDist);
+
 				return false;
 			}
 		}
@@ -6114,7 +6132,7 @@ bool CHARACTER::EquipItem(LPITEM item, int iCandidateCell)
 		// 용혼석은 swap을 지원하면 안됨.
 		if(GetInventoryItem(INVENTORY_MAX_NUM + iWearCell))
 		{
-			ChatPacket(CHAT_TYPE_INFO, "이미 같은 종류의 용혼석을 착용하고 있습니다.");
+			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("이미 같은 종류의 용혼석을 착용하고 있습니다."));
 			return false;
 		}
 		

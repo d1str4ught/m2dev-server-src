@@ -148,6 +148,10 @@ void CHARACTER::SetSkillGroup(BYTE bSkillGroup)
 	p.skill_group = m_points.skill_group;
 
 	GetDesc()->Packet(&p, sizeof(TPacketGCChangeSkillGroup));
+#ifdef FIX_REFRESH_SKILL_COOLDOWN
+	SkillLevelPacket();
+	PointsPacket();
+#endif
 }
 
 int CHARACTER::ComputeCooltime(int time)
@@ -178,6 +182,14 @@ void CHARACTER::SetSkillLevel(DWORD dwVnum, BYTE bLev)
 		return;
 	}
 
+#ifdef FIX_REFRESH_SKILL_COOLDOWN
+	if (dwVnum == SKILL_COMBO && (bLev == 0 || m_pSkillLevels[dwVnum].bLevel == 0) && m_bComboIndex > 0)
+	{
+		m_bComboIndex = 0;
+		ChatPacket(CHAT_TYPE_COMMAND, "combo %d", 0);
+	}
+#endif
+
 	m_pSkillLevels[dwVnum].bLevel = MIN(40, bLev);
 
 	if (bLev >= 40)
@@ -187,7 +199,14 @@ void CHARACTER::SetSkillLevel(DWORD dwVnum, BYTE bLev)
 	else if (bLev >= 20)
 		m_pSkillLevels[dwVnum].bMasterType = SKILL_MASTER;
 	else
+	{
+#ifdef FIX_REFRESH_SKILL_COOLDOWN
+		if (bLev == 0)
+			ResetOneSkillCoolTime(dwVnum);
+#endif
+
 		m_pSkillLevels[dwVnum].bMasterType = SKILL_NORMAL;
+	}
 }
 
 bool CHARACTER::IsLearnableSkill(DWORD dwSkillVnum) const
@@ -432,7 +451,11 @@ bool CHARACTER::LearnSkillByBook(DWORD dwSkillVnum, BYTE bProb)
 	{
 		need_exp = 20000;
 
-		if ( GetExp() < need_exp )
+#ifdef FIX_BOOK_READING_FOR_MAX_LEVEL
+		if (GetExp() < need_exp && GetLevel() < gPlayerMaxLevel)
+#else
+		if (GetExp() < need_exp)
+#endif
 		{
 			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("경험치가 부족하여 책을 읽을 수 없습니다."));
 			return false;
@@ -888,9 +911,22 @@ void CHARACTER::ResetSkill()
 		m_pSkillLevels[pair.first] = pair.second;
 	}
 
+#ifdef FIX_REFRESH_SKILL_COOLDOWN
+	ResetSkillCoolTimes();
+#endif
+
 	ComputePoints();
 	SkillLevelPacket();
 }
+
+
+#ifdef FIX_REFRESH_SKILL_COOLDOWN
+void CHARACTER::ResetSkillCoolTimes()
+{
+	for (std::map<int, TSkillUseInfo>::iterator it = m_SkillUseInfo.begin(); it != m_SkillUseInfo.end(); ++it)
+		ResetOneSkillCoolTime(it->first);
+}
+#endif
 
 void CHARACTER::ComputePassiveSkill(DWORD dwVnum)
 {
@@ -1960,6 +1996,7 @@ int CHARACTER::ComputeSkillAtPosition(DWORD dwVnum, const PIXEL_POSITION& posTar
 // bSkillLevel로 계산한다.
 int CHARACTER::ComputeSkill(DWORD dwVnum, LPCHARACTER pkVictim, BYTE bSkillLevel)
 {
+	CSkillProto* pkSk = CSkillManager::instance().Get(dwVnum);
 	const bool bCanUseHorseSkill = CanUseHorseSkill();
 
 	// 말을 타고있지만 스킬은 사용할 수 없는 상태라면 return
@@ -1971,8 +2008,6 @@ int CHARACTER::ComputeSkill(DWORD dwVnum, LPCHARACTER pkVictim, BYTE bSkillLevel
 
 	if (g_bSkillDisable)
 		return BATTLE_NONE;
-
-	CSkillProto* pkSk = CSkillManager::instance().Get(dwVnum);
 
 	if (!pkSk)
 		return BATTLE_NONE;
@@ -2452,11 +2487,13 @@ bool CHARACTER::UseSkill(DWORD dwVnum, LPCHARACTER pkVictim, bool bUseGrandMaste
 		return true;
 	}
 
+	CSkillProto* pkSk = CSkillManager::instance().Get(dwVnum);
+		
 	// 말을 타고있지만 스킬은 사용할 수 없는 상태라면 return false
 	if (false == bCanUseHorseSkill && true == IsRiding())
 		return false;
 
-	CSkillProto * pkSk = CSkillManager::instance().Get(dwVnum);
+	// CSkillProto * pkSk = CSkillManager::instance().Get(dwVnum);
 	sys_log(0, "%s: USE_SKILL: %d pkVictim %p", GetName(), dwVnum, get_pointer(pkVictim));
 
 	if (!pkSk)
@@ -2627,7 +2664,15 @@ bool CHARACTER::UseSkill(DWORD dwVnum, LPCHARACTER pkVictim, bool bUseGrandMaste
 		ResetChainLightningIndex();
 		AddChainLightningExcept(pkVictim);
 	}
-	
+
+#ifdef FIX_BATTLE_INACTIVITY_TIMEOUT
+	// tw1x1: POS_FIGHTING timer fix
+	if (IsPC() && IS_SET(pkSk->dwFlag, SKILL_FLAG_ATTACK))
+	{
+		EnterCombat();
+	}
+	// tw1x1: end
+#endif
 
 	if (IS_SET(pkSk->dwFlag, SKILL_FLAG_SELFONLY))
 		ComputeSkill(dwVnum, this);
@@ -3464,6 +3509,10 @@ bool CHARACTER::ResetOneSkill(DWORD dwVnum)
 	m_pSkillLevels[dwVnum].bMasterType = 0;
 	m_pSkillLevels[dwVnum].tNextRead = 0;
 
+#ifdef FIX_REFRESH_SKILL_COOLDOWN
+	ResetOneSkillCoolTime(dwVnum);
+#endif
+
 	if (level > 17)
 		level = 17;
 
@@ -3476,6 +3525,36 @@ bool CHARACTER::ResetOneSkill(DWORD dwVnum)
 
 	return true;
 }
+
+#ifdef FIX_REFRESH_SKILL_COOLDOWN
+void CHARACTER::ResetOneSkillCoolTime(DWORD dwVnum)
+{
+	if (dwVnum >= SKILL_MAX_NUM)
+		return;
+
+	if (!GetSkillGroup() || m_SkillUseInfo.empty())
+	{
+		// still try to disable toggle state even when no cooldown info exists
+		CSkillProto* pkSkNoInfo = CSkillManager::instance().Get(dwVnum);
+
+		if (pkSkNoInfo && IS_SET(pkSkNoInfo->dwFlag, SKILL_FLAG_TOGGLE))
+			RemoveAffect(pkSkNoInfo->dwVnum);
+
+		return;
+	}
+
+	std::map<int, TSkillUseInfo>::iterator it = m_SkillUseInfo.find(dwVnum);
+
+	if (it != m_SkillUseInfo.end())
+		it->second.dwNextSkillUsableTime = 0;
+
+	// If the skill is togglable, ensure it is turned off.
+	CSkillProto* pkSk = CSkillManager::instance().Get(dwVnum);
+
+	if (pkSk && IS_SET(pkSk->dwFlag, SKILL_FLAG_TOGGLE))
+		RemoveAffect(pkSk->dwVnum);
+}
+#endif
 
 bool CHARACTER::CanUseSkill(DWORD dwSkillVnum) const
 {

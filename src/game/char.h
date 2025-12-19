@@ -1364,6 +1364,9 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 		// ADD_GRANDMASTER_SKILL
 		bool				UseSkill(DWORD dwVnum, LPCHARACTER pkVictim, bool bUseGrandMaster = true);
 		void				ResetSkill();
+#ifdef FIX_REFRESH_SKILL_COOLDOWN
+		void				ResetSkillCoolTimes();
+#endif
 		void				SetSkillLevel(DWORD dwVnum, BYTE bLev);
 		int					GetUsedSkillMasterType(DWORD dwVnum);
 
@@ -1758,6 +1761,10 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 		// RESET_ONE_SKILL
 		bool ResetOneSkill(DWORD dwVnum);
 		// END_RESET_ONE_SKILL
+
+#ifdef FIX_REFRESH_SKILL_COOLDOWN
+		void ResetOneSkillCoolTime(DWORD dwVnum);
+#endif
 
 	private :
 		void SendDamagePacket(LPCHARACTER pAttacker, int Damage, BYTE DamageFlag);
