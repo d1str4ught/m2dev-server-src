@@ -41,6 +41,7 @@
 #include "DragonLair.h"
 #include <random>
 #include <algorithm>
+
 DWORD AdjustExpByLevel(const LPCHARACTER ch, const DWORD exp)
 {
 	if (PLAYER_EXP_TABLE_MAX < ch->GetLevel())
@@ -208,8 +209,11 @@ bool CHARACTER::Attack(LPCHARACTER pkVictim, BYTE bType)
 
 	pkVictim->SetSyncOwner(this);
 
+	// Always ensure the victim is in fighting state and has the inactivity timer running
 	if (pkVictim->CanBeginFight())
+	{
 		pkVictim->BeginFight(this);
+	}
 
 	int iRet;
 
@@ -1608,12 +1612,29 @@ void CHARACTER::SendDamagePacket(LPCHARACTER pAttacker, int Damage, BYTE DamageF
 //    true		: dead
 //    false		: not dead yet
 // 
+
+#ifdef FIX_BATTLE_INACTIVITY_TIMEOUT
+// tw1x1: POS_FIGHTING timer fix
+void CHARACTER::EnterCombat()
+{
+	if (!IsPC())
+		return;
+
+	if (!IsPosition(POS_FIGHTING))
+		SetPosition(POS_FIGHTING);
+
+	SetNextStatePulse(1);
+}
+// tw1x1: end
+#endif
+
 bool CHARACTER::Damage(LPCHARACTER pAttacker, int dam, EDamageType type) // returns true if dead
 {
 	if (DAMAGE_TYPE_MAGIC == type)
 	{
 		dam = (int)((float)dam * (100 + (pAttacker->GetPoint(POINT_MAGIC_ATT_BONUS_PER) + pAttacker->GetPoint(POINT_MELEE_MAGIC_ATT_BONUS_PER))) / 100.f + 0.5f);
 	}
+
 	if (GetRaceNum() == 5001)
 	{
 		bool bDropMoney = false;
@@ -2295,6 +2316,26 @@ bool CHARACTER::Damage(LPCHARACTER pAttacker, int dam, EDamageType type) // retu
 		if (GetHP() - dam <= 0)
 			dam = GetHP();
 #endif
+
+#ifdef FIX_BATTLE_INACTIVITY_TIMEOUT
+		// tw1x1: POS_FIGHTING timer fix
+		// REAL combat activity only: final damage > 0
+		if (dam > 0)
+		{
+			// Victim received real damage
+			UpdateLastCombatTime();
+			EnterCombat();
+
+			// Attacker dealt real damage
+			if (pAttacker)
+			{
+				pAttacker->UpdateLastCombatTime();
+				pAttacker->EnterCombat();
+			}
+		}
+		// tw1x1: end
+#endif
+
 		PointChange(POINT_HP, -dam, false);
 	}
 

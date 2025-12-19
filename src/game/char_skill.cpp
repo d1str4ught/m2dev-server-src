@@ -2001,18 +2001,7 @@ int CHARACTER::ComputeSkill(DWORD dwVnum, LPCHARACTER pkVictim, BYTE bSkillLevel
 
 	// 말을 타고있지만 스킬은 사용할 수 없는 상태라면 return
 	if (false == bCanUseHorseSkill && true == IsRiding())
-#ifdef FIX_REFRESH_SKILL_COOLDOWN
-	{
-		const bool bToggleSkill = pkSk && IS_SET(pkSk->dwFlag, SKILL_FLAG_TOGGLE);
-		const bool bToggleActive = bToggleSkill ? (dwVnum == SKILL_COMBO ? m_bComboIndex != 0 : FindAffect(dwVnum) != nullptr) : false;
-
-		// Allow only deactivation of already-active toggles (combo or other) while riding
-		if (!bToggleActive)
-			return BATTLE_NONE;
-	}
-#else
 		return BATTLE_NONE;
-#endif
 
 	if (IsPolymorphed())
 		return BATTLE_NONE;
@@ -2023,14 +2012,7 @@ int CHARACTER::ComputeSkill(DWORD dwVnum, LPCHARACTER pkVictim, BYTE bSkillLevel
 	if (!pkSk)
 		return BATTLE_NONE;
 
-#ifdef FIX_REFRESH_SKILL_COOLDOWN
-	const bool bIsToggleSkill = IS_SET(pkSk->dwFlag, SKILL_FLAG_TOGGLE);
-	const bool bToggleActive = bIsToggleSkill ? (dwVnum == SKILL_COMBO ? m_bComboIndex != 0 : FindAffect(dwVnum) != nullptr) : false;
-
-	if (bCanUseHorseSkill && pkSk->dwType != SKILL_TYPE_HORSE && !(bIsToggleSkill && bToggleActive))
-#else
 	if (bCanUseHorseSkill && pkSk->dwType != SKILL_TYPE_HORSE)
-#endif
 		return BATTLE_NONE;
 
 	if (!bCanUseHorseSkill && pkSk->dwType == SKILL_TYPE_HORSE)
@@ -2509,18 +2491,7 @@ bool CHARACTER::UseSkill(DWORD dwVnum, LPCHARACTER pkVictim, bool bUseGrandMaste
 		
 	// 말을 타고있지만 스킬은 사용할 수 없는 상태라면 return false
 	if (false == bCanUseHorseSkill && true == IsRiding())
-#ifdef FIX_REFRESH_SKILL_COOLDOWN
-	{
-		const bool bToggleSkill = pkSk && IS_SET(pkSk->dwFlag, SKILL_FLAG_TOGGLE);
-		const bool bToggleActive = bToggleSkill ? (dwVnum == SKILL_COMBO ? m_bComboIndex != 0 : FindAffect(dwVnum) != nullptr) : false;
-
-		// Allow only deactivation of already-active toggles (combo or other) while riding
-		if (!bToggleActive)
-			return false;
-	}
-#else
 		return false;
-#endif
 
 	// CSkillProto * pkSk = CSkillManager::instance().Get(dwVnum);
 	sys_log(0, "%s: USE_SKILL: %d pkVictim %p", GetName(), dwVnum, get_pointer(pkVictim));
@@ -2528,14 +2499,16 @@ bool CHARACTER::UseSkill(DWORD dwVnum, LPCHARACTER pkVictim, bool bUseGrandMaste
 	if (!pkSk)
 		return false;
 
-#ifdef FIX_REFRESH_SKILL_COOLDOWN
-	const bool bIsToggleSkill = IS_SET(pkSk->dwFlag, SKILL_FLAG_TOGGLE);
-	const bool bToggleActive = bIsToggleSkill ? (dwVnum == SKILL_COMBO ? m_bComboIndex != 0 : FindAffect(dwVnum) != nullptr) : false;
-
-	if (bCanUseHorseSkill && pkSk->dwType != SKILL_TYPE_HORSE && !(bIsToggleSkill && bToggleActive))
-#else
-	if (bCanUseHorseSkill && pkSk->dwType != SKILL_TYPE_HORSE)
+#ifdef FIX_BATTLE_INACTIVITY_TIMEOUT
+	// tw1x1: POS_FIGHTING timer fix
+	if (IsPC() && IS_SET(pkSk->dwFlag, SKILL_FLAG_ATTACK))
+	{
+		EnterCombat();
+	}
+	// tw1x1: end
 #endif
+
+	if (bCanUseHorseSkill && pkSk->dwType != SKILL_TYPE_HORSE)
 		return BATTLE_NONE;
 
 	if (!bCanUseHorseSkill && pkSk->dwType == SKILL_TYPE_HORSE)
@@ -2695,7 +2668,15 @@ bool CHARACTER::UseSkill(DWORD dwVnum, LPCHARACTER pkVictim, bool bUseGrandMaste
 		ResetChainLightningIndex();
 		AddChainLightningExcept(pkVictim);
 	}
-	
+
+#ifdef FIX_BATTLE_INACTIVITY_TIMEOUT
+	// tw1x1: POS_FIGHTING timer fix
+	if (IsPC() && IS_SET(pkSk->dwFlag, SKILL_FLAG_ATTACK))
+	{
+		EnterCombat();
+	}
+	// tw1x1: end
+#endif
 
 	if (IS_SET(pkSk->dwFlag, SKILL_FLAG_SELFONLY))
 		ComputeSkill(dwVnum, this);

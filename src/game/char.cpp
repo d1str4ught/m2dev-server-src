@@ -361,6 +361,12 @@ void CHARACTER::Initialize()
 	m_bIsLoadedAffect = false;
 	cannot_dead = false;
 
+#ifdef FIX_BATTLE_INACTIVITY_TIMEOUT
+	// tw1x1: POS_FIGHTING timer fix
+	m_dwLastCombatTime = 0;
+	// tw1x1: end
+#endif
+
 #ifdef __PET_SYSTEM__
 	m_petSystem = 0;
 	m_bIsPet = false;
@@ -2650,6 +2656,19 @@ bool CHARACTER::Sync(long x, long y)
 	SetRotationToXY(x, y);
 	SetXYZ(x, y, 0);
 
+#ifdef TW1X1_TEST
+	m_posDest.x = m_posStart.x = x;
+	m_posDest.y = m_posStart.y = y;
+
+	// If we were moving, stop movement state after a correction.
+	// Client will resend intent if it still wants to move.
+	if (IsState(m_stateMove))
+	{
+		m_dwStateDuration = 0;
+		GotoState(m_stateIdle);
+	}
+#endif
+
 	if (GetDungeon())
 	{
 		// 던젼용 이벤트 속성 변화
@@ -4090,6 +4109,22 @@ void CHARACTER::UpdateStateMachine(DWORD dwPulse)
 
 	if (IsDead())
 		return;
+
+#ifdef FIX_BATTLE_INACTIVITY_TIMEOUT
+	// tw1x1: POS_FIGHTING timer fix
+	if (IsPC() && IsPosition(POS_FIGHTING))
+	{
+		const DWORD now = get_dword_time();
+
+		// If we never set a combat time yet, set it now so timer can start.
+		if (m_dwLastCombatTime == 0)
+			m_dwLastCombatTime = now;
+
+		if (now - m_dwLastCombatTime >= 10000)
+			SetVictim(NULL); // triggers battle_end() -> POS_STANDING
+	}
+	// tw1x1: end
+#endif
 
 	Update();
 	m_dwNextStatePulse = dwPulse + m_dwStateDuration;
@@ -5907,7 +5942,11 @@ void CHARACTER::ResetPoint(int iLv)
 {
 	BYTE bJob = GetJob();
 
+#if defined(__BL_LEVEL_FIX__)
+	PointChange(POINT_LEVEL, iLv - GetLevel(), false, true);
+#else
 	PointChange(POINT_LEVEL, iLv - GetLevel());
+#endif
 
 	SetRealPoint(POINT_ST, JobInitialPoints[bJob].st);
 	SetPoint(POINT_ST, GetRealPoint(POINT_ST));
