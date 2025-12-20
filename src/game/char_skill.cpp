@@ -445,11 +445,7 @@ bool CHARACTER::LearnSkillByBook(DWORD dwSkillVnum, BYTE bProb)
 	{
 		need_exp = 20000;
 
-#ifdef FIX_BOOK_READING_FOR_MAX_LEVEL
 		if (GetExp() < need_exp && GetLevel() < gPlayerMaxLevel)
-#else
-		if (GetExp() < need_exp)
-#endif
 		{
 			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("경험치가 부족하여 책을 읽을 수 없습니다."));
 			return false;
@@ -2489,11 +2485,6 @@ bool CHARACTER::UseSkill(DWORD dwVnum, LPCHARACTER pkVictim, bool bUseGrandMaste
 	if (!pkSk)
 		return false;
 
-	if (IsPC() && IS_SET(pkSk->dwFlag, SKILL_FLAG_ATTACK))
-	{
-		EnterCombat();
-	}
-
 	if (bCanUseHorseSkill && pkSk->dwType != SKILL_TYPE_HORSE)
 		return BATTLE_NONE;
 
@@ -2655,14 +2646,12 @@ bool CHARACTER::UseSkill(DWORD dwVnum, LPCHARACTER pkVictim, bool bUseGrandMaste
 		AddChainLightningExcept(pkVictim);
 	}
 
-#ifdef FIX_BATTLE_INACTIVITY_TIMEOUT
 	// tw1x1: POS_FIGHTING timer fix
 	if (IsPC() && IS_SET(pkSk->dwFlag, SKILL_FLAG_ATTACK))
 	{
 		EnterCombat();
 	}
 	// tw1x1: end
-#endif
 
 	if (IS_SET(pkSk->dwFlag, SKILL_FLAG_SELFONLY))
 		ComputeSkill(dwVnum, this);

@@ -4096,6 +4096,7 @@ void CHARACTER::UpdateStateMachine(DWORD dwPulse)
 	if (IsDead())
 		return;
 
+	// tw1x1: POS_FIGHTING timer fix
 	if (IsPC() && IsPosition(POS_FIGHTING))
 	{
 		const DWORD now = get_dword_time();
@@ -4107,6 +4108,7 @@ void CHARACTER::UpdateStateMachine(DWORD dwPulse)
 		if (now - m_dwLastCombatTime >= 10000)
 			SetVictim(NULL); // triggers battle_end() -> POS_STANDING
 	}
+	// tw1x1: end
 
 	Update();
 	m_dwNextStatePulse = dwPulse + m_dwStateDuration;
@@ -5924,11 +5926,7 @@ void CHARACTER::ResetPoint(int iLv)
 {
 	BYTE bJob = GetJob();
 
-#if defined(__BL_LEVEL_FIX__)
 	PointChange(POINT_LEVEL, iLv - GetLevel(), false, true);
-#else
-	PointChange(POINT_LEVEL, iLv - GetLevel());
-#endif
 
 	SetRealPoint(POINT_ST, JobInitialPoints[bJob].st);
 	SetPoint(POINT_ST, GetRealPoint(POINT_ST));
