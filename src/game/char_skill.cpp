@@ -148,10 +148,8 @@ void CHARACTER::SetSkillGroup(BYTE bSkillGroup)
 	p.skill_group = m_points.skill_group;
 
 	GetDesc()->Packet(&p, sizeof(TPacketGCChangeSkillGroup));
-#ifdef FIX_REFRESH_SKILL_COOLDOWN
 	SkillLevelPacket();
 	PointsPacket();
-#endif
 }
 
 int CHARACTER::ComputeCooltime(int time)
@@ -182,13 +180,11 @@ void CHARACTER::SetSkillLevel(DWORD dwVnum, BYTE bLev)
 		return;
 	}
 
-#ifdef FIX_REFRESH_SKILL_COOLDOWN
 	if (dwVnum == SKILL_COMBO && (bLev == 0 || m_pSkillLevels[dwVnum].bLevel == 0) && m_bComboIndex > 0)
 	{
 		m_bComboIndex = 0;
 		ChatPacket(CHAT_TYPE_COMMAND, "combo %d", 0);
 	}
-#endif
 
 	m_pSkillLevels[dwVnum].bLevel = MIN(40, bLev);
 
@@ -200,10 +196,8 @@ void CHARACTER::SetSkillLevel(DWORD dwVnum, BYTE bLev)
 		m_pSkillLevels[dwVnum].bMasterType = SKILL_MASTER;
 	else
 	{
-#ifdef FIX_REFRESH_SKILL_COOLDOWN
 		if (bLev == 0)
 			ResetOneSkillCoolTime(dwVnum);
-#endif
 
 		m_pSkillLevels[dwVnum].bMasterType = SKILL_NORMAL;
 	}
@@ -451,11 +445,7 @@ bool CHARACTER::LearnSkillByBook(DWORD dwSkillVnum, BYTE bProb)
 	{
 		need_exp = 20000;
 
-#ifdef FIX_BOOK_READING_FOR_MAX_LEVEL
 		if (GetExp() < need_exp && GetLevel() < gPlayerMaxLevel)
-#else
-		if (GetExp() < need_exp)
-#endif
 		{
 			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("경험치가 부족하여 책을 읽을 수 없습니다."));
 			return false;
@@ -911,22 +901,18 @@ void CHARACTER::ResetSkill()
 		m_pSkillLevels[pair.first] = pair.second;
 	}
 
-#ifdef FIX_REFRESH_SKILL_COOLDOWN
 	ResetSkillCoolTimes();
-#endif
 
 	ComputePoints();
 	SkillLevelPacket();
 }
 
 
-#ifdef FIX_REFRESH_SKILL_COOLDOWN
 void CHARACTER::ResetSkillCoolTimes()
 {
 	for (std::map<int, TSkillUseInfo>::iterator it = m_SkillUseInfo.begin(); it != m_SkillUseInfo.end(); ++it)
 		ResetOneSkillCoolTime(it->first);
 }
-#endif
 
 void CHARACTER::ComputePassiveSkill(DWORD dwVnum)
 {
@@ -2499,11 +2485,6 @@ bool CHARACTER::UseSkill(DWORD dwVnum, LPCHARACTER pkVictim, bool bUseGrandMaste
 	if (!pkSk)
 		return false;
 
-	if (IsPC() && IS_SET(pkSk->dwFlag, SKILL_FLAG_ATTACK))
-	{
-		EnterCombat();
-	}
-
 	if (bCanUseHorseSkill && pkSk->dwType != SKILL_TYPE_HORSE)
 		return BATTLE_NONE;
 
@@ -2665,14 +2646,12 @@ bool CHARACTER::UseSkill(DWORD dwVnum, LPCHARACTER pkVictim, bool bUseGrandMaste
 		AddChainLightningExcept(pkVictim);
 	}
 
-#ifdef FIX_BATTLE_INACTIVITY_TIMEOUT
 	// tw1x1: POS_FIGHTING timer fix
 	if (IsPC() && IS_SET(pkSk->dwFlag, SKILL_FLAG_ATTACK))
 	{
 		EnterCombat();
 	}
 	// tw1x1: end
-#endif
 
 	if (IS_SET(pkSk->dwFlag, SKILL_FLAG_SELFONLY))
 		ComputeSkill(dwVnum, this);
@@ -3509,9 +3488,7 @@ bool CHARACTER::ResetOneSkill(DWORD dwVnum)
 	m_pSkillLevels[dwVnum].bMasterType = 0;
 	m_pSkillLevels[dwVnum].tNextRead = 0;
 
-#ifdef FIX_REFRESH_SKILL_COOLDOWN
 	ResetOneSkillCoolTime(dwVnum);
-#endif
 
 	if (level > 17)
 		level = 17;
@@ -3526,7 +3503,6 @@ bool CHARACTER::ResetOneSkill(DWORD dwVnum)
 	return true;
 }
 
-#ifdef FIX_REFRESH_SKILL_COOLDOWN
 void CHARACTER::ResetOneSkillCoolTime(DWORD dwVnum)
 {
 	if (dwVnum >= SKILL_MAX_NUM)
@@ -3554,7 +3530,6 @@ void CHARACTER::ResetOneSkillCoolTime(DWORD dwVnum)
 	if (pkSk && IS_SET(pkSk->dwFlag, SKILL_FLAG_TOGGLE))
 		RemoveAffect(pkSk->dwVnum);
 }
-#endif
 
 bool CHARACTER::CanUseSkill(DWORD dwSkillVnum) const
 {

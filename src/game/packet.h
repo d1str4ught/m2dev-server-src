@@ -304,10 +304,8 @@ enum
 	HEADER_GG_CHECK_CLIENT_VERSION		= 21,
 	HEADER_GG_BLOCK_CHAT			= 22,
 
-#ifdef CROSS_CHANNEL_FRIEND_REQUEST
 	HEADER_GG_MESSENGER_REQUEST_ADD = 23,
 	HEADER_GG_MESSENGER_RESPONSE    = 24,
-#endif
 
 	HEADER_GG_SIEGE					= 25,
 	HEADER_GG_MONARCH_NOTICE		= 26,
@@ -448,7 +446,6 @@ typedef struct SPacketGGMessenger
 	char        szCompanion[CHARACTER_NAME_MAX_LEN + 1];
 } TPacketGGMessenger;
 
-#ifdef CROSS_CHANNEL_FRIEND_REQUEST
 typedef struct SPacketGGMessengerRequest
 {
 	uint8_t	header;
@@ -463,7 +460,6 @@ typedef struct SPacketGGMessengerResponse
     char szTarget[CHARACTER_NAME_MAX_LEN + 1];
     BYTE bResponseType; // 0=already_sent, 1=already_received_reverse, 2=quest_running, 3=blocking_requests
 } TPacketGGMessengerResponse;
-#endif
 
 typedef struct SPacketGGMessengerMobile
 {   
@@ -603,7 +599,37 @@ typedef struct command_attack
 	uint32_t	dwVID;
 	uint8_t	bCRCMagicCubeProcPiece;
 	uint8_t	bCRCMagicCubeFilePiece;
+#ifdef FIX_POS_SYNC
+	BOOL    bPacket;
+	LONG    lSX;
+	LONG    lSY;
+	LONG    lX;
+	LONG    lY;
+	float    fSyncDestX;
+	float    fSyncDestY;
+	DWORD    dwBlendDuration;
+	DWORD    dwComboMotion;
+	DWORD    dwTime;
+#endif
 } TPacketCGAttack;
+
+#ifdef FIX_POS_SYNC
+typedef struct packet_attack
+{
+	BYTE    bHeader;
+	BYTE    bType;
+	DWORD    dwAttacakerVID;
+	DWORD    dwVID;
+	BOOL    bPacket;
+	LONG    lSX;
+	LONG    lSY;
+	LONG    lX;
+	LONG    lY;
+	float    fSyncDestX;
+	float    fSyncDestY;
+	DWORD    dwBlendDuration;
+} TPacketGCAttack;
+#endif
 
 enum EMoveFuncType
 {
@@ -1444,9 +1470,7 @@ enum
 	MESSENGER_SUBHEADER_GC_LOGOUT,
 	MESSENGER_SUBHEADER_GC_INVITE,
 	MESSENGER_SUBHEADER_GC_MOBILE,
-#ifdef FIX_MESSENGER_ACTION_SYNC
 	MESSENGER_SUBHEADER_GC_REMOVE_FRIEND
-#endif
 };
 
 typedef struct packet_messenger

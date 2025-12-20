@@ -114,6 +114,9 @@ CHARACTER::CHARACTER()
 	m_stateIdle.Set(this, &CHARACTER::BeginStateEmpty, &CHARACTER::StateIdle, &CHARACTER::EndStateEmpty);
 	m_stateMove.Set(this, &CHARACTER::BeginStateEmpty, &CHARACTER::StateMove, &CHARACTER::EndStateEmpty);
 	m_stateBattle.Set(this, &CHARACTER::BeginStateEmpty, &CHARACTER::StateBattle, &CHARACTER::EndStateEmpty);
+#ifdef FIX_POS_SYNC
+	m_stateSyncing.Set(this, &CHARACTER::BeginStateEmpty, &CHARACTER::StateSyncing, &CHARACTER::EndStateEmpty);
+#endif
 
 	Initialize();
 }
@@ -1007,10 +1010,8 @@ void CHARACTER::UpdatePacket()
 {
 	if (GetSectree() == NULL) return;
 
-#ifdef CHAR_SELECT_STATS_IMPROVEMENT
 	if (IsPC() && (!GetDesc() || !GetDesc()->GetCharacter()))
 		return;
-#endif
 
 	TPacketGCCharacterUpdate pack;
 	TPacketGCCharacterUpdate pack2;
@@ -1398,7 +1399,6 @@ void CHARACTER::Disconnect(const char * c_pszReason)
 
 	if (GetDesc())
 	{
-#ifdef CHAR_SELECT_STATS_IMPROVEMENT
 		PointsPacket();
 
 		packet_point_change pack;
@@ -1409,7 +1409,6 @@ void CHARACTER::Disconnect(const char * c_pszReason)
 		pack.amount = 0;
 
 		GetDesc()->Packet(&pack, sizeof(struct packet_point_change));
-#endif
 		GetDesc()->BindCharacter(NULL);
 //		BindDesc(NULL);
 	}
@@ -1624,16 +1623,11 @@ void CHARACTER::PointsPacket()
 	pack.points[POINT_STAMINA]		= GetStamina();
 	pack.points[POINT_MAX_STAMINA]	= GetMaxStamina();
 
-#ifdef CHAR_SELECT_STATS_IMPROVEMENT
 	for (int i = POINT_ST; i < POINT_IQ + 1; ++i)
 		pack.points[i] = GetRealPoint(i);
 
 	for (int i = POINT_IQ + 1; i < POINT_MAX_NUM; ++i)
 		pack.points[i] = GetPoint(i);
-#else
-	for (int i = POINT_ST; i < POINT_MAX_NUM; ++i)
-		pack.points[i] = GetPoint(i);
-#endif
 
 	GetDesc()->Packet(&pack, sizeof(TPacketGCPoints));
 }
@@ -1811,15 +1805,9 @@ void CHARACTER::SetPlayerProto(const TPlayerTable * t)
 
 	ComputePoints();
 
-#ifdef FIX_NEG_HP
 	SetHP(GetMaxHP());
 	SetSP(GetMaxSP());
 	SetStamina(GetMaxStamina());
-#else
-	SetHP(t->hp);
-	SetSP(t->sp);
-	SetStamina(t->stamina);
-#endif
 
 	//GM일때 보호모드  
 	if (!test_server)
@@ -4108,6 +4096,7 @@ void CHARACTER::UpdateStateMachine(DWORD dwPulse)
 	if (IsDead())
 		return;
 
+	// tw1x1: POS_FIGHTING timer fix
 	if (IsPC() && IsPosition(POS_FIGHTING))
 	{
 		const DWORD now = get_dword_time();
@@ -4119,6 +4108,7 @@ void CHARACTER::UpdateStateMachine(DWORD dwPulse)
 		if (now - m_dwLastCombatTime >= 10000)
 			SetVictim(NULL); // triggers battle_end() -> POS_STANDING
 	}
+	// tw1x1: end
 
 	Update();
 	m_dwNextStatePulse = dwPulse + m_dwStateDuration;
@@ -5936,11 +5926,7 @@ void CHARACTER::ResetPoint(int iLv)
 {
 	BYTE bJob = GetJob();
 
-#if defined(__BL_LEVEL_FIX__)
 	PointChange(POINT_LEVEL, iLv - GetLevel(), false, true);
-#else
-	PointChange(POINT_LEVEL, iLv - GetLevel());
-#endif
 
 	SetRealPoint(POINT_ST, JobInitialPoints[bJob].st);
 	SetPoint(POINT_ST, GetRealPoint(POINT_ST));

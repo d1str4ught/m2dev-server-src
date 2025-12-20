@@ -522,10 +522,17 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 		CStateTemplate<CHARACTER>	m_stateMove;
 		CStateTemplate<CHARACTER>	m_stateBattle;
 		CStateTemplate<CHARACTER>	m_stateIdle;
+#ifdef FIX_POS_SYNC
+		CStateTemplate<CHARACTER>	m_stateSyncing;
+#endif
 
 	public:
 		virtual void		StateMove();
 		virtual void		StateBattle();
+#ifdef FIX_POS_SYNC
+		virtual void		StateSyncing();
+		virtual bool		BlendSync(long x, long y, unsigned int unDuration);
+#endif
 		virtual void		StateIdle();
 		virtual void		StateFlag();
 		virtual void		StateFlagBase();
@@ -1364,9 +1371,7 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 		// ADD_GRANDMASTER_SKILL
 		bool				UseSkill(DWORD dwVnum, LPCHARACTER pkVictim, bool bUseGrandMaster = true);
 		void				ResetSkill();
-#ifdef FIX_REFRESH_SKILL_COOLDOWN
 		void				ResetSkillCoolTimes();
-#endif
 		void				SetSkillLevel(DWORD dwVnum, BYTE bLev);
 		int					GetUsedSkillMasterType(DWORD dwVnum);
 
@@ -1762,9 +1767,7 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 		bool ResetOneSkill(DWORD dwVnum);
 		// END_RESET_ONE_SKILL
 
-#ifdef FIX_REFRESH_SKILL_COOLDOWN
 		void ResetOneSkillCoolTime(DWORD dwVnum);
-#endif
 
 	private :
 		void SendDamagePacket(LPCHARACTER pAttacker, int Damage, BYTE DamageFlag);
@@ -2045,6 +2048,7 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 		int m_iLastPMPulse;
 		int m_iPMCounter;
 
+	// tw1x1: POS_FIGHTING timer fix
 	public:
 		void EnterCombat();
 		void UpdateLastCombatTime() { m_dwLastCombatTime = get_dword_time(); }
@@ -2052,6 +2056,7 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 
 	private:
 		DWORD m_dwLastCombatTime;
+	// tw1x1: end
 };
 
 ESex GET_SEX(LPCHARACTER ch);
