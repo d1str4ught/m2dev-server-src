@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#ifndef OS_WINDOWS
+#ifndef __USE_SELECT__
 
     typedef struct fdwatch		FDWATCH;
     typedef struct fdwatch *	LPFDWATCH;

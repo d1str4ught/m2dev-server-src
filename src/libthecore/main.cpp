@@ -49,7 +49,9 @@ int thecore_init(int fps, HEARTFUNC heartbeat_func)
     srand(time(0));
 #else
     srandom(time(0) + getpid() + getuid());
+#ifdef OS_FREEBSD
     srandomdev();
+#endif
 #endif
 
 	log_init();
