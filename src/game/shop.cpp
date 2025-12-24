@@ -179,10 +179,10 @@ void CShop::SetShopItems(TShopItemTable * pTable, BYTE bItemCount)
 				item.price = item_table->dwGold * item.count;
 		}
 
-		char name[36];
+		char name[128];
 		snprintf(name, sizeof(name), "%-20s(#%-5d) (x %d)", item_table->szName, (int) item.vnum, item.count);
 
-		sys_log(0, "SHOP_ITEM: %-36s PRICE %-5d", name, item.price);
+		sys_log(0, "SHOP_ITEM: %s PRICE %-5d", name, item.price);
 		++pTable;
 	}
 }

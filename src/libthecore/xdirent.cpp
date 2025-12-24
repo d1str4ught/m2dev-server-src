@@ -21,10 +21,10 @@
 
 struct DIR
 {
-    long                handle; /* -1 for failed rewind */
-    struct _finddata_t  info;
-    struct dirent       result; /* d_name null iff first time */
-    char                *name;  /* null-terminated char string */
+    intptr_t                handle; /* -1 for failed rewind */
+    struct _finddata64i32_t info;
+    struct dirent           result; /* d_name null iff first time */
+    char                    *name;  /* null-terminated char string */
 };
 
 DIR *opendir(const char *name)
@@ -42,7 +42,7 @@ DIR *opendir(const char *name)
         {
             strcat(strcpy(dir->name, name), all);
 
-            if((dir->handle = (long) _findfirst(dir->name, &dir->info)) != -1)
+            if((dir->handle = _findfirst64i32(dir->name, &dir->info)) != -1)
             {
                 dir->result.d_name = 0;
             }
@@ -97,7 +97,7 @@ struct dirent *readdir(DIR *dir)
 
     if(dir && dir->handle != -1)
     {
-        if(!dir->result.d_name || _findnext(dir->handle, &dir->info) != -1)
+        if(!dir->result.d_name || _findnext64i32(dir->handle, &dir->info) != -1)
         {
             result         = &dir->result;
             result->d_name = dir->info.name;
@@ -116,7 +116,7 @@ void rewinddir(DIR *dir)
     if(dir && dir->handle != -1)
     {
         _findclose(dir->handle);
-        dir->handle = (long) _findfirst(dir->name, &dir->info);
+        dir->handle = _findfirst64i32(dir->name, &dir->info);
         dir->result.d_name = 0;
     }
     else
