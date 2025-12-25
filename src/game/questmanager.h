@@ -114,6 +114,7 @@ namespace quest
 			void		SelectItem(unsigned int pc, unsigned int selection);
 
 			void		LogoutPC(LPCHARACTER ch);
+			void		Cancel(unsigned int pc);
 			void		DisconnectPC(LPCHARACTER ch);
 
 			QuestState *	GetCurrentState()	{ return m_CurrentRunningState; }

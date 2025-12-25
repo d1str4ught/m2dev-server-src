@@ -2056,6 +2056,12 @@ void CInputMain::QuestConfirm(LPCHARACTER ch, const void* c_pData)
 	}
 }
 
+void CInputMain::QuestCancel(LPCHARACTER ch)
+{
+	sys_log(0, "QuestCancel from %s pid %u", ch->GetName(), ch->GetPlayerID());
+	quest::CQuestManager::Instance().Cancel(ch->GetPlayerID());
+}
+
 void CInputMain::Target(LPCHARACTER ch, const char * pcData)
 {
 	TPacketCGTarget * p = (TPacketCGTarget *) pcData;
@@ -3270,6 +3276,10 @@ int CInputMain::Analyze(LPDESC d, BYTE bHeader, const char * c_pData)
 
 		case HEADER_CG_QUEST_CONFIRM:
 			QuestConfirm(ch, c_pData);
+			break;
+
+		case HEADER_CG_QUEST_CANCEL:
+			QuestCancel(ch);
 			break;
 
 		case HEADER_CG_TARGET:
