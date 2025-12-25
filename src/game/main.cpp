@@ -500,14 +500,14 @@ int start(int argc, char **argv)
 	std::string st_localeServiceName;
 
 	bool bVerbose = false;
-	char ch;
+	int ch;
 
 	//_malloc_options = "A";
 #if defined(OS_FREEBSD) && defined(DEBUG_ALLOC)
 	_malloc_message = WriteMallocMessage;
 #endif
 
-	char optstring[] = "npverltI";
+	char optstring[] = "n:p:vrtI:";
 	while ((ch = getopt(argc, argv, optstring)) != -1)
 	{
 		char* ep = NULL;
@@ -515,18 +515,14 @@ int start(int argc, char **argv)
 		switch (ch)
 		{
 			case 'I': // IP
-				strlcpy(g_szPublicIP, argv[optind], sizeof(g_szPublicIP));
+				strlcpy(g_szPublicIP, optarg, sizeof(g_szPublicIP));
 
 				printf("IP %s\n", g_szPublicIP);
 
-				optind++;
-				#ifdef OS_FREEBSD
-                	optreset = 1;
-				#endif
 				break;
 
 			case 'p': // port
-				mother_port = strtol(argv[optind], &ep, 10);
+				mother_port = strtol(optarg, &ep, 10);
 
 				if (mother_port <= 1024)
 				{
@@ -536,23 +532,11 @@ int start(int argc, char **argv)
 
 				printf("port %d\n", mother_port);
 
-				optind++;
-				#ifdef OS_FREEBSD
-                	optreset = 1;
-				#endif
 				break;
 
 				// LOCALE_SERVICE
 			case 'n': 
-				{
-					if (optind < argc)
-					{
-						st_localeServiceName = argv[optind++];
-						#ifdef OS_FREEBSD
-							optreset = 1;
-						#endif
-					}
-				}
+                st_localeServiceName = optarg;
 				break;
 				// END_OF_LOCALE_SERVICE
 
