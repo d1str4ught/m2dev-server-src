@@ -114,6 +114,9 @@ CHARACTER::CHARACTER()
 	m_stateIdle.Set(this, &CHARACTER::BeginStateEmpty, &CHARACTER::StateIdle, &CHARACTER::EndStateEmpty);
 	m_stateMove.Set(this, &CHARACTER::BeginStateEmpty, &CHARACTER::StateMove, &CHARACTER::EndStateEmpty);
 	m_stateBattle.Set(this, &CHARACTER::BeginStateEmpty, &CHARACTER::StateBattle, &CHARACTER::EndStateEmpty);
+#ifdef FIX_POS_SYNC
+	m_stateSyncing.Set(this, &CHARACTER::BeginStateEmpty, &CHARACTER::StateSyncing, &CHARACTER::EndStateEmpty);
+#endif
 
 	Initialize();
 }
@@ -657,6 +660,25 @@ void CHARACTER::OpenMyShop(const char * c_pszSign, TShopItemTable * pTable, BYTE
 				ChatPacket(CHAT_TYPE_INFO, LC_TEXT("사용중인 아이템은 개인상점에서 판매할 수 없습니다."));
 				return;
 			}
+
+			// MR-3: Deactivate auto potions if active and being sold
+			switch (pkItem->GetVnum())
+			{
+				case ITEM_AUTO_HP_RECOVERY_S:
+				case ITEM_AUTO_HP_RECOVERY_M:
+				case ITEM_AUTO_HP_RECOVERY_L:
+				case ITEM_AUTO_HP_RECOVERY_X:
+				case ITEM_AUTO_SP_RECOVERY_S:
+				case ITEM_AUTO_SP_RECOVERY_M:
+				case ITEM_AUTO_SP_RECOVERY_L:
+				case ITEM_AUTO_SP_RECOVERY_X:
+					if (pkItem->GetSocket(0) == 1)
+						pkItem->SetSocket(0, 0);
+					break;
+				default:
+					break;
+			}
+			// MR-3: -- END OF -- Deactivate auto potions if active and being sold
 
 			// MYSHOP_PRICE_LIST
 			itemkind[pkItem->GetVnum()] = (pTable + i)->price / pkItem->GetCount();

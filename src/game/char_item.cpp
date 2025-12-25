@@ -233,29 +233,32 @@ LPITEM CHARACTER::GetItem(TItemPos Cell) const
 {
 	if (!IsValidItemPosition(Cell))
 		return NULL;
+
 	WORD wCell = Cell.cell;
 	BYTE window_type = Cell.window_type;
+
 	switch (window_type)
 	{
-	case INVENTORY:
-	case EQUIPMENT:
-		if (wCell >= INVENTORY_AND_EQUIP_SLOT_MAX)
-		{
-			sys_err("CHARACTER::GetInventoryItem: invalid item cell %d", wCell);
-			return NULL;
-		}
-		return m_pointsInstant.pItems[wCell];
-	case DRAGON_SOUL_INVENTORY:
-		if (wCell >= DRAGON_SOUL_INVENTORY_MAX_NUM)
-		{
-			sys_err("CHARACTER::GetInventoryItem: invalid DS item cell %d", wCell);
-			return NULL;
-		}
-		return m_pointsInstant.pDSItems[wCell];
+		case INVENTORY:
+		case EQUIPMENT:
+			if (wCell >= INVENTORY_AND_EQUIP_SLOT_MAX)
+			{
+				sys_err("CHARACTER::GetInventoryItem: invalid item cell %d", wCell);
+				return NULL;
+			}
+			return m_pointsInstant.pItems[wCell];
+		case DRAGON_SOUL_INVENTORY:
+			if (wCell >= DRAGON_SOUL_INVENTORY_MAX_NUM)
+			{
+				sys_err("CHARACTER::GetInventoryItem: invalid DS item cell %d", wCell);
+				return NULL;
+			}
+			return m_pointsInstant.pDSItems[wCell];
 
-	default:
-		return NULL;
+		default:
+			return NULL;
 	}
+	
 	return NULL;
 }
 
@@ -5652,6 +5655,28 @@ bool CHARACTER::MoveItem(TItemPos Cell, TItemPos DestCell, BYTE count)
 		{
 			sys_log(0, "%s: ITEM_MOVE %s (window: %d, cell : %d) -> (window:%d, cell %d) count %d", GetName(), item->GetName(), Cell.window_type, Cell.cell, 
 				DestCell.window_type, DestCell.cell, count);
+
+			// MR-3: Auto-deactivate auto potions before moving to safebox or myshop
+			if (item && DestCell.window_type == SAFEBOX)
+			{
+				switch (item->GetVnum())
+				{
+					case ITEM_AUTO_HP_RECOVERY_S:
+					case ITEM_AUTO_HP_RECOVERY_M:
+					case ITEM_AUTO_HP_RECOVERY_L:
+					case ITEM_AUTO_HP_RECOVERY_X:
+					case ITEM_AUTO_SP_RECOVERY_S:
+					case ITEM_AUTO_SP_RECOVERY_M:
+					case ITEM_AUTO_SP_RECOVERY_L:
+					case ITEM_AUTO_SP_RECOVERY_X:
+						if (item->GetSocket(0) == 1)
+							item->SetSocket(0, 0);
+						break;
+					default:
+						break;
+				}
+			}
+			// MR-3: -- END OF -- Auto-deactivate auto potions before moving to safebox or myshop
 			
 			item->RemoveFromCharacter();
 			SetItem(DestCell, item);
@@ -6688,6 +6713,26 @@ bool CHARACTER::GiveItem(LPCHARACTER victim, TItemPos Cell)
 		return false;
 
 	LPITEM item = GetItem(Cell);
+
+	// MR-3: Auto-deactivate auto potions before trading/transferring
+	if (item) {
+		switch (item->GetVnum()) {
+			case ITEM_AUTO_HP_RECOVERY_S:
+			case ITEM_AUTO_HP_RECOVERY_M:
+			case ITEM_AUTO_HP_RECOVERY_L:
+			case ITEM_AUTO_HP_RECOVERY_X:
+			case ITEM_AUTO_SP_RECOVERY_S:
+			case ITEM_AUTO_SP_RECOVERY_M:
+			case ITEM_AUTO_SP_RECOVERY_L:
+			case ITEM_AUTO_SP_RECOVERY_X:
+				if (item->GetSocket(0) == 1)
+					item->SetSocket(0, 0);
+				break;
+			default:
+				break;
+		}
+	}
+	// MR-3: -- END OF -- Auto-deactivate auto potions before trading/transferring
 
 	if (item && !item->IsExchanging())
 	{
