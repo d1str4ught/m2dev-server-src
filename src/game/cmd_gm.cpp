@@ -1358,6 +1358,9 @@ ACMD(do_kill)
 		return;
 	}
 
+	// MR-3: Empty HP on kill
+	tch->PointChange(POINT_HP, -tch->GetHP());
+	// MR-3: -- END OF -- Empty HP on kill
 	tch->Dead();
 }
 

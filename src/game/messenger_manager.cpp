@@ -409,13 +409,13 @@ void MessengerManager::EraseRequestsForAccount(keyA account)
 
 	std::vector<DWORD> toRemove;
 
-	auto itFrom = m_map_requestsFrom.find(dw);
+	// auto itFrom = m_map_requestsFrom.find(dw);
 	
-	if (itFrom != m_map_requestsFrom.end())
-	{
-		for (DWORD c : itFrom->second)
-			toRemove.push_back(c);
-	}
+	// if (itFrom != m_map_requestsFrom.end())
+	// {
+	// 	for (DWORD c : itFrom->second)
+	// 		toRemove.push_back(c);
+	// }
 
 	auto itTo = m_map_requestsTo.find(dw);
 	
@@ -510,18 +510,13 @@ void MessengerManager::AddToList(MessengerManager::keyA account, MessengerManage
 	P2P_MANAGER::instance().Send(&p2ppck, sizeof(TPacketGGMessenger));
 }
 
-void MessengerManager::__RemoveFromList(MessengerManager::keyA account, MessengerManager::keyA companion, bool isRequester)
+// MR-3: Remove from messenger Fix
+void MessengerManager::__RemoveFromList(MessengerManager::keyA account, MessengerManager::keyA companion)
 {
 	m_Relation[account].erase(companion);
 	m_InverseRelation[companion].erase(account);
 	m_Relation[companion].erase(account);
 	m_InverseRelation[account].erase(companion);
-
-	LPCHARACTER ch = CHARACTER_MANAGER::instance().FindPC(account.c_str());
-	LPDESC d = ch ? ch->GetDesc() : NULL;
-
-	if (d && isRequester)
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<메신져> %s 님을 메신저에서 삭제하였습니다."), companion.c_str());
 
 	LPCHARACTER tch = CHARACTER_MANAGER::Instance().FindPC(companion.c_str());
 
@@ -539,6 +534,7 @@ void MessengerManager::__RemoveFromList(MessengerManager::keyA account, Messenge
 		tch->GetDesc()->Packet(account.c_str(), account.size());
 	}
 }
+// MR-3: -- END OF -- Remove from messenger Fix
 
 bool MessengerManager::IsInList(MessengerManager::keyA account, MessengerManager::keyA companion) // Fix
 {
@@ -551,15 +547,12 @@ bool MessengerManager::IsInList(MessengerManager::keyA account, MessengerManager
     return m_Relation[account].find(companion) != m_Relation[account].end();
 }
 
-void MessengerManager::RemoveFromList(MessengerManager::keyA account, MessengerManager::keyA companion)
+void MessengerManager::RemoveFromList(MessengerManager::keyA account, MessengerManager::keyA companion, bool isRequester)
 {
 	if (companion.empty())
 		return;
 	
 	if (companion.size() == 0)
-		return;
-	
-	if (!IsInList(account, companion)) // Fix
 		return;
 	
 	DBManager::instance().EscapeString(__account, sizeof(__account), account.c_str(), account.size());
@@ -573,6 +566,14 @@ void MessengerManager::RemoveFromList(MessengerManager::keyA account, MessengerM
 	// Fix
 	DBManager::instance().Query("DELETE FROM messenger_list%s WHERE (account='%s' AND companion = '%s') OR (account = '%s' AND companion = '%s')",
 			get_table_postfix(), account.c_str(), companion.c_str(), companion.c_str(), account.c_str());
+
+	// MR-3: Remove from messenger Fix
+	LPCHARACTER ch = CHARACTER_MANAGER::instance().FindPC(account.c_str());
+	LPDESC d = ch ? ch->GetDesc() : NULL;
+
+	if (d && isRequester)
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<메신져> %s 님을 메신저에서 삭제하였습니다."), companion.c_str());
+	// MR-3: -- END OF -- Remove from messenger Fix
 
 	__RemoveFromList(account, companion);
 
@@ -602,8 +603,10 @@ void MessengerManager::RemoveAllList(keyA account)
 			iter != company.end();
 			iter++ )
 	{
-		this->RemoveFromList(account, *iter);
-		this->RemoveFromList(*iter, account);
+		// MR-3: Remove from messenger Fix
+		this->RemoveFromList(account, *iter, false);
+		this->RemoveFromList(*iter, account, false);
+		// MR-3: -- END OF -- Remove from messenger Fix
 	}
 
 	/* 복사한 데이타 삭제 */

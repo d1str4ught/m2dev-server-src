@@ -4006,7 +4006,9 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 
 										AddAffect( type, bonus, 4, item->GetID(), INFINITE_AFFECT_DURATION, 0, true, false);
 
-										item->Lock(true);
+										// MR-3: Active autopotion unlock
+										//item->Lock(true);
+										// MR-3: -- END OF -- Active autopotion unlock
 										item->SetSocket(0, true);
 
 										AutoRecoveryItemProcess( type );
@@ -4048,7 +4050,9 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 
 											AddAffect( type, bonus, 4, item->GetID(), INFINITE_AFFECT_DURATION, 0, true, false);
 
-											item->Lock(true);
+											// MR-3: Active autopotion unlock
+											//item->Lock(true);
+											// MR-3: -- END OF -- Active autopotion unlock
 											item->SetSocket(0, true);
 
 											AutoRecoveryItemProcess( type );
@@ -5377,6 +5381,25 @@ bool CHARACTER::DropItem(TItemPos Cell, BYTE bCount)
 	SyncQuickslot(QUICKSLOT_TYPE_ITEM, Cell.cell, 255);	// Quickslot 에서 지움
 
 	LPITEM pkItemToDrop;
+	
+	// MR-3: Auto-deactivate auto potions before dropping
+	switch (item->GetVnum())
+	{
+		case ITEM_AUTO_HP_RECOVERY_S:
+		case ITEM_AUTO_HP_RECOVERY_M:
+		case ITEM_AUTO_HP_RECOVERY_L:
+		case ITEM_AUTO_HP_RECOVERY_X:
+		case ITEM_AUTO_SP_RECOVERY_S:
+		case ITEM_AUTO_SP_RECOVERY_M:
+		case ITEM_AUTO_SP_RECOVERY_L:
+		case ITEM_AUTO_SP_RECOVERY_X:
+			if (item->GetSocket(0) == 1)
+				item->SetSocket(0, 0);
+			break;
+		default:
+			break;
+	}
+	// MR-3: -- END OF -- Auto-deactivate auto potions before dropping
 
 	if (bCount == item->GetCount())
 	{

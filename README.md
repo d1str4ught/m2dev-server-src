@@ -23,19 +23,15 @@ It builds as it is, without external dependencies.
 ## 📋 Changelog
 
 ### 🐛 Bug Fixes
-* **Realtime Character Level Updates:** Implemented the reversed fix (credits to Mali) for updating character level in real-time across game view and all windows (such as Guild window) for all viewing players.
+* **HP/SP Value Persistence:** Fixed an issue where current HP/SP values were incorrectly affected by changes to Max HP/SP (such as stat upgrades or equipment changes).
+* **GM Kill Command:** Updated the `/kill` command to properly zero out the target's HP.
+* **Messenger Deletion (Offline):** Fixed an issue where a companion needed to be online for a "remove from messenger" action to complete.
+* **Messenger Deletion (Cross-Channel):** Fixed an issue where the removal message was visible to both parties even if they were in different channels or cores at the time of deletion.
+* **Dungeon Party Logic:** Fixed an issue where the same message would popup to all affected parties when a leader tried to kick a player or a player tried to leave a team while inside a dungeon. Includes several other update message optimizations and dungeon logic improvements regarding party kicking/leaving.
 
 ### ⬆️ Feature Improvements
-* **Character position auto-reverts from ```POS_FIGHTING``` to ```POS_STANDING``` after 10 seconds of battle inactivity:** Affects the final logout countdown (from 10s to 3s) as character state updating for real-time data across server functions. Tests performed (and succeeded):
-	* The character takes hits from another character.
-	* The character hits another character.
-	* The character takes hits from mobs.
-	* The character hits mobs/stones.
-	* The character uses an aggressive skill to another character.
-	* An aggressive skill is being used on the character.
-	* The character uses an aggressive skill to a mob/stone, without killing the instance.
-	* A boss uses a skill on the character.
-
-All credits go to #tw1x1 for this amazing and smoothly executed fix!
+* **Job-Specific Stat Resets:** Individual stats reset scrolls (Items 71103, 71104, 71105, 71106) now recover stats to their initial values based on character job instead of defaulting to 1, returning the appropriate points. Translations now dynamically display the selected stat's value. Translation for Reset all-status scroll (71002) also adjusted from printing 'to 1'.
+* **Logout Interruption:** Using a skill now automatically cancels the logout countdown for both the user and the target (if applicable).
+* **Auto Potion Logic:** Auto potions can now be moved within the inventory while active and are automatically disabled immediately before being dropped to the ground.
 
 

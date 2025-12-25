@@ -34,8 +34,10 @@ class MessengerManager : public singleton<MessengerManager>
 		void	__AddToList(keyA account, keyA companion, bool isRequester = true);	// 실제 m_Relation, m_InverseRelation 수정하는 메소드
 		void	AddToList(keyA account, keyA companion);
 
-		void	__RemoveFromList(keyA account, keyA companion, bool isRequester = true); // 실제 m_Relation, m_InverseRelation 수정하는 메소드
-		void	RemoveFromList(keyA account, keyA companion);
+		// MR-3: Remove from messenger Fix
+		void	__RemoveFromList(keyA account, keyA companion); // 실제 m_Relation, m_InverseRelation 수정하는 메소드
+		void	RemoveFromList(keyA account, keyA companion, bool isRequester = true);
+		// MR-3: -- END OF -- Remove from messenger Fix
 
 		void	RemoveAllList(keyA account);
 

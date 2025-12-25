@@ -1034,8 +1034,11 @@ int CInputMain::Messenger(LPCHARACTER ch, const char* c_pData, size_t uiBytes)
 
 				char char_name[CHARACTER_NAME_MAX_LEN + 1];
 				strlcpy(char_name, c_pData, sizeof(char_name));
+
+				// MR-3: Remove from messenger Fix
 				MessengerManager::instance().RemoveFromList(ch->GetName(), char_name);
-        		MessengerManager::instance().RemoveFromList(char_name, ch->GetName());	// friend removed from companion too.
+        		MessengerManager::instance().RemoveFromList(char_name, ch->GetName(), false);	// friend removed from companion too.
+				// MR-3: -- END OF -- Remove from messenger Fix
 			}
 			return CHARACTER_NAME_MAX_LEN;
 
@@ -2359,35 +2362,41 @@ void CInputMain::PartyRemove(LPCHARACTER ch, const char* c_pData)
 		return;
 	}
 
-	if (ch->GetDungeon())
-	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<파티> 던전 안에서는 파티에서 추방할 수 없습니다."));
-		return;
-	}
-
+	// MR-3: Fix party removal chat messages and improved dungeon logic
 	TPacketCGPartyRemove* p = (TPacketCGPartyRemove*) c_pData;
 
 	if (!ch->GetParty())
 		return;
 
 	LPPARTY pParty = ch->GetParty();
+
 	if (pParty->GetLeaderPID() == ch->GetPlayerID())
 	{
-		if (ch->GetDungeon())
+		// leader can remove any member
+		if (p->pid == ch->GetPlayerID() || pParty->GetMemberCount() == 2)
 		{
-			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<파티> 던젼내에서는 파티원을 추방할 수 없습니다."));
-		}
-		else
-		{
-			// leader can remove any member
-			if (p->pid == ch->GetPlayerID() || pParty->GetMemberCount() == 2)
+			if (ch->GetDungeon())
+			{
+				ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<파티> 던전 안에서는 파티에서 추방할 수 없습니다."));
+				return;
+			}
+			else
 			{
 				// party disband
 				CPartyManager::instance().DeleteParty(pParty);
 			}
+		}
+		else
+		{
+			if (ch->GetDungeon())
+			{
+				ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<파티> 던젼내에서는 파티원을 추방할 수 없습니다."));
+				return;
+			}
 			else
 			{
 				LPCHARACTER B = CHARACTER_MANAGER::instance().FindByPID(p->pid);
+
 				if (B)
 				{
 					//pParty->SendPartyRemoveOneToAll(B);
@@ -2395,6 +2404,7 @@ void CInputMain::PartyRemove(LPCHARACTER ch, const char* c_pData)
 					//pParty->Unlink(B);
 					//CPartyManager::instance().SetPartyMember(B->GetPlayerID(), NULL);
 				}
+
 				pParty->Quit(p->pid);
 			}
 		}
@@ -2404,16 +2414,25 @@ void CInputMain::PartyRemove(LPCHARACTER ch, const char* c_pData)
 		// otherwise, only remove itself
 		if (p->pid == ch->GetPlayerID())
 		{
-			if (ch->GetDungeon())
+			if (pParty->GetMemberCount() == 2)
 			{
-				ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<파티> 던젼내에서는 파티를 나갈 수 없습니다."));
-			}
-			else
-			{
-				if (pParty->GetMemberCount() == 2)
+				if (ch->GetDungeon())
+				{
+					ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<파티> 던전 안에서는 파티에서 추방할 수 없습니다."));
+					return;
+				}
+				else
 				{
 					// party disband
 					CPartyManager::instance().DeleteParty(pParty);
+				}
+			}
+			else
+			{
+				if (ch->GetDungeon())
+				{
+					ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<파티> 던젼내에서는 파티를 나갈 수 없습니다."));
+					return;
 				}
 				else
 				{
@@ -2430,6 +2449,7 @@ void CInputMain::PartyRemove(LPCHARACTER ch, const char* c_pData)
 			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<파티> 다른 파티원을 탈퇴시킬 수 없습니다."));
 		}
 	}
+	// MR-3: -- END OF -- Fix party removal chat messages and improved dungeon logic
 }
 
 void CInputMain::AnswerMakeGuild(LPCHARACTER ch, const char* c_pData)
