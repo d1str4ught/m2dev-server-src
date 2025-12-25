@@ -1802,9 +1802,9 @@ void CHARACTER::SetPlayerProto(const TPlayerTable * t)
 
 	ComputePoints();
 
-	SetHP(GetMaxHP());
-	SetSP(GetMaxSP());
-	SetStamina(GetMaxStamina());
+	SetHP(t->hp);
+	SetSP(t->sp);
+	SetStamina(t->stamina);
 
 	//GM일때 보호모드  
 	if (!test_server)
@@ -2334,20 +2334,22 @@ void CHARACTER::ComputePoints()
 
 	// 기본 HP/SP 설정
 	if (iMaxHP != GetMaxHP())
-	{
 		SetRealPoint(POINT_MAX_HP, iMaxHP); // 기본HP를 RealPoint에 저장해 놓는다.
-	}
 
 	PointChange(POINT_MAX_HP, 0);
 
+
 	if (iMaxSP != GetMaxSP())
-	{
 		SetRealPoint(POINT_MAX_SP, iMaxSP); // 기본SP를 RealPoint에 저장해 놓는다.
-	}
 
 	PointChange(POINT_MAX_SP, 0);
 
 	SetMaxStamina(iMaxStamina);
+
+	// MR-3: HP/SP Fixes
+	int iCurHP = GetHP();
+	int iCurSP = GetSP();
+	// MR-3: -- END OF -- HP/SP Fixes
 
 	m_pointsInstant.dwImmuneFlag = 0;
 
@@ -2386,18 +2388,23 @@ void CHARACTER::ComputePoints()
 		PointChange(POINT_SP, GetMaxSP() - GetSP());
 
 	ComputeSkillPoints();
-
 	RefreshAffect();
-	CPetSystem* pPetSystem = GetPetSystem();
-	if (NULL != pPetSystem)
-	{
-		pPetSystem->RefreshBuff();
-	}
 
-	for (TMapBuffOnAttrs::iterator it = m_map_buff_on_attrs.begin(); it != m_map_buff_on_attrs.end(); it++)
+	// MR-3: HP/SP Fixes
+	if (IsPC())
 	{
-		it->second->GiveAllAttributes();
+		CPetSystem * pPetSystem = GetPetSystem();
+
+		if (pPetSystem)
+			pPetSystem->RefreshBuff();
+
+		// @Fixed Hp/Mp mount/unmount
+		if (GetHP() != iCurHP)
+			SetPoint(POINT_HP, std::min(iCurHP, GetMaxHP()));
+		if (GetSP() != iCurSP)
+			SetPoint(POINT_SP, std::min(iCurSP, GetMaxSP()));
 	}
+	// MR-3: -- END OF -- HP/SP Fixes
 
 	UpdatePacket();
 }
@@ -3299,12 +3306,21 @@ void CHARACTER::PointChange(BYTE type, int amount, bool bAmount, bool bBroadcast
 
 				//SetMaxHP(GetMaxHP() + amount);
 				// 최대 생명력 = (기본 최대 생명력 + 추가) * 최대생명력%
+				int i = GetHP();
 				int hp = GetRealPoint(POINT_MAX_HP);
 				int add_hp = MIN(3500, hp * GetPoint(POINT_MAX_HP_PCT) / 100);
+
 				add_hp += GetPoint(POINT_MAX_HP);
 				add_hp += GetPoint(POINT_PARTY_TANKER_BONUS);
 
 				SetMaxHP(hp + add_hp);
+
+				// MR-3: HP/SP Fixes
+				if (GetHP() > GetMaxHP())
+					SetPoint(POINT_HP, GetMaxHP());
+				else
+					SetPoint(POINT_HP, i);
+				// MR-3: -- END OF -- HP/SP Fixes
 
 				val = GetMaxHP();
 			}
@@ -3316,12 +3332,21 @@ void CHARACTER::PointChange(BYTE type, int amount, bool bAmount, bool bBroadcast
 
 				//SetMaxSP(GetMaxSP() + amount);
 				// 최대 정신력 = (기본 최대 정신력 + 추가) * 최대정신력%
+				int i = GetSP();
 				int sp = GetRealPoint(POINT_MAX_SP);
 				int add_sp = MIN(800, sp * GetPoint(POINT_MAX_SP_PCT) / 100);
+
 				add_sp += GetPoint(POINT_MAX_SP);
 				add_sp += GetPoint(POINT_PARTY_SKILL_MASTER_BONUS);
 
 				SetMaxSP(sp + add_sp);
+
+				// MR-3: HP/SP Fixes
+				if (GetSP() > GetMaxSP())
+					SetPoint(POINT_SP, GetMaxSP());
+				else
+					SetPoint(POINT_SP, i);
+				// MR-3: -- END OF -- HP/SP Fixes
 
 				val = GetMaxSP();
 			}
@@ -3720,12 +3745,27 @@ void CHARACTER::ApplyPoint(BYTE bApplyType, int iVal)
 			// END_OF_SKILL_DAMAGE_BONUS
 			break;
 
+		// MR-3: HP/SP Fixes
+		case APPLY_MAX_HP:
+		case APPLY_MAX_HP_PCT:
+			{
+				int i = GetMaxHP(); if(i == 0) break;
+				int curr = GetHP();
+
+				PointChange(aApplyInfo[bApplyType].bPointType, iVal);
+			}
+			break;
+		case APPLY_MAX_SP:
+		case APPLY_MAX_SP_PCT:
+			{
+				int i = GetMaxSP(); if(i == 0) break;
+				PointChange(aApplyInfo[bApplyType].bPointType, iVal);
+			}
+			break;
+		// MR-3: -- END OF -- HP/SP Fixes
+
 		case APPLY_STR:
 		case APPLY_DEX:
-		case APPLY_MAX_HP:
-		case APPLY_MAX_SP:
-		case APPLY_MAX_HP_PCT:
-		case APPLY_MAX_SP_PCT:
 		case APPLY_ATT_SPEED:
 		case APPLY_MOV_SPEED:
 		case APPLY_CAST_SPEED:

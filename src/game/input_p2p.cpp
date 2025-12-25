@@ -325,8 +325,9 @@ void CInputP2P::MessengerRemove(const char * c_pData)
         deletee->GetDesc()->Packet(p->szAccount, strlen(p->szAccount));
     }
 
+	// MR-3: Remove from messenger Fix
 	MessengerManager::instance().__RemoveFromList(p->szAccount, p->szCompanion);
-	MessengerManager::instance().__RemoveFromList(p->szCompanion, p->szAccount, false);
+	// MR-3: -- END OF -- Remove from messenger Fix
 }
 
 void CInputP2P::FindPosition(LPDESC d, const char* c_pData)
