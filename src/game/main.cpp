@@ -520,7 +520,9 @@ int start(int argc, char **argv)
 				printf("IP %s\n", g_szPublicIP);
 
 				optind++;
-				optreset = 1;
+				#ifdef OS_FREEBSD
+                	optreset = 1;
+				#endif
 				break;
 
 			case 'p': // port
@@ -535,7 +537,9 @@ int start(int argc, char **argv)
 				printf("port %d\n", mother_port);
 
 				optind++;
-				optreset = 1;
+				#ifdef OS_FREEBSD
+                	optreset = 1;
+				#endif
 				break;
 
 				// LOCALE_SERVICE
@@ -544,7 +548,9 @@ int start(int argc, char **argv)
 					if (optind < argc)
 					{
 						st_localeServiceName = argv[optind++];
-						optreset = 1;
+						#ifdef OS_FREEBSD
+							optreset = 1;
+						#endif
 					}
 				}
 				break;

@@ -2,7 +2,7 @@
 #include "ClientPackageCryptInfo.h"
 #include "common/stl.h"
 
-#ifndef OS_FREEBSD
+#ifdef OS_WINDOWS
 #include "libthecore/xdirent.h"
 #endif
 
