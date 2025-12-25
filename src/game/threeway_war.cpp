@@ -541,8 +541,8 @@ void CThreeWayWar::onDead(LPCHARACTER pChar, LPCHARACTER pkKiller)
 			int x = pChar->GetX();
 			int y = pChar->GetY();
 
-			x = (thecore_random() & 1) ? x - number(200, 1000) : x + number(200, 1000);
-			y = (thecore_random() & 1) ? y - number(200, 1000) : y + number(200, 1000);
+			x = (number(0, 1)) ? x - number(200, 1000) : x + number(200, 1000);
+			y = (number(0, 1)) ? y - number(200, 1000) : y + number(200, 1000);
 
 			if (x < 0)
 				x = pChar->GetX();

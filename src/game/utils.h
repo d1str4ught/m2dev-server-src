@@ -59,8 +59,6 @@ extern const char *	first_cmd(const char *argument, char *first_arg, size_t firs
 
 extern int CalculateDuration(int iSpd, int iDur);
 
-extern float gauss_random(float avg = 0, float sigma = 1);
-
 extern int parse_time_str(const char* str);
 
 extern bool WildCaseCmp(const char *w, const char *s);
