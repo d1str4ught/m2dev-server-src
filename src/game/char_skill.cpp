@@ -2649,6 +2649,9 @@ bool CHARACTER::UseSkill(DWORD dwVnum, LPCHARACTER pkVictim, bool bUseGrandMaste
 	// tw1x1: POS_FIGHTING timer fix
 	if (IsPC() && IS_SET(pkSk->dwFlag, SKILL_FLAG_ATTACK))
 	{
+		// update combat timestamp on aggresive skill cast
+		// prevent POS_FIGHTING from expiring when skills deal 0 damage (miss, block, imun, etc.)
+		UpdateLastCombatTime();
 		EnterCombat();
 	}
 	// tw1x1: end
