@@ -105,6 +105,7 @@ namespace fishing
 	int g_prob_accumulate[MAX_PROB][MAX_FISH];
 
 	SFishInfo fish_info[MAX_FISH] = { { "\0", }, };
+	int g_fish_count = 0;  // Actual number of loaded fish
 	/*
 	   {
 	   { "꽝",		00000, 00000, 00000, {  750, 1750, 2750 },   10, FISHING_LIMIT_NONE,	{  0,   0,   0}, FISHING_TIME_NORMAL, { 0,           }, 
@@ -299,9 +300,14 @@ void Initialize()
 
 	fclose(fp);
 
-	for (int i = 0; i < MAX_FISH; ++i)
+	g_fish_count = idx;  // Save actual fish count
+	sys_log(0, "FISH: Loaded %d fish entries", g_fish_count);
+	sys_log(0, "FISH: DEBUG - Starting to print fish info, count=%d", g_fish_count);
+
+	for (int i = 0; i < g_fish_count; ++i)
 	{
-		sys_log(0, "FISH: %-24s vnum %5lu prob %4d %4d %4d %4d len %d %d %d", 
+		sys_log(0, "FISH: DEBUG - About to print fish %d/%d", i, g_fish_count);
+		sys_log(0, "FISH: %-24s vnum %5lu prob %4d %4d %4d %4d len %d %d %d",
 				fish_info[i].name,
 				fish_info[i].vnum,
 				fish_info[i].prob[0],
@@ -311,17 +317,19 @@ void Initialize()
 				fish_info[i].length_range[0],
 				fish_info[i].length_range[1],
 				fish_info[i].length_range[2]);
+		sys_log(0, "FISH: DEBUG - Finished printing fish %d", i);
 	}
+	sys_log(0, "FISH: DEBUG - Finished printing all fish");
 
 	// 확률 계산
 	for (int j = 0; j < MAX_PROB; ++j)
 	{
 		g_prob_accumulate[j][0] = fish_info[0].prob[j];
 
-		for (int i = 1; i < MAX_FISH; ++i)
+		for (int i = 1; i < g_fish_count; ++i)
 			g_prob_accumulate[j][i] = fish_info[i].prob[j] + g_prob_accumulate[j][i - 1];
 
-		g_prob_sum[j] = g_prob_accumulate[j][MAX_FISH - 1];
+		g_prob_sum[j] = g_prob_accumulate[j][g_fish_count - 1];
 		sys_log(0, "FISH: prob table %d %d", j, g_prob_sum[j]);
 	}
 }
@@ -329,7 +337,7 @@ void Initialize()
 int DetermineFishByProbIndex(int prob_idx)
 {
 	int rv = number(1, g_prob_sum[prob_idx]);
-	int * p = std::lower_bound(g_prob_accumulate[prob_idx], g_prob_accumulate[prob_idx]+ MAX_FISH, rv);
+	int * p = std::lower_bound(g_prob_accumulate[prob_idx], g_prob_accumulate[prob_idx]+ g_fish_count, rv);
 	int fish_idx = p - g_prob_accumulate[prob_idx];
 	return fish_idx;
 }
@@ -384,7 +392,7 @@ int DetermineFish(LPCHARACTER ch)
 
 	int rv = number(adjust + 1, g_prob_sum[prob_idx]);
 
-	int * p = std::lower_bound(g_prob_accumulate[prob_idx], g_prob_accumulate[prob_idx] + MAX_FISH, rv);
+	int * p = std::lower_bound(g_prob_accumulate[prob_idx], g_prob_accumulate[prob_idx] + g_fish_count, rv);
 	int fish_idx = p - g_prob_accumulate[prob_idx];
 
 	//if (!g_iUseLocale)
@@ -556,10 +564,10 @@ int Compute(DWORD fish_id, DWORD ms, DWORD* item, int level)
 	if (fish_id == 0)
 		return -2;
 
-	if (fish_id >= MAX_FISH)
+	if (fish_id >= g_fish_count)
 	{
 		sys_err("Wrong FISH ID : %d", fish_id);
-		return -2; 
+		return -2;
 	}
 
 	if (ms > 6000)
@@ -760,7 +768,7 @@ void UseFish(LPCHARACTER ch, LPITEM item)
 
 	// 피라미 사용불가, 살아있는게 아닌건 사용불가
 
-	if (idx<=1 || idx >= MAX_FISH)
+	if (idx<=1 || idx >= g_fish_count)
 		return;
 
 	int r = number(1, 10000);
@@ -818,9 +826,9 @@ void Grill(LPCHARACTER ch, LPITEM item)
 	/*if (item->GetVnum() < fish_info[3].vnum)
 	  return;
 	  int idx = item->GetVnum()-fish_info[3].vnum+3;
-	  if (idx>=MAX_FISH)
+	  if (idx>=g_fish_count)
 	  idx = item->GetVnum()-fish_info[3].dead_vnum+3;
-	  if (idx>=MAX_FISH)
+	  if (idx>=g_fish_count)
 	  return;*/
 	int idx = -1;
 	DWORD vnum = item->GetVnum();
@@ -941,7 +949,7 @@ int main(int argc, char **argv)
 
 	Initialize();
 
-	for (int i = 0; i < MAX_FISH; ++i)
+	for (int i = 0; i < g_fish_count; ++i)
 	{
 		printf("%s\t%u\t%u\t%u\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d",
 				fish_info[i].name,
