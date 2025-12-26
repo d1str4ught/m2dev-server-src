@@ -1077,6 +1077,25 @@ void CHARACTER::ItemDropPenalty(LPCHARACTER pkKiller)
 				if (IS_SET(pkItem->GetAntiFlag(), ITEM_ANTIFLAG_GIVE | ITEM_ANTIFLAG_PKDROP))
 					continue;
 
+				// MR-3: Auto-deactivate auto potions before dropping (death penalty)
+				switch (pkItem->GetVnum())
+				{
+					case ITEM_AUTO_HP_RECOVERY_S:
+					case ITEM_AUTO_HP_RECOVERY_M:
+					case ITEM_AUTO_HP_RECOVERY_L:
+					case ITEM_AUTO_HP_RECOVERY_X:
+					case ITEM_AUTO_SP_RECOVERY_S:
+					case ITEM_AUTO_SP_RECOVERY_M:
+					case ITEM_AUTO_SP_RECOVERY_L:
+					case ITEM_AUTO_SP_RECOVERY_X:
+						if (pkItem->GetSocket(0) == 1)
+							pkItem->SetSocket(0, 0);
+						break;
+					default:
+						break;
+				}
+				// MR-3: -- END OF -- Auto-deactivate auto potions before dropping (death penalty)
+
 				SyncQuickslot(QUICKSLOT_TYPE_ITEM, vec_bSlots[i], 255);
 				vec_item.push_back(std::make_pair(pkItem->RemoveFromCharacter(), INVENTORY));
 			}
@@ -1108,16 +1127,34 @@ void CHARACTER::ItemDropPenalty(LPCHARACTER pkKiller)
 			if (iQty)
 				iQty = number(1, iQty);
 
-			for (i = 0; i < iQty; ++i)
-			{
-				pkItem = GetWear(vec_bSlots[i]);
+			   for (i = 0; i < iQty; ++i)
+			   {
+				   pkItem = GetWear(vec_bSlots[i]);
 
-				if (IS_SET(pkItem->GetAntiFlag(), ITEM_ANTIFLAG_GIVE | ITEM_ANTIFLAG_PKDROP))
-					continue;
+				   if (IS_SET(pkItem->GetAntiFlag(), ITEM_ANTIFLAG_GIVE | ITEM_ANTIFLAG_PKDROP))
+					   continue;
 
-				SyncQuickslot(QUICKSLOT_TYPE_ITEM, vec_bSlots[i], 255);
-				vec_item.push_back(std::make_pair(pkItem->RemoveFromCharacter(), EQUIPMENT));
-			}
+				   // MR-3: Auto-deactivate auto potions before dropping (death penalty)
+				   switch (pkItem->GetVnum())
+				   {
+					   case ITEM_AUTO_HP_RECOVERY_S:
+					   case ITEM_AUTO_HP_RECOVERY_M:
+					   case ITEM_AUTO_HP_RECOVERY_L:
+					   case ITEM_AUTO_HP_RECOVERY_X:
+					   case ITEM_AUTO_SP_RECOVERY_S:
+					   case ITEM_AUTO_SP_RECOVERY_M:
+					   case ITEM_AUTO_SP_RECOVERY_L:
+					   case ITEM_AUTO_SP_RECOVERY_X:
+						   if (pkItem->GetSocket(0) == 1)
+							   pkItem->SetSocket(0, 0);
+						   break;
+					   default:
+						   break;
+				   }
+
+				   SyncQuickslot(QUICKSLOT_TYPE_ITEM, vec_bSlots[i], 255);
+				   vec_item.push_back(std::make_pair(pkItem->RemoveFromCharacter(), EQUIPMENT));
+			   }
 		}
 	}
 

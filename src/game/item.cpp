@@ -295,7 +295,7 @@ LPITEM CItem::RemoveFromCharacter()
 
 	LPCHARACTER pOwner = m_pOwner;
 
-	if (m_bEquipped)	// 장착되었는가?
+	if (m_bEquipped) // 장착되었는가?
 	{
 		Unequip();
 		//pOwner->UpdatePacket();
@@ -323,6 +323,21 @@ LPITEM CItem::RemoveFromCharacter()
 					sys_err("CItem::RemoveFromCharacter: Invalid Item Position");
 				else
 				{
+					// MR-3: Auto-deactivate auto potions before selling to vendors/removing
+					// Auto potion deactivation for NPC sell and similar removals
+					// Only deactivate if not from safebox or mall
+					if (GetWindow() != SAFEBOX && GetWindow() != MALL)
+					{
+						// Check for auto potion vnums (50200, 50201, 50202)
+						DWORD vnum = GetVnum();
+						if (vnum == 50200 || vnum == 50201 || vnum == 50202)
+						{
+							// Set socket 0 to 0 (deactivate)
+							SetSocket(0, 0);
+						}
+					}
+					// MR-3: -- END OF -- Auto-deactivate auto potions before selling to vendors/removing
+					
 					pOwner->SetItem(cell, NULL);
 				}
 			}
