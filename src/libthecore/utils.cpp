@@ -6,6 +6,8 @@
  */
 #define __LIBTHECORE__
 #include "stdafx.h"
+#include <random>
+#include "XoshiroCpp.hpp"
 
 static struct timeval null_time = { 0, 0 };
 
@@ -344,15 +346,6 @@ int MINMAX(int min, int value, int max)
     return (max < tv) ? max : tv;
 }
 
-DWORD thecore_random()
-{
-#ifdef OS_WINDOWS
-    return rand();
-#else
-    return random();
-#endif
-}
-
 int number_ex(int from, int to, const char *file, int line)
 {
     if (from > to)
@@ -367,8 +360,12 @@ int number_ex(int from, int to, const char *file, int line)
 
 	int returnValue = 0;
 
+	static thread_local XoshiroCpp::Xoshiro128PlusPlus gen(std::random_device{}());
+
+	std::uniform_int_distribution<> distrib(from, to);
+
 	if ((to - from + 1) != 0)
-		returnValue = ((thecore_random() % (to - from + 1)) + from);
+		returnValue = distrib(gen);
 	else
 		sys_err("number(): devided by 0");
 
@@ -377,7 +374,20 @@ int number_ex(int from, int to, const char *file, int line)
 
 float fnumber(float from, float to)
 {
-	return (((float)thecore_random() / (float)RAND_MAX) * (to - from)) + from;
+	static thread_local XoshiroCpp::Xoshiro128PlusPlus gen(std::random_device{}());
+
+	std::uniform_real_distribution<float> distrib(from, to);
+
+	return distrib(gen);
+}
+
+float gauss_random(float avg, float sigma)
+{
+	static thread_local XoshiroCpp::Xoshiro128PlusPlus gen(std::random_device{}());
+
+	std::normal_distribution<float> distrib(avg, sigma);
+
+	return distrib(gen);
 }
 
 #ifndef OS_WINDOWS

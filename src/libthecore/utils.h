@@ -41,9 +41,9 @@ int		number_ex(int from, int to, const char *file, int line);
 #define number(from, to) number_ex(from, to, __FILE__, __LINE__)
 
 float	fnumber(float from, float to);
+extern float gauss_random(float avg = 0, float sigma = 1);
 
 void		thecore_sleep(struct timeval * timeout);
-DWORD	thecore_random();
 
 float	get_float_time();
 DWORD	get_dword_time();

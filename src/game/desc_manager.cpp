@@ -91,7 +91,7 @@ DWORD DESC_MANAGER::CreateHandshake()
 RETRY:
 	do
 	{
-		DWORD val = thecore_random() % (1024 * 1024);
+		DWORD val = number(0, (1024 * 1024));
 
 		*(DWORD *) (crc_buf    ) = val;
 		*((DWORD *) crc_buf + 1) = get_global_time();
@@ -383,7 +383,7 @@ void DESC_MANAGER::GetUserCount(int & iTotal, int ** paiEmpireUserCount, int & i
 
 DWORD DESC_MANAGER::MakeRandomKey(DWORD dwHandle)
 { 
-	DWORD random_key = thecore_random(); 
+	DWORD random_key = number(0, INT_MAX);
 	m_map_handle_random_key.insert(std::make_pair(dwHandle, random_key));
 	return random_key;
 }

@@ -26,7 +26,7 @@ int dice(int number, int size)
 
 	while (number)
 	{
-		val = ((thecore_random() % size) + 1);
+		val = number(1, size);
 		sum += val;
 		--number;
 	}
@@ -145,41 +145,6 @@ int CalculateDuration(int iSpd, int iDur)
 		i = 100;
 
 	return iDur * i / 100;
-}
-double uniform_random(double a, double b)
-{
-	// Uses 64-bit precision and the full range of the 32-bit DWORD
-    const double MAX_DIVISOR = 4294967296.0; 
-    
-    return (static_cast<double>(thecore_random()) / MAX_DIVISOR) * (b - a) + a;
-	//return thecore_random() / (RAND_MAX + 1.f) * (b - a) + a;
-}
-
-float gauss_random(float avg, float sigma)
-{
-	static bool haveNextGaussian = false;
-	static float nextGaussian = 0.0f;
-
-	if (haveNextGaussian) 
-	{
-		haveNextGaussian = false;
-		return nextGaussian * sigma + avg;
-	} 
-	else 
-	{
-		double v1, v2, s;
-		do { 
-			//v1 = 2 * nextDouble() - 1;   // between -1.0 and 1.0
-			//v2 = 2 * nextDouble() - 1;   // between -1.0 and 1.0
-			v1 = uniform_random(-1.f, 1.f);
-			v2 = uniform_random(-1.f, 1.f);
-			s = v1 * v1 + v2 * v2;
-		} while (s >= 1.f || fabs(s) < FLT_EPSILON);
-		double multiplier = sqrtf(-2 * logf(s)/s);
-		nextGaussian = v2 * multiplier;
-		haveNextGaussian = true;
-		return v1 * multiplier * sigma + avg;
-	}
 }
 
 int parse_time_str(const char* str)
