@@ -231,6 +231,7 @@ socket_t socket_accept(socket_t s, struct sockaddr_in *peer)
 
     socket_nonblock(desc);
     socket_lingeroff(desc);
+    socket_nodelay(desc);
     return (desc);
 }
 
@@ -272,6 +273,7 @@ socket_t socket_connect(const char* host, WORD port)
     socket_rcvbuf(s, 233016);
     socket_timeout(s, 10, 0);
     socket_lingeron(s);
+    socket_nodelay(s);
 
     /*  연결요청 */
     if ((rslt = connect(s, (struct sockaddr *) &server_addr, sizeof(server_addr))) < 0)
@@ -537,4 +539,17 @@ void socket_keepalive(socket_t s)
 	socket_close(s);
 	return;
     }
+}
+
+void socket_nodelay(socket_t s)
+{
+    int opt = 1;
+
+    if (setsockopt(s, IPPROTO_TCP, TCP_NODELAY, (const char*) &opt, sizeof(opt)) < 0)
+    {
+	sys_err("setsockopt: TCP_NODELAY: %s", strerror(errno));
+	return;
+    }
+
+    sys_log(1, "SYSTEM: %d: TCP_NODELAY enabled", s);
 }

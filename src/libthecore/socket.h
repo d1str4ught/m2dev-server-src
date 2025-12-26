@@ -22,6 +22,7 @@ void		socket_block(socket_t s);
 void		socket_dontroute(socket_t s);
 void		socket_lingeroff(socket_t s);
 void		socket_lingeron(socket_t s);
+void		socket_nodelay(socket_t s);
 
 void		socket_sndbuf(socket_t s, unsigned int opt);
 void		socket_rcvbuf(socket_t s, unsigned int opt);
