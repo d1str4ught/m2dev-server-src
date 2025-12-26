@@ -110,7 +110,7 @@ int main()
 		sys_log(0, "WAITING_QUERY_COUNT %d", iCount);
 	}
 
-	log_destroy();
+	
 	return 1;
 }
 
