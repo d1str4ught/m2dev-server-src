@@ -381,6 +381,23 @@ namespace quest
 		}
 	}
 
+	void CQuestManager::Cancel(unsigned int pc)
+	{
+		PC * pPC = GetPC(pc);
+
+		if (pPC && pPC->IsRunning())
+		{
+			sys_log(0, "QUEST: Dialog cancelled by player %u, cleaning up quest state (quest: %s)", pc, pPC->GetCurrentQuestName().c_str());
+			
+			CloseState(*pPC->GetRunningQuestState());
+			pPC->CancelRunning();
+		}
+		else
+		{
+			sys_log(0, "QUEST: Cancel requested for player %u but no quest is running", pc);
+		}
+	}
+
 	///////////////////////////////////////////////////////////////////////////////////////////
 	//
 	// Quest Event 관련

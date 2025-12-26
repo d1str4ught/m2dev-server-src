@@ -132,6 +132,7 @@ class CInputMain : public CInputProcessor
 
 		void		QuestInputString(LPCHARACTER ch, const void * pvData);
 		void		QuestConfirm(LPCHARACTER ch, const void* pvData);
+		void		QuestCancel(LPCHARACTER ch);
 		void		Target(LPCHARACTER ch, const char * pcData);
 		void		Warp(LPCHARACTER ch, const char * pcData);
 		void		SafeboxCheckin(LPCHARACTER ch, const char * c_pData);

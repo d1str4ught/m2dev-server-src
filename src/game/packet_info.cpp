@@ -174,6 +174,7 @@ CPacketInfoCG::CPacketInfoCG()
 	Set(HEADER_CG_SCRIPT_BUTTON, sizeof(TPacketCGScriptButton), "ScriptButton", true);
 	Set(HEADER_CG_QUEST_INPUT_STRING, sizeof(TPacketCGQuestInputString), "QuestInputString", true);
 	Set(HEADER_CG_QUEST_CONFIRM, sizeof(TPacketCGQuestConfirm), "QuestConfirm", true);
+	Set(HEADER_CG_QUEST_CANCEL, sizeof(TPacketCGQuestCancel), "QuestCancel", true);
 
 	Set(HEADER_CG_MOVE, sizeof(TPacketCGMove), "Move", true);
 	Set(HEADER_CG_SYNC_POSITION, sizeof(TPacketCGSyncPosition), "SyncPosition", true);

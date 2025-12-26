@@ -34,6 +34,7 @@ enum
 	HEADER_CG_SCRIPT_ANSWER			= 29,
 	HEADER_CG_QUEST_INPUT_STRING		= 30,
 	HEADER_CG_QUEST_CONFIRM			= 31,
+	HEADER_CG_QUEST_CANCEL			= 32,
 
 	HEADER_CG_SHOP				= 50,
 	HEADER_CG_FLY_TARGETING			= 51,
@@ -805,6 +806,11 @@ typedef struct command_quest_confirm
 	uint8_t answer;
 	uint32_t requestPID;
 } TPacketCGQuestConfirm;
+
+typedef struct command_quest_cancel
+{
+	uint8_t header;
+} TPacketCGQuestCancel;
 
 /*
  * 서버 측에서 보내는 패킷 
