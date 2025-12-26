@@ -268,8 +268,8 @@ socket_t socket_connect(const char* host, WORD port)
     }
 
     socket_keepalive(s);
-    socket_sndbuf(s, 233016);
-    socket_rcvbuf(s, 233016);
+    socket_sndbuf(s, 524288);  // Increased from 233KB to 512KB
+    socket_rcvbuf(s, 524288);  // Increased from 233KB to 512KB
     socket_timeout(s, 10, 0);
     socket_lingeron(s);
 
