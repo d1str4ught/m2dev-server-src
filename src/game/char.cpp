@@ -1,4 +1,4 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 
 #include "common/VnumHelper.h"
 
@@ -114,9 +114,6 @@ CHARACTER::CHARACTER()
 	m_stateIdle.Set(this, &CHARACTER::BeginStateEmpty, &CHARACTER::StateIdle, &CHARACTER::EndStateEmpty);
 	m_stateMove.Set(this, &CHARACTER::BeginStateEmpty, &CHARACTER::StateMove, &CHARACTER::EndStateEmpty);
 	m_stateBattle.Set(this, &CHARACTER::BeginStateEmpty, &CHARACTER::StateBattle, &CHARACTER::EndStateEmpty);
-#ifdef FIX_POS_SYNC
-	m_stateSyncing.Set(this, &CHARACTER::BeginStateEmpty, &CHARACTER::StateSyncing, &CHARACTER::EndStateEmpty);
-#endif
 
 	Initialize();
 }
