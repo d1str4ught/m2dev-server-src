@@ -1,4 +1,5 @@
 ﻿#include "stdafx.h"
+#include <netinet/tcp.h>
 
 /* Forwards */
 void socket_lingeron(socket_t s);
