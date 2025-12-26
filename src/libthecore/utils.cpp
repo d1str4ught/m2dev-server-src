@@ -360,8 +360,7 @@ int number_ex(int from, int to, const char *file, int line)
 
 	int returnValue = 0;
 
-	std::random_device rd;
-	XoshiroCpp::Xoshiro128PlusPlus gen(rd());
+	static thread_local XoshiroCpp::Xoshiro128PlusPlus gen(std::random_device{}());
 
 	std::uniform_int_distribution<> distrib(from, to);
 
@@ -375,8 +374,7 @@ int number_ex(int from, int to, const char *file, int line)
 
 float fnumber(float from, float to)
 {
-	std::random_device rd;
-	XoshiroCpp::Xoshiro128PlusPlus gen(rd());
+	static thread_local XoshiroCpp::Xoshiro128PlusPlus gen(std::random_device{}());
 
 	std::uniform_real_distribution<float> distrib(from, to);
 
@@ -385,8 +383,7 @@ float fnumber(float from, float to)
 
 float gauss_random(float avg, float sigma)
 {
-	std::random_device rd;
-	XoshiroCpp::Xoshiro128PlusPlus gen(rd());
+	static thread_local XoshiroCpp::Xoshiro128PlusPlus gen(std::random_device{}());
 
 	std::normal_distribution<float> distrib(avg, sigma);
 
