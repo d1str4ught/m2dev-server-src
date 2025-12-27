@@ -762,7 +762,10 @@ bool __CHARACTER_GotoNearTarget(LPCHARACTER self, LPCHARACTER victim)
 void CHARACTER::StateMove()
 {
 	DWORD dwElapsedTime = get_dword_time() - m_dwMoveStartTime;
-	float fRate = (float) dwElapsedTime / (float) m_dwMoveDuration;
+	
+	// Avoid division by zero. Move duration can sometimes be 0 if the destination is the same as the current position.
+	// If the duration is 0, the interpolation rate will be 0, which means the character will not move.
+	float fRate = m_dwMoveDuration > 0 ? (float) dwElapsedTime / (float) m_dwMoveDuration : 0.0f;
 
 	if (fRate > 1.0f)
 		fRate = 1.0f;
