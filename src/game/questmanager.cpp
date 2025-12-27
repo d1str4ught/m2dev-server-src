@@ -1501,6 +1501,11 @@ namespace quest
 		return it->second;
 	}
 
+	bool CQuestManager::IsEventFlagSet(const string& name)
+	{
+		return m_mapEventFlag.find(name) != m_mapEventFlag.end();
+	}
+
 	void CQuestManager::BroadcastEventFlagOnLogin(LPCHARACTER ch)
 	{
 		int iEventFlagValue;
@@ -1569,6 +1574,27 @@ namespace quest
 
 	bool CQuestManager::ExecuteQuestScript(PC& pc, const string& quest_name, const int state, const char* code, const int code_size, vector<AArgScript*>* pChatScripts, bool bUseCache)
 	{
+		// Check if quest is enabled via event flag
+		// Only blocks if flag is explicitly set to 0 (default is enabled)
+		string quest_flag = "quest_" + quest_name + "_enabled";
+
+		if (CQuestManager::instance().IsEventFlagSet(quest_flag)
+			&& CQuestManager::instance().GetEventFlag(quest_flag) == 0)
+		{
+			if (test_server)
+				sys_log(0, "QUEST: Quest %s is disabled via event flag %s", quest_name.c_str(), quest_flag.c_str());
+			return false;
+		}
+
+		// Check global quest disable flag (only if explicitly set)
+		if (CQuestManager::instance().IsEventFlagSet("quests_global_enabled")
+			&& CQuestManager::instance().GetEventFlag("quests_global_enabled") == 0)
+		{
+			if (test_server)
+				sys_log(0, "QUEST: All quests are disabled via quests_global_enabled flag");
+			return false;
+		}
+
 		// 실행공간을 생성
 		QuestState qs = CQuestManager::instance().OpenState(quest_name, state);
 		if (pChatScripts)

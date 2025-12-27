@@ -457,6 +457,22 @@ namespace quest
 			return false;
 		}
 
+		// Check if NPC quests are disabled via event flag
+		// Only blocks if flag is explicitly set to 0 (default is enabled)
+		if (m_vnum > 0)
+		{
+			string npc_flag_str = "quest_npc_" + std::to_string(m_vnum) + "_enabled";
+
+			// Only check if flag is explicitly set
+			if (CQuestManager::instance().IsEventFlagSet(npc_flag_str)
+				&& CQuestManager::instance().GetEventFlag(npc_flag_str) == 0)
+			{
+				if (test_server)
+					sys_log(0, "QUEST: NPC %u quests are disabled via event flag %s", m_vnum, npc_flag_str.c_str());
+				return false;
+			}
+		}
+
 		if (pc.IsRunning()) 
 		{
 			if (test_server)
@@ -870,7 +886,23 @@ namespace quest
 
 	bool NPC::OnChat(PC& pc)
 	{
-		if (pc.IsRunning()) 
+		// Check if NPC quests are disabled via event flag
+		// Only blocks if flag is explicitly set to 0 (default is enabled)
+		if (m_vnum > 0)
+		{
+			string npc_flag_str = "quest_npc_" + std::to_string(m_vnum) + "_enabled";
+
+			// Only check if flag is explicitly set
+			if (CQuestManager::instance().IsEventFlagSet(npc_flag_str)
+				&& CQuestManager::instance().GetEventFlag(npc_flag_str) == 0)
+			{
+				if (test_server)
+					sys_log(0, "QUEST: NPC %u chat quests are disabled via event flag %s", m_vnum, npc_flag_str.c_str());
+				return false;
+			}
+		}
+
+		if (pc.IsRunning())
 		{
 			if (test_server)
 			{
