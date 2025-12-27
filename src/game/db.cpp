@@ -55,7 +55,7 @@ void DBManager::Query(const char * c_pszFormat, ...)
 	m_sql.AsyncQuery(szQuery);
 }
 
-SQLMsg * DBManager::DirectQuery(const char * c_pszFormat, ...)
+std::unique_ptr<SQLMsg> DBManager::DirectQuery(const char* c_pszFormat, ...)
 {
 	char szQuery[4096];
 	va_list args;
@@ -68,14 +68,14 @@ SQLMsg * DBManager::DirectQuery(const char * c_pszFormat, ...)
 
 	// DirectQuery LPHeart debuging trace 15/11/2015 06:38AM GMT
 	DWORD t = get_dword_time();
-	SQLMsg* p = m_sql_direct.DirectQuery(szQuery);
+	auto msg = m_sql_direct.DirectQuery(szQuery);
 	DWORD dt = get_dword_time() - t;
 
 	if (dt > 200) {
 		sys_err("[SLOW-GAME] DirectQuery took %u ms: %s", dt, szQuery);
 	}
 
-	return p;
+	return msg;
 }
 
 bool DBManager::IsConnected()
@@ -411,7 +411,7 @@ void DBManager::AnalyzeReturnQuery(SQLMsg * pMsg)
 
 							char szQuery[1024];
 							snprintf(szQuery, sizeof(szQuery), "UPDATE account SET last_play=NOW() WHERE id=%u", dwID);
-							std::unique_ptr<SQLMsg> msg( DBManager::instance().DirectQuery(szQuery) );
+							DBManager::instance().DirectQuery(szQuery);
 						}
 
 						TAccountTable & r = d->GetAccountTable();
@@ -645,7 +645,7 @@ void AccountDB::SetLocale(const std::string & stLocale)
 	m_sql_direct.QueryLocaleSet();
 }
 
-SQLMsg* AccountDB::DirectQuery(const char * query)
+std::unique_ptr<SQLMsg> AccountDB::DirectQuery(const char* query)
 {
 	return m_sql_direct.DirectQuery(query);
 }

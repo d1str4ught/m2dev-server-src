@@ -159,7 +159,7 @@ void CGuildManager::Initialize()
 {
 	char szQuery[1024];
 	snprintf(szQuery, sizeof(szQuery), "SELECT id, name, ladder_point, win, draw, loss, gold, level FROM guild%s", GetTablePostfix());
-	std::unique_ptr<SQLMsg> pmsg(CDBManager::instance().DirectQuery(szQuery));
+	auto pmsg = CDBManager::instance().DirectQuery(szQuery);
 
 	if (pmsg->Get()->uiNumRows)
 		ParseResult(pmsg->Get());
@@ -190,7 +190,7 @@ void CGuildManager::Load(DWORD dwGuildID)
 	char szQuery[1024];
 
 	snprintf(szQuery, sizeof(szQuery), "SELECT id, name, ladder_point, win, draw, loss, gold, level FROM guild%s WHERE id=%u", GetTablePostfix(), dwGuildID);
-	std::unique_ptr<SQLMsg> pmsg(CDBManager::instance().DirectQuery(szQuery));
+	auto pmsg = CDBManager::instance().DirectQuery(szQuery);
 
 	if (pmsg->Get()->uiNumRows)
 		ParseResult(pmsg->Get());
@@ -901,7 +901,7 @@ void CGuildManager::BootReserveWar()
 
 	for (int i = 0; i < 2; ++i)
 	{
-		std::unique_ptr<SQLMsg> pmsg(CDBManager::instance().DirectQuery(c_apszQuery[i]));
+		auto pmsg = CDBManager::instance().DirectQuery(c_apszQuery[i]);
 
 		if (pmsg->Get()->uiNumRows == 0)
 			continue;
@@ -962,7 +962,7 @@ int GetAverageGuildMemberLevel(DWORD dwGID)
 			"SELECT AVG(level) FROM guild_member%s, player%s AS p WHERE guild_id=%u AND guild_member%s.pid=p.id", 
 			GetTablePostfix(), GetTablePostfix(), dwGID, GetTablePostfix());
 
-	std::unique_ptr<SQLMsg> msg(CDBManager::instance().DirectQuery(szQuery));
+	auto msg = CDBManager::instance().DirectQuery(szQuery);
 
 	MYSQL_ROW row;
 	row = mysql_fetch_row(msg->Get()->pSQLResult);
@@ -977,7 +977,7 @@ int GetGuildMemberCount(DWORD dwGID)
 
 	snprintf(szQuery, sizeof(szQuery), "SELECT COUNT(*) FROM guild_member%s WHERE guild_id=%u", GetTablePostfix(), dwGID);
 
-	std::unique_ptr<SQLMsg> msg(CDBManager::instance().DirectQuery(szQuery));
+	auto msg = CDBManager::instance().DirectQuery(szQuery);
 
 	MYSQL_ROW row;
 	row = mysql_fetch_row(msg->Get()->pSQLResult);
@@ -1065,7 +1065,7 @@ bool CGuildManager::ReserveWar(TPacketGuildWar * p)
 			"VALUES(%u, %u, DATE_ADD(NOW(), INTERVAL 180 SECOND), %u, %ld, %ld, %ld, %ld, %ld)",
 			GID1, GID2, p->bType, static_cast<long>(p->lWarPrice), static_cast<long>(p->lInitialScore), static_cast<long>(t.lPowerFrom), static_cast<long>(t.lPowerTo), static_cast<long>(t.lHandicap));
 
-	std::unique_ptr<SQLMsg> pmsg(CDBManager::instance().DirectQuery(szQuery));
+	auto pmsg = CDBManager::instance().DirectQuery(szQuery);
 
 	if (pmsg->Get()->uiAffectedRows == 0 || pmsg->Get()->uiInsertID == 0 || pmsg->Get()->uiAffectedRows == (uint32_t)-1)
 	{
@@ -1187,13 +1187,13 @@ bool CGuildManager::ChangeMaster(DWORD dwGID, DWORD dwFrom, DWORD dwTo)
 	char szQuery[1024];
 
 	snprintf(szQuery, sizeof(szQuery), "UPDATE guild%s SET master=%u WHERE id=%u", GetTablePostfix(), dwTo, dwGID);
-	delete CDBManager::instance().DirectQuery(szQuery);
+	CDBManager::instance().DirectQuery(szQuery);
 
 	snprintf(szQuery, sizeof(szQuery), "UPDATE guild_member%s SET grade=1 WHERE pid=%u", GetTablePostfix(), dwTo);
-	delete CDBManager::instance().DirectQuery(szQuery);
+	CDBManager::instance().DirectQuery(szQuery);
 
 	snprintf(szQuery, sizeof(szQuery), "UPDATE guild_member%s SET grade=15 WHERE pid=%u", GetTablePostfix(), dwFrom);
-	delete CDBManager::instance().DirectQuery(szQuery);
+	CDBManager::instance().DirectQuery(szQuery);
 
 	return true;
 }
@@ -1214,7 +1214,7 @@ void CGuildWarReserve::Initialize()
 	char szQuery[256];
 	snprintf(szQuery, sizeof(szQuery), "SELECT login, guild, gold FROM guild_war_bet WHERE war_id=%u", m_data.dwID);
 
-	std::unique_ptr<SQLMsg> msgbet(CDBManager::instance().DirectQuery(szQuery));
+	auto msgbet = CDBManager::instance().DirectQuery(szQuery);
 
 	if (msgbet->Get()->uiNumRows)
 	{
@@ -1291,7 +1291,7 @@ bool CGuildWarReserve::Bet(const char * pszLogin, DWORD dwGold, DWORD dwGuild)
 			"INSERT INTO guild_war_bet (war_id, login, gold, guild) VALUES(%u, '%s', %u, %u)",
 			m_data.dwID, pszLogin, dwGold, dwGuild);
 
-	std::unique_ptr<SQLMsg> pmsg(CDBManager::instance().DirectQuery(szQuery));
+	auto pmsg = CDBManager::instance().DirectQuery(szQuery);
 
 	if (pmsg->Get()->uiAffectedRows == 0 || pmsg->Get()->uiAffectedRows == (uint32_t)-1)
 	{

@@ -40,9 +40,9 @@ namespace marriage
 				"SELECT pid1, pid2, love_point, time, is_married, p1.name, p2.name FROM marriage, player%s as p1, player%s as p2 WHERE p1.id = pid1 AND p2.id = pid2",
 				GetTablePostfix(), GetTablePostfix());
 
-		unique_ptr<SQLMsg> pmsg_delete(CDBManager::instance().DirectQuery("DELETE FROM marriage WHERE is_married = 0"));
-		unique_ptr<SQLMsg> pmsg(CDBManager::instance().DirectQuery(szQuery));
-
+		CDBManager::instance().DirectQuery("DELETE FROM marriage WHERE is_married = 0");
+		
+		auto pmsg = CDBManager::instance().DirectQuery(szQuery);
 		SQLResult * pRes = pmsg->Get();
 		sys_log(0, "MarriageList(size=%lu)", pRes->uiNumRows);
 
@@ -101,7 +101,7 @@ namespace marriage
 		char szQuery[512];
 		snprintf(szQuery, sizeof(szQuery), "INSERT INTO marriage(pid1, pid2, love_point, time) VALUES (%u, %u, 0, %u)", dwPID1, dwPID2, now);
 
-		unique_ptr<SQLMsg> pmsg(CDBManager::instance().DirectQuery(szQuery));
+		auto pmsg = CDBManager::instance().DirectQuery(szQuery);
 
 		SQLResult* res = pmsg->Get();
 		if (res->uiAffectedRows == 0 || res->uiAffectedRows == (uint32_t)-1)
@@ -141,7 +141,7 @@ namespace marriage
 		snprintf(szQuery, sizeof(szQuery), "UPDATE marriage SET love_point = %d, is_married = %d WHERE pid1 = %u AND pid2 = %u", 
 				iLovePoint, byMarried, pMarriage->pid1, pMarriage->pid2);
 
-		unique_ptr<SQLMsg> pmsg(CDBManager::instance().DirectQuery(szQuery));
+		auto pmsg = CDBManager::instance().DirectQuery(szQuery);
 
 		SQLResult* res = pmsg->Get();
 		if (res->uiAffectedRows == 0 || res->uiAffectedRows == (uint32_t)-1)
@@ -187,7 +187,7 @@ namespace marriage
 		char szQuery[512];
 		snprintf(szQuery, sizeof(szQuery), "DELETE FROM marriage WHERE pid1 = %u AND pid2 = %u", dwPID1, dwPID2);
 
-		unique_ptr<SQLMsg> pmsg(CDBManager::instance().DirectQuery(szQuery));
+		auto pmsg = CDBManager::instance().DirectQuery(szQuery);
 
 		SQLResult* res = pmsg->Get();
 		if (res->uiAffectedRows == 0 || res->uiAffectedRows == (uint32_t)-1)
@@ -231,7 +231,7 @@ namespace marriage
 		snprintf(szQuery, sizeof(szQuery), "UPDATE marriage SET is_married = 1 WHERE pid1 = %u AND pid2 = %u", 
 				pMarriage->pid1, pMarriage->pid2);
 
-		unique_ptr<SQLMsg> pmsg(CDBManager::instance().DirectQuery(szQuery));
+		auto pmsg = CDBManager::instance().DirectQuery(szQuery);
 
 		SQLResult* res = pmsg->Get();
 		if (res->uiAffectedRows == 0 || res->uiAffectedRows == (uint32_t)-1)

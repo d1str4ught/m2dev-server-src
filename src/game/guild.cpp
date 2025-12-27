@@ -72,10 +72,10 @@ CGuild::CGuild(TGuildCreateParameter & cp)
 		m_data.grade_array[i].auth_flag = 0;
 	}
 
-	std::unique_ptr<SQLMsg> pmsg (DBManager::instance().DirectQuery(
+	auto pmsg = DBManager::instance().DirectQuery(
 				"INSERT INTO guild%s(name, master, sp, level, exp, skill_point, skill) "
 				"VALUES('%s', %u, 1000, 1, 0, 0, '\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0')", 
-				get_table_postfix(), m_data.name, m_data.master_pid));
+				get_table_postfix(), m_data.name, m_data.master_pid);
 
 	// TODO if error occur?
 	m_data.guild_id = pmsg->Get()->uiInsertID;
@@ -1036,19 +1036,18 @@ void CGuild::AddComment(LPCHARACTER ch, const std::string& str)
 
 void CGuild::DeleteComment(LPCHARACTER ch, DWORD comment_id)
 {
-	SQLMsg * pmsg;
+	std::unique_ptr<SQLMsg> pmsg{};
 
 	if (GetMember(ch->GetPlayerID())->grade == GUILD_LEADER_GRADE)
 		pmsg = DBManager::instance().DirectQuery("DELETE FROM guild_comment%s WHERE id = %u AND guild_id = %u",get_table_postfix(), comment_id, m_data.guild_id);
 	else
 		pmsg = DBManager::instance().DirectQuery("DELETE FROM guild_comment%s WHERE id = %u AND guild_id = %u AND name = '%s'",get_table_postfix(), comment_id, m_data.guild_id, ch->GetName());
 
-	if (pmsg->Get()->uiAffectedRows == 0 || pmsg->Get()->uiAffectedRows == (uint32_t)-1)
+	auto* res = pmsg ? pmsg->Get() : nullptr;
+	if (!res || res->uiAffectedRows == 0 || res->uiAffectedRows == (uint32_t)-1)
 		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<길드> 삭제할 수 없는 글입니다."));
 	else
 		RefreshCommentForce(ch->GetPlayerID());
-
-	M2_DELETE(pmsg);
 }
 
 void CGuild::RefreshComment(LPCHARACTER ch)
@@ -1063,7 +1062,7 @@ void CGuild::RefreshCommentForce(DWORD player_id)
 		return;
 	}
 
-	std::unique_ptr<SQLMsg> pmsg (DBManager::instance().DirectQuery("SELECT id, name, content FROM guild_comment%s WHERE guild_id = %u ORDER BY notice DESC, id DESC LIMIT %d", get_table_postfix(), m_data.guild_id, GUILD_COMMENT_MAX_COUNT));
+	auto pmsg = DBManager::instance().DirectQuery("SELECT id, name, content FROM guild_comment%s WHERE guild_id = %u ORDER BY notice DESC, id DESC LIMIT %d", get_table_postfix(), m_data.guild_id, GUILD_COMMENT_MAX_COUNT);
 
 	TPacketGCGuild pack;
 	pack.header = HEADER_GC_GUILD;
@@ -2104,7 +2103,7 @@ CGuild::GuildJoinErrCode CGuild::VerifyGuildJoinableCondition( const LPCHARACTER
 	}
 	else if ( LC_IsBrazil() == true )
 	{
-		std::unique_ptr<SQLMsg> pMsg( DBManager::instance().DirectQuery("SELECT value FROM guild_invite_limit WHERE id=%d", GetID()) );
+		auto pMsg = DBManager::instance().DirectQuery("SELECT value FROM guild_invite_limit WHERE id=%d", GetID());
 
 		if ( pMsg->Get()->uiNumRows > 0 )
 		{
