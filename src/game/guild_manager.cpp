@@ -81,8 +81,8 @@ DWORD CGuildManager::CreateGuild(TGuildCreateParameter& gcp)
 		return 0;
 	}
 
-	std::unique_ptr<SQLMsg> pmsg(DBManager::instance().DirectQuery("SELECT COUNT(*) FROM guild%s WHERE name = '%s'",
-				get_table_postfix(), gcp.name));
+	auto pmsg = DBManager::instance().DirectQuery("SELECT COUNT(*) FROM guild%s WHERE name = '%s'",
+				get_table_postfix(), gcp.name);
 
 	if (pmsg->Get()->uiNumRows > 0)
 	{
@@ -204,7 +204,7 @@ void CGuildManager::Initialize()
 		return;
 	}
 
-	std::unique_ptr<SQLMsg> pmsg(DBManager::instance().DirectQuery("SELECT id FROM guild%s", get_table_postfix()));
+	auto pmsg = DBManager::instance().DirectQuery("SELECT id FROM guild%s", get_table_postfix());
 
 	std::vector<DWORD> vecGuildID;
 	vecGuildID.reserve(pmsg->Get()->uiNumRows);

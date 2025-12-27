@@ -2097,7 +2097,7 @@ teleport_area:
 
 		char szQuery[1024];
 		snprintf(szQuery, sizeof(szQuery), "SELECT COUNT(*) FROM player%s WHERE name='%s'", get_table_postfix(), szName);
-		std::unique_ptr<SQLMsg> pmsg(DBManager::instance().DirectQuery(szQuery));
+		auto pmsg = DBManager::instance().DirectQuery(szQuery);
 
 		if ( pmsg->Get()->uiNumRows > 0 )
 		{
@@ -2126,8 +2126,7 @@ teleport_area:
 		LogManager::instance().ChangeNameLog(pid, ch->GetName(), szName, ch->GetDesc()->GetHostName());
 
 		snprintf(szQuery, sizeof(szQuery), "UPDATE player%s SET name='%s' WHERE id=%u", get_table_postfix(), szName, pid);
-		SQLMsg * msg = DBManager::instance().DirectQuery(szQuery);
-		M2_DELETE(msg);
+		DBManager::instance().DirectQuery(szQuery);
 
 		ch->SetNewName(szName);
 		lua_pushnumber(L, 4);

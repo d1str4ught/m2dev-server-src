@@ -24,7 +24,7 @@ CAsyncSQL::CAsyncSQL()
 #else
 	m_hThread(INVALID_HANDLE_VALUE),
 #endif
-	m_mtxQuery(NULL), m_mtxResult(NULL),
+	m_mtxQuery(nullptr), m_mtxResult(nullptr),
 	m_iQueryFinished(0), m_ulThreadID(0), m_bConnected(false), m_iCopiedQuery(0),
 	m_iPort(0)
 {
@@ -52,23 +52,21 @@ void CAsyncSQL::Destroy()
 	if (m_mtxQuery)
 	{
 #ifndef OS_WINDOWS
-		pthread_mutex_destroy(m_mtxQuery);
+		pthread_mutex_destroy(m_mtxQuery.get());
 #else
-		::DeleteCriticalSection(m_mtxQuery);
+		::DeleteCriticalSection(m_mtxQuery.get());
 #endif
-		delete m_mtxQuery;
-		m_mtxQuery = NULL;
+		m_mtxQuery.reset();
 	}
 
 	if (m_mtxResult)
 	{
 #ifndef OS_WINDOWS
-		pthread_mutex_destroy(m_mtxResult);
+		pthread_mutex_destroy(m_mtxResult.get());
 #else
-		::DeleteCriticalSection(m_mtxResult);
+		::DeleteCriticalSection(m_mtxResult.get());
 #endif
-		delete m_mtxResult;
-		m_mtxResult = NULL;
+		m_mtxResult.reset();
 	}
 }
 
@@ -191,16 +189,16 @@ bool CAsyncSQL::Setup(const char * c_pszHost, const char * c_pszUser, const char
 		}
 		*/
 #ifndef OS_WINDOWS
-		m_mtxQuery = new pthread_mutex_t;
-		m_mtxResult = new pthread_mutex_t;
+		m_mtxQuery = std::make_unique<pthread_mutex_t>();
+		m_mtxResult = std::make_unique<pthread_mutex_t>();
 
-		if (0 != pthread_mutex_init(m_mtxQuery, NULL))
+		if (0 != pthread_mutex_init(m_mtxQuery.get(), NULL))
 		{
 			perror("pthread_mutex_init");
 			exit(0);
 		}
 
-		if (0 != pthread_mutex_init(m_mtxResult, NULL))
+		if (0 != pthread_mutex_init(m_mtxResult.get(), NULL))
 		{
 			perror("pthread_mutex_init");
 			exit(0);
@@ -208,11 +206,11 @@ bool CAsyncSQL::Setup(const char * c_pszHost, const char * c_pszUser, const char
 
 		pthread_create(&m_hThread, NULL, AsyncSQLThread, this);
 #else
-		m_mtxQuery = new CRITICAL_SECTION;
-		m_mtxResult = new CRITICAL_SECTION;
+		m_mtxQuery = std::make_unique<CRITICAL_SECTION>();
+		m_mtxResult = std::make_unique<CRITICAL_SECTION>();
 
-		::InitializeCriticalSection(m_mtxQuery);
-		::InitializeCriticalSection(m_mtxResult);
+		::InitializeCriticalSection(m_mtxQuery.get());
+		::InitializeCriticalSection(m_mtxResult.get());
 
 		m_hThread = (HANDLE)::_beginthreadex(NULL, 0, AsyncSQLThread, this, 0, NULL);
 		if (m_hThread == INVALID_HANDLE_VALUE) {
@@ -246,7 +244,7 @@ void CAsyncSQL::Quit()
 #endif
 }
 
-SQLMsg * CAsyncSQL::DirectQuery(const char * c_pszQuery)
+std::unique_ptr<SQLMsg> CAsyncSQL::DirectQuery(const char* c_pszQuery)
 {
 	if (m_ulThreadID != mysql_thread_id(&m_hDB))
 	{
@@ -255,7 +253,7 @@ SQLMsg * CAsyncSQL::DirectQuery(const char * c_pszQuery)
 		m_ulThreadID = mysql_thread_id(&m_hDB);
 	}
 
-	SQLMsg * p = new SQLMsg;
+	auto p = std::make_unique<SQLMsg>();
 
 	p->m_pkSQL = &m_hDB;
 	p->iID = ++m_iMsgCount;
@@ -303,70 +301,70 @@ void CAsyncSQL::ReturnQuery(const char * c_pszQuery, void * pvUserData)
 
 void CAsyncSQL::PushResult(SQLMsg * p)
 {
-	MUTEX_LOCK(m_mtxResult);
+	MUTEX_LOCK(m_mtxResult.get());
 
 	m_queue_result.push(p);
 
-	MUTEX_UNLOCK(m_mtxResult);
+	MUTEX_UNLOCK(m_mtxResult.get());
 }
 
 bool CAsyncSQL::PopResult(SQLMsg ** pp)
 {
-	MUTEX_LOCK(m_mtxResult);
+	MUTEX_LOCK(m_mtxResult.get());
 
 	if (m_queue_result.empty())
 	{
-		MUTEX_UNLOCK(m_mtxResult);
+		MUTEX_UNLOCK(m_mtxResult.get());
 		return false;
 	}
 
 	*pp = m_queue_result.front();
 	m_queue_result.pop();
-	MUTEX_UNLOCK(m_mtxResult);
+	MUTEX_UNLOCK(m_mtxResult.get());
 	return true;
 }
 
 void CAsyncSQL::PushQuery(SQLMsg * p)
 {
-	MUTEX_LOCK(m_mtxQuery);
+	MUTEX_LOCK(m_mtxQuery.get());
 
 	m_queue_query.push(p);
 	//m_map_kSQLMsgUnfinished.insert(std::make_pair(p->iID, p));
 
 	m_sem.Release();
 
-	MUTEX_UNLOCK(m_mtxQuery);
+	MUTEX_UNLOCK(m_mtxQuery.get());
 }
 
 bool CAsyncSQL::PeekQuery(SQLMsg ** pp)
 {
-	MUTEX_LOCK(m_mtxQuery);
+	MUTEX_LOCK(m_mtxQuery.get());
 
 	if (m_queue_query.empty())
 	{
-		MUTEX_UNLOCK(m_mtxQuery);
+		MUTEX_UNLOCK(m_mtxQuery.get());
 		return false;
 	}
 
 	*pp = m_queue_query.front();
-	MUTEX_UNLOCK(m_mtxQuery);
+	MUTEX_UNLOCK(m_mtxQuery.get());
 	return true;
 }
 
 bool CAsyncSQL::PopQuery(int iID)
 {
-	MUTEX_LOCK(m_mtxQuery);
+	MUTEX_LOCK(m_mtxQuery.get());
 
 	if (m_queue_query.empty())
 	{
-		MUTEX_UNLOCK(m_mtxQuery);
+		MUTEX_UNLOCK(m_mtxQuery.get());
 		return false;
 	}
 
 	m_queue_query.pop();
 	//m_map_kSQLMsgUnfinished.erase(iID);
 
-	MUTEX_UNLOCK(m_mtxQuery);
+	MUTEX_UNLOCK(m_mtxQuery.get());
 	return true;
 }
 
@@ -381,11 +379,11 @@ bool CAsyncSQL::PeekQueryFromCopyQueue(SQLMsg ** pp)
 
 int CAsyncSQL::CopyQuery()
 {
-	MUTEX_LOCK(m_mtxQuery);
+	MUTEX_LOCK(m_mtxQuery.get());
 
 	if (m_queue_query.empty())
 	{
-		MUTEX_UNLOCK(m_mtxQuery);
+		MUTEX_UNLOCK(m_mtxQuery.get());
 		return -1;
 	}
 
@@ -400,7 +398,7 @@ int CAsyncSQL::CopyQuery()
 
 	int count = m_queue_query_copy.size();	
 
-	MUTEX_UNLOCK(m_mtxQuery);
+	MUTEX_UNLOCK(m_mtxQuery.get());
 	return count;
 }
 

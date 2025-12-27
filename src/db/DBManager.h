@@ -42,7 +42,7 @@ class CDBManager : public singleton<CDBManager>
 
 	void			ReturnQuery(const char * c_pszQuery, int iType, IDENT dwIdent, void * pvData, int iSlot = SQL_PLAYER);
 	void			AsyncQuery(const char * c_pszQuery, int iSlot = SQL_PLAYER);
-	SQLMsg *		DirectQuery(const char * c_pszQuery, int iSlot = SQL_PLAYER);
+	std::unique_ptr<SQLMsg> DirectQuery(const char* c_pszQuery, int iSlot = SQL_PLAYER);
 
 	SQLMsg *		PopResult();
 	SQLMsg * 		PopResult(eSQL_SLOT slot );
@@ -78,9 +78,9 @@ class CDBManager : public singleton<CDBManager>
 	}
 
     private:
-	CAsyncSQL2 *		m_mainSQL[SQL_MAX_NUM];
-	CAsyncSQL2 *	 	m_directSQL[SQL_MAX_NUM];
-	CAsyncSQL2 *		m_asyncSQL[SQL_MAX_NUM];
+		std::unique_ptr<CAsyncSQL2>		m_mainSQL[SQL_MAX_NUM];
+		std::unique_ptr<CAsyncSQL2>	 	m_directSQL[SQL_MAX_NUM];
+		std::unique_ptr<CAsyncSQL2>		m_asyncSQL[SQL_MAX_NUM];
 
 	int			m_quit;		// looping flag
 

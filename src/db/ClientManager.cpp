@@ -768,7 +768,7 @@ void CClientManager::RESULT_SAFEBOX_LOAD(CPeer * pkPeer, SQLMsg * msg)
 								pItemAward->dwVnum, pItemAward->dwCount, pItemAward->dwSocket0, pItemAward->dwSocket1, dwSocket2);
 					}
 
-					std::unique_ptr<SQLMsg> pmsg(CDBManager::instance().DirectQuery(szQuery));
+					auto pmsg = CDBManager::instance().DirectQuery(szQuery);
 					SQLResult * pRes = pmsg->Get();
 					sys_log(0, "SAFEBOX Query : [%s]", szQuery);
 
@@ -988,14 +988,14 @@ void CClientManager::QUERY_EMPIRE_SELECT(CPeer * pkPeer, DWORD dwHandle, TEmpire
 	char szQuery[QUERY_MAX_LEN];
 
 	snprintf(szQuery, sizeof(szQuery), "UPDATE player_index%s SET empire=%u WHERE id=%u", GetTablePostfix(), p->bEmpire, p->dwAccountID);
-	delete CDBManager::instance().DirectQuery(szQuery);
+	CDBManager::instance().DirectQuery(szQuery);
 
 	sys_log(0, "EmpireSelect: %s", szQuery);
 	{
 		snprintf(szQuery, sizeof(szQuery),
 				"SELECT pid1, pid2, pid3, pid4 FROM player_index%s WHERE id=%u", GetTablePostfix(), p->dwAccountID);
 
-		std::unique_ptr<SQLMsg> pmsg(CDBManager::instance().DirectQuery(szQuery));
+		auto pmsg = CDBManager::instance().DirectQuery(szQuery);
 
 		SQLResult * pRes = pmsg->Get();
 
@@ -1040,7 +1040,7 @@ void CClientManager::QUERY_EMPIRE_SELECT(CPeer * pkPeer, DWORD dwHandle, TEmpire
 							g_start_position[p->bEmpire][1],
 							pids[i]);
 
-					std::unique_ptr<SQLMsg> pmsg2(CDBManager::instance().DirectQuery(szQuery));
+					auto pmsg2 = CDBManager::instance().DirectQuery(szQuery);
 				}
 			}
 		}
@@ -1801,7 +1801,7 @@ void CClientManager::CreateObject(TPacketGDCreateObject * p)
 			"INSERT INTO object%s (land_id, vnum, map_index, x, y, x_rot, y_rot, z_rot) VALUES(%u, %u, %d, %d, %d, %f, %f, %f)",
 			GetTablePostfix(), p->dwLandID, p->dwVnum, p->lMapIndex, p->x, p->y, p->xRot, p->yRot, p->zRot);
 
-	std::unique_ptr<SQLMsg> pmsg(CDBManager::instance().DirectQuery(szQuery));
+	auto pmsg = CDBManager::instance().DirectQuery(szQuery);
 
 	if (pmsg->Get()->uiInsertID == 0)
 	{
@@ -1835,7 +1835,7 @@ void CClientManager::DeleteObject(DWORD dwID)
 
 	snprintf(szQuery, sizeof(szQuery), "DELETE FROM object%s WHERE id=%u", GetTablePostfix(), dwID);
 
-	std::unique_ptr<SQLMsg> pmsg(CDBManager::instance().DirectQuery(szQuery));
+	auto pmsg = CDBManager::instance().DirectQuery(szQuery);
 
 	if (pmsg->Get()->uiAffectedRows == 0 || pmsg->Get()->uiAffectedRows == (uint32_t)-1)
 	{
@@ -1889,7 +1889,8 @@ void CClientManager::BlockChat(TPacketBlockChat* p)
 		snprintf(szQuery, sizeof(szQuery), "SELECT id FROM player%s WHERE name = '%s' collate sjis_japanese_ci", GetTablePostfix(), p->szName);
 	else
 		snprintf(szQuery, sizeof(szQuery), "SELECT id FROM player%s WHERE name = '%s'", GetTablePostfix(), p->szName);
-	std::unique_ptr<SQLMsg> pmsg(CDBManager::instance().DirectQuery(szQuery));
+	
+	auto pmsg = CDBManager::instance().DirectQuery(szQuery);
 	SQLResult * pRes = pmsg->Get();
 
 	if (pRes->uiNumRows)
@@ -3037,12 +3038,11 @@ bool CClientManager::InitializeLocalization()
 {
 	char szQuery[512];	
 	snprintf(szQuery, sizeof(szQuery), "SELECT mValue, mKey FROM locale");
-	SQLMsg * pMsg = CDBManager::instance().DirectQuery(szQuery, SQL_COMMON);
+	auto pMsg = CDBManager::instance().DirectQuery(szQuery, SQL_COMMON);
 
 	if (pMsg->Get()->uiNumRows == 0)
 	{
 		sys_err("InitializeLocalization() ==> DirectQuery failed(%s)", szQuery);
-		delete pMsg;
 		return false;
 	}
 
@@ -3422,8 +3422,6 @@ bool CClientManager::InitializeLocalization()
 		m_vec_Locale.push_back(locale);
 	}	
 
-	delete pMsg;
-
 	return true;
 }
 //END_BOOT_LOCALIZATION
@@ -3437,12 +3435,11 @@ bool CClientManager::__GetAdminInfo(const char *szIP, std::vector<tAdminInfo> & 
 			"SELECT mID,mAccount,mName,mContactIP,mServerIP,mAuthority FROM gmlist WHERE mServerIP='ALL' or mServerIP='%s'",
 		   	szIP ? szIP : "ALL");
 
-	SQLMsg * pMsg = CDBManager::instance().DirectQuery(szQuery, SQL_COMMON);
+	auto pMsg = CDBManager::instance().DirectQuery(szQuery, SQL_COMMON);
 
 	if (pMsg->Get()->uiNumRows == 0)
 	{
 		sys_err("__GetAdminInfo() ==> DirectQuery failed(%s)", szQuery);
-		delete pMsg;
 		return false;
 	}
 
@@ -3480,8 +3477,6 @@ bool CClientManager::__GetAdminInfo(const char *szIP, std::vector<tAdminInfo> & 
 			   	Info.m_ID, Info.m_szAccount, Info.m_szName, Info.m_szContactIP, Info.m_szServerIP, Info.m_Authority, stAuth.c_str());
 	}
 
-	delete pMsg;
-
 	return true;
 }
 
@@ -3489,12 +3484,11 @@ bool CClientManager::__GetHostInfo(std::vector<std::string> & rIPVec)
 {
 	char szQuery[512];
 	snprintf(szQuery, sizeof(szQuery), "SELECT mIP FROM gmhost");
-	SQLMsg * pMsg = CDBManager::instance().DirectQuery(szQuery, SQL_COMMON);
+	auto pMsg = CDBManager::instance().DirectQuery(szQuery, SQL_COMMON);
 
 	if (pMsg->Get()->uiNumRows == 0)
 	{
 		sys_err("__GetHostInfo() ==> DirectQuery failed(%s)", szQuery);
-		delete pMsg;
 		return false;
 	}
 
@@ -3511,7 +3505,6 @@ bool CClientManager::__GetHostInfo(std::vector<std::string> & rIPVec)
 		}
 	}
 
-	delete pMsg;
 	return true;
 }
 //END_ADMIN_MANAGER
@@ -3913,7 +3906,7 @@ void CClientManager::ChangeMonarchLord(CPeer * peer, DWORD dwHandle, TPacketChan
 			GetTablePostfix(), GetTablePostfix(), info->dwPID, info->bEmpire,
 		   	info->dwPID, info->dwPID, info->dwPID, info->dwPID);
 
-	SQLMsg * pMsg = CDBManager::instance().DirectQuery(szQuery, SQL_PLAYER);
+	auto pMsg = CDBManager::instance().DirectQuery(szQuery, SQL_PLAYER);
 
 	if (pMsg->Get()->uiNumRows != 0)
 	{
@@ -3926,7 +3919,7 @@ void CClientManager::ChangeMonarchLord(CPeer * peer, DWORD dwHandle, TPacketChan
 		strlcpy(ack.szDate, row[1], sizeof(ack.szDate));
 		
 		snprintf(szQuery, sizeof(szQuery), "UPDATE monarch SET pid=%u, windate=NOW() WHERE empire=%d", ack.dwPID, ack.bEmpire);
-		SQLMsg* pMsg2 = CDBManager::instance().DirectQuery(szQuery, SQL_PLAYER);
+		auto pMsg2 = CDBManager::instance().DirectQuery(szQuery, SQL_PLAYER);
 
 		if (pMsg2->Get()->uiAffectedRows > 0)
 		{
@@ -3945,11 +3938,7 @@ void CClientManager::ChangeMonarchLord(CPeer * peer, DWORD dwHandle, TPacketChan
 				client->Encode(newInfo, sizeof(TMonarchInfo));
 			}
 		}
-
-		delete pMsg2;
 	}
-
-	delete pMsg;
 }
 
 void CClientManager::SendSpareItemIDRange(CPeer* peer)

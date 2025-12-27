@@ -73,7 +73,7 @@ class DBManager : public singleton<DBManager>
 		bool			Connect(const char * host, const int port, const char * user, const char * pwd, const char * db);
 		void			Query(const char * c_pszFormat, ...);
 
-		SQLMsg *		DirectQuery(const char * c_pszFormat, ...);
+		std::unique_ptr<SQLMsg> DirectQuery(const char* c_pszFormat, ...);
 		void			ReturnQuery(int iType, DWORD dwIdent, void* pvData, const char * c_pszFormat, ...);
 
 		void			Process();
@@ -168,7 +168,7 @@ class AccountDB : public singleton<AccountDB>
 		bool Connect(const char * host, const int port, const char * user, const char * pwd, const char * db);
 		bool ConnectAsync(const char * host, const int port, const char * user, const char * pwd, const char * db, const char * locale);
 
-		SQLMsg* DirectQuery(const char * query);		
+		std::unique_ptr<SQLMsg> DirectQuery(const char* query);
 		void ReturnQuery(int iType, DWORD dwIdent, void * pvData, const char * c_pszFormat, ...);
 		void AsyncQuery(const char* query);
 
