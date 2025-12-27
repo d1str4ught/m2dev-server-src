@@ -464,80 +464,52 @@ bool CPVPManager::CanAttack(LPCHARACTER pkChr, LPCHARACTER pkVictim)
 		{
 		    if (g_protectNormalPlayer)
 		    {
-			// 범법자는 평화모드인 착한사람을 공격할 수 없다.
-			if (PK_MODE_PEACE == pkVictim->GetPKMode())
-			    return false;
+				// 범법자는 평화모드인 착한사람을 공격할 수 없다.
+				if (PK_MODE_PEACE == pkVictim->GetPKMode())
+					return false;
 		    }
 		}
 
-
+		// MR-4: Fix PK mode logic
 		switch (pkChr->GetPKMode())
 		{
 			case PK_MODE_PEACE:
 			case PK_MODE_REVENGE:
-				// Cannot attack same guild
-				if (pkVictim->GetGuild() && pkVictim->GetGuild() == pkChr->GetGuild())
-					break;
-
-				if (pkChr->GetPKMode() == PK_MODE_REVENGE)
 				{
-					//if (!g_iUseLocale)
-					if (1)
-					{
-						if (pkChr->GetAlignment() < 0 && pkVictim->GetAlignment() >= 0)
-						{
-							pkChr->SetKillerMode(true);
-							return true;
-						}
-						else if (pkChr->GetAlignment() >= 0 && pkVictim->GetAlignment() < 0)
-							return true;
-					}
-					else
-					{
-						if (pkChr->GetAlignment() < 0 && pkVictim->GetAlignment() < 0)
-							break;
-						else if (pkChr->GetAlignment() >= 0 && pkVictim->GetAlignment() >= 0)
-							break;
-
-						beKillerMode = true;
-					}
+					if (
+						(!pkChr->GetGuild() || (pkVictim->GetGuild() != pkChr->GetGuild())) && 
+						pkChr->GetPKMode() == PK_MODE_REVENGE && pkVictim->GetAlignment() < 0
+					)
+						return true;
 				}
 				break;
 
 			case PK_MODE_GUILD:
-				// Same implementation from PK_MODE_FREE except for attacking same guild
-				if (!pkChr->GetGuild() || (pkVictim->GetGuild() != pkChr->GetGuild()))
 				{
-					if (1)
-					//if (!g_iUseLocale)
+					// Same implementation from PK_MODE_FREE except for attacking same guild
+				   	if (!pkChr->GetGuild() || (pkVictim->GetGuild() != pkChr->GetGuild()))
 					{
-						if (pkVictim->GetAlignment() >= 0)
-							pkChr->SetKillerMode(true);
-						else if (pkChr->GetAlignment() < 0 && pkVictim->GetAlignment() < 0)
+						// Only set killer mode if victim is not already attackable
+						if (!pkVictim->IsKillerMode())
 							pkChr->SetKillerMode(true);
 
 						return true;
 					}
-					else
-						beKillerMode = true;
 				}
 				break;
 
 			case PK_MODE_FREE:
-				//if (!g_iUseLocale)
-				if (1)
 				{
-					if (pkVictim->GetAlignment() >= 0)
-						pkChr->SetKillerMode(true);
-					else if (pkChr->GetAlignment() < 0 && pkVictim->GetAlignment() < 0)
+					// Same as GUILD, but allows attacking same guild members
+					// Only set killer mode if victim is not already attackable
+					if (!pkVictim->IsKillerMode())
 						pkChr->SetKillerMode(true);
 
 					return true;
 				}
-				else
-					beKillerMode = true;
 				break;
 		}
+		// MR-4: -- END OF -- Fix PK mode logic
 	}
 
 	CPVP kPVP(pkChr->GetPlayerID(), pkVictim->GetPlayerID());

@@ -2525,14 +2525,6 @@ bool CHARACTER::UseSkill(DWORD dwVnum, LPCHARACTER pkVictim, bool bUseGrandMaste
 			ComputeSkill(dwVnum, pkVictim);
 			RemoveAffect(dwVnum);
 
-			// MR-3: Cancel logout on use skill
-			if (m_pkTimedEvent)
-			{
-				ChatPacket(CHAT_TYPE_INFO, LC_TEXT("취소 되었습니다."));
-				event_cancel(&m_pkTimedEvent);
-			}
-			// MR-3: -- END OF -- Cancel logout on use skill
-
 			return true;
 		}
 	}
@@ -2551,14 +2543,6 @@ bool CHARACTER::UseSkill(DWORD dwVnum, LPCHARACTER pkVictim, bool bUseGrandMaste
 	// Toggle 할 때는 SP를 쓰지 않음 (SelfOnly로 구분)
 	if ((0 != pkSk->dwAffectFlag || pkSk->dwVnum == SKILL_MUYEONG) && (pkSk->dwFlag & SKILL_FLAG_TOGGLE) && RemoveAffect(pkSk->dwVnum))
 	{
-		// MR-3: Cancel logout on use skill
-		if (m_pkTimedEvent)
-		{
-			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("취소 되었습니다."));
-			event_cancel(&m_pkTimedEvent);
-		}
-		// MR-3: -- END OF -- Cancel logout on use skill
-
 		return true;
 	}
 
@@ -2657,6 +2641,14 @@ bool CHARACTER::UseSkill(DWORD dwVnum, LPCHARACTER pkVictim, bool bUseGrandMaste
 		}
 	}
 
+	// MR-3: Cancel logout on use skill
+	if (IsPC() && m_pkTimedEvent)
+	{
+		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("취소 되었습니다."));
+		event_cancel(&m_pkTimedEvent);
+	}
+	// MR-3: -- END OF -- Cancel logout on use skill
+
 	if (dwVnum == SKILL_CHAIN)
 	{
 		ResetChainLightningIndex();
@@ -2670,14 +2662,6 @@ bool CHARACTER::UseSkill(DWORD dwVnum, LPCHARACTER pkVictim, bool bUseGrandMaste
 		// prevent POS_FIGHTING from expiring when skills deal 0 damage (miss, block, imun, etc.)
 		UpdateLastCombatTime();
 		EnterCombat();
-
-		// MR-3: Cancel logout on use skill
-		if (pkVictim->m_pkTimedEvent)
-		{
-			pkVictim->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("취소 되었습니다."));
-			event_cancel(&pkVictim->m_pkTimedEvent);
-		}
-		// MR-3: -- END OF -- Cancel logout on use skill
 	}
 	// tw1x1: end
 
@@ -2691,14 +2675,6 @@ bool CHARACTER::UseSkill(DWORD dwVnum, LPCHARACTER pkVictim, bool bUseGrandMaste
 		ComputeSkill(dwVnum, pkVictim);
 
 	m_dwLastSkillTime = get_dword_time();
-
-	// MR-3: Cancel logout on use skill
-	if (m_pkTimedEvent)
-	{
-		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("취소 되었습니다."));
-		event_cancel(&m_pkTimedEvent);
-	}
-	// MR-3: -- END OF -- Cancel logout on use skill
 
 	return true;
 }
