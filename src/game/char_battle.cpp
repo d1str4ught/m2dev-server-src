@@ -1659,6 +1659,14 @@ void CHARACTER::EnterCombat()
 	if (!IsPosition(POS_FIGHTING))
 		SetPosition(POS_FIGHTING);
 
+	// MR-3: Cancel logout on use skill
+	if (m_pkTimedEvent)
+	{
+		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("전투가 시작 되어 취소 되었습니다."));
+		event_cancel(&m_pkTimedEvent);
+	}
+	// MR-3: -- END OF -- Cancel logout on use skill
+
 	SetNextStatePulse(1);
 }
 // tw1x1: end
