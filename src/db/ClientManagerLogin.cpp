@@ -161,7 +161,7 @@ void CClientManager::RESULT_LOGIN_BY_KEY(CPeer * peer, SQLMsg * msg)
 		DWORD account_id = info->pAccountTable->id;
 		char szQuery[QUERY_MAX_LEN];
 		snprintf(szQuery, sizeof(szQuery), "SELECT pid1, pid2, pid3, pid4, empire FROM player_index%s WHERE id=%u", GetTablePostfix(), account_id);
-		std::unique_ptr<SQLMsg> pMsg(CDBManager::instance().DirectQuery(szQuery, SQL_PLAYER));
+		auto pMsg = CDBManager::instance().DirectQuery(szQuery, SQL_PLAYER);
 		
 		sys_log(0, "RESULT_LOGIN_BY_KEY FAIL player_index's NULL : ID:%d", account_id);
 
@@ -487,7 +487,7 @@ void CClientManager::QUERY_CHANGE_NAME(CPeer * peer, DWORD dwHandle, TPacketGDCh
 		snprintf(queryStr, sizeof(queryStr),
 			"SELECT COUNT(*) as count FROM player%s WHERE name='%s' AND id <> %u", GetTablePostfix(), p->name, p->pid);
 
-	std::unique_ptr<SQLMsg> pMsg(CDBManager::instance().DirectQuery(queryStr, SQL_PLAYER));
+	auto pMsg = CDBManager::instance().DirectQuery(queryStr, SQL_PLAYER);
 
 	if (pMsg->Get()->uiNumRows)
 	{
@@ -514,7 +514,7 @@ void CClientManager::QUERY_CHANGE_NAME(CPeer * peer, DWORD dwHandle, TPacketGDCh
 	snprintf(queryStr, sizeof(queryStr),
 			"UPDATE player%s SET name='%s',change_name=0 WHERE id=%u", GetTablePostfix(), p->name, p->pid);
 
-	std::unique_ptr<SQLMsg> pMsg0(CDBManager::instance().DirectQuery(queryStr, SQL_PLAYER));
+	auto pMsg0 = CDBManager::instance().DirectQuery(queryStr, SQL_PLAYER);
 
 	TPacketDGChangeName pdg;
 	peer->EncodeHeader(HEADER_DG_CHANGE_NAME, dwHandle, sizeof(TPacketDGChangeName));

@@ -8,6 +8,8 @@
 #include <queue>
 #include <vector>
 #include <map>
+#include <memory>
+
 #include <mysql.h>
 #include <errmsg.h>
 #include <mysqld_error.h>
@@ -126,7 +128,7 @@ class CAsyncSQL
 
 		void		AsyncQuery(const char * c_pszQuery);
 		void		ReturnQuery(const char * c_pszQuery, void * pvUserData);
-		SQLMsg *	DirectQuery(const char * c_pszQuery);
+		std::unique_ptr<SQLMsg>	DirectQuery(const char* c_pszQuery);
 
 		DWORD		CountQuery();
 		DWORD		CountResult();
@@ -184,12 +186,12 @@ class CAsyncSQL
 
 #ifndef OS_WINDOWS
 		pthread_t m_hThread;
-		pthread_mutex_t	* m_mtxQuery;
-		pthread_mutex_t	* m_mtxResult;
+		std::unique_ptr<pthread_mutex_t> m_mtxQuery;
+		std::unique_ptr<pthread_mutex_t> m_mtxResult;
 #else
 		HANDLE m_hThread;
-		CRITICAL_SECTION* m_mtxQuery;
-		CRITICAL_SECTION* m_mtxResult;
+		std::unique_ptr<CRITICAL_SECTION> m_mtxQuery;
+		std::unique_ptr<CRITICAL_SECTION> m_mtxResult;
 #endif
 
 		CSemaphore m_sem;

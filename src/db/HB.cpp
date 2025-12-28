@@ -19,7 +19,7 @@ bool PlayerHB::Initialize()
 	char szQuery[128];
 	snprintf(szQuery, sizeof(szQuery), "SHOW CREATE TABLE player%s", GetTablePostfix());
 
-	std::unique_ptr<SQLMsg> pMsg(CDBManager::instance().DirectQuery(szQuery));
+	auto pMsg = CDBManager::instance().DirectQuery(szQuery);
 
 	if (pMsg->Get()->uiNumRows == 0)
 		return false;
@@ -75,7 +75,7 @@ bool PlayerHB::Query(DWORD id)
 
 		snprintf(szQuery, sizeof(szQuery), "CREATE TABLE IF NOT EXISTS %s%s", szTableName, m_stCreateTableQuery.c_str() + strlen(szFind));
 	//	sys_log(0, "%s", szQuery);
-		std::unique_ptr<SQLMsg> pMsg(CDBManager::instance().DirectQuery(szQuery, SQL_HOTBACKUP));
+		auto pMsg = CDBManager::instance().DirectQuery(szQuery, SQL_HOTBACKUP);
 		m_stTableName = szTableName;
 	}
 
