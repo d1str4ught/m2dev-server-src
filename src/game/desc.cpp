@@ -52,6 +52,7 @@ void DESC::Initialize()
 	m_iHandshakeRetry = 0;
 	m_dwClientTime = 0;
 	m_bHandshaking = false;
+	m_handshake_time = get_dword_time();
 
 	m_lpBufferedOutputBuffer = NULL;
 	m_lpOutputBuffer = NULL;
@@ -713,6 +714,14 @@ bool DESC::HandshakeProcess(DWORD dwTime, int32_t lDelta, bool bInfiniteRetry)
 bool DESC::IsHandshaking()
 {
 	return m_bHandshaking;
+}
+
+bool DESC::IsExpiredHandshake() const
+{
+	if (m_handshake_time == 0)
+		return false;
+
+	return (m_handshake_time + (5 * 1000)) < get_dword_time();
 }
 
 DWORD DESC::GetClientTime()

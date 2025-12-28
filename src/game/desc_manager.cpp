@@ -224,6 +224,18 @@ void DESC_MANAGER::DestroyClosed()
 			DestroyDesc(d, false);
 			m_set_pkDesc.erase(ci);
 		}
+		else if (d->IsPhase(PHASE_HANDSHAKE))
+		{
+			if (d->GetType() == DESC_TYPE_ACCEPTOR)
+			{
+				if (d->IsExpiredHandshake())
+				{
+					sys_log(0, "[%s]: handshake session has expired!", d->GetHostName());
+					DestroyDesc(d, false);
+					m_set_pkDesc.erase(ci);
+				}
+			}
+		}
 	}
 }
 
