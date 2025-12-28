@@ -226,6 +226,7 @@ class DESC
 		bool			m_bPong;
 
 		pcg32 			m_SequenceGenerator;
+		BYTE			m_bNextExpectedSequence; // Next expected sequence number from client
 
 		CLoginKey *		m_pkLoginKey;
 		DWORD			m_dwLoginKey;

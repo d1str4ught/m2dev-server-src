@@ -77,6 +77,8 @@ void DESC::Initialize()
 	m_bChannelStatusRequested = false;
 
 	m_SequenceGenerator.seed(SEQUENCE_SEED);
+	// Pre-generate the first expected sequence to match what client will send
+	m_bNextExpectedSequence = m_SequenceGenerator(UINT8_MAX + 1);
 
 	m_pkLoginKey = NULL;
 	m_dwLoginKey = 0;
@@ -911,7 +913,10 @@ bool DESC::IsAdminMode()
 
 BYTE DESC::GetSequence()
 {
-	return m_SequenceGenerator(UINT8_MAX + 1);
+	// Return the next expected sequence and then generate the one after that
+	BYTE bCurrentExpected = m_bNextExpectedSequence;
+	m_bNextExpectedSequence = m_SequenceGenerator(UINT8_MAX + 1);
+	return bCurrentExpected;
 }
 
 void DESC::SendLoginSuccessPacket()
