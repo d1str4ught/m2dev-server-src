@@ -97,7 +97,7 @@ namespace quest
 			lua_pushboolean(L, false);
 		*/
 
-		std::unique_ptr<SQLMsg> pmsg(DBManager::instance().DirectQuery("SELECT COUNT(*) FROM land%s WHERE guild_id = %d", get_table_postfix(), (DWORD)lua_tonumber(L,1)));
+		auto pmsg = DBManager::instance().DirectQuery("SELECT COUNT(*) FROM land%s WHERE guild_id = %d", get_table_postfix(), (DWORD)lua_tonumber(L,1));
 
 		if ( pmsg->Get()->uiNumRows > 0 )
 		{

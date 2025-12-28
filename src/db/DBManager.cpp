@@ -18,9 +18,9 @@ void CDBManager::Initialize()
 {
 	for (int i = 0; i < SQL_MAX_NUM; ++i)
 	{
-		m_mainSQL[i] = NULL;
-		m_directSQL[i] = NULL;
-		m_asyncSQL[i] = NULL;
+		m_mainSQL[i].reset();
+		m_directSQL[i].reset();
+		m_asyncSQL[i].reset();
 	}
 }
 
@@ -33,23 +33,9 @@ void CDBManager::Clear()
 {
 	for (int i = 0; i < SQL_MAX_NUM; ++i)
 	{
-		if (m_mainSQL[i])
-		{
-			delete m_mainSQL[i];
-			m_mainSQL[i] = NULL;
-		}
-
-		if (m_directSQL[i])
-		{
-			delete m_directSQL[i];
-			m_directSQL[i] = NULL;
-		}
-
-		if (m_asyncSQL[i])
-		{
-			delete m_asyncSQL[i];
-			m_asyncSQL[i] = NULL;
-		}
+		m_mainSQL[i].reset();
+		m_directSQL[i].reset();
+		m_asyncSQL[i].reset();
 	}
 
 	Initialize();
@@ -99,7 +85,7 @@ int CDBManager::Connect(int iSlot, const char * db_address, const int db_port, c
 		return false;
 
 	sys_log(0, "CREATING DIRECT_SQL");
-	m_directSQL[iSlot] = new CAsyncSQL2;
+	m_directSQL[iSlot] = std::make_unique<CAsyncSQL2>();
 	if (!m_directSQL[iSlot]->Setup(db_address, user, pwd, db_name, g_stLocale.c_str(), true, db_port))
 	{
 		Clear();
@@ -108,7 +94,7 @@ int CDBManager::Connect(int iSlot, const char * db_address, const int db_port, c
 
 
 	sys_log(0, "CREATING MAIN_SQL");
-	m_mainSQL[iSlot] = new CAsyncSQL2;
+	m_mainSQL[iSlot] = std::make_unique<CAsyncSQL2>();
 	if (!m_mainSQL[iSlot]->Setup(db_address, user, pwd, db_name, g_stLocale.c_str(), false, db_port))
 	{
 		Clear();
@@ -116,7 +102,7 @@ int CDBManager::Connect(int iSlot, const char * db_address, const int db_port, c
 	}
 
 	sys_log(0, "CREATING ASYNC_SQL");
-	m_asyncSQL[iSlot] = new CAsyncSQL2;
+	m_asyncSQL[iSlot] = std::make_unique<CAsyncSQL2>();
 	if (!m_asyncSQL[iSlot]->Setup(db_address, user, pwd, db_name, g_stLocale.c_str(), false, db_port))
 	{
 		Clear();
@@ -126,20 +112,20 @@ int CDBManager::Connect(int iSlot, const char * db_address, const int db_port, c
 	return true;
 }
 
-SQLMsg * CDBManager::DirectQuery(const char * c_pszQuery, int iSlot)
+std::unique_ptr<SQLMsg> CDBManager::DirectQuery(const char* c_pszQuery, int iSlot)
 {
 	//return m_directSQL[iSlot]->DirectQuery(c_pszQuery);
 
 	// DirectQuery LPHeart debuging trace 15/11/2015 06:38AM GMT
 	DWORD t = get_dword_time();
-	SQLMsg* p = m_directSQL[iSlot]->DirectQuery(c_pszQuery);
+	auto msg = m_directSQL[iSlot]->DirectQuery(c_pszQuery);
 	DWORD dt = get_dword_time() - t;
 
 	if (dt > 200) {
 		sys_err("[SLOW-DB] DirectQuery(%d) took %u ms: %s", iSlot, dt, c_pszQuery);
 	}
 
-	return p;
+	return msg;
 }
 
 extern CPacketInfo g_query_info;

@@ -177,11 +177,10 @@ bool CMonarch::LoadMonarch()
 	MonarchInfo * p = &m_MonarchInfo;
     char szQuery[256];
 	snprintf(szQuery, sizeof(szQuery), "SELECT empire, pid, name, money, windate FROM monarch a, player%s b where a.pid=b.id", GetTablePostfix());
-    SQLMsg * pMsg = CDBManager::instance().DirectQuery(szQuery, SQL_PLAYER);
+    auto pMsg = CDBManager::instance().DirectQuery(szQuery, SQL_PLAYER);
 
     if (pMsg->Get()->uiNumRows == 0)
     {
-        delete pMsg;
         return false;
     }
 
@@ -201,7 +200,6 @@ bool CMonarch::LoadMonarch()
         	sys_log(0, "[LOAD_MONARCH] Empire %d pid %d money %lld windate %s", Empire, p->pid[Empire], static_cast<long long>(p->money[Empire]), p->date[Empire]);
     }
 
-    delete pMsg;
     return true;
 }
 
@@ -211,11 +209,10 @@ bool CMonarch::SetMonarch(const char * name)
     char szQuery[256];
 
 	snprintf(szQuery, sizeof(szQuery), "SELECT empire, pid, name FROM player a where a.name = '%s'", name);
-    SQLMsg * pMsg = CDBManager::instance().DirectQuery(szQuery, SQL_PLAYER);
+    auto pMsg = CDBManager::instance().DirectQuery(szQuery, SQL_PLAYER);
 
     if (pMsg->Get()->uiNumRows == 0)
     {
-        delete pMsg;
         return false;
     }
 
@@ -233,7 +230,6 @@ bool CMonarch::SetMonarch(const char * name)
 		if (g_test_server)
 			sys_log(0, "[Set_MONARCH] Empire %d pid %d money %lld windate %s", Empire, p->pid[Empire], static_cast<long long>(p->money[Empire]), p->date[Empire]);
     }
-    delete pMsg;
 
 	//db¿¡ ÀÔ·Â
 	snprintf(szQuery, sizeof(szQuery),
@@ -248,15 +244,11 @@ bool CMonarch::DelMonarch(int Empire)
 	char szQuery[256];
 
 	snprintf(szQuery, sizeof(szQuery), "DELETE from monarch where empire=%d", Empire);
-	SQLMsg * pMsg = CDBManager::instance().DirectQuery(szQuery, SQL_PLAYER);
-
+	auto pMsg = CDBManager::instance().DirectQuery(szQuery, SQL_PLAYER);
 	if (pMsg->Get()->uiNumRows == 0)
 	{
-		delete pMsg;
 		return false;
 	}
-
-	delete pMsg;
 
 	memset(m_MonarchInfo.name[Empire], 0, sizeof(m_MonarchInfo.name[Empire]));
 	m_MonarchInfo.money[Empire] = 0;
@@ -274,16 +266,13 @@ bool CMonarch::DelMonarch(const char * name)
 
 			int Empire = n;
 			snprintf(szQuery, sizeof(szQuery), "DELETE from monarch where name=%d", Empire);
-			SQLMsg * pMsg = CDBManager::instance().DirectQuery(szQuery, SQL_PLAYER);
+			auto pMsg = CDBManager::instance().DirectQuery(szQuery, SQL_PLAYER);
 
 			if (pMsg->Get()->uiNumRows == 0)
 			{
 				sys_err(" DirectQuery failed(%s)", szQuery);
-				delete pMsg;
 				return false;
 			}
-
-			delete pMsg;
 
 			memset(m_MonarchInfo.name[Empire], 0, 32);
 			m_MonarchInfo.money[Empire] = 0;
