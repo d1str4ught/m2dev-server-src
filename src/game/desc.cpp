@@ -52,6 +52,7 @@ void DESC::Initialize()
 	m_iHandshakeRetry = 0;
 	m_dwClientTime = 0;
 	m_bHandshaking = false;
+	m_handshake_time = get_dword_time();
 
 	m_lpBufferedOutputBuffer = NULL;
 	m_lpOutputBuffer = NULL;
@@ -77,6 +78,8 @@ void DESC::Initialize()
 	m_bChannelStatusRequested = false;
 
 	m_SequenceGenerator.seed(SEQUENCE_SEED);
+	// Pre-generate the first expected sequence to match what client will send
+	m_bNextExpectedSequence = m_SequenceGenerator(UINT8_MAX + 1);
 
 	m_pkLoginKey = NULL;
 	m_dwLoginKey = 0;
@@ -715,6 +718,14 @@ bool DESC::IsHandshaking()
 	return m_bHandshaking;
 }
 
+bool DESC::IsExpiredHandshake() const
+{
+	if (m_handshake_time == 0)
+		return false;
+
+	return (m_handshake_time + (5 * 1000)) < get_dword_time();
+}
+
 DWORD DESC::GetClientTime()
 {
 	return m_dwClientTime;
@@ -911,7 +922,10 @@ bool DESC::IsAdminMode()
 
 BYTE DESC::GetSequence()
 {
-	return m_SequenceGenerator(UINT8_MAX + 1);
+	// Return the next expected sequence and then generate the one after that
+	BYTE bCurrentExpected = m_bNextExpectedSequence;
+	m_bNextExpectedSequence = m_SequenceGenerator(UINT8_MAX + 1);
+	return bCurrentExpected;
 }
 
 void DESC::SendLoginSuccessPacket()
