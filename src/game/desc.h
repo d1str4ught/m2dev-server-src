@@ -174,6 +174,10 @@ class DESC
 		bool			isChannelStatusRequested() const { return m_bChannelStatusRequested; }
 		void			SetChannelStatusRequested(bool bChannelStatusRequested) { m_bChannelStatusRequested = bChannelStatusRequested; }
 
+		// Handshake timeout check
+		bool			IsExpiredHandshake() const;
+		void			SetHandshakeTime(uint32_t handshake_time) { m_handshake_time = handshake_time; }
+
 	protected:
 		void			Initialize();
 
@@ -245,6 +249,9 @@ class DESC
 
 		bool			m_bDestroyed;
 		bool			m_bChannelStatusRequested;
+
+		// Handshake timeout protection
+		uint32_t		m_handshake_time;
 
 #ifdef _IMPROVED_PACKET_ENCRYPTION_
 		Cipher cipher_;
