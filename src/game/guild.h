@@ -3,6 +3,8 @@
 
 #include "skill.h"
 
+// Forward declaration removed - SQLMsg is now defined in libsql/AsyncSQL.h
+struct _SQLMsg;
 typedef struct _SQLMsg SQLMsg;
 
 enum
