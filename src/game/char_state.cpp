@@ -761,11 +761,37 @@ bool __CHARACTER_GotoNearTarget(LPCHARACTER self, LPCHARACTER victim)
 
 void CHARACTER::StateMove()
 {
+	// SAFETY NET:
+	// Never allow division by zero or NaN/INF interpolation rates.
+	// Without this, NaN can become INT_MIN when cast to int and break sectree lookup (disconnect).
+	if (m_dwMoveDuration == 0)
+	{
+		sys_err("STATE_MOVE_ZERO_DURATION: name=%s vid=%u map=%ld start=(%d,%d) dest=(%d,%d)",
+			GetName(), (DWORD)GetVID(), GetMapIndex(), (int)m_posStart.x, (int)m_posStart.y, (int)m_posDest.x, (int)m_posDest.y);
+
+		// Snap to destination and stop to keep server state consistent.
+		Move(m_posDest.x, m_posDest.y);
+		Stop();
+		return;
+	}
+
 	DWORD dwElapsedTime = get_dword_time() - m_dwMoveStartTime;
-	float fRate = (float) dwElapsedTime / (float) m_dwMoveDuration;
+	float fRate = (float)dwElapsedTime / (float)m_dwMoveDuration;
+
+	if (!std::isfinite(fRate))
+	{
+		sys_err("STATE_MOVE_NONFINITE_RATE: name=%s vid=%u map=%ld elapsed=%u duration=%u",
+			GetName(), (DWORD)GetVID(), GetMapIndex(), dwElapsedTime, m_dwMoveDuration);
+
+		Move(m_posDest.x, m_posDest.y);
+		Stop();
+		return;
+	}
 
 	if (fRate > 1.0f)
 		fRate = 1.0f;
+	else if (fRate < 0.0f)
+		fRate = 0.0f;
 
 	int x = (int) ((float) (m_posDest.x - m_posStart.x) * fRate + m_posStart.x);
 	int y = (int) ((float) (m_posDest.y - m_posStart.y) * fRate + m_posStart.y);
