@@ -157,6 +157,7 @@ namespace quest
 
 			void		SetEventFlag(const string& name, int value);
 			int			GetEventFlag(const string& name);
+			bool		IsEventFlagSet(const string& name);  // Check if flag exists
 			void		BroadcastEventFlagOnLogin(LPCHARACTER ch);
 
 			void		SendEventFlagList(LPCHARACTER ch);
