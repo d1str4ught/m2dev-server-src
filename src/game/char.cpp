@@ -2733,8 +2733,8 @@ void CHARACTER::Stop()
 
 bool CHARACTER::Goto(long x, long y)
 {
-	// TODO 거리체크 필요
-	// 같은 위치면 이동할 필요 없음 (자동 성공)
+	// TODO: Distance check required
+	// If the location is the same, no need to move (automatic success)
 	if (GetX() == x && GetY() == y)
 		return false;
 
@@ -2742,6 +2742,14 @@ bool CHARACTER::Goto(long x, long y)
 	{
 		if (!IsState(m_stateMove))
 		{
+			// Without this, StateMove() may divide by 0 (duration from ctor/init) and produce NaN/INT_MIN coords.
+			CalculateMoveDuration();
+
+			// If duration is 0, do NOT enter move state (it would snap+stop in StateMove).
+			// This indicates invalid speed or no actual movement.
+			if (m_dwMoveDuration == 0)
+				return false;
+
 			m_dwStateDuration = 4;
 			GotoState(m_stateMove);
 		}
@@ -2753,12 +2761,15 @@ bool CHARACTER::Goto(long x, long y)
 
 	CalculateMoveDuration();
 
+	// If duration is 0, do NOT enter move state.
+	if (m_dwMoveDuration == 0)
+		return false;
+
 	m_dwStateDuration = 4;
 
-	
 	if (!IsState(m_stateMove))
 	{
-		MonsterLog("[MOVE] %s", GetVictim() ? "대상추적" : "그냥이동");
+		MonsterLog("[MOVE] %s", GetVictim() ? "To victim" : "Free");
 
 		if (GetVictim())
 		{
@@ -2771,7 +2782,6 @@ bool CHARACTER::Goto(long x, long y)
 
 	return true;
 }
-
 
 DWORD CHARACTER::GetMotionMode() const
 {
@@ -2850,11 +2860,40 @@ void CHARACTER::CalculateMoveDuration()
 	m_posStart.y = GetY();
 
 	float fDist = DISTANCE_SQRT(m_posStart.x - m_posDest.x, m_posStart.y - m_posDest.y);
-
 	float motionSpeed = GetMoveMotionSpeed();
 
-	m_dwMoveDuration = CalculateDuration(GetLimitPoint(POINT_MOV_SPEED),
-			(int) ((fDist / motionSpeed) * 1000.0f));
+	// If there is no real movement or speed is invalid, duration becomes 0.
+	// This should NOT lead to NaN in StateMove (StateMove will guard).
+	if (motionSpeed <= 0.0f || fDist <= 0.0f)
+	{
+		sys_err("MOVE_DURATION_INVALID: name=%s vid=%u map=%ld dist=%.3f speed=%.3f start=(%d,%d) dest=(%d,%d)",
+			GetName(), (DWORD)GetVID(), GetMapIndex(), fDist, motionSpeed, (int)m_posStart.x, (int)m_posStart.y, (int)m_posDest.x, (int)m_posDest.y);
+
+		m_dwMoveDuration = 0;
+		m_dwMoveStartTime = get_dword_time();
+		return;
+	}
+
+	// Base duration in ms. int truncation can produce 0 for tiny moves.
+	int baseMs = (int)((fDist / motionSpeed) * 1000.0f);
+	if (baseMs <= 0)
+	{
+		sys_err("MOVE_DURATION_BASE_ZERO: name=%s vid=%u map=%ld dist=%.3f speed=%.3f base=%d start=(%d,%d) dest=(%d,%d)",
+			GetName(), (DWORD)GetVID(), GetMapIndex(), fDist, motionSpeed, baseMs, (int)m_posStart.x, (int)m_posStart.y, (int)m_posDest.x, (int)m_posDest.y);
+
+		baseMs = 1;
+	}
+
+	m_dwMoveDuration = CalculateDuration(GetLimitPoint(POINT_MOV_SPEED), baseMs);
+
+	// Defensive clamp: some duration formulas can still return 0.
+	if (m_dwMoveDuration == 0)
+	{
+		sys_err("MOVE_DURATION_FINAL_ZERO: name=%s vid=%u map=%ld base=%d dist=%.3f speed=%.3f",
+			GetName(), (DWORD)GetVID(), GetMapIndex(), baseMs, fDist, motionSpeed);
+
+		m_dwMoveDuration = 1;
+	}
 
 	if (IsNPC())
 		sys_log(1, "%s: GOTO: distance %f, spd %u, duration %u, motion speed %f pos %d %d -> %d %d",

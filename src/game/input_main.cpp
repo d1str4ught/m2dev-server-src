@@ -1696,7 +1696,7 @@ void CInputMain::Move(LPCHARACTER ch, const char * data)
 	pack.dwVID        = ch->GetVID();
 	pack.lX           = pinfo->lX;
 	pack.lY           = pinfo->lY;
-	pack.dwTime       = pinfo->dwTime;
+	pack.dwTime       = get_dword_time();
 	pack.dwDuration   = (pinfo->bFunc == FUNC_MOVE) ? ch->GetCurrentMoveDuration() : 0;
 
 	ch->PacketAround(&pack, sizeof(TPacketGCMove), ch);
