@@ -696,6 +696,19 @@ int CHARACTER::GetEmptyInventory(BYTE size) const
 	return -1;
 }
 
+int CHARACTER::GetEmptyInventoryWithPreference(BYTE size, int preferredCell) const
+{
+	// First try the preferred cell (original position)
+	if (preferredCell >= 0 && preferredCell < INVENTORY_MAX_NUM)
+	{
+		if (IsEmptyItemGrid(TItemPos(INVENTORY, preferredCell), size))
+			return preferredCell;
+	}
+	
+	// If preferred cell not available, find any empty slot
+	return GetEmptyInventory(size);
+}
+
 int CHARACTER::GetEmptyDragonSoulInventory(LPITEM pItem) const
 {
 	if (NULL == pItem || !pItem->IsDragonSoul())
@@ -6199,9 +6212,41 @@ bool CHARACTER::EquipItem(LPITEM item, int iCandidateCell)
 			if (item->GetWearFlag() == WEARABLE_ABILITY) 
 				return false;
 
+			// Try to swap first
 			if (false == SwapItem(item->GetCell(), INVENTORY_MAX_NUM + iWearCell))
 			{
-				return false;
+				// Swap failed (likely due to size difference), try unequip-then-equip approach
+				LPITEM pkOldItem = GetWear(iWearCell);
+				if (!pkOldItem)
+					return false;
+
+				// Find empty slot for the old item, preferring its original position if available
+				int emptyPos = GetEmptyInventoryWithPreference(pkOldItem->GetSize(), item->GetCell());
+				if (emptyPos < 0)
+				{
+					ChatPacket(CHAT_TYPE_INFO, LC_TEXT("인벤토리 공간이 부족합니다."));
+					return false;
+				}
+
+				// Store old cell before equipping
+				BYTE bOldCell = item->GetCell();
+				
+				// Unequip the old item
+				pkOldItem->RemoveFromCharacter();
+				
+				// Try to equip the new item
+				if (item->EquipTo(this, iWearCell))
+				{
+					// Successfully equipped, now place old item in inventory
+					pkOldItem->AddToCharacter(this, TItemPos(INVENTORY, emptyPos));
+					SyncQuickslot(QUICKSLOT_TYPE_ITEM, bOldCell, iWearCell);
+				}
+				else
+				{
+					// Failed to equip new item, restore old item
+					pkOldItem->AddToCharacter(this, TItemPos(INVENTORY, INVENTORY_MAX_NUM + iWearCell));
+					return false;
+				}
 			}
 		}
 		else
