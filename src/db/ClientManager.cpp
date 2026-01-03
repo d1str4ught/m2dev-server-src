@@ -131,6 +131,7 @@ bool CClientManager::Initialize()
 	}
 
 	sys_log(0, "ACCEPT_HANDLE: %u", m_fdAccept);
+	fdwatch_insert_fd(m_fdWatcher, m_fdAccept);
 	fdwatch_add_fd(m_fdWatcher, m_fdAccept, NULL, FDW_READ, false);
 
 	if (!CConfig::instance().GetValue("BACKUP_LIMIT_SEC", &tmpValue))
@@ -2869,7 +2870,7 @@ int CClientManager::Process()
 
 		if (!peer)
 		{
-			if (fdwatch_check_event(m_fdWatcher, m_fdAccept, idx) == FDW_READ)
+			if (fdwatch_check_event(m_fdWatcher, m_fdAccept, idx) & FDW_READ)
 			{
 				AddPeer(m_fdAccept);
 				fdwatch_clear_event(m_fdWatcher, m_fdAccept, idx);
@@ -2882,45 +2883,38 @@ int CClientManager::Process()
 			continue;
 		}
 
-		switch (fdwatch_check_event(m_fdWatcher, peer->GetFd(), idx))
+		int iRet = fdwatch_check_event(m_fdWatcher, peer->GetFd(), idx);
+		if (iRet & FDW_READ)
 		{
-			case FDW_READ:
-				if (peer->Recv() < 0)
-				{
-					sys_err("Recv failed");
-					RemovePeer(peer);
-				}
-				else
-				{
-					if (peer == m_pkAuthPeer)
-						if (g_log)
-							sys_log(0, "AUTH_PEER_READ: size %d", peer->GetRecvLength());
-
-					ProcessPackets(peer);
-				}
-				break;
-
-			case FDW_WRITE:
+			if (peer->Recv() < 0)
+			{
+				sys_err("Recv failed");
+				RemovePeer(peer);
+			}
+			else
+			{
 				if (peer == m_pkAuthPeer)
 					if (g_log)
-						sys_log(0, "AUTH_PEER_WRITE: size %d", peer->GetSendLength());
+						sys_log(0, "AUTH_PEER_READ: size %d", peer->GetRecvLength());
 
-				if (peer->Send() < 0)
-				{
-					sys_err("Send failed");
-					RemovePeer(peer);
-				}
+				ProcessPackets(peer);
+			}
+		}
+		if (iRet & FDW_WRITE)
+		{
+			if (peer == m_pkAuthPeer)
+				if (g_log)
+					sys_log(0, "AUTH_PEER_WRITE: size %d", peer->GetSendLength());
 
-				break;
-
-			case FDW_EOF:
+			if (peer->Send() < 0)
+			{
+				sys_err("Send failed");
 				RemovePeer(peer);
-				break;
-
-			default:
-				sys_err("fdwatch_check_fd returned unknown result");
-				RemovePeer(peer);
-				break;
+			}
+		}
+		if (iRet & FDW_EOF)
+		{
+			RemovePeer(peer);
 		}
 	}
 

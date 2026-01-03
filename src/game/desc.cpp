@@ -227,6 +227,7 @@ bool DESC::Setup(LPFDWATCH _fdw, socket_t _fd, const struct sockaddr_in & c_rSoc
 
 	m_SockAddr = c_rSockAddr;
 
+	fdwatch_insert_fd(m_lpFdw, m_sock);
 	fdwatch_add_fd(m_lpFdw, m_sock, this, FDW_READ, false);
 
 	// Ping Event 
@@ -834,21 +835,20 @@ void DESC::FlushOutput()
 			if (d2 != this)
 				continue;
 
-			switch (fdwatch_check_event(m_lpFdw, m_sock, event_idx))
+			int iRet = fdwatch_check_event(m_lpFdw, m_sock, event_idx);
+			if (iRet & FDW_WRITE)
 			{
-				case FDW_WRITE:
-					event_triggered = true;
+				event_triggered = true;
 
-					if (ProcessOutput() < 0)
-					{
-						sys_err("Cannot flush output buffer");
-						SetPhase(PHASE_CLOSE);
-					}
-					break;
-
-				case FDW_EOF:
+				if (ProcessOutput() < 0)
+				{
+					sys_err("Cannot flush output buffer");
 					SetPhase(PHASE_CLOSE);
-					break;
+				}
+			}
+			if (iRet & FDW_EOF)
+			{
+				SetPhase(PHASE_CLOSE);
 			}
 		}
 

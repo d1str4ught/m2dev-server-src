@@ -62,6 +62,7 @@ bool CPeerBase::Accept(socket_t fd_accept)
 		return false;
 	}
 
+	fdwatch_insert_fd(m_fdWatcher, m_fd);
 	fdwatch_add_fd(m_fdWatcher, m_fd, this, FDW_READ, false);
 
 	OnAccept();
@@ -84,6 +85,7 @@ bool CPeerBase::Connect(const char* host, WORD port)
 		return false;
 	}
 
+	fdwatch_insert_fd(m_fdWatcher, m_fd);
 	fdwatch_add_fd(m_fdWatcher, m_fd, this, FDW_READ, false);
 
 	OnConnect();

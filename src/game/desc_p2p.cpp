@@ -40,6 +40,7 @@ bool DESC_P2P::Setup(LPFDWATCH fdw, socket_t fd, const char * host, WORD wPort)
 	if (!(m_lpInputBuffer = buffer_new(1024 * 1024)))
 		return false;
 
+	fdwatch_insert_fd(m_lpFdw, m_sock);
 	fdwatch_add_fd(m_lpFdw, m_sock, this, FDW_READ, false);
 
 	m_iMinInputBufferLen = 1024 * 1024;
