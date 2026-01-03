@@ -627,10 +627,13 @@ int start(int argc, char **argv)
 		return 0;
 	}
 
+	fdwatch_insert_fd(main_fdw, tcp_socket);
 	fdwatch_add_fd(main_fdw, tcp_socket, NULL, FDW_READ, false);
 #ifndef __UDP_BLOCK__
+	fdwatch_insert_fd(main_fdw, udp_socket);
 	fdwatch_add_fd(main_fdw, udp_socket, NULL, FDW_READ, false);
 #endif
+	fdwatch_insert_fd(main_fdw, p2p_socket);
 	fdwatch_add_fd(main_fdw, p2p_socket, NULL, FDW_READ, false);
 
 	db_clientdesc = DESC_MANAGER::instance().CreateConnectionDesc(main_fdw, db_addr, db_port, PHASE_DBCLIENT, true);
@@ -780,18 +783,18 @@ int io_loop(LPFDWATCH fdw)
 
 		if (!d)
 		{
-			if (FDW_READ == fdwatch_check_event(fdw, tcp_socket, event_idx))
+			if (FDW_READ & fdwatch_check_event(fdw, tcp_socket, event_idx))
 			{
 				DESC_MANAGER::instance().AcceptDesc(fdw, tcp_socket);
 				fdwatch_clear_event(fdw, tcp_socket, event_idx);
 			}
-			else if (FDW_READ == fdwatch_check_event(fdw, p2p_socket, event_idx))
+			else if (FDW_READ & fdwatch_check_event(fdw, p2p_socket, event_idx))
 			{
 				DESC_MANAGER::instance().AcceptP2PDesc(fdw, p2p_socket);
 				fdwatch_clear_event(fdw, p2p_socket, event_idx);
 			}
 			/*
-			else if (FDW_READ == fdwatch_check_event(fdw, udp_socket, event_idx))
+			else if (FDW_READ & fdwatch_check_event(fdw, udp_socket, event_idx))
 			{
 				char			buf[256];
 				struct sockaddr_in	cliaddr;
@@ -817,59 +820,50 @@ int io_loop(LPFDWATCH fdw)
 
 		int iRet = fdwatch_check_event(fdw, d->GetSocket(), event_idx);
 
-		switch (iRet)
+		if (iRet & FDW_READ)
 		{
-			case FDW_READ:
-				if (db_clientdesc == d)
-				{
-					int size = d->ProcessInput();
+			if (db_clientdesc == d)
+			{
+				int size = d->ProcessInput();
 
-					if (size)
-						sys_log(1, "DB_BYTES_READ: %d", size);
+				if (size)
+					sys_log(1, "DB_BYTES_READ: %d", size);
 
-					if (size < 0)
-					{
-						d->SetPhase(PHASE_CLOSE);
-					}
-				}
-				else if (d->ProcessInput() < 0)
+				if (size < 0)
 				{
 					d->SetPhase(PHASE_CLOSE);
 				}
-				break;
-
-			case FDW_WRITE:
-				if (db_clientdesc == d)
-				{
-					int buf_size = buffer_size(d->GetOutputBuffer());
-					int sock_buf_size = fdwatch_get_buffer_size(fdw, d->GetSocket());
-
-					int ret = d->ProcessOutput();
-
-					if (ret < 0)
-					{
-						d->SetPhase(PHASE_CLOSE);
-					}
-
-					if (buf_size)
-						sys_log(1, "DB_BYTES_WRITE: size %d sock_buf %d ret %d", buf_size, sock_buf_size, ret);
-				}
-				else if (d->ProcessOutput() < 0)
-				{
-					d->SetPhase(PHASE_CLOSE);
-				}
-				break;
-
-			case FDW_EOF:
-				{
-					d->SetPhase(PHASE_CLOSE);
-				}
-				break;
-
-			default:
-				sys_err("fdwatch_check_event returned unknown %d", iRet);
+			}
+			else if (d->ProcessInput() < 0)
+			{
 				d->SetPhase(PHASE_CLOSE);
-				break;
+			}
+		}
+		if (iRet & FDW_WRITE)
+		{
+			if (db_clientdesc == d)
+			{
+				int buf_size = buffer_size(d->GetOutputBuffer());
+				int sock_buf_size = fdwatch_get_buffer_size(fdw, d->GetSocket());
+
+				int ret = d->ProcessOutput();
+
+				if (ret < 0)
+				{
+					d->SetPhase(PHASE_CLOSE);
+				}
+
+				if (buf_size)
+					sys_log(1, "DB_BYTES_WRITE: size %d sock_buf %d ret %d", buf_size, sock_buf_size, ret);
+			}
+			else if (d->ProcessOutput() < 0)
+			{
+				d->SetPhase(PHASE_CLOSE);
+			}
+		}
+		if (iRet & FDW_EOF)
+		{
+			d->SetPhase(PHASE_CLOSE);
 		}
 	}
 
