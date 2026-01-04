@@ -821,27 +821,18 @@ void CHARACTER::SkillLevelUp(DWORD dwVnum, BYTE bMethod)
 		switch (GetSkillMasterType(pkSk->dwVnum))
 		{
 			case SKILL_NORMAL:
-				// 번섭은 스킬 업그레이드 17~20 사이 랜덤 마스터 수련
+				// Always upgrade to master at level 17
 				if (GetSkillLevel(pkSk->dwVnum) >= 17)
 				{
-					if (GetQuestFlag("reset_scroll.force_to_master_skill") > 0)
-					{
-						SetSkillLevel(pkSk->dwVnum, 20);
-						SetQuestFlag("reset_scroll.force_to_master_skill", 0);
-					}
-					else
-					{
-						if (number(1, 21 - MIN(20, GetSkillLevel(pkSk->dwVnum))) == 1)
-							SetSkillLevel(pkSk->dwVnum, 20);
-					}
+					SetSkillLevel(pkSk->dwVnum, 20);
 				}
 				break;
 
 			case SKILL_MASTER:
+				// Always upgrade to grand master at level 30
 				if (GetSkillLevel(pkSk->dwVnum) >= 30)
 				{
-					if (number(1, 31 - MIN(30, GetSkillLevel(pkSk->dwVnum))) == 1)
-						SetSkillLevel(pkSk->dwVnum, 30);
+					SetSkillLevel(pkSk->dwVnum, 30);
 				}
 				break;
 
