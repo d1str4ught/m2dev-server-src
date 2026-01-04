@@ -1818,10 +1818,12 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 							{
 								case APPLY_MOV_SPEED:
 									AddAffect(AFFECT_UNIQUE_ABILITY, POINT_MOV_SPEED, item->GetValue(2), AFF_MOV_SPEED_POTION, item->GetValue(1), 0, true, true);
+									EffectPacket(SE_DXUP_PURPLE);
 									break;
 
 								case APPLY_ATT_SPEED:
 									AddAffect(AFFECT_UNIQUE_ABILITY, POINT_ATT_SPEED, item->GetValue(2), AFF_ATT_SPEED_POTION, item->GetValue(1), 0, true, true);
+									EffectPacket(SE_SPEEDUP_GREEN);
 									break;
 
 								case APPLY_STR:
@@ -2207,10 +2209,12 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 								{
 									case APPLY_MOV_SPEED:
 										AddAffect(affect_type, apply_type, apply_value, AFF_MOV_SPEED_POTION, apply_duration, 0, true, true);
+										EffectPacket(SE_DXUP_PURPLE);
 										break;
 
 									case APPLY_ATT_SPEED:
 										AddAffect(affect_type, apply_type, apply_value, AFF_ATT_SPEED_POTION, apply_duration, 0, true, true);
+										EffectPacket(SE_SPEEDUP_GREEN);
 										break;
 
 									case APPLY_STR:
@@ -2481,6 +2485,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 									long attPer	= item->GetValue(2);
 									long expPer			= item->GetValue(3);
 									AddAffect(AFFECT_NOG_ABILITY, POINT_MOV_SPEED, moveSpeedPer, AFF_MOV_SPEED_POTION, time, 0, true, true);
+									EffectPacket(SE_DXUP_PURPLE);
 									AddAffect(AFFECT_NOG_ABILITY, POINT_MALL_ATTBONUS, attPer, AFF_NONE, time, 0, true, true);
 									AddAffect(AFFECT_NOG_ABILITY, POINT_MALL_EXPBONUS, expPer, AFF_NONE, time, 0, true, true);
 									item->SetCount(item->GetCount() - 1);
@@ -4339,7 +4344,62 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 					item->SetCount(item->GetCount() - 1);
 					break;
 
-				case USE_TALISMAN:
+					case USE_ABILITY_UP:
+						{
+							switch (item->GetValue(0))
+							{
+								case APPLY_MOV_SPEED:
+									AddAffect(AFFECT_MOV_SPEED, POINT_MOV_SPEED, item->GetValue(2), AFF_MOV_SPEED_POTION, item->GetValue(1), 0, true);
+									EffectPacket(SE_DXUP_PURPLE);
+									break;
+
+								case APPLY_ATT_SPEED:
+									AddAffect(AFFECT_ATT_SPEED, POINT_ATT_SPEED, item->GetValue(2), AFF_ATT_SPEED_POTION, item->GetValue(1), 0, true);
+									EffectPacket(SE_SPEEDUP_GREEN);
+									break;
+
+								case APPLY_STR:
+									AddAffect(AFFECT_STR, POINT_ST, item->GetValue(2), 0, item->GetValue(1), 0, true);
+									break;
+
+								case APPLY_DEX:
+									AddAffect(AFFECT_DEX, POINT_DX, item->GetValue(2), 0, item->GetValue(1), 0, true);
+									break;
+
+								case APPLY_CON:
+									AddAffect(AFFECT_CON, POINT_HT, item->GetValue(2), 0, item->GetValue(1), 0, true);
+									break;
+
+								case APPLY_INT:
+									AddAffect(AFFECT_INT, POINT_IQ, item->GetValue(2), 0, item->GetValue(1), 0, true);
+									break;
+
+								case APPLY_CAST_SPEED:
+									AddAffect(AFFECT_CAST_SPEED, POINT_CASTING_SPEED, item->GetValue(2), 0, item->GetValue(1), 0, true);
+									break;
+
+								case APPLY_ATT_GRADE_BONUS:
+									AddAffect(AFFECT_ATT_GRADE, POINT_ATT_GRADE_BONUS, 
+											item->GetValue(2), 0, item->GetValue(1), 0, true);
+									break;
+
+								case APPLY_DEF_GRADE_BONUS:
+									AddAffect(AFFECT_DEF_GRADE, POINT_DEF_GRADE_BONUS,
+											item->GetValue(2), 0, item->GetValue(1), 0, true);
+									break;
+							}
+						}
+
+						if (GetDungeon())
+							GetDungeon()->UsePotion(this);
+
+						if (GetWarMap())
+							GetWarMap()->UsePotion(this, item);
+
+						item->SetCount(item->GetCount() - 1);
+						break;
+
+					case USE_TALISMAN:
 						{
 							const int TOWN_PORTAL	= 1;
 							const int MEMORY_PORTAL = 2;

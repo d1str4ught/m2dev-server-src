@@ -3468,6 +3468,7 @@ struct FuncAggregateMonster
 	FuncAggregateMonster(LPCHARACTER ch)
 	{
 		m_ch = ch;
+		m_ch->EffectPacket(SE_AGGREGATE_MONSTER);
 	}
 	void operator()(LPENTITY ent)
 	{
