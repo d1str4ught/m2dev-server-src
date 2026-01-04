@@ -111,6 +111,7 @@ class CInputMain : public CInputProcessor
 		void		ItemUse(LPCHARACTER ch, const char * data);
 		void		ItemDrop(LPCHARACTER ch, const char * data);
 		void		ItemDrop2(LPCHARACTER ch, const char * data);
+		void		ItemDestroy(LPCHARACTER ch, const char * data);
 		void		ItemMove(LPCHARACTER ch, const char * data);
 		void		ItemPickup(LPCHARACTER ch, const char * data);
 		void		ItemToItem(LPCHARACTER ch, const char * pcData);
