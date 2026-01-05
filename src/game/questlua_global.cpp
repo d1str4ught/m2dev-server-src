@@ -16,7 +16,6 @@
 #include "item_manager.h"
 #include "mob_manager.h"
 #include "start_position.h"
-#include "over9refine.h"
 #include "OXEvent.h"
 #include "regen.h"
 #include "cmd.h"
@@ -1046,19 +1045,6 @@ namespace quest
 		return 0;
 	}
 
-	int _enable_over9refine( lua_State* L )
-	{
-		if ( lua_isnumber(L, 1) == true && lua_isnumber(L, 2) == true )
-		{
-			DWORD dwVnumFrom = (DWORD)lua_tonumber(L, 1);
-			DWORD dwVnumTo = (DWORD)lua_tonumber(L, 2);
-
-			COver9RefineManager::instance().enableOver9Refine(dwVnumFrom, dwVnumTo);
-		}
-
-		return 0;
-	}
-
 	int _add_ox_quiz(lua_State* L)
 	{
 		int level = (int)lua_tonumber(L, 1);
@@ -1398,7 +1384,6 @@ namespace quest
 			{	"say_in_map",					_say_in_map						},	
 			{	"kill_all_in_map",				_kill_all_in_map				},
 			{	"regen_in_map",					_regen_in_map					},
-			{	"enable_over9refine",			_enable_over9refine				},
 			{	"block_chat",					_block_chat						},
 			{	"spawn_mob",					_spawn_mob						},
 			{	"get_locale_base_path",			_get_locale_base_path			},
