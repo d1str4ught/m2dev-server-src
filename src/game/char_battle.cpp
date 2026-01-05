@@ -3482,10 +3482,15 @@ struct FuncAggregateMonster
 			if (ch->GetVictim())
 				return;
 
-			if (number(1, 100) <= 50) // 임시로 50% 확률로 적을 끌어온다
-				if (DISTANCE_APPROX(ch->GetX() - m_ch->GetX(), ch->GetY() - m_ch->GetY()) < 5000)
-					if (ch->CanBeginFight())
-						ch->BeginFight(m_ch);
+			if (DISTANCE_APPROX(ch->GetX() - m_ch->GetX(), ch->GetY() - m_ch->GetY()) < 5000)
+            {
+                if (ch->CanBeginFight())
+                {
+                    ch->SetVictim(m_ch);
+                    ch->SetPosition(POS_FIGHTING);
+                    ch->SetNextStatePulse(1);
+                }
+            }
 		}
 	}
 };
