@@ -1253,7 +1253,7 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 		void				FlyTarget(DWORD dwTargetVID, long x, long y, BYTE bHeader);
 
 		void				ForgetMyAttacker();
-		void				AggregateMonster();
+		void				AggregateMonster(int iRange = 5000);
 		void				AttractRanger();
 		void				PullMonster();
 

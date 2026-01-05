@@ -2558,6 +2558,12 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 								AggregateMonster();
 								item->SetCount(item->GetCount()-1);
 								break;
+							case UNIQUE_ITEM_CAPE_OF_COURAGE_INFINITE:
+								AggregateMonster();
+								break;
+							case UNIQUE_ITEM_CAPE_OF_COURAGE_INFINITE_PLUS:
+								AggregateMonster(10000);
+								break;
 
 							case UNIQUE_ITEM_WHITE_FLAG:
 								ForgetMyAttacker();

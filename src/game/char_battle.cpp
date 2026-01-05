@@ -3464,35 +3464,46 @@ struct FuncForgetMyAttacker
 
 struct FuncAggregateMonster
 {
-	LPCHARACTER m_ch;
-	FuncAggregateMonster(LPCHARACTER ch)
-	{
-		m_ch = ch;
-		m_ch->EffectPacket(SE_AGGREGATE_MONSTER);
-	}
-	void operator()(LPENTITY ent)
-	{
-		if (ent->IsType(ENTITY_CHARACTER))
-		{
-			LPCHARACTER ch = (LPCHARACTER) ent;
-			if (ch->IsPC())
-				return;
-			if (!ch->IsMonster())
-				return;
-			if (ch->GetVictim())
-				return;
+    LPCHARACTER m_ch;
+    int m_iRange;
+    
+    FuncAggregateMonster(LPCHARACTER ch, int iRange = 5000)
+    {
+        m_ch = ch;
+        m_iRange = iRange;
+        m_ch->EffectPacket(SE_AGGREGATE_MONSTER);
+    }
+    
+    void operator()(LPENTITY ent)
+    {
+        if (ent->IsType(ENTITY_CHARACTER))
+        {
+            LPCHARACTER ch = (LPCHARACTER) ent;
+            if (ch->IsPC())
+                return;
+            if (!ch->IsMonster())
+                return;
+            if (ch->GetVictim())
+                return;
 
-			if (DISTANCE_APPROX(ch->GetX() - m_ch->GetX(), ch->GetY() - m_ch->GetY()) < 5000)
+            
+            int dist = DISTANCE_APPROX(ch->GetX() - m_ch->GetX(), ch->GetY() - m_ch->GetY());
+            
+            if (dist < m_iRange)
             {
                 if (ch->CanBeginFight())
                 {
+					if (dist > 4000)
+					{
+						ch->AddAffect(AFFECT_CAPE_OF_COURAGE_PLUS, POINT_NONE, 0, AFF_NONE, 20, 0, false);
+					}
                     ch->SetVictim(m_ch);
                     ch->SetPosition(POS_FIGHTING);
                     ch->SetNextStatePulse(1);
                 }
             }
-		}
-	}
+        }
+    }
 };
 
 struct FuncAttractRanger
@@ -3583,14 +3594,31 @@ void CHARACTER::ForgetMyAttacker()
 	ReviveInvisible(5);
 }
 
-void CHARACTER::AggregateMonster()
-{
-	LPSECTREE pSec = GetSectree();
-	if (pSec)
-	{
-		FuncAggregateMonster f(this);
-		pSec->ForEachAround(f);
-	}
+void CHARACTER::AggregateMonster(int iRange)
+{    
+    int monsterCount = 0;
+    int pulledCount = 0;
+    
+    if (iRange > SECTREE_SIZE)
+    {
+        // For ranges larger than a sectree (6400), search the entire map
+        LPSECTREE_MAP pMap = SECTREE_MANAGER::instance().GetMap(GetMapIndex());
+        if (pMap)
+        {
+            FuncAggregateMonster f(this, iRange);
+            pMap->for_each(f);
+        }
+    }
+    else
+    {
+        // Normal sectree-around search for smaller ranges
+        LPSECTREE pSec = GetSectree();
+        if (pSec)
+        {
+            FuncAggregateMonster f(this, iRange);
+            pSec->ForEachAround(f);
+        }
+    }
 }
 
 void CHARACTER::AttractRanger()
