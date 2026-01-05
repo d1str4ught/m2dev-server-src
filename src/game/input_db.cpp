@@ -34,8 +34,6 @@
 #include "castle.h"
 #include "motion.h"
 
-#include "dev_log.h"
-
 #include "log.h"
 
 #include "horsename_manager.h"
