@@ -12,7 +12,6 @@
 #include "utils.h"
 #include "log.h"
 #include "char.h"
-#include "dev_log.h"
 #include "locale_service.h"
 #include "item.h"
 #include "item_manager.h"
@@ -298,7 +297,7 @@ void Cube_open (LPCHARACTER ch)
 	if (NULL==npc)
 	{
 		if (test_server)
-			dev_log(LOG_DEB0, "cube_npc is NULL");
+			sys_log(1, "cube_npc is NULL");
 		return;
 	}
 
@@ -306,7 +305,7 @@ void Cube_open (LPCHARACTER ch)
 	{
 		if ( test_server == true )
 		{
-			dev_log(LOG_DEB0, "cube not valid NPC");
+			sys_log(1, "cube not valid NPC");
 		}
 		return;
 	}
@@ -343,7 +342,7 @@ void Cube_close (LPCHARACTER ch)
 	Cube_clean_item(ch);
 	ch->SetCubeNpc(NULL);
 	ch->ChatPacket(CHAT_TYPE_COMMAND, "cube close");
-	dev_log(LOG_DEB0, "<CUBE> close (%s)", ch->GetName());
+	sys_log(1, "<CUBE> close (%s)", ch->GetName());
 }
 
 void Cube_init()
@@ -439,7 +438,7 @@ bool Cube_load (const char *file)
 			// TODO : check cube data
 			if (false == FN_check_cube_data(cube_data))
 			{
-				dev_log(LOG_DEB0, "something wrong");
+				sys_log(1, "something wrong");
 				M2_DELETE(cube_data);
 				continue;
 			}
@@ -454,23 +453,23 @@ bool Cube_load (const char *file)
 static void FN_cube_print (CUBE_DATA *data, DWORD index)
 {
 	DWORD	i;
-	dev_log(LOG_DEB0, "--------------------------------");
-	dev_log(LOG_DEB0, "CUBE_DATA[%d]", index);
+	sys_log(1, "--------------------------------");
+	sys_log(1, "CUBE_DATA[%d]", index);
 
 	for (i=0; i<data->npc_vnum.size(); ++i)
 	{
-		dev_log(LOG_DEB0, "\tNPC_VNUM[%d] = %d", i, data->npc_vnum[i]);
+		sys_log(1, "\tNPC_VNUM[%d] = %d", i, data->npc_vnum[i]);
 	}
 	for (i=0; i<data->item.size(); ++i)
 	{
-		dev_log(LOG_DEB0, "\tITEM[%d]   = (%d, %d)", i, data->item[i].vnum, data->item[i].count);
+		sys_log(1, "\tITEM[%d]   = (%d, %d)", i, data->item[i].vnum, data->item[i].count);
 	}
 	for (i=0; i<data->reward.size(); ++i)
 	{
-		dev_log(LOG_DEB0, "\tREWARD[%d] = (%d, %d)", i, data->reward[i].vnum, data->reward[i].count);
+		sys_log(1, "\tREWARD[%d] = (%d, %d)", i, data->reward[i].vnum, data->reward[i].count);
 	}
-	dev_log(LOG_DEB0, "\tPERCENT = %d", data->percent);
-	dev_log(LOG_DEB0, "--------------------------------");
+	sys_log(1, "\tPERCENT = %d", data->percent);
+	sys_log(1, "--------------------------------");
 }
 
 void Cube_print ()

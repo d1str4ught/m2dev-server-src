@@ -11,7 +11,6 @@
 #include "char.h"
 #include "item.h"
 #include "ani.h"
-#include "dev_log.h"
 
 const char* FN_race_name(int race)
 {
@@ -200,7 +199,7 @@ bool ANI::load_one_race(int race, const char *dir_name)
 
 	for (int weapon = WEAPON_SWORD; weapon < WEAPON_NUM_TYPES; ++weapon)
 	{
-		dev_log(LOG_DEB0, "ANI (%s,%s)", FN_race_name(race), FN_weapon_type(weapon));
+		sys_log(1, "ANI (%s,%s)", FN_race_name(race), FN_weapon_type(weapon));
 
 		for (BYTE combo = 1; combo <= 8; ++combo)
 		{
@@ -212,11 +211,11 @@ bool ANI::load_one_race(int race, const char *dir_name)
 			m_speed[race][1][weapon][combo] = load_one_weapon(dir_name, weapon, combo, true);
 			m_speed[race][1][weapon][0] = MIN(m_speed[race][1][weapon][0], m_speed[race][1][weapon][combo]); // 최소값
 
-			dev_log(LOG_DEB0, "combo%02d speed=%d horse=%d",
+			sys_log(1, "combo%02d speed=%d horse=%d",
 					combo, m_speed[race][0][weapon][combo], m_speed[race][1][weapon][combo]);
 		}
 
-		dev_log(LOG_DEB0, "minspeed=%u", m_speed[race][0][weapon][0]);
+		sys_log(1, "minspeed=%u", m_speed[race][0][weapon][0]);
 	}
 
 	return true;
@@ -331,7 +330,7 @@ DWORD ani_attack_speed(LPCHARACTER ch)
 	int weapon = item->GetSubType();
 
 	/*
-	dev_log(LOG_DEB0, "%s : (race,weapon) = (%s,%s) POINT_ATT_SPEED = %d",
+	sys_log(1, "%s : (race,weapon) = (%s,%s) POINT_ATT_SPEED = %d",
 			ch->GetName(),
 			FN_race_name(race),
 			FN_weapon_type(weapon),
