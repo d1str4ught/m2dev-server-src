@@ -1436,6 +1436,18 @@ EVENTFUNC(real_time_expire_event)
 
 	if (current > item->GetSocket(0))
 	{
+	LPCHARACTER owner = item->GetOwner();
+	//##########################################
+		if (owner && owner->GetDesc())
+		{
+			LPDESC d = owner->GetDesc();
+			
+			if (d->IsPhase(PHASE_LOADING))
+			{								
+				return PASSES_PER_SEC(1);	
+			}								
+		}									
+	//##########################################
 		switch (item->GetVnum())
 		{
 			if(item->IsNewMountItem())
@@ -2001,16 +2013,6 @@ bool CItem::OnAfterCreatedItem()
 		// Socket1에 아이템의 사용 횟수가 기록되어 있으니, 한 번이라도 사용한 아이템은 타이머를 시작한다.
 		if (0 != GetSocket(1))
 		{
-			// Check if item has already expired before starting the event
-			const time_t current = get_global_time();
-			if (current > GetSocket(0))
-			{
-				// Item has already expired while player was offline
-				// Remove it immediately to prevent crash during login
-				ITEM_MANAGER::instance().RemoveItem(this, "REAL_TIME_EXPIRE (expired offline)");
-				return false;
-			}
-
 			StartRealTimeExpireEvent();
 		}
 	}
