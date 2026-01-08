@@ -885,6 +885,45 @@ void CInputMain::ItemDrop2(LPCHARACTER ch, const char * data)
 		ch->DropItem(pinfo->Cell, pinfo->count);
 }
 
+void CInputMain::ItemDestroy(LPCHARACTER ch, const char * data)
+{
+	const TPacketCGItemDestroy* p = reinterpret_cast<const TPacketCGItemDestroy*>(data);
+
+	if (!ch->CanHandleItem())
+		return;
+
+	LPITEM item = ch->GetItem(p->Cell);
+
+	if (!item)
+		return;
+
+	if (item->IsExchanging())
+	{
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("You cannot delete an item while trading."));
+		return;
+	}
+
+	if (item->isLocked())
+	{
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("You cannot delete an item that is currently in use."));
+		return;
+	}
+
+	// Log the item destruction for security/tracking
+	char szHint[128];
+	snprintf(szHint, sizeof(szHint), "%s %u %u (DESTROYED)", 
+		item->GetName(), item->GetCount(), item->GetOriginalVnum());
+	LogManager::instance().ItemLog(ch, item, "DESTROY", szHint);
+
+	sys_log(0, "ITEM_DESTROY: %s item %s (vnum: %u, count: %u)", 
+		ch->GetName(), item->GetName(), item->GetVnum(), item->GetCount());
+
+	// Remove the item completely, bypassing ANTI_DROP and other flags
+	ITEM_MANAGER::instance().RemoveItem(item, "ITEM_DESTROY");
+
+	ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Item has been destroyed."));
+}
+
 void CInputMain::ItemMove(LPCHARACTER ch, const char * data)
 {
 	struct command_item_move * pinfo = (struct command_item_move *) data;
@@ -3185,6 +3224,11 @@ int CInputMain::Analyze(LPDESC d, BYTE bHeader, const char * c_pData)
 		case HEADER_CG_ITEM_MOVE:
 			if (!ch->IsObserverMode())
 				ItemMove(ch, c_pData);
+			break;
+		
+		case HEADER_CG_ITEM_DESTROY:
+			if (!ch->IsObserverMode())
+				ItemDestroy(ch, c_pData);
 			break;
 
 		case HEADER_CG_ITEM_PICKUP:

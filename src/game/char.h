@@ -1125,6 +1125,7 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 		void			AutoGiveItem(LPITEM item, bool longOwnerShip = false);
 		
 		int				GetEmptyInventory(BYTE size) const;
+		int				GetEmptyInventoryWithPreference(BYTE size, int preferredCell) const;
 		int				GetEmptyDragonSoulInventory(LPITEM pItem) const;
 		void			CopyDragonSoulItemGrid(std::vector<WORD>& vDragonSoulItemGrid) const;
 
@@ -1252,7 +1253,7 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 		void				FlyTarget(DWORD dwTargetVID, long x, long y, BYTE bHeader);
 
 		void				ForgetMyAttacker();
-		void				AggregateMonster();
+		void				AggregateMonster(int iRange = 5000);
 		void				AttractRanger();
 		void				PullMonster();
 

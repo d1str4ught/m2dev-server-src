@@ -1061,9 +1061,21 @@ void CHARACTER::StateBattle()
 
 	LPCHARACTER pkChrProtege = GetProtege();
 
-	float fDist = DISTANCE_APPROX(GetX() - victim->GetX(), GetY() - victim->GetY());
+	float fNormalChaseDistance = 4000.0f;
+	float fCouragePlusChaseDistance = 6000.0f;
 
-	if (fDist >= 4000.0f)   // 40미터 이상 멀어지면 포기
+	int customNormal = quest::CQuestManager::instance().GetEventFlag("mob_chase_distance");
+	if (customNormal > 0)
+		fNormalChaseDistance = (float)customNormal;
+
+	int customCourage = quest::CQuestManager::instance().GetEventFlag("mob_chase_distance_courage");
+	if (customCourage > 0)
+		fCouragePlusChaseDistance = (float)customCourage;
+
+	float fDist = DISTANCE_APPROX(GetX() - victim->GetX(), GetY() - victim->GetY());
+	float fMaxChaseDistance = FindAffect(AFFECT_CAPE_OF_COURAGE_PLUS) ? fCouragePlusChaseDistance : fNormalChaseDistance;
+
+	if (fDist >= fMaxChaseDistance)   // 40미터 이상 멀어지면 포기
 	{
 		MonsterLog("타겟이 멀어서 포기");
 		SetVictim(NULL);

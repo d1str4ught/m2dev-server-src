@@ -4408,3 +4408,24 @@ ACMD (do_ds_list)
 			ch->ChatPacket(CHAT_TYPE_INFO, "cell : %d, name : %s, id : %d", item->GetCell(), item->GetName(), item->GetID());
 	}
 }
+
+ACMD(do_premium_hand)
+{
+    // Get account ID
+    DWORD account_id = ch->GetDesc()->GetAccountTable().id;
+    
+    // Update database
+    std::unique_ptr<SQLMsg> pmsg(DBManager::instance().DirectQuery(
+        "UPDATE account.account SET autoloot_expire = DATE_ADD(NOW(), INTERVAL 10 YEAR) WHERE id = %u",
+        account_id
+    ));
+    
+    ch->ChatPacket(CHAT_TYPE_INFO, "Premium Hand activated for 10 years! Please relog for changes to take effect.");
+    
+    // Broadcast to server
+    char buf[256];
+    snprintf(buf, sizeof(buf), "%s has activated Premium Hand!", ch->GetName());
+    SendNotice(buf);
+    
+    LogManager::instance().CharLog(ch, 0, "PREMIUM_HAND", "activated for 10 years");
+}
