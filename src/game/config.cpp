@@ -15,7 +15,6 @@
 #include "war_map.h"
 #include "locale_service.h"
 #include "config.h"
-#include "dev_log.h"
 #include "db.h"
 #include "skill_power.h"
 
@@ -199,11 +198,11 @@ static void FN_log_adminpage()
 
 	while (iter != g_stAdminPageIP.end())
 	{
-		dev_log(LOG_DEB0, "ADMIN_PAGE_IP = %s", (*iter).c_str());
+		sys_log(1, "ADMIN_PAGE_IP = %s", (*iter).c_str());
 		++iter;
 	}
 
-	dev_log(LOG_DEB0, "ADMIN_PAGE_PASSWORD = %s", g_stAdminPagePassword.c_str());
+	sys_log(1, "ADMIN_PAGE_PASSWORD = %s", g_stAdminPagePassword.c_str());
 }
 
 

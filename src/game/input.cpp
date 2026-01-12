@@ -16,7 +16,6 @@
 #include "TrafficProfiler.h"
 #include "priv_manager.h"
 #include "castle.h"
-#include "dev_log.h"
 
 extern time_t get_global_time();
 
@@ -395,7 +394,7 @@ int CInputHandshake::Analyze(LPDESC d, BYTE bHeader, const char * c_pData)
 				{
 					std::string msg = stBuf.substr(3, LOGIN_MAX_LEN);
 
-dev_log(LOG_DEB0, "DC : '%s'", msg.c_str());
+					sys_log(1, "DC : '%s'", msg.c_str());
 
 					TPacketGGDisconnect pgg;
 

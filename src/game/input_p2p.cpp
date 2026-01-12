@@ -14,7 +14,6 @@
 #include "xmas_event.h"
 #include "affect.h"
 #include "castle.h"
-#include "dev_log.h"
 #include "locale_service.h"
 #include "questmanager.h"
 #include "skill.h"

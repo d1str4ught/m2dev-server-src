@@ -22,7 +22,6 @@
 #include "item_manager.h"
 #include "monarch.h"
 #include "mob_manager.h"
-#include "dev_log.h"
 #include "item.h"
 #include "arena.h"
 #include "buffer_manager.h"
@@ -2179,7 +2178,7 @@ ACMD(do_cube)
 	if (!ch->CanDoCube())
 		return;
 
-	dev_log(LOG_DEB0, "CUBE COMMAND <%s>: %s", ch->GetName(), argument);
+	sys_log(1, "CUBE COMMAND <%s>: %s", ch->GetName(), argument);
 	int cube_index = 0, inven_index = 0;
 	const char *line;
 
@@ -2272,7 +2271,7 @@ ACMD(do_cube)
 			if (0 != arg2[0])
 			{
 				while (true == Cube_make(ch))
-					dev_log (LOG_DEB0, "cube make success");
+					sys_log(1, "cube make success");
 			}
 			else
 				Cube_make(ch);
@@ -2431,7 +2430,7 @@ ACMD(do_click_mall)
 
 ACMD(do_ride)
 {
-    dev_log(LOG_DEB0, "[DO_RIDE] start");
+	sys_log(1, "[DO_RIDE] start");
     if (ch->IsDead() || ch->IsStun())
 	return;
 
@@ -2439,14 +2438,14 @@ ACMD(do_ride)
     {
 	if (ch->IsHorseRiding())
 	{
-	    dev_log(LOG_DEB0, "[DO_RIDE] stop riding");
+		sys_log(1, "[DO_RIDE] stop riding");
 	    ch->StopRiding(); 
 	    return;
 	}
 
 	if (ch->GetMountVnum())
 	{
-	    dev_log(LOG_DEB0, "[DO_RIDE] unmount");
+		sys_log(1, "[DO_RIDE] unmount");
 	    do_unmount(ch, NULL, 0, 0);
 	    return;
 	}
@@ -2456,7 +2455,7 @@ ACMD(do_ride)
     {
 	if (ch->GetHorse() != NULL)
 	{
-	    dev_log(LOG_DEB0, "[DO_RIDE] start riding");
+		sys_log(1, "[DO_RIDE] start riding");
 	    ch->StartRiding();
 	    return;
 	}
@@ -2472,7 +2471,7 @@ ACMD(do_ride)
 		{
 			if (NULL==ch->GetWear(WEAR_UNIQUE1) || NULL==ch->GetWear(WEAR_UNIQUE2))
 			{
-				dev_log(LOG_DEB0, "[DO_RIDE] USE UNIQUE ITEM");
+				sys_log(1, "[DO_RIDE] USE UNIQUE ITEM");
 				//ch->EquipItem(item);
 				ch->UseItem(TItemPos (INVENTORY, i));
 				return;
@@ -2487,14 +2486,14 @@ ACMD(do_ride)
 		case 71116:	// 산견신이용권
 		case 71118:	// 투지범이용권
 		case 71120:	// 사자왕이용권
-		    dev_log(LOG_DEB0, "[DO_RIDE] USE QUEST ITEM");
+			sys_log(1, "[DO_RIDE] USE QUEST ITEM");
 		    ch->UseItem(TItemPos (INVENTORY, i));
 		    return;
 	    }
 
 		// GF mantis #113524, 52001~52090 번 탈것
 		if( (item->GetVnum() > 52000) && (item->GetVnum() < 52091) )	{
-			dev_log(LOG_DEB0, "[DO_RIDE] USE QUEST ITEM");
+			sys_log(1, "[DO_RIDE] USE QUEST ITEM");
 			ch->UseItem(TItemPos (INVENTORY, i));
 		    return;
 		}

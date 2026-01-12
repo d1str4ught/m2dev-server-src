@@ -16,7 +16,6 @@
 #include "buffer_manager.h"
 #include "packet.h"
 #include "start_position.h"
-#include "dev_log.h"
 
 WORD SECTREE_MANAGER::current_sectree_version = MAKEWORD(0, 3);
 

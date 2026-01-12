@@ -3,7 +3,6 @@
 #include "char.h"
 #include "item.h"
 #include "item_manager.h"
-#include "over9refine.h"
 #include "log.h"
 
 #undef sys_err
@@ -337,52 +336,6 @@ namespace quest
 		return 1;
 	}
 
-	int item_can_over9refine(lua_State* L)
-	{
-		LPITEM item = CQuestManager::instance().GetCurrentItem();
-
-		if ( item == NULL ) return 0;
-
-		lua_pushnumber(L, COver9RefineManager::instance().canOver9Refine(item->GetVnum()));
-
-		return 1;
-	}
-
-	int item_change_to_over9(lua_State* L)
-	{
-		LPCHARACTER ch = CQuestManager::instance().GetCurrentCharacterPtr();
-		LPITEM item = CQuestManager::instance().GetCurrentItem();
-
-		if ( ch == NULL || item == NULL ) return 0;
-
-		lua_pushboolean(L, COver9RefineManager::instance().Change9ToOver9(ch, item));
-		
-		return 1;
-	}
-	
-	int item_over9refine(lua_State* L)
-	{
-		LPCHARACTER ch = CQuestManager::instance().GetCurrentCharacterPtr();
-		LPITEM item = CQuestManager::instance().GetCurrentItem();
-
-		if ( ch == NULL || item == NULL ) return 0;
-
-		lua_pushboolean(L, COver9RefineManager::instance().Over9Refine(ch, item));
-		
-		return 1;
-	}
-
-	int item_get_over9_material_vnum(lua_State* L)
-	{
-		if ( lua_isnumber(L, 1) == true )
-		{
-			lua_pushnumber(L, COver9RefineManager::instance().GetMaterialVnum((DWORD)lua_tonumber(L, 1)));
-			return 1;
-		}
-
-		return 0;
-	}
-
 	int item_get_level_limit (lua_State* L)
 	{
 		CQuestManager& q = CQuestManager::instance();
@@ -471,10 +424,6 @@ namespace quest
 			{ "get_refine_vnum",	item_get_refine_vnum	},
 			{ "get_level",		item_get_level		},
 			{ "next_refine_vnum",	item_next_refine_vnum	},
-			{ "can_over9refine",	item_can_over9refine	},
-			{ "change_to_over9",		item_change_to_over9	},
-			{ "over9refine",		item_over9refine	},
-			{ "get_over9_material_vnum",		item_get_over9_material_vnum	},
 			{ "get_level_limit", 				item_get_level_limit },
 			{ "start_realtime_expire", 			item_start_realtime_expire },
 			{ "copy_and_give_before_remove",	item_copy_and_give_before_remove},

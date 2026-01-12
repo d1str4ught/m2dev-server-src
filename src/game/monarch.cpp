@@ -4,7 +4,6 @@
 #include "char.h"
 #include "sectree_manager.h"
 #include "desc_client.h"
-#include "dev_log.h"
 
 extern int test_server;
 extern int passes_per_sec;
@@ -113,7 +112,7 @@ bool CMonarch::IsMonarch(DWORD pid, BYTE bEmpire)
 
 bool CMonarch::IsMoneyOk(int price, BYTE bEmpire)
 {
-	dev_log(LOG_DEB1, "GetMoney(%d), price = (%d,%d)", bEmpire, GetMoney(bEmpire), price);
+	sys_log(1, "GetMoney(%d), price = (%d,%d)", bEmpire, GetMoney(bEmpire), price);
 	return (GetMoney(bEmpire) >= price);
 }
 

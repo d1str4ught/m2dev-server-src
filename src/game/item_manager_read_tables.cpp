@@ -13,7 +13,6 @@
 #include "unique_item.h"
 #include "safebox.h"
 #include "blend_item.h"
-#include "dev_log.h"
 #include "locale_service.h"
 #include "item.h"
 #include "item_manager.h"
