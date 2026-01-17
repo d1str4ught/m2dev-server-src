@@ -232,6 +232,7 @@ class CMobItemGroup
 
 class CDropItemGroup
 {
+public:
 	struct SDropItemGroupInfo
 	{
 		DWORD	dwVnum;
@@ -243,7 +244,6 @@ class CDropItemGroup
 			{}
 	};
 
-	public:
 	CDropItemGroup(DWORD dwVnum, DWORD dwMobVnum, const std::string& r_stName)
 		:
 		m_dwVnum(dwVnum),
@@ -408,6 +408,19 @@ class ITEM_MANAGER : public singleton<ITEM_MANAGER>
 		// CHECK_UNIQUE_GROUP
 		int			GetSpecialGroupFromItem(DWORD dwVnum) const { itertype(m_ItemToSpecialGroup) it = m_ItemToSpecialGroup.find(dwVnum); return (it == m_ItemToSpecialGroup.end()) ? 0 : it->second; }
 		// END_OF_CHECK_UNIQUE_GROUP
+
+		// Idle Hunting - Access to drop tables
+		CMobItemGroup*	GetMobItemGroup(DWORD dwMobVnum) 
+		{ 
+			auto it = m_map_pkMobItemGroup.find(dwMobVnum);
+			return (it != m_map_pkMobItemGroup.end()) ? it->second : nullptr;
+		}
+		
+		CDropItemGroup*	GetDropItemGroup(DWORD dwMobVnum)
+		{
+			auto it = m_map_pkDropItemGroup.find(dwMobVnum);
+			return (it != m_map_pkDropItemGroup.end()) ? it->second : nullptr;
+		}
 
 	protected:
 		int                     RealNumber(DWORD vnum);

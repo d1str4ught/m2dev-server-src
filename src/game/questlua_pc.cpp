@@ -22,6 +22,7 @@
 #include "utils.h"
 #include "unique_item.h"
 #include "mob_manager.h"
+#include "idle_hunting_manager.h"
 #include <cctype>
 
 #undef sys_err
@@ -2797,6 +2798,288 @@ teleport_area:
 		return 2;
 	}
 
+	int pc_start_idle_hunting(lua_State* L)
+	{
+		// Write to test file to prove this was called
+		FILE* test = fopen("/tmp/idle_hunt_test.txt", "a");
+		if (test) {
+			fprintf(test, "pc_start_idle_hunting CALLED at %ld\n", time(0));
+			fclose(test);
+		}
+		
+		LPCHARACTER ch = CQuestManager::instance().GetCurrentCharacterPtr();
+		if (!ch || !ch->IsPC())
+		{
+			lua_pushboolean(L, false);
+			return 1;
+		}
+		
+		sys_log(0, "IDLE_HUNT_LUA: pc_start_idle_hunting called from quest");
+		sys_log(0, "IDLE_HUNT_LUA: Character found: %s (PID: %u)", ch->GetName(), ch->GetPlayerID());
+		
+		if (!lua_isnumber(L, 1))
+		{
+			sys_err("idle_hunting: invalid mob vnum");
+			lua_pushboolean(L, false);
+			return 1;
+		}
+		
+		DWORD mobVnum = static_cast<DWORD>(lua_tonumber(L, 1));
+		sys_log(0, "IDLE_HUNT_LUA: Calling StartIdleHunting with mob vnum: %u", mobVnum);
+		ch->StartIdleHunting(mobVnum);
+		sys_log(0, "IDLE_HUNT_LUA: StartIdleHunting returned");
+		
+		lua_pushboolean(L, true);
+		return 1;
+	}
+
+	int pc_stop_idle_hunting(lua_State* L)
+	{
+		LPCHARACTER ch = CQuestManager::instance().GetCurrentCharacterPtr();
+		if (!ch || !ch->IsPC())
+		{
+			lua_pushboolean(L, false);
+			return 1;
+		}
+		
+		ch->StopIdleHunting();
+		
+		lua_pushboolean(L, true);
+		return 1;
+	}
+
+	int pc_get_idle_hunting_time_left(lua_State* L)
+	{
+		LPCHARACTER ch = CQuestManager::instance().GetCurrentCharacterPtr();
+		if (!ch || !ch->IsPC())
+		{
+			lua_pushnumber(L, 0);
+			return 1;
+		}
+		
+		const DWORD MAX_DAILY_SECONDS = ch->GetIdleHuntingMaxDaily();
+		DWORD remaining = MAX_DAILY_SECONDS - ch->GetIdleHuntingTimeToday();
+		
+		lua_pushnumber(L, remaining);
+		return 1;
+	}
+
+	int pc_is_idle_hunting_active(lua_State* L)
+	{
+		LPCHARACTER ch = CQuestManager::instance().GetCurrentCharacterPtr();
+		if (!ch || !ch->IsPC())
+		{
+			lua_pushboolean(L, false);
+			return 1;
+		}
+		
+		lua_pushboolean(L, ch->IsIdleHuntingActive());
+		return 1;
+	}
+
+	int pc_get_idle_hunting_state(lua_State* L)
+	{
+		LPCHARACTER ch = CQuestManager::instance().GetCurrentCharacterPtr();
+		if (!ch || !ch->IsPC())
+		{
+			lua_pushnumber(L, 0);
+			return 1;
+		}
+		
+		// Returns: 0 = no hunt, 1 = pending logout, 2 = ready to claim
+		lua_pushnumber(L, ch->GetIdleHuntingState());
+		return 1;
+	}
+
+	int pc_claim_idle_hunting_rewards(lua_State* L)
+	{
+		LPCHARACTER ch = CQuestManager::instance().GetCurrentCharacterPtr();
+		if (!ch || !ch->IsPC())
+		{
+			lua_pushboolean(L, false);
+			return 1;
+		}
+		
+		ch->CalculateIdleRewards();
+		lua_pushboolean(L, true);
+		return 1;
+	}
+
+	int pc_get_idle_hunting_max_time(lua_State* L)
+	{
+		LPCHARACTER ch = CQuestManager::instance().GetCurrentCharacterPtr();
+		if (!ch || !ch->IsPC())
+		{
+			lua_pushnumber(L, 0);
+			return 1;
+		}
+		
+		// Returns max daily seconds
+		lua_pushnumber(L, ch->GetIdleHuntingMaxDaily());
+		return 1;
+	}
+
+	int pc_set_idle_hunting_max_time(lua_State* L)
+	{
+		LPCHARACTER ch = CQuestManager::instance().GetCurrentCharacterPtr();
+		if (!ch || !ch->IsPC())
+		{
+			lua_pushboolean(L, false);
+			return 1;
+		}
+		
+		if (!lua_isnumber(L, 1))
+		{
+			sys_err("pc_set_idle_hunting_max_time: argument must be a number (seconds)");
+			lua_pushboolean(L, false);
+			return 1;
+		}
+		
+		DWORD seconds = static_cast<DWORD>(lua_tonumber(L, 1));
+		
+		// Cap at 24 hours
+		if (seconds > 86400)
+			seconds = 86400;
+		
+		ch->SetIdleHuntingMaxDaily(seconds);
+		
+		lua_pushboolean(L, true);
+		return 1;
+	}
+
+	int pc_add_idle_hunting_time(lua_State* L)
+	{
+		LPCHARACTER ch = CQuestManager::instance().GetCurrentCharacterPtr();
+		if (!ch || !ch->IsPC())
+		{
+			lua_pushboolean(L, false);
+			return 1;
+		}
+		
+		if (!lua_isnumber(L, 1))
+		{
+			sys_err("pc_add_idle_hunting_time: argument must be a number (seconds to add)");
+			lua_pushboolean(L, false);
+			return 1;
+		}
+		
+		DWORD secondsToAdd = static_cast<DWORD>(lua_tonumber(L, 1));
+		DWORD currentMax = ch->GetIdleHuntingMaxDaily();
+		DWORD newMax = currentMax + secondsToAdd;
+		
+		// Cap at 24 hours
+		if (newMax > 86400)
+			newMax = 86400;
+		
+		ch->SetIdleHuntingMaxDaily(newMax);
+		
+		int hoursAdded = secondsToAdd / 3600;
+		int totalHours = newMax / 3600;
+		ch->ChatPacket(CHAT_TYPE_INFO, "Added %d hours to idle hunting limit! New limit: %d hours per day.", hoursAdded, totalHours);
+		
+		lua_pushboolean(L, true);
+		return 1;
+	}
+
+	int pc_get_idle_hunting_duration(lua_State* L)
+	{
+		LPCHARACTER ch = CQuestManager::instance().GetCurrentCharacterPtr();
+		if (!ch)
+		{
+			lua_pushnumber(L, 0);
+			return 1;
+		}
+		
+		lua_pushnumber(L, ch->GetIdleHuntingDuration());
+		return 1;
+	}
+
+	int pc_get_idle_hunting_group_id(lua_State* L)
+	{
+		LPCHARACTER ch = CQuestManager::instance().GetCurrentCharacterPtr();
+		if (!ch || !ch->IsPC())
+		{
+			lua_pushnumber(L, 0);
+			return 1;
+		}
+		
+		lua_pushnumber(L, ch->GetIdleHuntingGroupId());
+		return 1;
+	}
+
+	int pc_get_available_idle_hunting_groups(lua_State* L)
+	{
+		LPCHARACTER ch = CQuestManager::instance().GetCurrentCharacterPtr();
+		if (!ch || !ch->IsPC())
+		{
+			lua_newtable(L);
+			return 1;
+		}
+
+		BYTE level = ch->GetLevel();
+		bool is_premium = ch->IsGM(); // TODO: Replace with actual premium check
+
+		std::vector<const IdleHuntingGroup*> available_groups = CIdleHuntingManager::instance().GetAvailableGroups(level, is_premium);
+		
+		lua_newtable(L);
+		int index = 1;
+		for (const IdleHuntingGroup* group : available_groups)
+		{
+			if (group)
+			{
+				lua_newtable(L); // Create group table
+				
+				lua_pushstring(L, "id");
+				lua_pushnumber(L, group->group_id);
+				lua_settable(L, -3);
+				
+				lua_pushstring(L, "name");
+				lua_pushstring(L, group->name.c_str());
+				lua_settable(L, -3);
+				
+				lua_pushstring(L, "display_name");
+				lua_pushstring(L, group->display_name.c_str());
+				lua_settable(L, -3);
+				
+				lua_pushstring(L, "min_level");
+				lua_pushnumber(L, group->min_level);
+				lua_settable(L, -3);
+				
+				lua_pushstring(L, "premium_only");
+				lua_pushboolean(L, group->premium_only);
+				lua_settable(L, -3);
+				
+				lua_rawseti(L, -2, index++); // Insert into array
+			}
+		}
+		
+		return 1;
+	}
+
+	int pc_disconnect_character(lua_State* L)
+	{
+		LPCHARACTER ch = CQuestManager::instance().GetCurrentCharacterPtr();
+		if (!ch || !ch->IsPC())
+			return 0;
+		
+		// Get quest PC and close any running quest
+		PC* pPC = CQuestManager::instance().GetPC(ch->GetPlayerID());
+		if (pPC && pPC->IsRunning())
+		{
+			CQuestManager::instance().CloseState(*pPC->GetRunningQuestState());
+			pPC->CancelRunning();
+		}
+		
+		// Disconnect
+		LPDESC desc = ch->GetDesc();
+		if (desc)
+		{
+			desc->SetPhase(PHASE_CLOSE);
+		}
+		
+		return 0;
+	}
+
 	void RegisterPCFunctionTable()
 	{
 		luaL_reg pc_functions[] = 
@@ -3002,7 +3285,20 @@ teleport_area:
 																	* (이 말이 더 어려울라나 ㅠㅠ)
 																	* 주의사항 : kill event에서만 사용할 것!
 																	*/
-
+			// Idle Hunting System
+			{ "start_idle_hunting",			pc_start_idle_hunting		},
+			{ "stop_idle_hunting",			pc_stop_idle_hunting		},
+			{ "get_idle_hunting_time_left",	pc_get_idle_hunting_time_left	},
+			{ "is_idle_hunting_active",		pc_is_idle_hunting_active	},
+			{ "get_idle_hunting_state",		pc_get_idle_hunting_state	},
+			{ "claim_idle_hunting_rewards",	pc_claim_idle_hunting_rewards	},
+			{ "get_idle_hunting_max_time",	pc_get_idle_hunting_max_time	},
+			{ "set_idle_hunting_max_time",	pc_set_idle_hunting_max_time	},
+			{ "add_idle_hunting_time",		pc_add_idle_hunting_time	},
+			{ "get_idle_hunting_duration", pc_get_idle_hunting_duration },
+			{ "get_idle_hunting_group_id",	pc_get_idle_hunting_group_id	},
+			{ "get_available_idle_hunting_groups", pc_get_available_idle_hunting_groups },
+			{ "disconnect_character",		pc_disconnect_character	},
 			{ NULL,			NULL			}
 		};
 

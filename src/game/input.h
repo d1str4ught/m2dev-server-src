@@ -147,6 +147,9 @@ class CInputMain : public CInputProcessor
 		void		PartySetState(LPCHARACTER ch, const char * c_pData);
 		void		PartyUseSkill(LPCHARACTER ch, const char * c_pData);
 		void		PartyParameter(LPCHARACTER ch, const char * c_pData);
+		
+		void		IdleHunting(LPCHARACTER ch, const char* c_pData);
+		void		SendIdleHuntingUpdate(LPCHARACTER ch);
 
 		int			Guild(LPCHARACTER ch, const char * data, size_t uiBytes);
 		void		AnswerMakeGuild(LPCHARACTER ch, const char* c_pData);

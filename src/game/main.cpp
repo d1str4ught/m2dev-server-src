@@ -57,6 +57,7 @@
 #include "skill_power.h"
 #include "SpeedServer.h"
 #include "DragonSoul.h"
+#include "idle_hunting_manager.h"
 
 // #ifndef OS_WINDOWS
 // #include <gtest/gtest.h>
@@ -377,6 +378,7 @@ int main(int argc, char **argv)
 
 	CSpeedServerManager SSManager;
 	DSManager dsManager;
+	CIdleHuntingManager idle_hunting_manager;
 
 	if (!start(argc, argv)) {
 		CleanUpForEarlyExit();
@@ -397,10 +399,18 @@ int main(int argc, char **argv)
 	if (speed_server)
 		CSpeedServerManager::instance().Initialize();
 
+	if (!CIdleHuntingManager::instance().LoadGroups("conf/idle_hunting_groups.json"))
+    {
+        sys_err("Failed to load idle hunting groups configuration!");
+        CleanUpForEarlyExit();
+        return 0;
+    }
+
 	Cube_init();
 	Blend_Item_init();
 	ani_init();
 	PanamaLoad();
+
 
 	if ( g_bTrafficProfileOn )
 		TrafficProfiler::instance().Initialize( TRAFFIC_PROFILE_FLUSH_CYCLE, "ProfileLog" );

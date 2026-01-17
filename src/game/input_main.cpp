@@ -19,6 +19,7 @@
 #include "battle.h"
 #include "exchange.h"
 #include "questmanager.h"
+#include "idle_hunting_manager.h"
 #include "profiler.h"
 #include "messenger_manager.h"
 #include "party.h"
@@ -28,6 +29,7 @@
 #include "guild_manager.h"
 #include "log.h"
 #include "banword.h"
+#include "mob_manager.h"
 #include "empire_text_convert.h"
 #include "unique_item.h"
 #include "building.h"
@@ -3403,6 +3405,10 @@ int CInputMain::Analyze(LPDESC d, BYTE bHeader, const char * c_pData)
 		case HEADER_CG_CLIENT_VERSION:
 			Version(ch, c_pData);
 			break;
+		
+		case HEADER_CG_IDLE_HUNTING:
+			IdleHunting(ch, c_pData);
+			break;
 			
 		case HEADER_CG_DRAGON_SOUL_REFINE:
 			{
@@ -3480,3 +3486,87 @@ int CInputDead::Analyze(LPDESC d, BYTE bHeader, const char * c_pData)
 	return (iExtraLen);
 }
 
+void CInputMain::IdleHunting(LPCHARACTER ch, const char* c_pData)
+{
+	if (!ch)
+		return;
+	
+	TPacketCGIdleHunting* p = (TPacketCGIdleHunting*)c_pData;
+	
+	switch (p->subheader)
+	{
+		case IDLE_HUNTING_SUBHEADER_CG_GET_INFO:
+			// Request for idle hunting info - send update
+			SendIdleHuntingUpdate(ch);
+			break;
+			
+		case IDLE_HUNTING_SUBHEADER_CG_START:
+			{
+				DWORD groupId = p->value;
+				
+				// Validate mob exists
+				const IdleHuntingGroup* group = CIdleHuntingManager::instance().GetGroup(groupId);
+				if (!group)
+				{
+					ch->ChatPacket(CHAT_TYPE_INFO, "Invalid idle hunting group selected.");
+					return;
+				}
+				
+				// Start hunt (server validates everything)
+				ch->StartIdleHunting(groupId);
+				
+				// Send updated info
+				SendIdleHuntingUpdate(ch);
+			}
+			break;
+			
+		case IDLE_HUNTING_SUBHEADER_CG_STOP:
+			ch->StopIdleHunting();
+			SendIdleHuntingUpdate(ch);
+			break;
+			
+		case IDLE_HUNTING_SUBHEADER_CG_CLAIM:
+			ch->CalculateIdleRewards();
+			SendIdleHuntingUpdate(ch);
+			break;
+			
+		default:
+			sys_err("Unknown idle hunting subheader: %d from %s", p->subheader, ch->GetName());
+			break;
+	}
+}
+
+void CInputMain::SendIdleHuntingUpdate(LPCHARACTER ch)
+{
+	if (!ch || !ch->GetDesc())
+		return;
+	
+	TPacketGCIdleHunting pack;
+	pack.header = HEADER_GC_IDLE_HUNTING;
+	pack.state = ch->GetIdleHuntingState();
+    pack.group_id = ch->GetIdleHuntingGroupId();
+	pack.time_left = ch->GetIdleHuntingMaxDaily() - ch->GetIdleHuntingTimeToday();
+	pack.hunt_duration = ch->GetIdleHuntingDuration();
+	pack.max_daily_seconds = ch->GetIdleHuntingMaxDaily();
+	pack.total_time_today = ch->GetIdleHuntingTimeToday();
+	
+	ch->GetDesc()->Packet(&pack, sizeof(pack));
+}
+
+// Make SendIdleHuntingUpdate accessible from char_idle_hunting.cpp
+void SendIdleHuntingUpdateToClient(LPCHARACTER ch)
+{
+	if (!ch || !ch->GetDesc())
+		return;
+	
+	TPacketGCIdleHunting pack;
+	pack.header = HEADER_GC_IDLE_HUNTING;
+	pack.state = ch->GetIdleHuntingState();
+    pack.group_id = ch->GetIdleHuntingGroupId();
+	pack.time_left = ch->GetIdleHuntingMaxDaily() - ch->GetIdleHuntingTimeToday();
+	pack.hunt_duration = ch->GetIdleHuntingDuration();
+	pack.max_daily_seconds = ch->GetIdleHuntingMaxDaily();
+	pack.total_time_today = ch->GetIdleHuntingTimeToday();
+	
+	ch->GetDesc()->Packet(&pack, sizeof(pack));
+}

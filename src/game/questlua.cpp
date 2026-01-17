@@ -558,7 +558,7 @@ namespace quest
 		if (LC_IsEurope())
 		{
 			char translateFileName[256];
-			snprintf(translateFileName, sizeof(translateFileName), "%s/translate.lua", LocaleService_GetBasePath().c_str());
+			snprintf(translateFileName, sizeof(translateFileName), "%s/translate_pl.lua", LocaleService_GetBasePath().c_str());
 
 			int translateLoadingResult = lua_dofile(L, translateFileName);
 			sys_log(0, "LoadTranslate(%s), returns %d", translateFileName, translateLoadingResult);
