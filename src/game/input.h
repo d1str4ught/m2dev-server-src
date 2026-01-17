@@ -111,6 +111,7 @@ class CInputMain : public CInputProcessor
 		void		ItemUse(LPCHARACTER ch, const char * data);
 		void		ItemDrop(LPCHARACTER ch, const char * data);
 		void		ItemDrop2(LPCHARACTER ch, const char * data);
+		void		ItemDestroy(LPCHARACTER ch, const char * data);
 		void		ItemMove(LPCHARACTER ch, const char * data);
 		void		ItemPickup(LPCHARACTER ch, const char * data);
 		void		ItemToItem(LPCHARACTER ch, const char * pcData);
@@ -146,6 +147,9 @@ class CInputMain : public CInputProcessor
 		void		PartySetState(LPCHARACTER ch, const char * c_pData);
 		void		PartyUseSkill(LPCHARACTER ch, const char * c_pData);
 		void		PartyParameter(LPCHARACTER ch, const char * c_pData);
+		
+		void		IdleHunting(LPCHARACTER ch, const char* c_pData);
+		void		SendIdleHuntingUpdate(LPCHARACTER ch);
 
 		int			Guild(LPCHARACTER ch, const char * data, size_t uiBytes);
 		void		AnswerMakeGuild(LPCHARACTER ch, const char* c_pData);

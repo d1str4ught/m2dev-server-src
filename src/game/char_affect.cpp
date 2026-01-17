@@ -529,6 +529,8 @@ void CHARACTER::LoadAffect(DWORD dwCount, TPacketAffectElement * pElements)
 
 	// 용혼석 셋팅 로드 및 초기화
 	DragonSoul_Initialize();
+	
+	LoadIdleHunting(); // Load idle hunting data on login
 }
 
 bool CHARACTER::AddAffect(DWORD dwType, BYTE bApplyOn, long lApplyValue, DWORD dwFlag, long lDuration, long lSPCost, bool bOverride, bool IsCube )

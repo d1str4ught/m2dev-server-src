@@ -27,6 +27,7 @@ enum
 	HEADER_CG_QUICKSLOT_SWAP			= 18,
 	HEADER_CG_WHISPER				= 19,
 	HEADER_CG_ITEM_DROP2			= 20,
+	HEADER_CG_ITEM_DESTROY			= 21,
 
 	HEADER_CG_ON_CLICK				= 26,
 	HEADER_CG_EXCHANGE				= 27,
@@ -101,6 +102,7 @@ enum
 
 	HEADER_CG_DRAGON_SOUL_REFINE			= 205,
 	HEADER_CG_STATE_CHECKER					= 206,
+	HEADER_CG_IDLE_HUNTING					= 207,
 
 	HEADER_CG_CLIENT_VERSION			= 0xfd,
 	HEADER_CG_CLIENT_VERSION2			= 0xf1,
@@ -260,6 +262,8 @@ enum
 	HEADER_GC_MAIN_CHARACTER3_BGM		= 137,
 	HEADER_GC_MAIN_CHARACTER4_BGM_VOL	= 138,
 	// END_OF_SUPPORT_BGM
+
+	HEADER_GC_IDLE_HUNTING			= 139,
 
 	HEADER_GC_AUTH_SUCCESS			= 150,
 
@@ -688,6 +692,12 @@ typedef struct command_item_drop2
 	uint32_t	gold;
 	uint8_t	count;
 } TPacketCGItemDrop2;
+
+typedef struct command_item_destroy
+{
+	uint8_t 	header;
+	TItemPos 	Cell;
+} TPacketCGItemDestroy;
 
 typedef struct command_item_move
 {
@@ -2300,6 +2310,33 @@ typedef struct SPacketGCDragonSoulRefine
 	uint8_t bSubType;
 	TItemPos Pos;
 } TPacketGCDragonSoulRefine;
+
+// Idle Hunting System
+enum
+{
+	IDLE_HUNTING_SUBHEADER_CG_GET_INFO = 0,
+	IDLE_HUNTING_SUBHEADER_CG_START = 1,
+	IDLE_HUNTING_SUBHEADER_CG_STOP = 2,
+	IDLE_HUNTING_SUBHEADER_CG_CLAIM = 3,
+};
+
+typedef struct SPacketCGIdleHunting
+{
+	uint8_t	header;
+	uint8_t	subheader;
+	uint32_t	value;	// group_id for START, 0 for others
+} TPacketCGIdleHunting;
+
+typedef struct SPacketGCIdleHunting
+{
+	uint8_t	header;
+	uint8_t	state;				// 0=idle, 1=active, 2=claimable
+	uint32_t	group_id;			// Current target group (0 if none)
+	uint32_t	time_left;			// Remaining daily time (seconds)
+	uint32_t	hunt_duration;		// Duration of current unclaimed hunt (seconds)
+	uint32_t	max_daily_seconds;	// Max daily limit
+	uint32_t	total_time_today;	// Time used today
+} TPacketGCIdleHunting;
 
 typedef struct SPacketCGStateCheck
 {
