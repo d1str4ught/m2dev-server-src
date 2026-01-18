@@ -266,7 +266,8 @@ namespace quest
 	int pc_in_dungeon(lua_State * L)
 	{
 		LPCHARACTER ch = CQuestManager::instance().GetCurrentCharacterPtr();
-		lua_pushboolean(L, ch->GetDungeon()?1:0);
+		lua_pushboolean(L, ch->GetDungeon() ? 1 : 0);
+
 		return 1;
 	}
 
@@ -1245,6 +1246,18 @@ namespace quest
 		if (!lua_isnumber(L, 1))
 			return 0;
 
+		LPCHARACTER ch = CQuestManager::instance().GetCurrentCharacterPtr();
+
+		// MR-8: Prevent mounting in Nemere's Watchtower
+		long lMapIndex = ch->GetMapIndex();
+
+		if (lMapIndex >= 352 * 10000 && lMapIndex < 353 * 10000)
+		{
+			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("You cannot ride your horse in Nemere's Watchtower."));
+			return 0;
+		}
+		// MR-8: -- END OF -- Prevent mounting in Nemere's Watchtower
+
 		int length = 60;
 
 		if (lua_isnumber(L, 2))
@@ -1254,8 +1267,6 @@ namespace quest
 
 		if (length < 0)
 			length = 60;
-
-		LPCHARACTER ch = CQuestManager::instance().GetCurrentCharacterPtr();
 
 		ch->RemoveAffect(AFFECT_MOUNT);
 		ch->RemoveAffect(AFFECT_MOUNT_BONUS);
@@ -1310,11 +1321,16 @@ namespace quest
 
 		LPCHARACTER ch = CQuestManager::instance().GetCurrentCharacterPtr();
 
-		if( NULL != ch )
+		// MR-8: Prevent mount bonuses in Nemere's Watchtower
+		long lMapIndex = ch->GetMapIndex();
+		bool isInNemereDungeon = lMapIndex >= 352 * 10000 && lMapIndex < 353 * 10000;
+
+		if (NULL != ch && !isInNemereDungeon)
 		{
 			ch->RemoveAffect(AFFECT_MOUNT_BONUS);
 			ch->AddAffect(AFFECT_MOUNT_BONUS, aApplyInfo[applyOn].bPointType, value, AFF_NONE, duration, 0, false);
 		}
+		// MR-8: -- END OF -- Prevent mount bonuses in Nemere's Watchtower
 
 		return 0;
 	}
@@ -1322,10 +1338,13 @@ namespace quest
 	int pc_unmount(lua_State* L)
 	{
 		LPCHARACTER ch = CQuestManager::instance().GetCurrentCharacterPtr();
+
 		ch->RemoveAffect(AFFECT_MOUNT);
 		ch->RemoveAffect(AFFECT_MOUNT_BONUS);
+
 		if (ch->IsHorseRiding())
 			ch->StopRiding();
+
 		return 0;
 	}
 

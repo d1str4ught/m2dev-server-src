@@ -1769,6 +1769,39 @@ bool CHARACTER::Damage(LPCHARACTER pAttacker, int dam, EDamageType type) // retu
 
 	//PROF_UNIT puAttr("Attr");
 
+	// MR-8: Snow dungeon - All-damage immunity with exceptions
+	// Damage Immunity System - per-hit check (O(1) operation)
+	// Check immunity for monsters/stones/doors with the flag set
+	if (m_bDamageImmune && (IsMonster() || IsStone() || IsDoor()))
+	{
+		// Check if attacker meets all required conditions
+		// NOTE: If flag is set but conditions are empty, this will return false (block all damage)
+		if (!CheckDamageImmunityConditions(pAttacker))
+		{
+			// Attacker doesn't meet conditions - send MISS packet directly
+			if (pAttacker->IsPC())
+			{
+				TPacketGCDamageInfo damageInfo;
+
+				memset(&damageInfo, 0, sizeof(TPacketGCDamageInfo));
+
+				damageInfo.header = HEADER_GC_DAMAGE_INFO;
+				damageInfo.dwVID = (DWORD)GetVID();
+				damageInfo.flag = DAMAGE_DODGE;
+				damageInfo.damage = 0;
+				
+				if (pAttacker->GetDesc() != NULL)
+				{
+					pAttacker->GetDesc()->Packet(&damageInfo, sizeof(TPacketGCDamageInfo));
+				}
+			}
+
+			return false;
+		}
+		// All conditions met - allow damage to pass through
+	}
+	// MR-8: -- END OF -- Snow dungeon - All-damage immunity with exceptions
+
 	//
 	// 마법형 스킬과, 레인지형 스킬은(궁자객) 크리티컬과, 관통공격 계산을 한다.
 	// 원래는 하지 않아야 하는데 Nerf(다운밸런스)패치를 할 수 없어서 크리티컬과

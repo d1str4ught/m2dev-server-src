@@ -9,9 +9,10 @@
 #include "common/length.h"
 
 #include "vid.h"
+#include "char.h"
 
 class CDungeon;
-class CHARACTER;
+// class CHARACTER;
 class CharacterVectorInteractor;
 
 class CHARACTER_MANAGER : public singleton<CHARACTER_MANAGER>
@@ -40,6 +41,10 @@ class CHARACTER_MANAGER : public singleton<CHARACTER_MANAGER>
 		LPCHARACTER		SpawnMob(DWORD dwVnum, long lMapIndex, long x, long y, long z, bool bSpawnMotion = false, int iRot = -1, bool bShow = true);
 		LPCHARACTER		SpawnMobRange(DWORD dwVnum, long lMapIndex, int sx, int sy, int ex, int ey, bool bIsException=false, bool bSpawnMotion = false , bool bAggressive = false);
 		LPCHARACTER		SpawnGroup(DWORD dwVnum, long lMapIndex, int sx, int sy, int ex, int ey, LPREGEN pkRegen = NULL, bool bAggressive_ = false, LPDUNGEON pDungeon = NULL);
+		// MR-8: Snow dungeon - All-damage immunity with exceptions
+		LPCHARACTER		SpawnGroupWithVIDs(DWORD dwVnum, long lMapIndex, int sx, int sy, int ex, int ey, LPREGEN pkRegen, bool bAggressive_, LPDUNGEON pDungeon, std::vector<DWORD>& rVids);
+		LPCHARACTER		SpawnGroupWithImmunity(DWORD dwVnum, long lMapIndex, int sx, int sy, int ex, int ey, LPREGEN pkRegen, bool bAggressive_, LPDUNGEON pDungeon, const std::vector<CHARACTER::SDamageImmunityCondition>& conditions);
+		// MR-8: -- END OF -- Snow dungeon - All-damage immunity with exceptions
 		bool			SpawnGroupGroup(DWORD dwVnum, long lMapIndex, int sx, int sy, int ex, int ey, LPREGEN pkRegen = NULL, bool bAggressive_ = false, LPDUNGEON pDungeon = NULL);
 		bool			SpawnMoveGroup(DWORD dwVnum, long lMapIndex, int sx, int sy, int ex, int ey, int tx, int ty, LPREGEN pkRegen = NULL, bool bAggressive_ = false);
 		LPCHARACTER		SpawnMobRandomPosition(DWORD dwVnum, long lMapIndex);

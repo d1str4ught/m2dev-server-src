@@ -167,7 +167,17 @@ void CHARACTER::AttackedByFire(LPCHARACTER pkAttacker, int amount, int count)
 	if (m_pkFireEvent)
 		return;
 
-	AddAffect(AFFECT_FIRE, POINT_NONE, 0, AFF_FIRE, count*3+1, 0, true);
+	// MR-8: Check damage immunity system - prevent fire application if conditions not met
+	if (m_bDamageImmune && (IsMonster() || IsStone() || IsDoor()))
+	{
+		if (!CheckDamageImmunityConditions(pkAttacker))
+		{
+			return;  // Immunity prevents fire application
+		}
+	}
+
+	AddAffect(AFFECT_FIRE, POINT_NONE, 0, AFF_FIRE, count * 3 + 1, 0, true);
+	// MR-8: -- END OF -- Check damage immunity system - prevent fire application if conditions not met
 
 	TFireEventInfo* info = AllocEventInfo<TFireEventInfo>();
 
@@ -186,6 +196,16 @@ void CHARACTER::AttackedByPoison(LPCHARACTER pkAttacker)
 
 	if (m_bHasPoisoned && !IsPC()) // 몬스터는 독이 한번만 걸린다.
 		return;
+
+	// MR-8: Check damage immunity system - prevent poison application if conditions not met
+	if (m_bDamageImmune && (IsMonster() || IsStone() || IsDoor()))
+	{
+		if (!CheckDamageImmunityConditions(pkAttacker))
+		{
+			return;  // Immunity prevents poison application
+		}
+	}
+	// MR-8: -- END OF -- Check damage immunity system - prevent poison application if conditions not met
 
 	if (pkAttacker && pkAttacker->GetLevel() < GetLevel())
 	{

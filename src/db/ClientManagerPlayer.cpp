@@ -306,13 +306,13 @@ void CClientManager::QUERY_PLAYER_LOAD(CPeer * peer, DWORD dwHandle, TPlayerLoad
 					"SELECT dwPID,szName,szState,lValue FROM quest%s WHERE dwPID=%d AND lValue<>0",
 					GetTablePostfix(), pTab->id);
 			
-			CDBManager::instance().ReturnQuery(szQuery, QID_QUEST, peer->GetHandle(), new ClientHandleInfo(dwHandle,0,packet->account_id));
+			CDBManager::instance().ReturnQuery(szQuery, QID_QUEST, peer->GetHandle(), new ClientHandleInfo(dwHandle, 0, packet->account_id));
 
 			// Affect
 			snprintf(szQuery, sizeof(szQuery),
 					"SELECT dwPID,bType,bApplyOn,lApplyValue,dwFlag,lDuration,lSPCost FROM affect%s WHERE dwPID=%d",
 					GetTablePostfix(), pTab->id);
-			CDBManager::instance().ReturnQuery(szQuery, QID_AFFECT, peer->GetHandle(), new ClientHandleInfo(dwHandle));
+			CDBManager::instance().ReturnQuery(szQuery, QID_AFFECT, peer->GetHandle(), new ClientHandleInfo(dwHandle, packet->player_id));
 		}
 		/////////////////////////////////////////////
 		// 2) 아이템이 DBCache 에 없음 : DB 에서 가져옴 
@@ -601,6 +601,22 @@ void CClientManager::RESULT_COMPOSITE_PLAYER(CPeer * peer, SQLMsg * pMsg, DWORD 
 
 		case QID_AFFECT:
 			sys_log(0, "QID_AFFECT %u", info->dwHandle);
+
+			// MR-8: Fix "when_login" being loaded before character affects
+			if (!mysql_num_rows(pSQLResult))
+			{
+				TPacketAffectElement pAffElem{};
+				DWORD dwCount = 0;
+
+				peer->EncodeHeader(HEADER_DG_AFFECT_LOAD, info->dwHandle, sizeof(DWORD) + sizeof(DWORD) + sizeof(TPacketAffectElement) * dwCount);
+				peer->Encode(&info->player_id, sizeof(DWORD));
+				peer->Encode(&dwCount, sizeof(DWORD));
+				peer->Encode(&pAffElem, sizeof(TPacketAffectElement) * dwCount);
+
+				break;
+			}
+			// MR-8: -- END OF -- Fix "when_login" being loaded before character affects
+
 			RESULT_AFFECT_LOAD(peer, pSQLResult, info->dwHandle);
 			break;
 			/*

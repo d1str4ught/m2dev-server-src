@@ -1,7 +1,9 @@
 ﻿#ifndef __INC_METIN_II_GAME_DUNGEON_H
 #define __INC_METIN_II_GAME_DUNGEON_H
 
+#include <vector>
 #include "sectree_manager.h"
+#include "char.h"
 
 class CParty;
 
@@ -57,12 +59,21 @@ class CDungeon
 	void	Spawn(DWORD vnum, const char* pos);
 	LPCHARACTER	SpawnMob(DWORD vnum, int x, int y, int dir = 0);
 	LPCHARACTER	SpawnMob_ac_dir(DWORD vnum, int x, int y, int dir = 0);
-	LPCHARACTER	SpawnGroup(DWORD vnum, long x, long y, float radius, bool bAggressive=false, int count=1);
+	// MR-8: Snow dungeon - All-damage immunity with exceptions
+	LPCHARACTER SpawnMobWithImmunity(DWORD vnum, int x, int y, int dir, const std::vector<CHARACTER::SDamageImmunityCondition>& conditions);
+	LPCHARACTER	SpawnGroup(DWORD vnum, long x, long y, float radius, bool bAggressive = false, int count = 1);
+	bool		SpawnGroupWithVIDs(DWORD vnum, long x, long y, float radius, bool bAggressive, int count, std::vector<DWORD>& rVids);
+	LPCHARACTER	SpawnGroupWithImmunity(DWORD vnum, long x, long y, float radius, bool bAggressive, int count, const std::vector<CHARACTER::SDamageImmunityCondition>& conditions);
+	// MR-8: -- END OF -- Snow dungeon - All-damage immunity with exceptions
 
 	void	SpawnNameMob(DWORD vnum, int x, int y, const char* name);
 	void	SpawnGotoMob(long lFromX, long lFromY, long lToX, long lToY);
 
 	void	SpawnRegen(const char* filename, bool bOnce = true);
+	// MR-8: Snow dungeon - All-damage immunity with exceptions
+	bool	SpawnRegenWithVIDs(const char* filename, bool bOnce, std::vector<DWORD>& rVids);
+	void	SpawnRegenWithImmunity(const char* filename, bool bOnce, const std::vector<CHARACTER::SDamageImmunityCondition>& conditions);
+	// MR-8: -- END OF -- Snow dungeon - All-damage immunity with exceptions
 	void	AddRegen(LPREGEN regen);
 	void	ClearRegen();
 	bool	IsValidRegen(LPREGEN regen, size_t regen_id);

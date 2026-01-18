@@ -23,15 +23,26 @@ It builds as it is, without external dependencies.
 ## 📋 Changelog
 
 ### 🐛 Bug Fixes
-* **HP/SP Value Persistence:** Fixed an issue where current HP/SP values were incorrectly affected by changes to Max HP/SP (such as stat upgrades or equipment changes).
-* **GM Kill Command:** Updated the `/kill` command to properly zero out the target's HP.
-* **Messenger Deletion (Offline):** Fixed an issue where a companion needed to be online for a "remove from messenger" action to complete.
-* **Messenger Deletion (Cross-Channel):** Fixed an issue where the removal message was visible to both parties even if they were in different channels or cores at the time of deletion.
-* **Dungeon Party Logic:** Fixed an issue where the same message would popup to all affected parties when a leader tried to kick a player or a player tried to leave a team while inside a dungeon. Includes several other update message optimizations and dungeon logic improvements regarding party kicking/leaving.
+* **Horse skill grade check:** Fixed a check that required the horse skill's grade to be exactly 3 (Grand Master) in order to use skills, leaving GMs that set their skill to P unable to use riding skills
+* **Quest state loading:** Fixed an issue where quest states (`when login begin`) was being loaded before character affects on `PHASE_GAME`
+* **Sura's Flame Ghost mounting:** Fixed Sura's Flame Ghost when mounting. The skill now damages nearby enemies when the horse skill is more than Level 10.
+* **Experience points from chests:** Fixed a bug where experience points were being replaced by Experience Rings when opening chests
+* **Gold from chests:** Fixed a bug where Gold was being replaced by a Gold inventory item that had no value when opening chests
 
 ### ⬆️ Feature Improvements
-* **Job-Specific Stat Resets:** Individual stats reset scrolls (Items 71103, 71104, 71105, 71106) now recover stats to their initial values based on character job instead of defaulting to 1, returning the appropriate points. Translations now dynamically display the selected stat's value. Translation for Reset all-status scroll (71002) also adjusted from printing 'to 1'.
-* **Logout Interruption:** Using a skill now automatically cancels the logout countdown for both the user and the target (if applicable).
-* **Auto Potion Logic:** Auto potions can now be moved within the inventory while active and are automatically disabled immediately before being dropped to the ground.
+* **Nemere's Watchtower dungeon safeguards:** Added checks for automatically dismounting/prevent mounting of any kind when the character is inside the new Nemere's Watchtower dungeon
+* **Conditional damage immunity system:** Added various checks for true per-hit conditional damage immunity with full control via Lua functions as well as clones of the default mob/group spawning Lua functions that return the monsters' VIDs for further manipulation from the quests. Exposed Lua functions below:
+  * `d.regen_file_with_immunity`: Spawn all monster/groups from a dungeon folder's regen.txt file with conditional immunity embedded from spawn
+  * `d.regen_file_with_vids`: The VIDs of all spawned monsters/groups from a dungeon folder's regen.txt file are being returned to Lua for further manipulation
+  * `d.spawn_group_with_immunity`: Spawn a group of monsters via its ID with conditional immunity embedded from spawn
+  * `d.spawn_group_with_vids`: The VIDs of all monsters from the group spawned are being returned to Lua for further manipulation
+  * `d.spawn_mob_with_immunity`: Spawn a single monster with conditional immunity embedded from spawn
+  * `npc.add_damage_immunity_condition`: Add a damage immunity condition to an already spawned monster
+  * `npc.clear_damage_immunity_conditions`: Clear all damage immunity from a monster so it can take damage normally again
+  * `npc.is_damage_immune`: Check if a mob has damage immunity using its VID
+  * `npc.set_damage_immunity`: Set damage immunity to a monster using its VID
+  * `npc.set_damage_immunity_with_conditions`: Set conditional damage immunity to a monster using its VID
+  * **Immunity vs Conditional immunity**: When a monster is immune to damage all hits are returning as MISS and it cannot be poisoned, burned, slowed or stunned. A condition is a rule that when applied, the monster's immunity is being ignored (for example, a mob is immune to damage unless the attacker is a Ninja - job 1). Multiple conditions are possible.
+  * More about the available conditions for damage immunity in `game/char.h`
 
 
