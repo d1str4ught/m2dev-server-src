@@ -1441,13 +1441,14 @@ struct FuncSplashDamage
 
 				iDur += m_pkChr->GetPoint(POINT_PARTY_BUFFER_BONUS);
 
+				// MR-8: Snow dungeon - All-damage immunity with exceptions
 				if (IS_SET(m_pkSk->dwFlag, SKILL_FLAG_STUN))
 				{
-					SkillAttackAffect(pkChrVictim, iPct, IMMUNE_STUN, AFFECT_STUN, POINT_NONE, 0, AFF_STUN, iDur, m_pkSk->szName);
+					SkillAttackAffect(m_pkChr, pkChrVictim, iPct, IMMUNE_STUN, AFFECT_STUN, POINT_NONE, 0, AFF_STUN, iDur, m_pkSk->szName);
 				}
 				else if (IS_SET(m_pkSk->dwFlag, SKILL_FLAG_SLOW))
 				{
-					SkillAttackAffect(pkChrVictim, iPct, IMMUNE_SLOW, AFFECT_SLOW, POINT_MOV_SPEED, -30, AFF_SLOW, iDur, m_pkSk->szName);
+					SkillAttackAffect(m_pkChr, pkChrVictim, iPct, IMMUNE_SLOW, AFFECT_SLOW, POINT_MOV_SPEED, -30, AFF_SLOW, iDur, m_pkSk->szName);
 				}
 				else if (IS_SET(m_pkSk->dwFlag, SKILL_FLAG_FIRE_CONT))
 				{
@@ -1472,6 +1473,7 @@ struct FuncSplashDamage
 					if (number(1, 100) <= iPct)
 						pkChrVictim->AttackedByPoison(m_pkChr);
 				}
+				// MR-8: -- END OF -- Snow dungeon - All-damage immunity with exceptions
 			}
 
 			if (IS_SET(m_pkSk->dwFlag, SKILL_FLAG_CRUSH | SKILL_FLAG_CRUSH_LONG) &&
@@ -1510,11 +1512,13 @@ struct FuncSplashDamage
 
 				if (m_pkChr->IsPC() && m_pkChr->m_SkillUseInfo[m_pkSk->dwVnum].GetMainTargetVID() == (DWORD) pkChrVictim->GetVID())
 				{
+					// MR-8: Snow dungeon - All-damage immunity with exceptions
 					//if (!g_iUseLocale)
 					if (LC_IsYMIR())
-						SkillAttackAffect(pkChrVictim, 1000, IMMUNE_STUN, m_pkSk->dwVnum, POINT_NONE, 0, AFF_STUN, 3, m_pkSk->szName);
+						SkillAttackAffect(m_pkChr, pkChrVictim, 1000, IMMUNE_STUN, m_pkSk->dwVnum, POINT_NONE, 0, AFF_STUN, 3, m_pkSk->szName);
 					else
-						SkillAttackAffect(pkChrVictim, 1000, IMMUNE_STUN, m_pkSk->dwVnum, POINT_NONE, 0, AFF_STUN, 4, m_pkSk->szName);
+						SkillAttackAffect(m_pkChr, pkChrVictim, 1000, IMMUNE_STUN, m_pkSk->dwVnum, POINT_NONE, 0, AFF_STUN, 4, m_pkSk->szName);
+					// MR-8: -- END OF -- Snow dungeon - All-damage immunity with exceptions
 				}
 				else
 				{
@@ -1985,9 +1989,14 @@ int CHARACTER::ComputeSkill(DWORD dwVnum, LPCHARACTER pkVictim, BYTE bSkillLevel
 	CSkillProto* pkSk = CSkillManager::instance().Get(dwVnum);
 	const bool bCanUseHorseSkill = CanUseHorseSkill();
 
-	// 말을 타고있지만 스킬은 사용할 수 없는 상태라면 return
-	if (false == bCanUseHorseSkill && true == IsRiding())
-		return BATTLE_NONE;
+	// MR-8: Flame Ghost skill fix on mounting
+	if (dwVnum != SKILL_MUYEONG)
+	{
+		// 말을 타고있지만 스킬은 사용할 수 없는 상태라면 return
+		if (false == bCanUseHorseSkill && true == IsRiding())
+			return BATTLE_NONE;
+	}
+	// MR-8: -- END OF -- Flame Ghost skill fix on mounting
 
 	if (IsPolymorphed())
 		return BATTLE_NONE;
@@ -1998,12 +2007,16 @@ int CHARACTER::ComputeSkill(DWORD dwVnum, LPCHARACTER pkVictim, BYTE bSkillLevel
 	if (!pkSk)
 		return BATTLE_NONE;
 
-	if (bCanUseHorseSkill && pkSk->dwType != SKILL_TYPE_HORSE)
-		return BATTLE_NONE;
+	// MR-8: Flame Ghost skill fix on mounting
+	if (dwVnum != SKILL_MUYEONG)
+	{
+		if (bCanUseHorseSkill && pkSk->dwType != SKILL_TYPE_HORSE)
+			return BATTLE_NONE;
 
-	if (!bCanUseHorseSkill && pkSk->dwType == SKILL_TYPE_HORSE)
-		return BATTLE_NONE;
-	
+		if (!bCanUseHorseSkill && pkSk->dwType == SKILL_TYPE_HORSE)
+			return BATTLE_NONE;
+	}
+	// MR-8: -- END OF -- Flame Ghost skill fix on mounting
 
 	// 상대방에게 쓰는 것이 아니면 나에게 써야 한다.
 	if (IS_SET(pkSk->dwFlag, SKILL_FLAG_SELFONLY))

@@ -253,7 +253,9 @@ bool is_regen_exception(long x, long y)
 	return false;
 }
 
-static void regen_spawn_dungeon(LPREGEN regen, LPDUNGEON pDungeon, bool bOnce)
+// MR-8: Snow dungeon - All-damage immunity with exceptions
+static void regen_spawn_dungeon(LPREGEN regen, LPDUNGEON pDungeon, bool bOnce, std::vector<DWORD>* pOutVids, const std::vector<CHARACTER::SDamageImmunityCondition>* pConditions)
+// MR-8: -- END OF -- Snow dungeon - All-damage immunity with exceptions
 {
 	DWORD	num;
 	DWORD	i;
@@ -275,6 +277,20 @@ static void regen_spawn_dungeon(LPREGEN regen, LPDUNGEON pDungeon, bool bOnce)
 			{
 				++regen->count;
 				ch->SetDungeon(pDungeon);
+
+				// MR-8: Snow dungeon - All-damage immunity with exceptions
+				// Apply damage immunity atomically before mob is attackable
+				if (pConditions && !pConditions->empty())
+				{
+					ch->SetDamageImmunity(true);
+
+					for (const auto& cond : *pConditions)
+						ch->AddDamageImmunityCondition(cond.bType, cond.dwValue, cond.strExtra);
+				}
+
+				if (pOutVids)
+					pOutVids->push_back(ch->GetVID());
+				// MR-8: -- END OF -- Snow dungeon - All-damage immunity with exceptions
 			}
 		}
 		else if (regen->sx == regen->ex && regen->sy == regen->ey)
@@ -291,6 +307,20 @@ static void regen_spawn_dungeon(LPREGEN regen, LPDUNGEON pDungeon, bool bOnce)
 			{
 				++regen->count;
 				ch->SetDungeon(pDungeon);
+
+				// MR-8: Snow dungeon - All-damage immunity with exceptions
+				// Apply damage immunity atomically before mob is attackable
+				if (pConditions && !pConditions->empty())
+				{
+					ch->SetDamageImmunity(true);
+
+					for (const auto& cond : *pConditions)
+						ch->AddDamageImmunityCondition(cond.bType, cond.dwValue, cond.strExtra);
+				}
+
+				if (pOutVids)
+					pOutVids->push_back(ch->GetVID());
+				// MR-8: -- END OF -- Snow dungeon - All-damage immunity with exceptions
 			}
 		}
 		else
@@ -303,12 +333,53 @@ static void regen_spawn_dungeon(LPREGEN regen, LPDUNGEON pDungeon, bool bOnce)
 				{
 					++regen->count;
 					ch->SetDungeon(pDungeon);
+
+					// MR-8: Snow dungeon - All-damage immunity with exceptions
+					// Apply damage immunity atomically before mob is attackable
+					if (pConditions && !pConditions->empty())
+					{
+						ch->SetDamageImmunity(true);
+
+						for (const auto& cond : *pConditions)
+							ch->AddDamageImmunityCondition(cond.bType, cond.dwValue, cond.strExtra);
+					}
+
+					if (pOutVids)
+						pOutVids->push_back(ch->GetVID());
+					// MR-8: -- END OF -- Snow dungeon - All-damage immunity with exceptions
 				}
 			}
 			else if (regen->type == REGEN_TYPE_GROUP)
 			{
-				if (CHARACTER_MANAGER::Instance().SpawnGroup(regen->vnum, regen->lMapIndex, regen->sx, regen->sy, regen->ex, regen->ey, bOnce ? NULL : regen, regen->is_aggressive, pDungeon))
+				// MR-8: Snow dungeon - All-damage immunity with exceptions
+				std::vector<DWORD> localVids;
+				LPCHARACTER leader = CHARACTER_MANAGER::Instance().SpawnGroupWithVIDs(regen->vnum, regen->lMapIndex, regen->sx, regen->sy, regen->ex, regen->ey, bOnce ? NULL : regen, regen->is_aggressive, pDungeon, localVids);
+
+				if (leader)
+				{
 					++regen->count;
+
+					// Apply damage immunity to all spawned group members if requested.
+					if (pConditions && !pConditions->empty())
+					{
+						for (DWORD vid : localVids)
+						{
+							LPCHARACTER member = CHARACTER_MANAGER::instance().Find(vid);
+							
+							if (!member)
+								continue;
+
+							member->SetDamageImmunity(true);
+
+							for (const auto& cond : *pConditions)
+								member->AddDamageImmunityCondition(cond.bType, cond.dwValue, cond.strExtra);
+						}
+					}
+
+					if (pOutVids)
+						pOutVids->insert(pOutVids->end(), localVids.begin(), localVids.end());
+				}
+				// MR-8: -- END OF -- Snow dungeon - All-damage immunity with exceptions
 			}
 			else if (regen->type == REGEN_TYPE_GROUP_GROUP)
 			{
@@ -403,11 +474,15 @@ EVENTFUNC(dungeon_regen_event)
 		regen->event = NULL;
 	}
 
-	regen_spawn_dungeon(regen, pDungeon, false);
+	// MR-8: Snow dungeon - All-damage immunity with exceptions
+	regen_spawn_dungeon(regen, pDungeon, false, NULL, NULL);
+	// MR-8: -- END OF -- Snow dungeon - All-damage immunity with exceptions
 	return PASSES_PER_SEC(regen->time);
 }
 
-bool regen_do(const char* filename, long lMapIndex, int base_x, int base_y, LPDUNGEON pDungeon, bool bOnce)
+// MR-8:Snow dungeon - All-damage immunity with exceptions
+bool regen_do(const char* filename, long lMapIndex, int base_x, int base_y, LPDUNGEON pDungeon, bool bOnce, std::vector<DWORD>* pOutVids, const std::vector<CHARACTER::SDamageImmunityCondition>* pConditions)
+// MR-8: -- END OF -- Snow dungeon - All-damage immunity with exceptions
 {
 	if (g_bNoRegen)
 		return true;
@@ -500,8 +575,10 @@ bool regen_do(const char* filename, long lMapIndex, int base_x, int base_y, LPDU
 				// before the call to CHARACTER::SetRegen()
 			}
 
-			// 처음엔 무조건 리젠 해준다.
-			regen_spawn_dungeon(regen, pDungeon, bOnce);
+			// MR-8: Snow dungeon - All-damage immunity with exceptions
+			// 처음엔 무조건 리젠 해준다. Optionally collect VIDs for the initial spawn.
+			regen_spawn_dungeon(regen, pDungeon, bOnce, pOutVids, pConditions);
+			// MR-8: -- END OF -- Snow dungeon - All-damage immunity with exceptions
 
 		}
 	}

@@ -42,6 +42,15 @@ bool CHARACTER::StartRiding()
 			return false;
 	}
 
+	// MR-8: Prevent mounting in Nemere's Watchtower
+	long lMapIndex = GetMapIndex();
+
+	if (lMapIndex >= 352 * 10000 && lMapIndex < 353 * 10000)
+	{
+		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("You cannot ride your horse in Nemere's Watchtower."));
+		return false;
+	}
+	// MR-8: -- END OF -- Prevent mounting in Nemere's Watchtower
 
 	DWORD dwMountVnum = m_chHorse ? m_chHorse->GetRaceNum() : GetMyHorseVnum();
 
@@ -150,6 +159,16 @@ void CHARACTER::HorseSummon(bool bSummon, bool bFromFar, DWORD dwVnum, const cha
 		// 무언가를 타고 있다면 실패
 		if (IsRiding())
 			return;
+
+		// MR-8: Prevent mounting in Nemere's Watchtower
+		long lMapIndex = GetMapIndex();
+
+		if (lMapIndex >= 352 * 10000 && lMapIndex < 353 * 10000)
+		{
+			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("You cannot ride your horse in Nemere's Watchtower."));
+			return;
+		}
+		// MR-8: -- END OF -- Prevent mounting in Nemere's Watchtower
 
 		sys_log(0, "HorseSummon : %s lv:%d bSummon:%d fromFar:%d", GetName(), GetLevel(), bSummon, bFromFar);
 
@@ -357,10 +376,12 @@ bool CHARACTER::CanUseHorseSkill()
 {
 	if(IsRiding())
 	{
-		if (GetHorseGrade() == 3)
+		// MR-8: CanUseHorseSkill() grade fix
+		if (GetHorseGrade() >= 3)
 			return true;
 		else
 			return false;
+		// MR-8: -- END OF -- CanUseHorseSkill() grade fix
 
 		if(GetMountVnum())
 		{

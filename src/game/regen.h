@@ -1,4 +1,10 @@
-﻿#include "dungeon.h"
+﻿#include <vector>
+#include "dungeon.h"
+
+// MR-8: Snow dungeon - All-damage immunity with exceptions
+// Forward declaration
+class CHARACTER;
+// MR-8: -- END OF -- Snow dungeon - All-damage immunity with exceptions
 
 enum
 {
@@ -84,7 +90,9 @@ EVENTINFO(dungeon_regen_event_info)
 };
 
 extern bool	regen_load(const char *filename, long lMapIndex, int base_x, int base_y); 
-extern bool	regen_do(const char* filename, long lMapIndex, int base_x, int base_y, LPDUNGEON pDungeon, bool bOnce = true );
+// MR-8: Snow dungeon - All-damage immunity with exceptions
+extern bool	regen_do(const char* filename, long lMapIndex, int base_x, int base_y, LPDUNGEON pDungeon, bool bOnce = true, std::vector<DWORD>* pOutVids = NULL, const std::vector<CHARACTER::SDamageImmunityCondition>* pConditions = NULL);
+// MR-8: --END OF -- Snow dungeon - All-damage immunity with exceptions
 extern bool	regen_load_in_file(const char* filename, long lMapIndex, int base_x, int base_y );
 extern void	regen_free();
 

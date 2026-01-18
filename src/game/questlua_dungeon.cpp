@@ -11,6 +11,8 @@
 #include "desc_client.h"
 #include "desc_manager.h"
 
+#include <vector>
+
 #undef sys_err
 #define sys_err(fmt, ...) quest::CQuestManager::instance().QuestError(std::source_location::current(), fmt __VA_OPT__(, __VA_ARGS__))
 
@@ -172,6 +174,40 @@ namespace quest
 
 		return 0;
 	}
+
+	// MR-8: Snow dungeon - All-damage immunity with exceptions
+	int dungeon_regen_file_with_vids(lua_State* L)
+	{
+		if (!lua_isstring(L,1))
+		{
+			sys_err("wrong filename");
+			lua_newtable(L);
+			return 1;
+		}
+
+		CQuestManager& q = CQuestManager::instance();
+		LPDUNGEON pDungeon = q.GetCurrentDungeon();
+
+		std::vector<DWORD> vids;
+
+		if (pDungeon)
+		{
+			const char* filename = lua_tostring(L, 1);
+			pDungeon->SpawnRegenWithVIDs(filename, true, vids);
+		}
+
+		lua_newtable(L);
+
+		for (size_t i = 0; i < vids.size(); ++i)
+		{
+			lua_pushnumber(L, i + 1);
+			lua_pushnumber(L, vids[i]);
+			lua_settable(L, -3);
+		}
+
+		return 1;
+	}
+	// MR-8: -- END OF -- Snow dungeon - All-damage immunity with exceptions
 
 	int dungeon_set_regen_file(lua_State* L)
 	{
@@ -971,6 +1007,207 @@ namespace quest
 		return 1;
 	}
 
+	// MR-8: Snow dungeon - All-damage immunity with exceptions
+	int dungeon_spawn_group_with_vids(lua_State* L)
+	{
+		//
+		// argument: vnum,x,y,radius,aggressive,count
+		// returns: table of all spawned VIDs
+		//
+		if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2) || !lua_isnumber(L, 3) || !lua_isnumber(L, 4) || !lua_isnumber(L, 6))
+		{
+			sys_err("invalid argument");
+			lua_newtable(L);
+
+			return 1;
+		}
+
+		CQuestManager& q = CQuestManager::instance();
+		LPDUNGEON pDungeon = q.GetCurrentDungeon();
+
+		std::vector<DWORD> vids;
+
+		if (pDungeon)
+		{
+			DWORD group_vnum = (DWORD)lua_tonumber(L, 1);
+			long local_x = (long) lua_tonumber(L, 2) * 100;
+			long local_y = (long) lua_tonumber(L, 3) * 100;
+			float radius = (float) lua_tonumber(L, 4) * 100;
+			bool bAggressive = lua_toboolean(L, 5);
+			DWORD count = (DWORD) lua_tonumber(L, 6);
+
+			pDungeon->SpawnGroupWithVIDs(group_vnum, local_x, local_y, radius, bAggressive, count, vids);
+		}
+
+		// Push table of VIDs to Lua
+		lua_newtable(L);
+
+		for (size_t i = 0; i < vids.size(); ++i)
+		{
+			lua_pushnumber(L, i + 1);
+			lua_pushnumber(L, vids[i]);
+			lua_settable(L, -3);
+		}
+
+		return 1;
+	}
+
+	int dungeon_spawn_group_with_immunity(lua_State* L)
+	{
+		//
+		// argument: vnum, x, y, radius, aggressive, count, conditions_table
+		// conditions_table: { {type=6, value=3}, ... }
+		// returns: vid of group leader
+		//
+		if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2) || !lua_isnumber(L, 3) || 
+			!lua_isnumber(L, 4) || !lua_isnumber(L, 6) || !lua_istable(L, 7))
+		{
+			sys_err("invalid argument");
+			lua_pushnumber(L, 0);
+			return 1;
+		}
+
+		CQuestManager& q = CQuestManager::instance();
+		LPDUNGEON pDungeon = q.GetCurrentDungeon();
+
+		if (!pDungeon)
+		{
+			lua_pushnumber(L, 0);
+			return 1;
+		}
+
+		DWORD group_vnum = (DWORD)lua_tonumber(L, 1);
+		long local_x = (long) lua_tonumber(L, 2) * 100;
+		long local_y = (long) lua_tonumber(L, 3) * 100;
+		float radius = (float) lua_tonumber(L, 4) * 100;
+		bool bAggressive = lua_toboolean(L, 5);
+		DWORD count = (DWORD) lua_tonumber(L, 6);
+
+		// Parse conditions table
+		std::vector<CHARACTER::SDamageImmunityCondition> conditions;
+		lua_pushnil(L);
+		while (lua_next(L, 7) != 0)
+		{
+			if (lua_istable(L, -1))
+			{
+				lua_pushstring(L, "type");
+				lua_gettable(L, -2);
+				BYTE bType = (BYTE)lua_tonumber(L, -1);
+				lua_pop(L, 1);
+
+				lua_pushstring(L, "value");
+				lua_gettable(L, -2);
+				DWORD dwValue = (DWORD)lua_tonumber(L, -1);
+				lua_pop(L, 1);
+
+				conditions.emplace_back(bType, dwValue);
+			}
+			lua_pop(L, 1);
+		}
+
+		LPCHARACTER ch = pDungeon->SpawnGroupWithImmunity(group_vnum, local_x, local_y, radius, bAggressive, count, conditions);
+		lua_pushnumber(L, ch ? ch->GetVID() : 0);
+		return 1;
+	}
+
+	int dungeon_spawn_mob_with_immunity(lua_State* L)
+	{
+		// argument: vnum, x, y, conditions_table
+		// returns: vid
+		if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2) || !lua_isnumber(L, 3) || !lua_istable(L, 4))
+		{
+			sys_err("invalid argument");
+			lua_pushnumber(L, 0);
+			return 1;
+		}
+
+		CQuestManager& q = CQuestManager::instance();
+		LPDUNGEON pDungeon = q.GetCurrentDungeon();
+		if (!pDungeon)
+		{
+			lua_pushnumber(L, 0);
+			return 1;
+		}
+
+		DWORD mob_vnum = (DWORD)lua_tonumber(L, 1);
+		int x = (int)lua_tonumber(L, 2);
+		int y = (int)lua_tonumber(L, 3);
+
+		// Parse conditions
+		std::vector<CHARACTER::SDamageImmunityCondition> conditions;
+		lua_pushnil(L);
+		while (lua_next(L, 4) != 0)
+		{
+			if (lua_istable(L, -1))
+			{
+				lua_pushstring(L, "type");
+				lua_gettable(L, -2);
+				BYTE bType = (BYTE)lua_tonumber(L, -1);
+				lua_pop(L, 1);
+
+				lua_pushstring(L, "value");
+				lua_gettable(L, -2);
+				DWORD dwValue = (DWORD)lua_tonumber(L, -1);
+				lua_pop(L, 1);
+
+				conditions.emplace_back(bType, dwValue);
+			}
+			lua_pop(L, 1);
+		}
+
+		LPCHARACTER ch = pDungeon->SpawnMobWithImmunity(mob_vnum, x, y, 0, conditions);
+		lua_pushnumber(L, ch ? ch->GetVID() : 0);
+		return 1;
+	}
+
+	int dungeon_regen_file_with_immunity(lua_State* L)
+	{
+		//
+		// argument: filename, conditions_table
+		// conditions_table: { {type=6, value=3}, ... }
+		// returns: nothing
+		//
+		if (!lua_isstring(L, 1) || !lua_istable(L, 2))
+		{
+			sys_err("invalid argument");
+			return 0;
+		}
+
+		CQuestManager& q = CQuestManager::instance();
+		LPDUNGEON pDungeon = q.GetCurrentDungeon();
+
+		if (!pDungeon)
+			return 0;
+
+		const char* filename = lua_tostring(L, 1);
+
+		// Parse conditions table
+		std::vector<CHARACTER::SDamageImmunityCondition> conditions;
+		lua_pushnil(L);
+		while (lua_next(L, 2) != 0)
+		{
+			if (lua_istable(L, -1))
+			{
+				lua_pushstring(L, "type");
+				lua_gettable(L, -2);
+				BYTE bType = (BYTE)lua_tonumber(L, -1);
+				lua_pop(L, 1);
+
+				lua_pushstring(L, "value");
+				lua_gettable(L, -2);
+				DWORD dwValue = (DWORD)lua_tonumber(L, -1);
+				lua_pop(L, 1);
+
+				conditions.emplace_back(bType, dwValue);
+			}
+			lua_pop(L, 1);
+		}
+
+		pDungeon->SpawnRegenWithImmunity(filename, true, conditions);
+		return 0;
+	}
+	// MR-8: -- END OF -- Snow dungeon - All-damage immunity with exceptions
+
 	int dungeon_join(lua_State* L)
 	{
 		if (lua_gettop(L) < 1 || !lua_isnumber(L, 1))
@@ -1438,6 +1675,11 @@ namespace quest
 			{ "spawn_name_mob",	dungeon_spawn_name_mob	},
 			{ "spawn_goto_mob",		dungeon_spawn_goto_mob	},
 			{ "spawn_group",		dungeon_spawn_group	},
+			// MR-8: Snow dungeon - All-damage immunity with exceptions
+			{ "spawn_group_with_vids",	dungeon_spawn_group_with_vids	},
+			{ "spawn_group_with_immunity",	dungeon_spawn_group_with_immunity	},
+			{ "spawn_mob_with_immunity",    dungeon_spawn_mob_with_immunity    },
+			// MR-8: -- END OF -- Snow dungeon - All-damage immunity with exceptions
 			{ "spawn_unique",		dungeon_spawn_unique	},
 			{ "spawn_move_unique",		dungeon_spawn_move_unique},
 			{ "spawn_move_group",		dungeon_spawn_move_group},
@@ -1463,6 +1705,10 @@ namespace quest
 			{ "new_jump_party",		dungeon_new_jump_party	},
 			{ "new_jump",			dungeon_new_jump	},
 			{ "regen_file",			dungeon_regen_file	},
+			// MR-8: Snow dungeon - All-damage immunity with exceptions
+			{ "regen_file_with_vids", 	dungeon_regen_file_with_vids },
+			{ "regen_file_with_immunity", 	dungeon_regen_file_with_immunity },
+			// MR-8: -- END OF -- Snow dungeon - All-damage immunity with exceptions
 			{ "set_regen_file",		dungeon_set_regen_file	},
 			{ "clear_regen",		dungeon_clear_regen	},
 			{ "set_exit_all_at_eliminate",	dungeon_set_exit_all_at_eliminate},
