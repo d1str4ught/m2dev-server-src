@@ -334,6 +334,10 @@ struct command_info cmd_info[] =
 	{ "mall_passwor",	do_inputall,		0,			POS_DEAD,	GM_PLAYER	},
 	{ "mall_password",	do_mall_password,	0,			POS_DEAD,	GM_PLAYER	},
 	{ "mall_close",	do_mall_close,		0,			POS_DEAD,	GM_PLAYER	},
+	
+	// MOVE_CHANNEL
+	{ "move_channel", do_cmd, SCMD_MOVE_CHANNEL, POS_DEAD, GM_PLAYER },
+	// END_OF_MOVE_CHANNEL
 
 	// Group Command
 	{ "ungroup",	do_ungroup,		0,			POS_DEAD,	GM_PLAYER	},

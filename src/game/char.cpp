@@ -6618,6 +6618,54 @@ void CHARACTER::StartWarpNPCEvent()
 	m_pkWarpNPCEvent = event_create(warp_npc_event, info, passes_per_sec / 2);
 }
 
+// MOVE_CHANNEL
+void CHARACTER::MoveChannel(int iNewChannel)
+{
+    int32_t lMapIndex;
+    uint32_t lAddr;
+    uint16_t wPort;
+
+    long x = GetX();
+    long y = GetY();
+
+    if (!CMapLocation::Instance().Get(x, y, lMapIndex, lAddr, wPort))
+        return;
+
+    // Determine current channel from port
+    // Port pattern: 110X1, 110X2, 110X3 where X = channel number (1-4)
+    int iCurrentChannel = (wPort / 10) % 10;  // Extracts the X from 110X1/110X2/110X3
+    int iCore = wPort % 10;  // Extracts the core number (1, 2, or 3)
+
+    if (iCurrentChannel == iNewChannel)
+    {
+        ChatPacket(CHAT_TYPE_INFO, "You are already on channel %d.", iNewChannel);
+        return;
+    }
+
+    // Calculate new port: keep the same core, change the channel
+    WORD wNewPort = 11000 + (iNewChannel * 10) + iCore;
+
+    Stop();
+    Save();
+
+    if (GetSectree())
+    {
+        GetSectree()->RemoveEntity(this);
+        ViewCleanup();
+        EncodeRemovePacket(this);
+    }
+
+    TPacketGCWarp p;
+    p.bHeader = HEADER_GC_WARP;
+    p.lX = x;
+    p.lY = y;
+    p.lAddr = lAddr;
+    p.wPort = wNewPort;
+
+    GetDesc()->Packet(&p, sizeof(TPacketGCWarp));
+}
+// END_OF_MOVE_CHANNEL
+
 void CHARACTER::SyncPacket()
 {
 	TEMP_BUFFER buf;

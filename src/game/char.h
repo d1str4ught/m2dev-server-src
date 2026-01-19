@@ -1695,6 +1695,9 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 		// Warp Character
 	public:
 		void				StartWarpNPCEvent();
+		// MOVE_CHANNEL
+		void                MoveChannel(int new_ch);
+		// END_OF_MOVE_CHANNEL
 
 	public:
 		void				StartSaveEvent();
