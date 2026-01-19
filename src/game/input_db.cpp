@@ -474,6 +474,7 @@ void CInputDB::PlayerLoad(LPDESC d, const char * data)
 			ch->GetGMLevel());
 
 	ch->QuerySafeboxSize();
+	ch->LoadIdleHunting(); // Load idle hunting data on login
 }
 
 void CInputDB::Boot(const char* data)

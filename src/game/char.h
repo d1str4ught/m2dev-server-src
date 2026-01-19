@@ -1125,6 +1125,7 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 		void			AutoGiveItem(LPITEM item, bool longOwnerShip = false);
 		
 		int				GetEmptyInventory(BYTE size) const;
+		int				GetEmptyInventoryWithPreference(BYTE size, int preferredCell) const;
 		int				GetEmptyDragonSoulInventory(LPITEM pItem) const;
 		void			CopyDragonSoulItemGrid(std::vector<WORD>& vDragonSoulItemGrid) const;
 
@@ -1252,7 +1253,7 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 		void				FlyTarget(DWORD dwTargetVID, long x, long y, BYTE bHeader);
 
 		void				ForgetMyAttacker();
-		void				AggregateMonster();
+		void				AggregateMonster(int iRange = 5000);
 		void				AttractRanger();
 		void				PullMonster();
 
@@ -1694,6 +1695,9 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 		// Warp Character
 	public:
 		void				StartWarpNPCEvent();
+		// MOVE_CHANNEL
+		void                MoveChannel(int new_ch);
+		// END_OF_MOVE_CHANNEL
 
 	public:
 		void				StartSaveEvent();
@@ -2050,6 +2054,47 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 	private:
 		DWORD m_dwLastCombatTime;
 	// tw1x1: end
+
+	// Idle Hunting System
+	public:
+		void LoadIdleHunting();
+		void StartIdleHunting(DWORD groupId);
+		void StopIdleHunting();
+		void CalculateIdleRewards();
+		DWORD GetIdleHuntingTimeToday() const { return m_idleHunting.totalTimeToday; }
+		DWORD GetIdleHuntingMaxDaily() const { return m_idleHunting.maxDailySeconds; }
+		DWORD GetIdleHuntingDuration() const;
+		DWORD GetIdleHuntingGroupId() const { return m_idleHunting.groupId; }
+		void SetIdleHuntingMaxDaily(DWORD seconds) { 
+			m_idleHunting.maxDailySeconds = seconds; 
+			SaveIdleHunting();
+		}
+		bool IsIdleHuntingActive() const { return m_idleHunting.isActive == 1; }
+		BYTE GetIdleHuntingState() const { 
+			// Returns state: 0=none, 1=pending (mob set but not logged out), 2=ready to claim
+			if (m_idleHunting.groupId == 0) return 0;
+			return m_idleHunting.isActive;
+		}
+		struct IdleHuntingData {
+			DWORD groupId;
+			DWORD startTime;
+			DWORD endTime;
+			DWORD lastClaimTime;
+			DWORD totalTimeToday;
+			DWORD maxDailySeconds; // Configurable max time (default 28800 = 8 hours)
+			char lastResetDate[11]; // YYYY-MM-DD format
+			BYTE isActive; // 0=pending, 1=hunting (offline), 2=ready to claim, groupId!=0 implies pending, active or ready to claim
+			
+			IdleHuntingData() : groupId(0), startTime(0), lastClaimTime(0), 
+							totalTimeToday(0), maxDailySeconds(28800), isActive(0)
+			{
+				strcpy(lastResetDate, "2000-01-01");
+			}
+		} m_idleHunting;
+
+	private:
+		void SaveIdleHunting();
+		void GenerateIdleHuntingDrops(DWORD groupId, int killCount);
 };
 
 ESex GET_SEX(LPCHARACTER ch);

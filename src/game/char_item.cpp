@@ -695,6 +695,19 @@ int CHARACTER::GetEmptyInventory(BYTE size) const
 	return -1;
 }
 
+int CHARACTER::GetEmptyInventoryWithPreference(BYTE size, int preferredCell) const
+{
+	// First try the preferred cell (original position)
+	if (preferredCell >= 0 && preferredCell < INVENTORY_MAX_NUM)
+	{
+		if (IsEmptyItemGrid(TItemPos(INVENTORY, preferredCell), size))
+			return preferredCell;
+	}
+	
+	// If preferred cell not available, find any empty slot
+	return GetEmptyInventory(size);
+}
+
 int CHARACTER::GetEmptyDragonSoulInventory(LPITEM pItem) const
 {
 	if (NULL == pItem || !pItem->IsDragonSoul())
@@ -2544,6 +2557,12 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 								AggregateMonster();
 								item->SetCount(item->GetCount()-1);
 								break;
+							case UNIQUE_ITEM_CAPE_OF_COURAGE_INFINITE:
+								AggregateMonster();
+								break;
+							case UNIQUE_ITEM_CAPE_OF_COURAGE_INFINITE_PLUS:
+								AggregateMonster(10000);
+								break;
 
 							case UNIQUE_ITEM_WHITE_FLAG:
 								ForgetMyAttacker();
@@ -4263,89 +4282,74 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 						if (GetWarMap())
 							GetWarMap()->UsePotion(this, item);
 
+					// Infinite potions (27200 = Red Potion Infinite, 27201 = Blue Potion Infinite)
+					if (item->GetVnum() == 27200 || item->GetVnum() == 27201)
+					{
+						// Don't consume infinite potions, keep at count 1
+						if (item->GetCount() != 1)
+							item->SetCount(1);
+					}
+					else
+					{
+						// Normal potions get consumed
 						item->SetCount(item->GetCount() - 1);
-						m_nPotionLimit--;
-						break;
+					}
+					break;
 
-					case USE_POTION_CONTINUE:
+				case USE_ABILITY_UP:
+					{
+						switch (item->GetValue(0))
 						{
-							if (item->GetValue(0) != 0)
-							{
-								AddAffect(AFFECT_HP_RECOVER_CONTINUE, POINT_HP_RECOVER_CONTINUE, item->GetValue(0), 0, item->GetValue(2), 0, true);
-							}
-							else if (item->GetValue(1) != 0)
-							{
-								AddAffect(AFFECT_SP_RECOVER_CONTINUE, POINT_SP_RECOVER_CONTINUE, item->GetValue(1), 0, item->GetValue(2), 0, true);
-							}
-							else
-								return false;
+							case APPLY_MOV_SPEED:
+								AddAffect(AFFECT_MOV_SPEED, POINT_MOV_SPEED, item->GetValue(2), AFF_MOV_SPEED_POTION, item->GetValue(1), 0, true);
+								break;
+
+							case APPLY_ATT_SPEED:
+								AddAffect(AFFECT_ATT_SPEED, POINT_ATT_SPEED, item->GetValue(2), AFF_ATT_SPEED_POTION, item->GetValue(1), 0, true);
+								break;
+
+							case APPLY_STR:
+								AddAffect(AFFECT_STR, POINT_ST, item->GetValue(2), 0, item->GetValue(1), 0, true);
+								break;
+
+							case APPLY_DEX:
+								AddAffect(AFFECT_DEX, POINT_DX, item->GetValue(2), 0, item->GetValue(1), 0, true);
+								break;
+
+							case APPLY_CON:
+								AddAffect(AFFECT_CON, POINT_HT, item->GetValue(2), 0, item->GetValue(1), 0, true);
+								break;
+
+							case APPLY_INT:
+								AddAffect(AFFECT_INT, POINT_IQ, item->GetValue(2), 0, item->GetValue(1), 0, true);
+								break;
+
+							case APPLY_CAST_SPEED:
+								AddAffect(AFFECT_CAST_SPEED, POINT_CASTING_SPEED, item->GetValue(2), 0, item->GetValue(1), 0, true);
+								break;
+
+							case APPLY_ATT_GRADE_BONUS:
+								AddAffect(AFFECT_ATT_GRADE, POINT_ATT_GRADE_BONUS, 
+										item->GetValue(2), 0, item->GetValue(1), 0, true);
+								break;
+
+							case APPLY_DEF_GRADE_BONUS:
+								AddAffect(AFFECT_DEF_GRADE, POINT_DEF_GRADE_BONUS,
+										item->GetValue(2), 0, item->GetValue(1), 0, true);
+								break;
 						}
+					}
 
-						if (GetDungeon())
-							GetDungeon()->UsePotion(this);
+					if (GetDungeon())
+						GetDungeon()->UsePotion(this);
 
-						if (GetWarMap())
-							GetWarMap()->UsePotion(this, item);
+					if (GetWarMap())
+						GetWarMap()->UsePotion(this, item);
 
-						item->SetCount(item->GetCount() - 1);
-						break;
+					item->SetCount(item->GetCount() - 1);
+					break;
 
-					case USE_ABILITY_UP:
-						{
-							switch (item->GetValue(0))
-							{
-								case APPLY_MOV_SPEED:
-									AddAffect(AFFECT_MOV_SPEED, POINT_MOV_SPEED, item->GetValue(2), AFF_MOV_SPEED_POTION, item->GetValue(1), 0, true);
-									EffectPacket(SE_DXUP_PURPLE);
-									break;
-
-								case APPLY_ATT_SPEED:
-									AddAffect(AFFECT_ATT_SPEED, POINT_ATT_SPEED, item->GetValue(2), AFF_ATT_SPEED_POTION, item->GetValue(1), 0, true);
-									EffectPacket(SE_SPEEDUP_GREEN);
-									break;
-
-								case APPLY_STR:
-									AddAffect(AFFECT_STR, POINT_ST, item->GetValue(2), 0, item->GetValue(1), 0, true);
-									break;
-
-								case APPLY_DEX:
-									AddAffect(AFFECT_DEX, POINT_DX, item->GetValue(2), 0, item->GetValue(1), 0, true);
-									break;
-
-								case APPLY_CON:
-									AddAffect(AFFECT_CON, POINT_HT, item->GetValue(2), 0, item->GetValue(1), 0, true);
-									break;
-
-								case APPLY_INT:
-									AddAffect(AFFECT_INT, POINT_IQ, item->GetValue(2), 0, item->GetValue(1), 0, true);
-									break;
-
-								case APPLY_CAST_SPEED:
-									AddAffect(AFFECT_CAST_SPEED, POINT_CASTING_SPEED, item->GetValue(2), 0, item->GetValue(1), 0, true);
-									break;
-
-								case APPLY_ATT_GRADE_BONUS:
-									AddAffect(AFFECT_ATT_GRADE, POINT_ATT_GRADE_BONUS, 
-											item->GetValue(2), 0, item->GetValue(1), 0, true);
-									break;
-
-								case APPLY_DEF_GRADE_BONUS:
-									AddAffect(AFFECT_DEF_GRADE, POINT_DEF_GRADE_BONUS,
-											item->GetValue(2), 0, item->GetValue(1), 0, true);
-									break;
-							}
-						}
-
-						if (GetDungeon())
-							GetDungeon()->UsePotion(this);
-
-						if (GetWarMap())
-							GetWarMap()->UsePotion(this, item);
-
-						item->SetCount(item->GetCount() - 1);
-						break;
-
-					case USE_TALISMAN:
+				case USE_TALISMAN:
 						{
 							const int TOWN_PORTAL	= 1;
 							const int MEMORY_PORTAL = 2;
@@ -5738,6 +5742,7 @@ namespace NPartyPickupDistribute
 			if (item->IsOwnership(ch))
 				owner = ch;
 		}
+
 	};
 
 	struct FCountNearMember
@@ -6205,9 +6210,41 @@ bool CHARACTER::EquipItem(LPITEM item, int iCandidateCell)
 			if (item->GetWearFlag() == WEARABLE_ABILITY) 
 				return false;
 
+			// Try to swap first
 			if (false == SwapItem(item->GetCell(), INVENTORY_MAX_NUM + iWearCell))
 			{
-				return false;
+				// Swap failed (likely due to size difference), try unequip-then-equip approach
+				LPITEM pkOldItem = GetWear(iWearCell);
+				if (!pkOldItem)
+					return false;
+
+				// Find empty slot for the old item, preferring its original position if available
+				int emptyPos = GetEmptyInventoryWithPreference(pkOldItem->GetSize(), item->GetCell());
+				if (emptyPos < 0)
+				{
+					ChatPacket(CHAT_TYPE_INFO, LC_TEXT("인벤토리 공간이 부족합니다."));
+					return false;
+				}
+
+				// Store old cell before equipping
+				BYTE bOldCell = item->GetCell();
+				
+				// Unequip the old item
+				pkOldItem->RemoveFromCharacter();
+				
+				// Try to equip the new item
+				if (item->EquipTo(this, iWearCell))
+				{
+					// Successfully equipped, now place old item in inventory
+					pkOldItem->AddToCharacter(this, TItemPos(INVENTORY, emptyPos));
+					SyncQuickslot(QUICKSLOT_TYPE_ITEM, bOldCell, iWearCell);
+				}
+				else
+				{
+					// Failed to equip new item, restore old item
+					pkOldItem->AddToCharacter(this, TItemPos(INVENTORY, INVENTORY_MAX_NUM + iWearCell));
+					return false;
+				}
 			}
 		}
 		else
@@ -6596,34 +6633,45 @@ LPITEM CHARACTER::AutoGiveItem(DWORD dwItemVnum, BYTE bCount, int iRarePct, bool
 
 	DBManager::instance().SendMoneyLog(MONEY_LOG_DROP, dwItemVnum, bCount);
 
+	// Infinite potions should never stack
+	if (dwItemVnum == 27200 || dwItemVnum == 27201)
+	{
+		// Force count to 1 for infinite potions
+		bCount = 1;
+	}
+
 	if (p->dwFlags & ITEM_FLAG_STACKABLE && p->bType != ITEM_BLEND) 
 	{
-		for (int i = 0; i < INVENTORY_MAX_NUM; ++i)
+		// Skip stacking logic for infinite potions
+		if (dwItemVnum != 27200 && dwItemVnum != 27201)
 		{
-			LPITEM item = GetInventoryItem(i);
-
-			if (!item)
-				continue;
-
-			if (item->GetVnum() == dwItemVnum && FN_check_item_socket(item))
+			for (int i = 0; i < INVENTORY_MAX_NUM; ++i)
 			{
-				if (IS_SET(p->dwFlags, ITEM_FLAG_MAKECOUNT))
+				LPITEM item = GetInventoryItem(i);
+
+				if (!item)
+					continue;
+
+				if (item->GetVnum() == dwItemVnum && FN_check_item_socket(item))
 				{
-					if (bCount < p->alValues[1])
-						bCount = p->alValues[1];
-				}
+					if (IS_SET(p->dwFlags, ITEM_FLAG_MAKECOUNT))
+					{
+						if (bCount < p->alValues[1])
+							bCount = p->alValues[1];
+					}
 
-				BYTE bCount2 = MIN(200 - item->GetCount(), bCount);
-				bCount -= bCount2;
+					BYTE bCount2 = MIN(200 - item->GetCount(), bCount);
+					bCount -= bCount2;
 
-				item->SetCount(item->GetCount() + bCount2);
+					item->SetCount(item->GetCount() + bCount2);
 
-				if (bCount == 0)
-				{
-					if (bMsg)
-						ChatPacket(CHAT_TYPE_INFO, LC_TEXT("아이템 획득: %s"), item->GetName());
+					if (bCount == 0)
+					{
+						if (bMsg)
+							ChatPacket(CHAT_TYPE_INFO, LC_TEXT("아이템 획득: %s"), item->GetName());
 
-					return item;
+						return item;
+					}
 				}
 			}
 		}

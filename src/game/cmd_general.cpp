@@ -32,6 +32,11 @@
 
 extern int g_server_id;
 
+// MOVE_CHANNEL
+#include "map_location.h"
+int channel_index;
+// END_OF_MOVE_CHANNEL
+
 extern int g_nPortalLimitTime;
 
 ACMD(do_user_horse_ride)
@@ -285,6 +290,10 @@ EVENTFUNC(timed_event)
 
 						LogManager::instance().DetailLoginLog( false, ch );
 					}
+				// MOVE_CHANNEL
+				case SCMD_MOVE_CHANNEL:
+					ch->MoveChannel(channel_index);
+				// END_OF_MOVE_CHANNEL
 					break;
 			}
 		}
@@ -354,6 +363,23 @@ ACMD(do_cmd)
 		case SCMD_PHASE_SELECT:
 			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("캐릭터를 전환 합니다. 잠시만 기다리세요."));
 			break;
+		// MOVE_CHANNEL
+		case SCMD_MOVE_CHANNEL:
+			//ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("SCMD_MOVE_CHANNEL"));
+			char arg1[256];
+			one_argument(argument, arg1, sizeof(arg1));
+			if (!*arg1)
+				return;
+
+			int new_ch;
+			str_to_number(new_ch, arg1);
+			if (new_ch < 1 || new_ch > 6)   // replace with your channel count
+				return;
+			if (!ch->IsPC())
+				return;
+			channel_index = new_ch;
+			break;
+		// END_OF_MOVE_CHANNEL
 	}
 
 	int nExitLimitTime = 10;
@@ -387,6 +413,83 @@ ACMD(do_cmd)
 				ch->m_pkTimedEvent	= event_create(timed_event, info, 1);
 			}
 			break;
+		// MOVE_CHANNEL
+		case SCMD_MOVE_CHANNEL:
+			{
+				int lMapArray[] = { 66, 113, 207 }; // disallowed map index
+
+				int32_t lMapIndex;
+				uint32_t lAddr;
+				uint16_t wPort;
+
+				long x = ch->GetX();
+				long y = ch->GetY();
+
+				if (!CMapLocation::Instance().Get(x, y, lMapIndex, lAddr, wPort))
+				{
+					sys_err("Can not find map location index[%ld] x[%ld] y[%ld] name[%s]", lMapIndex, x, y, ch->GetName());
+					return;
+				}
+
+				if (lMapIndex >= 10000)
+				{
+					sys_err("Map index higher or equal to 10000");
+					return;
+				}
+
+				for (int i = 0; i < _countof(lMapArray); i++)
+				{
+					if (lMapIndex == lMapArray[i])
+					{
+						ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("CHANNEL_CHANGE_BLOCKED_LOCATION"));
+        				return;
+					}
+				}
+				
+
+				// Determine current channel from port
+                // Port pattern: 110X1, 110X2, 110X3 where X = channel number (1-4)
+                int iCurrentChannel = (wPort / 10) % 10;
+                int iCore = wPort % 10;
+				int temporaryChannelLimit = 2; // Set to 2 for now, replace with final channel count later
+
+                if (iCurrentChannel == 0 || iCore == 0)
+                {
+                    ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("CHANNEL_PORT_NOT_AVAILABLE"), wPort);
+    				return;
+                }
+
+                if (iCurrentChannel == channel_index)
+                {
+                    ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("CHANNEL_ALREADY_ON_CHANNEL"), iCurrentChannel);
+    				return;
+                }
+
+				if (channel_index > temporaryChannelLimit)
+				{
+					ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("CHANNEL_NOT_AVAILABLE"), channel_index, temporaryChannelLimit);
+    				return;
+				}
+
+                TimedEventInfo* info = AllocEventInfo<TimedEventInfo>();
+
+				{
+					if (ch->IsPosition(POS_FIGHTING))
+						info->left_second = 10;
+					else
+						info->left_second = 3;
+				}
+
+				ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("CHANNEL_CHANGING"));
+
+				info->ch = ch;
+				info->subcmd = subcmd;
+				strlcpy(info->szReason, argument, sizeof(info->szReason));
+
+				ch->m_pkTimedEvent = event_create(timed_event, info, 1);
+			}
+			break;
+		// END_OF_MOVE_CHANNEL
 	}
 }
 
