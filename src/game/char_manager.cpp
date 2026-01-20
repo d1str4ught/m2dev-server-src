@@ -543,8 +543,7 @@ bool CHARACTER_MANAGER::SpawnMoveGroup(DWORD dwVnum, long lMapIndex, int sx, int
 	return true;
 }
 
-// MR-8: Snow dungeon - All-damage immunity with exceptions
-LPCHARACTER CHARACTER_MANAGER::SpawnGroupWithVIDs(DWORD dwVnum, long lMapIndex, int sx, int sy, int ex, int ey, LPREGEN pkRegen, bool bAggressive_, LPDUNGEON pDungeon, std::vector<DWORD>& rVids)
+bool CHARACTER_MANAGER::SpawnGroupGroup(DWORD dwVnum, long lMapIndex, int sx, int sy, int ex, int ey, LPREGEN pkRegen, bool bAggressive_, LPDUNGEON pDungeon)
 {
 	const DWORD dwGroupID = CMobManager::Instance().GetGroupFromGroupGroup(dwVnum);
 
@@ -559,7 +558,8 @@ LPCHARACTER CHARACTER_MANAGER::SpawnGroupWithVIDs(DWORD dwVnum, long lMapIndex, 
 	}
 }
 
-LPCHARACTER CHARACTER_MANAGER::SpawnGroup(DWORD dwVnum, long lMapIndex, int sx, int sy, int ex, int ey, LPREGEN pkRegen, bool bAggressive_, LPDUNGEON pDungeon)
+// MR-8: Snow dungeon - All-damage immunity with exceptions
+LPCHARACTER CHARACTER_MANAGER::SpawnGroupWithVIDs(DWORD dwVnum, long lMapIndex, int sx, int sy, int ex, int ey, LPREGEN pkRegen, bool bAggressive_, LPDUNGEON pDungeon, std::vector<DWORD>& rVids)
 {
 	CMobGroup * pkGroup = CMobManager::Instance().GetGroup(dwVnum);
 
