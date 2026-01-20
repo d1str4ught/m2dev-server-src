@@ -2858,34 +2858,45 @@ void CHARACTER::CalculateMoveDuration()
 	m_posStart.x = GetX();
 	m_posStart.y = GetY();
 
-	float fDist = DISTANCE_SQRT(m_posStart.x - m_posDest.x, m_posStart.y - m_posDest.y);
-	float motionSpeed = GetMoveMotionSpeed();
+	const float fDist = DISTANCE_SQRT(m_posStart.x - m_posDest.x, m_posStart.y - m_posDest.y);
+	const float motionSpeed = GetMoveMotionSpeed();
 
 	// If there is no real movement or speed is invalid, duration becomes 0.
 	// This should NOT lead to NaN in StateMove (StateMove will guard).
-	if (motionSpeed <= 0.0f || fDist <= 0.0f)
+	// No real movement -> duration 0 is normal. Do not spam SYSERR.
+	if (fDist <= 0.0f)
 	{
-		sys_err("MOVE_DURATION_INVALID: name=%s vid=%u map=%ld dist=%.3f speed=%.3f start=(%d,%d) dest=(%d,%d)",
-			GetName(), (DWORD)GetVID(), GetMapIndex(), fDist, motionSpeed, (int)m_posStart.x, (int)m_posStart.y, (int)m_posDest.x, (int)m_posDest.y);
+		m_dwMoveDuration = 0;
+		m_dwMoveStartTime = get_dword_time();
+		return;
+	}
+
+	// Invalid speed is suspicious (can lead to divide byzero / NaN)
+	if (motionSpeed <= 0.0f)
+	{
+		sys_err("MOVE_DURATION_INVALID_SPEED: name=%s vid=%u map=%ld dist=%.3f speed=%.3f start=(%d,%d) dest=(%d,%d)",
+			GetName(), (DWORD)GetVID(), GetMapIndex(), fDist, motionSpeed,
+			(int)m_posStart.x, (int)m_posStart.y, (int)m_posDest.x, (int)m_posDest.y);
 
 		m_dwMoveDuration = 0;
 		m_dwMoveStartTime = get_dword_time();
 		return;
 	}
 
-	// Base duration in ms. int truncation can produce 0 for tiny moves.
+	// Base duration in ms. int truncation can produce 0 for tiny moves
 	int baseMs = (int)((fDist / motionSpeed) * 1000.0f);
 	if (baseMs <= 0)
 	{
 		sys_err("MOVE_DURATION_BASE_ZERO: name=%s vid=%u map=%ld dist=%.3f speed=%.3f base=%d start=(%d,%d) dest=(%d,%d)",
-			GetName(), (DWORD)GetVID(), GetMapIndex(), fDist, motionSpeed, baseMs, (int)m_posStart.x, (int)m_posStart.y, (int)m_posDest.x, (int)m_posDest.y);
+			GetName(), (DWORD)GetVID(), GetMapIndex(), fDist, motionSpeed, baseMs,
+			(int)m_posStart.x, (int)m_posStart.y, (int)m_posDest.x, (int)m_posDest.y);
 
 		baseMs = 1;
 	}
 
 	m_dwMoveDuration = CalculateDuration(GetLimitPoint(POINT_MOV_SPEED), baseMs);
 
-	// Defensive clamp: some duration formulas can still return 0.
+	// some duration formulas can still return 0
 	if (m_dwMoveDuration == 0)
 	{
 		sys_err("MOVE_DURATION_FINAL_ZERO: name=%s vid=%u map=%ld base=%d dist=%.3f speed=%.3f",
@@ -2894,12 +2905,12 @@ void CHARACTER::CalculateMoveDuration()
 		m_dwMoveDuration = 1;
 	}
 
+	m_dwMoveStartTime = get_dword_time();
+
 	if (IsNPC())
 		sys_log(1, "%s: GOTO: distance %f, spd %u, duration %u, motion speed %f pos %d %d -> %d %d",
-				GetName(), fDist, GetLimitPoint(POINT_MOV_SPEED), m_dwMoveDuration, motionSpeed,
-				m_posStart.x, m_posStart.y, m_posDest.x, m_posDest.y);
-
-	m_dwMoveStartTime = get_dword_time();
+			GetName(), fDist, GetLimitPoint(POINT_MOV_SPEED), m_dwMoveDuration, motionSpeed,
+			(int)m_posStart.x, (int)m_posStart.y, (int)m_posDest.x, (int)m_posDest.y);
 }
 
 // x y 위치로 이동 한다. (이동할 수 있는 가 없는 가를 확인 하고 Sync 메소드로 실제 이동 한다)
