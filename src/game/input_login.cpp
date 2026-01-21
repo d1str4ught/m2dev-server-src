@@ -27,6 +27,7 @@
 #include "log.h"
 #include "horsename_manager.h"
 #include "MarkManager.h"
+#include "p2p.h"
 
 static void _send_bonus_info(LPCHARACTER ch)
 {
@@ -924,10 +925,30 @@ void CInputLogin::GuildMarkUpload(LPDESC d, const char* c_pData)
 		if (*((DWORD *) p->image + iPixel) != 0x00000000)
 			isEmpty = false;
 
+	DWORD markID = CGuildMarkManager::INVALID_MARK_ID;
+
 	if (isEmpty)
 		rkMarkMgr.DeleteMark(p->gid);
 	else
-		rkMarkMgr.SaveMark(p->gid, p->image);
+		markID = rkMarkMgr.SaveMark(p->gid, p->image);
+
+	// Broadcast mark update to all game cores via P2P, which will then broadcast to their clients
+	if (markID != CGuildMarkManager::INVALID_MARK_ID)
+	{
+		WORD imgIdx = static_cast<WORD>(markID / CGuildMarkImage::MARK_TOTAL_COUNT);
+
+		// Send P2P packet to all other game cores
+		TPacketGGMarkUpdate p2pPacket;
+		p2pPacket.bHeader = HEADER_GG_MARK_UPDATE;
+		p2pPacket.dwGuildID = p->gid;
+		p2pPacket.wImgIdx = imgIdx;
+		P2P_MANAGER::instance().Send(&p2pPacket, sizeof(p2pPacket));
+
+		// Also broadcast to clients connected to this core (mark server) using the same logic
+		BroadcastGuildMarkUpdate(p->gid, imgIdx);
+
+		sys_log(0, "MARK_SERVER: GuildMarkUpload: Broadcast mark update for guild %u, imgIdx %u via P2P", p->gid, imgIdx);
+	}
 }
 
 void CInputLogin::GuildMarkIDXList(LPDESC d, const char* c_pData)

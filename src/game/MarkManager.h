@@ -45,6 +45,7 @@ class CGuildMarkManager : public singleton<CGuildMarkManager>
 		// SERVER
 		void CopyMarkIdx(char * pcBuf) const;
 		DWORD SaveMark(DWORD guildID, BYTE * pbMarkImage);
+		DWORD AllocMark(DWORD guildID); // Allocate a mark slot with default (empty) image
 		void DeleteMark(DWORD guildID);
 		void GetDiffBlocks(DWORD imgIdx, const uint32_t* crcList, std::map<BYTE, const SGuildMarkBlock *> & mapDiffBlocks);
 

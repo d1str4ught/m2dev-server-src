@@ -267,6 +267,7 @@ CPacketInfoGG::CPacketInfoGG()
 	Set(HEADER_GG_MONARCH_NOTICE,		sizeof(TPacketGGMonarchNotice),	"MonarchNotice", false);
 	Set(HEADER_GG_MONARCH_TRANSFER,		sizeof(TPacketMonarchGGTransfer),	"MonarchTransfer", false);
 	Set(HEADER_GG_CHECK_AWAKENESS,		sizeof(TPacketGGCheckAwakeness),	"CheckAwakeness",		false);
+	Set(HEADER_GG_MARK_UPDATE,			sizeof(TPacketGGMarkUpdate),		"MarkUpdate",			false);
 }
 
 CPacketInfoGG::~CPacketInfoGG()

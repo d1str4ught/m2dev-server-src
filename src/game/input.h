@@ -17,6 +17,7 @@ enum
 };
 
 void LoginFailure(LPDESC d, const char * c_pszStatus);
+void BroadcastGuildMarkUpdate(DWORD dwGuildID, WORD wImgIdx);
 
 
 class CInputProcessor
@@ -345,6 +346,7 @@ class CInputP2P : public CInputProcessor
 		void		IamAwake(LPDESC d, const char * c_pData);
 		void		MessengerRequestAdd(const char* c_pData);
 		void		MessengerResponse(const char* c_pData);
+		void		GuildMarkUpdate(const char * c_pData);
 
 	protected:
 		CPacketInfoGG 	m_packetInfoGG;

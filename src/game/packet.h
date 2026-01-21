@@ -212,6 +212,7 @@ enum
 
 	HEADER_GC_MARK_BLOCK			= 100,
 	HEADER_GC_MARK_IDXLIST			= 102,
+	HEADER_GC_MARK_UPDATE			= 103,
 
 	HEADER_GC_TIME					= 106,
 	HEADER_GC_CHANGE_NAME			= 107,
@@ -314,6 +315,7 @@ enum
 	HEADER_GG_MONARCH_TRANSFER		= 27,
 
 	HEADER_GG_CHECK_AWAKENESS		= 29,
+	HEADER_GG_MARK_UPDATE			= 30,
 };
 
 #pragma pack(1)
@@ -514,6 +516,13 @@ typedef struct SPacketGGBlockChat
 	char	szName[CHARACTER_NAME_MAX_LEN + 1];
 	int32_t	lBlockDuration;
 } TPacketGGBlockChat;
+
+typedef struct packet_gg_mark_update
+{
+	uint8_t		bHeader;
+	uint32_t	dwGuildID;
+	uint16_t	wImgIdx;
+} TPacketGGMarkUpdate;
 
 /* 클라이언트 측에서 보내는 패킷 */
 
@@ -1813,6 +1822,13 @@ typedef struct packet_mark_block
 	uint32_t	count;
 	// 뒤에 64 x 48 x 픽셀크기(4바이트) = 12288만큼 데이터 붙음
 } TPacketGCMarkBlock;
+
+typedef struct packet_mark_update
+{
+	uint8_t	header;
+	uint32_t	guildID;
+	uint16_t	imgIdx;
+} TPacketGCMarkUpdate;
 
 typedef struct command_symbol_upload
 {

@@ -457,6 +457,34 @@ void CInputP2P::IamAwake(LPDESC d, const char * c_pData)
 	sys_log(0, "P2P Awakeness check from %s. My P2P connection number is %d. and details...\n%s", d->GetHostName(), P2P_MANAGER::instance().GetDescCount(), hostNames.c_str());
 }
 
+// Shared function to broadcast mark update to all clients on this core
+void BroadcastGuildMarkUpdate(DWORD dwGuildID, WORD wImgIdx)
+{
+	TPacketGCMarkUpdate packet;
+	packet.header = HEADER_GC_MARK_UPDATE;
+	packet.guildID = dwGuildID;
+	packet.imgIdx = wImgIdx;
+
+	const DESC_MANAGER::DESC_SET & c_set_desc = DESC_MANAGER::instance().GetClientSet();
+	for (DESC_MANAGER::DESC_SET::const_iterator it = c_set_desc.begin(); it != c_set_desc.end(); ++it)
+	{
+		LPDESC pkDesc = *it;
+		if (pkDesc && pkDesc->GetCharacter())
+		{
+			pkDesc->Packet(&packet, sizeof(packet));
+		}
+	}
+
+	sys_log(0, "BroadcastGuildMarkUpdate: guild %u, imgIdx %u, sent to %zu clients",
+		dwGuildID, wImgIdx, c_set_desc.size());
+}
+
+void CInputP2P::GuildMarkUpdate(const char * c_pData)
+{
+	TPacketGGMarkUpdate * p = (TPacketGGMarkUpdate *) c_pData;
+	BroadcastGuildMarkUpdate(p->dwGuildID, p->wImgIdx);
+}
+
 int CInputP2P::Analyze(LPDESC d, BYTE bHeader, const char * c_pData)
 {
 	if (test_server)
@@ -580,6 +608,10 @@ int CInputP2P::Analyze(LPDESC d, BYTE bHeader, const char * c_pData)
 
 		case HEADER_GG_CHECK_AWAKENESS:
 			IamAwake(d, c_pData);
+			break;
+
+		case HEADER_GG_MARK_UPDATE:
+			GuildMarkUpdate(c_pData);
 			break;
 	}
 
