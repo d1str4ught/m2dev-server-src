@@ -1642,6 +1642,42 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 		// End of Resists & Proofs
 
 		////////////////////////////////////////////////////////////////////////////////////////
+		// MR-8: Snow dungeon - All-damage immunity with exceptions
+	public:
+		enum EDamageImmunityConditionType
+		{
+			DAMAGE_IMMUNITY_COND_AFFECT = 0,           // Has affect
+			DAMAGE_IMMUNITY_COND_LEVEL_MIN = 1,        // Level >= value
+			DAMAGE_IMMUNITY_COND_LEVEL_MAX = 2,        // Level <= value
+			DAMAGE_IMMUNITY_COND_QUEST_FLAG = 3,       // Quest flag == value
+			DAMAGE_IMMUNITY_COND_ITEM_EQUIPPED = 4,    // Has item vnum equipped
+			DAMAGE_IMMUNITY_COND_EMPIRE = 5,           // Is specific empire
+			DAMAGE_IMMUNITY_COND_JOB = 6,              // Is specific job
+		};
+
+		struct SDamageImmunityCondition
+		{
+			BYTE bType;
+			DWORD dwValue;
+			std::string strExtra;  // For quest flag names, etc.
+			
+			SDamageImmunityCondition() : bType(0), dwValue(0) {}
+			SDamageImmunityCondition(BYTE t, DWORD v, const std::string& e = "") 
+				: bType(t), dwValue(v), strExtra(e) {}
+		};
+
+		void				SetDamageImmunity(bool bImmune);
+		bool				IsDamageImmune() const { return m_bDamageImmune; }
+		void				AddDamageImmunityCondition(BYTE bType, DWORD dwValue, const std::string& strExtra = "");
+		void				ClearDamageImmunityConditions();
+		bool				CheckDamageImmunityConditions(LPCHARACTER pAttacker) const;
+
+	protected:
+		bool								m_bDamageImmune;
+		std::vector<SDamageImmunityCondition>	m_vecDamageImmunityConditions;
+		// MR-8: -- END OF -- Snow dungeon - All-damage immunity with exceptions
+
+		////////////////////////////////////////////////////////////////////////////////////////
 		// QUEST
 		// 
 	public:

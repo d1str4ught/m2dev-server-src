@@ -558,7 +558,82 @@ bool CHARACTER_MANAGER::SpawnGroupGroup(DWORD dwVnum, long lMapIndex, int sx, in
 	}
 }
 
-LPCHARACTER CHARACTER_MANAGER::SpawnGroup(DWORD dwVnum, long lMapIndex, int sx, int sy, int ex, int ey, LPREGEN pkRegen, bool bAggressive_, LPDUNGEON pDungeon)
+// MR-8: Snow dungeon - All-damage immunity with exceptions
+LPCHARACTER CHARACTER_MANAGER::SpawnGroupWithVIDs(DWORD dwVnum, long lMapIndex, int sx, int sy, int ex, int ey, LPREGEN pkRegen, bool bAggressive_, LPDUNGEON pDungeon, std::vector<DWORD>& rVids)
+{
+	CMobGroup * pkGroup = CMobManager::Instance().GetGroup(dwVnum);
+
+	if (!pkGroup)
+	{
+		sys_err("NOT_EXIST_GROUP_VNUM(%u) Map(%u) ", dwVnum, lMapIndex);
+		return NULL;
+	}
+
+	LPCHARACTER pkChrMaster = NULL;
+	LPPARTY pkParty = NULL;
+
+	const std::vector<DWORD> & c_rdwMembers = pkGroup->GetMemberVector();
+
+	bool bSpawnedByStone = false;
+	bool bAggressive = bAggressive_;
+
+	if (m_pkChrSelectedStone)
+	{
+		bSpawnedByStone = true;
+
+		if (m_pkChrSelectedStone->GetDungeon())
+			bAggressive = true;
+	}
+
+	LPCHARACTER chLeader = NULL;
+
+	for (DWORD i = 0; i < c_rdwMembers.size(); ++i)
+	{
+		LPCHARACTER tch = SpawnMobRange(c_rdwMembers[i], lMapIndex, sx, sy, ex, ey, true, bSpawnedByStone);
+
+		if (!tch)
+		{
+			if (i == 0)	// 못만든 몬스터가 대장일 경우에는 그냥 실패
+				return NULL;
+
+			continue;
+		}
+
+		if (i == 0)
+			chLeader = tch;
+
+		rVids.push_back(tch->GetVID());
+
+		tch->SetDungeon(pDungeon);
+
+		sx = tch->GetX() - number(300, 500);
+		sy = tch->GetY() - number(300, 500);
+		ex = tch->GetX() + number(300, 500);
+		ey = tch->GetY() + number(300, 500);
+
+		if (m_pkChrSelectedStone)
+			tch->SetStone(m_pkChrSelectedStone);
+		else if (pkParty)
+		{
+			pkParty->Join(tch->GetVID());
+			pkParty->Link(tch);
+		}
+		else if (!pkChrMaster)
+		{
+			pkChrMaster = tch;
+			pkChrMaster->SetRegen(pkRegen);
+
+			pkParty = CPartyManager::instance().CreateParty(pkChrMaster);
+		}
+
+		if (bAggressive)
+			tch->SetAggressive();
+	}
+
+	return chLeader;
+}
+
+LPCHARACTER CHARACTER_MANAGER::SpawnGroupWithImmunity(DWORD dwVnum, long lMapIndex, int sx, int sy, int ex, int ey, LPREGEN pkRegen, bool bAggressive_, LPDUNGEON pDungeon, const std::vector<CHARACTER::SDamageImmunityCondition>& conditions)
 {
 	CMobGroup * pkGroup = CMobManager::Instance().GetGroup(dwVnum);
 
@@ -603,6 +678,14 @@ LPCHARACTER CHARACTER_MANAGER::SpawnGroup(DWORD dwVnum, long lMapIndex, int sx, 
 
 		tch->SetDungeon(pDungeon);
 
+		// Apply damage immunity atomically before mob is attackable
+		if (!conditions.empty())
+		{
+			tch->SetDamageImmunity(true);
+			for (const auto& cond : conditions)
+				tch->AddDamageImmunityCondition(cond.bType, cond.dwValue, cond.strExtra);
+		}
+
 		sx = tch->GetX() - number(300, 500);
 		sy = tch->GetY() - number(300, 500);
 		ex = tch->GetX() + number(300, 500);
@@ -629,6 +712,13 @@ LPCHARACTER CHARACTER_MANAGER::SpawnGroup(DWORD dwVnum, long lMapIndex, int sx, 
 
 	return chLeader;
 }
+
+LPCHARACTER CHARACTER_MANAGER::SpawnGroup(DWORD dwVnum, long lMapIndex, int sx, int sy, int ex, int ey, LPREGEN pkRegen, bool bAggressive_, LPDUNGEON pDungeon)
+{
+	std::vector<DWORD> dummy;
+	return SpawnGroupWithVIDs(dwVnum, lMapIndex, sx, sy, ex, ey, pkRegen, bAggressive_, pDungeon, dummy);
+}
+// MR-8: -- END OF -- Snow dungeon - All-damage immunity with exceptions
 
 struct FuncUpdateAndResetChatCounter
 {

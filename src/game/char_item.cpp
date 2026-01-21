@@ -7601,6 +7601,19 @@ bool CHARACTER::CanEquipNow(const LPITEM item, const TItemPos& srcCell, const TI
 			return false;
 		}
 
+		// MR-8: Prevent mounting in Nemere's Watchtower
+		if (item->GetSpecialGroup() == UNIQUE_GROUP_SPECIAL_RIDE)
+		{
+			long lMapIndex = GetMapIndex();
+			bool isInNemereDungeon = lMapIndex >= 352 * 10000 && lMapIndex < 353 * 10000;
+
+			if (isInNemereDungeon && !IsRiding())
+			{
+				ChatPacket(CHAT_TYPE_INFO, LC_TEXT("You cannot ride your horse in Nemere's Watchtower."));
+				return false;
+			}
+		}
+		// MR-8: -- END OF -- Prevent mounting in Nemere's Watchtower
 	}
 
 	return true;

@@ -763,6 +763,46 @@ LPCHARACTER CDungeon::SpawnMob_ac_dir(DWORD vnum, int x, int y, int dir)
 	return ch;
 }
 
+// MR-8: Snow dungeon - All-damage immunity with exceptions
+LPCHARACTER CDungeon::SpawnMobWithImmunity(DWORD vnum, int x, int y, int dir, const std::vector<CHARACTER::SDamageImmunityCondition>& conditions)
+{
+	LPSECTREE_MAP pkSectreeMap = SECTREE_MANAGER::instance().GetMap(m_lMapIndex);
+	if (pkSectreeMap == NULL) {
+		sys_err("CDungeon: SECTREE_MAP not found for #%ld", m_lMapIndex);
+		return NULL;
+	}
+
+	long ax = pkSectreeMap->m_setting.iBaseX + x * 100;
+	long ay = pkSectreeMap->m_setting.iBaseY + y * 100;
+
+	int rot = (dir == 0 ? -1 : (dir - 1) * 45);
+
+	// Create but do NOT show yet
+	LPCHARACTER ch = CHARACTER_MANAGER::instance().SpawnMob(vnum, m_lMapIndex, ax, ay, 0, false, rot, false);
+	if (!ch)
+		return NULL;
+
+	// Apply damage immunity atomically before showing
+	if (!conditions.empty())
+	{
+		ch->SetDamageImmunity(true);
+		for (const auto& c : conditions)
+			ch->AddDamageImmunityCondition(c.bType, c.dwValue, c.strExtra);
+	}
+
+	// Link to dungeon and show
+	ch->SetDungeon(this);
+	if (!ch->Show(m_lMapIndex, ax, ay, 0, false))
+	{
+		M2_DESTROY_CHARACTER(ch);
+		sys_log(0, "SpawnMobWithImmunity: cannot show monster");
+		return NULL;
+	}
+
+	return ch;
+}
+// MR-8: -- END OF -- Snow dungeon - All-damage immunity with exceptions
+
 void CDungeon::SpawnNameMob(DWORD vnum, int x, int y, const char* name)
 {
 	LPSECTREE_MAP pkSectreeMap = SECTREE_MANAGER::instance().GetMap(m_lMapIndex);
@@ -833,6 +873,67 @@ LPCHARACTER CDungeon::SpawnGroup(DWORD vnum, long x, long y, float radius, bool 
 	return ch;
 }
 
+// MR-8: Snow dungeon - All-damage immunity with exceptions
+bool CDungeon::SpawnGroupWithVIDs(DWORD vnum, long x, long y, float radius, bool bAggressive, int count, std::vector<DWORD>& rVids)
+{
+	LPSECTREE_MAP pkSectreeMap = SECTREE_MANAGER::instance().GetMap(m_lMapIndex);
+	if (pkSectreeMap == NULL) {
+		sys_err("CDungeon: SECTREE_MAP not found for #%ld", m_lMapIndex);
+		return false;
+	}
+
+	int iRadius = (int) radius;
+
+	int sx = pkSectreeMap->m_setting.iBaseX + x - iRadius;
+	int sy = pkSectreeMap->m_setting.iBaseY + y - iRadius;
+	int ex = sx + iRadius;
+	int ey = sy + iRadius;
+
+	bool bAny = false;
+
+	while (count--)
+	{
+		std::vector<DWORD> localVids;
+		LPCHARACTER chLeader = CHARACTER_MANAGER::instance().SpawnGroupWithVIDs(vnum, m_lMapIndex, sx, sy, ex, ey, NULL, bAggressive, this, localVids);
+		if (chLeader)
+		{
+			bAny = true;
+			if (!localVids.empty())
+				rVids.insert(rVids.end(), localVids.begin(), localVids.end());
+		}
+	}
+
+	return bAny;
+}
+
+LPCHARACTER CDungeon::SpawnGroupWithImmunity(DWORD vnum, long x, long y, float radius, bool bAggressive, int count, const std::vector<CHARACTER::SDamageImmunityCondition>& conditions)
+{
+	LPSECTREE_MAP pkSectreeMap = SECTREE_MANAGER::instance().GetMap(m_lMapIndex);
+	if (pkSectreeMap == NULL) {
+		sys_err("CDungeon: SECTREE_MAP not found for #%ld", m_lMapIndex);
+		return NULL;
+	}
+
+	int iRadius = (int) radius;
+
+	int sx = pkSectreeMap->m_setting.iBaseX + x - iRadius;
+	int sy = pkSectreeMap->m_setting.iBaseY + y - iRadius;
+	int ex = sx + iRadius;
+	int ey = sy + iRadius;
+
+	LPCHARACTER chLeader = NULL;
+
+	while (count--)
+	{
+		LPCHARACTER ch = CHARACTER_MANAGER::instance().SpawnGroupWithImmunity(vnum, m_lMapIndex, sx, sy, ex, ey, NULL, bAggressive, this, conditions);
+		if (ch && !chLeader)
+			chLeader = ch;
+	}
+
+	return chLeader;
+}
+// MR-8: -- END OF -- Snow dungeon - All-damage immunity with exceptions
+
 void CDungeon::SpawnRegen(const char* filename, bool bOnce)
 {
 	if (!filename)
@@ -849,6 +950,44 @@ void CDungeon::SpawnRegen(const char* filename, bool bOnce)
 	}
 	regen_do(filename, m_lMapIndex, pkSectreeMap->m_setting.iBaseX, pkSectreeMap->m_setting.iBaseY, this, bOnce);
 }
+
+// MR-8: Snow dungeon - All-damage immunity with exceptions
+bool CDungeon::SpawnRegenWithVIDs(const char* filename, bool bOnce, std::vector<DWORD>& rVids)
+{
+	if (!filename)
+	{
+		sys_err("CDungeon::SpawnRegenWithVIDs(filename=NULL, bOnce=%d) - m_lMapIndex[%d]", bOnce, m_lMapIndex);
+		return false;
+	}
+
+	LPSECTREE_MAP pkSectreeMap = SECTREE_MANAGER::instance().GetMap(m_lMapIndex);
+	if (!pkSectreeMap)
+	{
+		sys_err("CDungeon::SpawnRegenWithVIDs(filename=%s, bOnce=%d) - m_lMapIndex[%d]", filename, bOnce, m_lMapIndex);
+		return false;
+	}
+
+	return regen_do(filename, m_lMapIndex, pkSectreeMap->m_setting.iBaseX, pkSectreeMap->m_setting.iBaseY, this, bOnce, &rVids);
+}
+
+void CDungeon::SpawnRegenWithImmunity(const char* filename, bool bOnce, const std::vector<CHARACTER::SDamageImmunityCondition>& conditions)
+{
+	if (!filename)
+	{
+		sys_err("CDungeon::SpawnRegenWithImmunity(filename=NULL, bOnce=%d) - m_lMapIndex[%d]", bOnce, m_lMapIndex);
+		return;
+	}
+
+	LPSECTREE_MAP pkSectreeMap = SECTREE_MANAGER::instance().GetMap(m_lMapIndex);
+	if (!pkSectreeMap)
+	{
+		sys_err("CDungeon::SpawnRegenWithImmunity(filename=%s, bOnce=%d) - m_lMapIndex[%d]", filename, bOnce, m_lMapIndex);
+		return;
+	}
+
+	regen_do(filename, m_lMapIndex, pkSectreeMap->m_setting.iBaseX, pkSectreeMap->m_setting.iBaseY, this, bOnce, NULL, &conditions);
+}
+// MR-8: -- END OF -- Snow dungeon - All-damage immunity with exceptions
 
 void CDungeon::AddRegen(LPREGEN regen)
 {

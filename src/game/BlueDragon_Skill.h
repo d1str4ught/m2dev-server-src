@@ -272,7 +272,9 @@ struct FSkillEarthQuake
 
 					ch->Damage( pAttacker, dam, DAMAGE_TYPE_ICE);
 
-					SkillAttackAffect( ch, 1000, IMMUNE_STUN, AFFECT_STUN, POINT_NONE, 0, AFF_STUN, sec, "BDRAGON_STUN" );
+					// MR-8: Snow dungeon - All-damage immunity with exceptions
+					SkillAttackAffect( pAttacker, ch, 1000, IMMUNE_STUN, AFFECT_STUN, POINT_NONE, 0, AFF_STUN, sec, "BDRAGON_STUN" );
+					// MR-8: -- END OF -- Snow dungeon - All-damage immunity with exceptions
 
 					sys_log(0, "BlueDragon: EarthQuake to %s addPct(%d) dam(%d) sec(%d)", ch->GetName(), addPct, dam, sec);
 

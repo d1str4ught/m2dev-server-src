@@ -40,6 +40,16 @@ inline void AttackAffect(LPCHARACTER pkAttacker,
 		int time,
 		const char* name)
 {
+	// MR-8: Snow dungeon - All-damage immunity with exceptions
+	if (pkVictim->IsDamageImmune() && (pkVictim->IsMonster() || pkVictim->IsStone() || pkVictim->IsDoor()))
+	{
+		if (!pkVictim->CheckDamageImmunityConditions(pkAttacker))
+		{
+			return;  // Immunity prevents stun application
+		}
+	}
+	// MR-8: -- END OF -- Snow dungeon - All-damage immunity with exceptions
+
 	if (pkAttacker->GetPoint(att_point) && !pkVictim->IsAffectFlag(affect_flag))
 	{
 		if (number(1, 100) <= pkAttacker->GetPoint(att_point) && !pkVictim->IsImmune(immune_flag))
@@ -58,7 +68,9 @@ inline void AttackAffect(LPCHARACTER pkAttacker,
 	}
 }
 
-inline void SkillAttackAffect(LPCHARACTER pkVictim,
+// MR-8: Snow dungeon - All-damage immunity with exceptions
+inline void SkillAttackAffect(LPCHARACTER pkAttacker,
+		LPCHARACTER pkVictim,
 		int success_pct,
 		DWORD immune_flag,
 		DWORD affect_idx,
@@ -68,6 +80,15 @@ inline void SkillAttackAffect(LPCHARACTER pkVictim,
 		int time,
 		const char* name)
 {
+	if (pkVictim->IsDamageImmune() && (pkVictim->IsMonster() || pkVictim->IsStone() || pkVictim->IsDoor()))
+	{
+		if (!pkVictim->CheckDamageImmunityConditions(pkAttacker))
+		{
+			return;  // Immunity prevents skill affect application
+		}
+	}
+	// MR-8: -- END OF -- Snow dungeon - All-damage immunity with exceptions
+
 	if (success_pct && !pkVictim->IsAffectFlag(affect_flag))
 	{
 		if (number(1, 1000) <= success_pct && !pkVictim->IsImmune(immune_flag))

@@ -221,44 +221,47 @@ bool ITEM_MANAGER::ReadSpecialDropItemFile(const char * c_pszFileName)
 					const std::string& name = pTok->at(0);
 					DWORD dwVnum = 0;
 
-					if (!GetVnumByOriginalName(name.c_str(), dwVnum))
+					// MR-8: Special_Item_Group Fix for handling gold and experience
+					if (name == "elk")
 					{
-						if (name == "exp")
+						dwVnum = CSpecialItemGroup::GOLD;
+					}
+					else if (name == "exp")
+					{
+						dwVnum = CSpecialItemGroup::EXP;
+					}
+					else if (name == "mob")
+					{
+						dwVnum = CSpecialItemGroup::MOB;
+					}
+					else if (name == "slow")
+					{
+						dwVnum = CSpecialItemGroup::SLOW;
+					}
+					else if (name == "drain_hp")
+					{
+						dwVnum = CSpecialItemGroup::DRAIN_HP;
+					}
+					else if (name == "poison")
+					{
+						dwVnum = CSpecialItemGroup::POISON;
+					}
+					else if (name == "group")
+					{
+						dwVnum = CSpecialItemGroup::MOB_GROUP;
+					}
+					else if (!GetVnumByOriginalName(name.c_str(), dwVnum))
+					{
+						str_to_number(dwVnum, name.c_str());
+						if (!ITEM_MANAGER::instance().GetTable(dwVnum))
 						{
-							dwVnum = CSpecialItemGroup::EXP;
-						}
-						else if (name == "mob")
-						{
-							dwVnum = CSpecialItemGroup::MOB;
-						}
-						else if (name == "slow")
-						{
-							dwVnum = CSpecialItemGroup::SLOW;
-						}
-						else if (name == "drain_hp")
-						{
-							dwVnum = CSpecialItemGroup::DRAIN_HP;
-						}
-						else if (name == "poison")
-						{
-							dwVnum = CSpecialItemGroup::POISON;
-						}
-						else if (name == "group")
-						{
-							dwVnum = CSpecialItemGroup::MOB_GROUP;
-						}
-						else
-						{
-							str_to_number(dwVnum, name.c_str());
-							if (!ITEM_MANAGER::instance().GetTable(dwVnum))
-							{
-								sys_err("ReadSpecialDropItemFile : there is no item %s : node %s", name.c_str(), stName.c_str());
-								M2_DELETE(pkGroup);
+							sys_err("ReadSpecialDropItemFile : there is no item %s : node %s", name.c_str(), stName.c_str());
+							M2_DELETE(pkGroup);
 
-								return false;
-							}
+							return false;
 						}
 					}
+					// MR-8: -- END OF -- Special_Item_Group Fix for handling gold and experience
 
 					int iCount = 0;
 					str_to_number(iCount, pTok->at(1).c_str());
@@ -286,7 +289,9 @@ bool ITEM_MANAGER::ReadSpecialDropItemFile(const char * c_pszFileName)
 
 				break;
 			}
+
 			loader.SetParentNode();
+
 			if (CSpecialItemGroup::QUEST == type)
 			{
 				m_map_pkQuestItemGroup.insert(std::make_pair(iVnum, pkGroup));
@@ -309,6 +314,7 @@ bool ITEM_MANAGER::ConvSpecialDropItemFile()
 		"%s/special_item_group.txt", LocaleService_GetBasePath().c_str());
 
 	FILE *fp = fopen("special_item_group_vnum.txt", "w");
+
 	if (!fp)
 	{
 		sys_err("could not open file (%s)", "special_item_group_vnum.txt");
@@ -372,13 +378,16 @@ bool ITEM_MANAGER::ConvSpecialDropItemFile()
 
 				if (!GetVnumByOriginalName(name.c_str(), dwVnum))
 				{
+					// MR-8: Special_Item_Group Fix for handling gold and experience
 					//if (	name == "����ġ" ||
-					if (name == "exp" ||
+					if (name == "elk" ||
+						name == "exp" ||
 						name == "mob" ||
 						name == "slow" ||
 						name == "drain_hp" ||
 						name == "poison" ||
 						name == "group")
+					// MR-8: -- END OF -- Special_Item_Group Fix for handling gold and experience
 					{
 						dwVnum = 0;
 					}

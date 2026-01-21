@@ -376,6 +376,11 @@ void CHARACTER::Initialize()
 
 	memset(&m_tvLastSyncTime, 0, sizeof(m_tvLastSyncTime));
 	m_iSyncHackCount = 0;
+
+	// MR-8: Snow dungeon - All-damage immunity with exceptions
+	m_bDamageImmune = false;
+	m_vecDamageImmunityConditions.clear();
+	// MR-8: -- END OF -- Snow dungeon - All-damage immunity with exceptions
 }
 
 void CHARACTER::Create(const char * c_pszName, DWORD vid, bool isPC)
@@ -1502,6 +1507,17 @@ bool CHARACTER::Show(long lMapIndex, long x, long y, long z, bool bShowSpawnMoti
 	REMOVE_BIT(m_bAddChrState, ADD_CHARACTER_STATE_SPAWN);
 	
 	SetValidComboInterval(0);
+
+	// MR-8: Resync affects when moving within same map (fixes dungeon relog affect icon bug)
+	if (IsPC() && GetDesc() != NULL) {
+		// Re-send all affect packets to client to ensure icons are synchronized
+		itertype(m_list_pkAffect) it = m_list_pkAffect.begin();
+
+		while (it != m_list_pkAffect.end())
+			SendAffectAddPacket(GetDesc(), *it++);
+	}
+	// MR-8: -- END OF -- Resync affects when moving within same map
+
 	return true;
 }
 
@@ -7400,5 +7416,184 @@ int	CHARACTER::GetSkillPowerByLevel(int level, bool bMob) const
 
 void CHARACTER::SetLastPMPulse(void)
 {
-      m_iLastPMPulse = thecore_pulse() + passes_per_sec;
+	m_iLastPMPulse = thecore_pulse() + passes_per_sec;
 }
+
+
+// MR-8: Snow dungeon - All-damage immunity with exceptions
+void CHARACTER::SetDamageImmunity(bool bImmune)
+{
+	m_bDamageImmune = bImmune;
+	
+	if (test_server)
+	{
+		DWORD vid = GetVID();
+
+		sys_log(0, "SetDamageImmunity: %s [%u] immune=%d conditions=%d", 
+				GetName(), vid, bImmune, m_vecDamageImmunityConditions.size());
+	}
+}
+
+void CHARACTER::AddDamageImmunityCondition(BYTE bType, DWORD dwValue, const std::string& strExtra)
+{
+	SDamageImmunityCondition cond(bType, dwValue, strExtra);
+	m_vecDamageImmunityConditions.push_back(cond);
+	
+	if (test_server)
+	{
+		DWORD vid = GetVID();
+		
+		sys_log(0, "AddDamageImmunityCondition: %s [%u] type=%d value=%u extra=%s", 
+				GetName(), vid, bType, dwValue, strExtra.c_str());
+	}
+}
+
+void CHARACTER::ClearDamageImmunityConditions()
+{
+	m_vecDamageImmunityConditions.clear();
+	
+	if (test_server)
+	{
+		DWORD vid = GetVID();
+		
+		sys_log(0, "ClearDamageImmunityConditions: %s [%u]", GetName(), vid);
+	}
+}
+
+bool CHARACTER::CheckDamageImmunityConditions(LPCHARACTER pAttacker) const
+{
+	if (!pAttacker)
+		return false;
+	
+	// If no conditions are set, block all damage
+	if (m_vecDamageImmunityConditions.empty())
+	{
+		if (test_server && m_bDamageImmune)
+		{
+			DWORD vid = GetVID();
+
+			sys_err("CheckDamageImmunityConditions: %s [%u] has immunity flag but NO conditions - blocking damage", 
+					GetName(), vid);
+		}
+		
+		return false;
+	}
+
+	std::vector<BYTE> allowedJobs;
+	
+	// All conditions must pass (AND logic)
+	for (std::vector<SDamageImmunityCondition>::const_iterator it = m_vecDamageImmunityConditions.begin();
+		 it != m_vecDamageImmunityConditions.end(); ++it)
+	{
+		const SDamageImmunityCondition& cond = *it;
+		
+		switch (cond.bType)
+		{
+			case DAMAGE_IMMUNITY_COND_AFFECT:
+				if (!pAttacker->FindAffect(cond.dwValue))
+				{
+					if (test_server)
+						pAttacker->ChatPacket(CHAT_TYPE_INFO, "Target immune: need affect %u", cond.dwValue);
+					return false;
+				}
+				break;
+				
+			case DAMAGE_IMMUNITY_COND_LEVEL_MIN:
+				if (pAttacker->GetLevel() < (int)cond.dwValue)
+				{
+					if (test_server)
+						pAttacker->ChatPacket(CHAT_TYPE_INFO, "Target immune: need level >= %u", cond.dwValue);
+					return false;
+				}
+				break;
+				
+			case DAMAGE_IMMUNITY_COND_LEVEL_MAX:
+				if (pAttacker->GetLevel() > (int)cond.dwValue)
+				{
+					if (test_server)
+						pAttacker->ChatPacket(CHAT_TYPE_INFO, "Target immune: need level <= %u", cond.dwValue);
+					return false;
+				}
+				break;
+				
+			case DAMAGE_IMMUNITY_COND_QUEST_FLAG:
+				if (!pAttacker->IsPC())
+					return false;
+					
+				if (pAttacker->GetQuestFlag(cond.strExtra) != (int)cond.dwValue)
+				{
+					if (test_server)
+						pAttacker->ChatPacket(CHAT_TYPE_INFO, "Target immune: need quest flag %s == %u", 
+											  cond.strExtra.c_str(), cond.dwValue);
+					return false;
+				}
+				break;
+				
+			case DAMAGE_IMMUNITY_COND_ITEM_EQUIPPED:
+				if (!pAttacker->IsEquipUniqueItem(cond.dwValue))
+				{
+					if (test_server)
+						pAttacker->ChatPacket(CHAT_TYPE_INFO, "Target immune: need item %u equipped", cond.dwValue);
+					return false;
+				}
+				break;
+				
+			case DAMAGE_IMMUNITY_COND_EMPIRE:
+				if (pAttacker->GetEmpire() != (BYTE)cond.dwValue)
+				{
+					if (test_server)
+						pAttacker->ChatPacket(CHAT_TYPE_INFO, "Target immune: need empire %u", cond.dwValue);
+					return false;
+				}
+				break;
+
+			case DAMAGE_IMMUNITY_COND_JOB:
+				if (!pAttacker->IsPC())
+					return false;
+
+				if ((BYTE)cond.dwValue >= JOB_MAX_NUM)
+				{
+					if (test_server)
+						pAttacker->ChatPacket(CHAT_TYPE_INFO, "Target immune: invalid job value");
+
+					return false;
+				}
+
+				allowedJobs.push_back((BYTE)cond.dwValue);
+				break;
+				
+			default:
+				sys_err("Unknown damage immunity condition type: %d", cond.bType);
+				
+				return false;
+		}
+	}
+
+	// Check job requirements (OR logic among jobs, AND with other conditions)
+	if (!allowedJobs.empty())
+	{
+		bool bJobAllowed = false;
+		BYTE bJob = pAttacker->GetJob();
+
+		for (std::vector<BYTE>::const_iterator jt = allowedJobs.begin(); jt != allowedJobs.end(); ++jt)
+		{
+			if (bJob == *jt)
+			{
+				bJobAllowed = true;
+				break;
+			}
+		}
+
+		if (!bJobAllowed)
+		{
+			if (test_server)
+				pAttacker->ChatPacket(CHAT_TYPE_INFO, "Target immune: need job match (your job: %d)", bJob);
+
+			return false;
+		}
+	}
+	
+	// All conditions passed
+	return true;
+}
+// MR-8: -- END OF -- Snow dungeon - All-damage immunity with exceptions

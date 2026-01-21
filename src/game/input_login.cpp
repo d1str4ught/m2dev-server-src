@@ -701,17 +701,38 @@ void CInputLogin::Entergame(LPDESC d, const char * data)
 		else if (marriage::WeddingManager::instance().IsWeddingMap(ch->GetMapIndex()))
 			ch->SetWeddingMap(marriage::WeddingManager::instance().Find(ch->GetMapIndex()));
 		else {
+			// MR-8: Auto-unmount and unequip special ride seals in Nemere's Watchtower
+			if (ch->GetMapIndex() >= 352 * 10000 && ch->GetMapIndex() < 353 * 10000)
+			{
+				ch->RemoveAffect(AFFECT_MOUNT);
+				ch->RemoveAffect(AFFECT_MOUNT_BONUS);
+
+				if (ch->IsRiding() || ch->IsHorseRiding())
+				{
+					ch->StopRiding();
+					ch->HorseSummon(false);
+				}
+
+				// Check for inventory space
+				int emptyCell = ch->GetEmptyInventory(1);
+				
+				if (emptyCell != -1)
+					ch->UnEquipSpecialRideUniqueItem();
+			}
+			// MR-8: -- END OF -- Auto-unmount and unequip special ride seals in Nemere's Watchtower
+
 			ch->SetDungeon(CDungeonManager::instance().FindByMapIndex(ch->GetMapIndex()));
 		}
 	}
 	else if (CArenaManager::instance().IsArenaMap(ch->GetMapIndex()) == true)
 	{
 		int memberFlag = CArenaManager::instance().IsMember(ch->GetMapIndex(), ch->GetPlayerID());
+
 		if (memberFlag == MEMBER_OBSERVER)
 		{
 			ch->SetObserverMode(true);
 			ch->SetArenaObserverMode(true);
-			if (CArenaManager::instance().RegisterObserverPtr(ch, ch->GetMapIndex(), ch->GetX()/100, ch->GetY()/100))
+			if (CArenaManager::instance().RegisterObserverPtr(ch, ch->GetMapIndex(), ch->GetX() / 100, ch->GetY() / 100))
 			{
 				sys_log(0, "ARENA : Observer add failed");
 			}
