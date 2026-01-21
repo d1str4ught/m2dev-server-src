@@ -1145,6 +1145,7 @@ void SECTREE_MANAGER::SendNPCPosition(LPCHARACTER ch)
 	for (auto it = m_mapNPCPosition[lMapIndex].begin(); it != m_mapNPCPosition[lMapIndex].end(); ++it)
 	{
 		np.bType = it->bType;
+		np.dwVnum = it->dwVnum;
 		strlcpy(np.name, it->name, sizeof(np.name));
 		np.x = it->x;
 		np.y = it->y;
@@ -1162,9 +1163,9 @@ void SECTREE_MANAGER::SendNPCPosition(LPCHARACTER ch)
 		d->Packet(&p, sizeof(TPacketGCNPCPosition));
 }
 
-void SECTREE_MANAGER::InsertNPCPosition(long lMapIndex, BYTE bType, const char* szName, long x, long y)
+void SECTREE_MANAGER::InsertNPCPosition(long lMapIndex, BYTE bType, DWORD dwVnum, const char* szName, long x, long y)
 {
-	m_mapNPCPosition[lMapIndex].push_back(npc_info(bType, szName, x, y));
+    m_mapNPCPosition[lMapIndex].push_back(npc_info(bType, dwVnum, szName, x, y));
 }
 
 BYTE SECTREE_MANAGER::GetEmpireFromMapIndex(long lMapIndex)
