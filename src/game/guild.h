@@ -48,7 +48,7 @@ typedef struct SGuildMember
 
 #pragma pack(1)
 typedef struct SGuildMemberPacketData
-{   
+{
 	uint32_t pid;
 	uint8_t grade;
 	uint8_t is_general;
@@ -56,7 +56,7 @@ typedef struct SGuildMemberPacketData
 	uint8_t level;
 	uint32_t offer;
 	uint8_t name_flag;
-	char name[CHARACTER_NAME_MAX_LEN+1];
+	// Note: name is sent separately after this struct if name_flag is set
 } TGuildMemberPacketData;
 
 typedef struct packet_guild_sub_info

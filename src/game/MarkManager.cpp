@@ -242,6 +242,31 @@ DWORD CGuildMarkManager::SaveMark(DWORD guildID, BYTE * pbMarkImage)
 	return idMark;
 }
 
+// SERVER - Allocate a mark slot with default (empty) image for a new guild
+DWORD CGuildMarkManager::AllocMark(DWORD guildID)
+{
+	// Check if guild already has a mark
+	if (GetMarkID(guildID) != INVALID_MARK_ID)
+	{
+		sys_log(0, "AllocMark: guild %u already has a mark", guildID);
+		return GetMarkID(guildID);
+	}
+
+	DWORD idMark = __AllocMarkID(guildID);
+	if (idMark == INVALID_MARK_ID)
+	{
+		sys_err("CGuildMarkManager::AllocMark: cannot alloc mark id for guild %u", guildID);
+		return INVALID_MARK_ID;
+	}
+
+	sys_log(0, "AllocMark: allocated mark id %u for guild %u", idMark, guildID);
+
+	// Save the index so the mark slot is persisted
+	SaveMarkIndex();
+
+	return idMark;
+}
+
 // SERVER
 void CGuildMarkManager::DeleteMark(DWORD guildID)
 {

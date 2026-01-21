@@ -315,6 +315,7 @@ enum
 	HEADER_GG_MONARCH_TRANSFER		= 27,
 
 	HEADER_GG_CHECK_AWAKENESS		= 29,
+	HEADER_GG_MARK_UPDATE			= 30,
 };
 
 #pragma pack(1)
@@ -515,6 +516,13 @@ typedef struct SPacketGGBlockChat
 	char	szName[CHARACTER_NAME_MAX_LEN + 1];
 	int32_t	lBlockDuration;
 } TPacketGGBlockChat;
+
+typedef struct packet_gg_mark_update
+{
+	uint8_t		bHeader;
+	uint32_t	dwGuildID;
+	uint16_t	wImgIdx;
+} TPacketGGMarkUpdate;
 
 /* 클라이언트 측에서 보내는 패킷 */
 

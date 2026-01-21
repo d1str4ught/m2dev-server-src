@@ -16,6 +16,7 @@
 #include "locale_service.h"
 #include "log.h"
 #include "questmanager.h"
+#include "MarkManager.h"
 
 	SGuildMember::SGuildMember(LPCHARACTER ch, BYTE grade, DWORD offer_exp)
 : pid(ch->GetPlayerID()), grade(grade), is_general(0), job(ch->GetJob()), level(ch->GetLevel()), offer_exp(offer_exp), name(ch->GetName())
@@ -113,6 +114,9 @@ CGuild::CGuild(TGuildCreateParameter & cp)
 	   AddMember(&p);
 	 */
 	RequestAddMember(cp.master, GUILD_LEADER_GRADE);
+
+	// Allocate a mark slot for the new guild
+	CGuildMarkManager::instance().AllocMark(GetID());
 }
 
 void CGuild::Initialize()
@@ -375,25 +379,23 @@ void CGuild::SendListOneToAll(LPCHARACTER ch)
 
 void CGuild::SendListOneToAll(DWORD pid)
 {
-
-	TPacketGCGuild pack;
-	pack.header = HEADER_GC_GUILD;
-	pack.size = sizeof(TPacketGCGuild);
-	pack.subheader = GUILD_SUBHEADER_GC_LIST;
-
-	pack.size += sizeof(TGuildMemberPacketData);
-
-	char c[CHARACTER_NAME_MAX_LEN+1];
-	memset(c, 0, sizeof(c));
-
 	TGuildMemberContainer::iterator cit = m_member.find(pid);
 	if (cit == m_member.end())
 		return;
 
+	TPacketGCGuild pack;
+	pack.header = HEADER_GC_GUILD;
+	pack.size = sizeof(TPacketGCGuild) + sizeof(TGuildMemberPacketData) + CHARACTER_NAME_MAX_LEN + 1;
+	pack.subheader = GUILD_SUBHEADER_GC_LIST;
+
+	char szName[CHARACTER_NAME_MAX_LEN + 1];
+	memset(szName, 0, sizeof(szName));
+	strlcpy(szName, cit->second.name.c_str(), sizeof(szName));
+
 	for (TGuildMemberOnlineContainer::iterator it = m_memberOnline.begin(); it!= m_memberOnline.end(); ++it)
 	{
 		LPDESC d = (*it)->GetDesc();
-		if (!d) 
+		if (!d)
 			continue;
 
 		TGuildMemberPacketData p;
@@ -404,12 +406,11 @@ void CGuild::SendListOneToAll(DWORD pid)
 		p.level = cit->second.level;
 		p.offer = cit->second.offer_exp;
 		p.name_flag = 1;
-		strlcpy(p.name, cit->second.name.c_str(), sizeof(p.name));
-
 
 		TEMP_BUFFER buf;
 		buf.write(&pack, sizeof(pack));
 		buf.write(&p, sizeof(p));
+		buf.write(szName, CHARACTER_NAME_MAX_LEN + 1);
 		d->Packet(buf.read_peek(), buf.size());
 	}
 }
@@ -424,7 +425,7 @@ void CGuild::SendListPacket(LPCHARACTER ch)
 	   [
 	   ...
 	   name_flag 1 - 이름을 보내느냐 안보내느냐
-	   name CHARACTER_NAME_MAX_LEN+1
+	   name CHARACTER_NAME_MAX_LEN+1 (only if name_flag is 1)
 	   ] * Count
 
 	 */
@@ -437,10 +438,11 @@ void CGuild::SendListPacket(LPCHARACTER ch)
 	pack.size = sizeof(TPacketGCGuild);
 	pack.subheader = GUILD_SUBHEADER_GC_LIST;
 
-	pack.size += sizeof(TGuildMemberPacketData) * m_member.size();
+	// Each member: struct + name (always sent with name_flag=1)
+	pack.size += (sizeof(TGuildMemberPacketData) + CHARACTER_NAME_MAX_LEN + 1) * m_member.size();
 
 	TEMP_BUFFER buf;
-	buf.write(&pack,sizeof(pack));
+	buf.write(&pack, sizeof(pack));
 
 	for (TGuildMemberContainer::iterator it = m_member.begin(); it != m_member.end(); ++it)
 	{
@@ -452,11 +454,16 @@ void CGuild::SendListPacket(LPCHARACTER ch)
 		p.level = it->second.level;
 		p.offer = it->second.offer_exp;
 		p.name_flag = 1;
-		strlcpy(p.name, it->second.name.c_str(), sizeof(p.name));
 		buf.write(&p, sizeof(p));
 
-		if ( test_server )
-			sys_log(0 ,"name %s job %d  ", it->second.name.c_str(), it->second.job );
+		// Send name separately after the struct
+		char szName[CHARACTER_NAME_MAX_LEN + 1];
+		memset(szName, 0, sizeof(szName));
+		strlcpy(szName, it->second.name.c_str(), sizeof(szName));
+		buf.write(szName, sizeof(szName));
+
+		if (test_server)
+			sys_log(0, "name %s job %d", it->second.name.c_str(), it->second.job);
 	}
 
 	d->Packet(buf.read_peek(), buf.size());
@@ -470,7 +477,6 @@ void CGuild::SendListPacket(LPCHARACTER ch)
 	{
 		SendLoginPacket(ch, *it);
 	}
-
 }
 
 void CGuild::SendLoginPacket(LPCHARACTER ch, LPCHARACTER chLogin)
@@ -1407,7 +1413,7 @@ void CGuild::SendSkillInfoPacket(LPCHARACTER ch) const
 	TPacketGCGuild pack;
 
 	pack.header		= HEADER_GC_GUILD;
-	pack.size		= sizeof(pack) + 6 + GUILD_SKILL_COUNT;
+	pack.size		= sizeof(pack) + 5 + GUILD_SKILL_COUNT;  // 1 (skill_point) + GUILD_SKILL_COUNT (abySkill) + 2 (power) + 2 (max_power)
 	pack.subheader	= GUILD_SUBHEADER_GC_SKILL_INFO;
 
 	d->BufferedPacket(&pack, sizeof(pack));
