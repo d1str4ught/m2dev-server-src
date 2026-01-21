@@ -4056,6 +4056,26 @@ void CHARACTER::ChatPacket(BYTE type, const char * format, ...)
 		sys_log(0, "SEND_COMMAND %s %s", GetName(), chatbuf);
 }
 
+void CHARACTER::ItemGetPacket(DWORD dwItemVnum, BYTE bCount, const char* szName, bool bIsDelivery)
+{
+	LPDESC d = GetDesc();
+
+	if (!d)
+		return;
+
+	TPacketGCItemGet pack;
+	pack.header = HEADER_GC_ITEM_GET;
+	pack.dwItemVnum = dwItemVnum;
+	pack.bCount = bCount;
+	// bArg: 0 = normal, 1 = from party member, 2 = delivered to party member
+	pack.bArg = szName ? (bIsDelivery ? 2 : 1) : 0;
+	memset(pack.szFromName, 0, sizeof(pack.szFromName));
+	if (szName)
+		strlcpy(pack.szFromName, szName, sizeof(pack.szFromName));
+
+	d->Packet(&pack, sizeof(pack));
+}
+
 // MINING
 void CHARACTER::mining_take()
 {

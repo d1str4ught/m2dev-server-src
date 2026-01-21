@@ -5894,7 +5894,7 @@ bool CHARACTER::PickupItem(DWORD dwVID)
 
 							if (bCount == 0)
 							{
-								ChatPacket(CHAT_TYPE_INFO, LC_TEXT("아이템 획득: %s"), item2->GetName());
+								ItemGetPacket(item2->GetVnum(), item2->GetCount());
 								M2_DESTROY_ITEM(item);
 								if (item2->GetType() == ITEM_QUEST)
 									quest::CQuestManager::instance().PickupItem (GetPlayerID(), item2);
@@ -5936,7 +5936,7 @@ bool CHARACTER::PickupItem(DWORD dwVID)
 				char szHint[32+1];
 				snprintf(szHint, sizeof(szHint), "%s %u %u", item->GetName(), item->GetCount(), item->GetOriginalVnum());
 				LogManager::instance().ItemLog(this, item, "GET", szHint);
-				ChatPacket(CHAT_TYPE_INFO, LC_TEXT("아이템 획득: %s"), item->GetName());
+				ItemGetPacket(item->GetVnum(), item->GetCount());
 
 				if (item->GetType() == ITEM_QUEST)
 					quest::CQuestManager::instance().PickupItem (GetPlayerID(), item);
@@ -5995,11 +5995,11 @@ bool CHARACTER::PickupItem(DWORD dwVID)
 			LogManager::instance().ItemLog(owner, item, "GET", szHint);
 
 			if (owner == this)
-				ChatPacket(CHAT_TYPE_INFO, LC_TEXT("아이템 획득: %s"), item->GetName());
+				ItemGetPacket(item->GetVnum(), item->GetCount());
 			else
 			{
-				owner->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("아이템 획득: %s 님으로부터 %s"), GetName(), item->GetName());
-				ChatPacket(CHAT_TYPE_INFO, LC_TEXT("아이템 전달: %s 님에게 %s"), owner->GetName(), item->GetName());
+				owner->ItemGetPacket(item->GetVnum(), item->GetCount(), GetName());
+				ItemGetPacket(item->GetVnum(), item->GetCount(), owner->GetName(), true);
 			}
 
 			if (item->GetType() == ITEM_QUEST)
@@ -6621,7 +6621,7 @@ LPITEM CHARACTER::AutoGiveItem(DWORD dwItemVnum, BYTE bCount, int iRarePct, bool
 				if (bCount == 0)
 				{
 					if (bMsg)
-						ChatPacket(CHAT_TYPE_INFO, LC_TEXT("아이템 획득: %s"), item->GetName());
+						ItemGetPacket(item->GetVnum(), item->GetCount());
 
 					return item;
 				}
@@ -6673,7 +6673,7 @@ LPITEM CHARACTER::AutoGiveItem(DWORD dwItemVnum, BYTE bCount, int iRarePct, bool
 	if (iEmptyCell != -1)
 	{
 		if (bMsg)
-			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("아이템 획득: %s"), item->GetName());
+			ItemGetPacket(item->GetVnum(), item->GetCount());
 
 		if (item->IsDragonSoul())
 			item->AddToCharacter(this, TItemPos(DRAGON_SOUL_INVENTORY, iEmptyCell));
