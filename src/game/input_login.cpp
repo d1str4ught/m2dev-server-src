@@ -924,10 +924,35 @@ void CInputLogin::GuildMarkUpload(LPDESC d, const char* c_pData)
 		if (*((DWORD *) p->image + iPixel) != 0x00000000)
 			isEmpty = false;
 
+	DWORD markID = CGuildMarkManager::INVALID_MARK_ID;
+
 	if (isEmpty)
 		rkMarkMgr.DeleteMark(p->gid);
 	else
-		rkMarkMgr.SaveMark(p->gid, p->image);
+		markID = rkMarkMgr.SaveMark(p->gid, p->image);
+
+	// Broadcast mark update to all connected game clients
+	if (markID != CGuildMarkManager::INVALID_MARK_ID)
+	{
+		WORD imgIdx = static_cast<WORD>(markID / CGuildMarkImage::MARK_TOTAL_COUNT);
+
+		TPacketGCMarkUpdate packet;
+		packet.header = HEADER_GC_MARK_UPDATE;
+		packet.guildID = p->gid;
+		packet.imgIdx = imgIdx;
+
+		const DESC_MANAGER::DESC_SET & c_set_desc = DESC_MANAGER::instance().GetClientSet();
+		for (DESC_MANAGER::DESC_SET::const_iterator it = c_set_desc.begin(); it != c_set_desc.end(); ++it)
+		{
+			LPDESC pkDesc = *it;
+			if (pkDesc && pkDesc->GetCharacter())
+			{
+				pkDesc->Packet(&packet, sizeof(packet));
+			}
+		}
+
+		sys_log(0, "MARK_SERVER: GuildMarkUpload: Broadcast mark update for guild %u, imgIdx %u", p->gid, imgIdx);
+	}
 }
 
 void CInputLogin::GuildMarkIDXList(LPDESC d, const char* c_pData)
