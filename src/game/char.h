@@ -739,6 +739,7 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 		void			Motion(BYTE motion, LPCHARACTER victim = NULL);
 
 		void			ChatPacket(BYTE type, const char *format, ...);
+		void			ItemGetPacket(DWORD dwItemVnum, BYTE bCount, const char* szName = NULL, bool bIsDelivery = false);
 		void			MonsterChat(BYTE bMonsterChatType);
 		void			SendGreetMessage();
 

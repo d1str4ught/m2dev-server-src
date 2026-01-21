@@ -27,10 +27,11 @@ struct TAreaInfo
 struct npc_info
 {
 	BYTE bType;
+	DWORD dwVnum;
 	const char* name;
 	long x, y;
-	npc_info(BYTE bType, const char* name, long x, long y)
-		: bType(bType), name(name), x(x), y(y)
+	npc_info(BYTE bType, DWORD dwVnum, const char* name, long x, long y)
+		: bType(bType), dwVnum(dwVnum), name(name), x(x), y(y)
 		{}
 };
 
@@ -155,7 +156,7 @@ class SECTREE_MANAGER : public singleton<SECTREE_MANAGER>
 
 		TAreaMap&	GetDungeonArea(long lMapIndex);
 		void		SendNPCPosition(LPCHARACTER ch);
-		void		InsertNPCPosition(long lMapIndex, BYTE bType, const char* szName, long x, long y);
+		void		InsertNPCPosition(long lMapIndex, BYTE bType, DWORD dwVnum, const char* szName, long x, long y);
 
 		BYTE		GetEmpireFromMapIndex(long lMapIndex);
 
