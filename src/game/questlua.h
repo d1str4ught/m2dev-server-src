@@ -5,7 +5,6 @@
 #include "buffer_manager.h"
 
 extern int test_server;
-extern int speed_server;
 
 namespace quest
 {
