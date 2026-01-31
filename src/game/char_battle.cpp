@@ -2568,12 +2568,6 @@ static void GiveExp(LPCHARACTER from, LPCHARACTER to, int iExp)
 	iExp += (iExp * to->GetPoint(POINT_MALL_EXPBONUS)/100);
 	iExp += (iExp * to->GetPoint(POINT_EXP)/100);
 
-/*	if (speed_server)
-	{
-		iExp += iExp * CSpeedServerManager::ExpBonus();
-
-	}
-*/
 	if (test_server)
 	{
 		sys_log(0, "Bonus Exp : Ramadan Candy: %d MallExp: %d PointExp: %d", 

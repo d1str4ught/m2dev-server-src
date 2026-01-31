@@ -55,7 +55,6 @@
 #include "threeway_war.h"
 #include "DragonLair.h"
 #include "skill_power.h"
-#include "SpeedServer.h"
 #include "DragonSoul.h"
 
 // #ifndef OS_WINDOWS
@@ -373,8 +372,6 @@ int main(int argc, char **argv)
 	SpamManager		spam_mgr;
 	CThreeWayWar	threeway_war;
 	CDragonLairManager	dl_manager;
-
-	CSpeedServerManager SSManager;
 	DSManager dsManager;
 
 	if (!start(argc, argv)) {
