@@ -2157,13 +2157,6 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 
 					int iReadDelay = number(SKILLBOOK_DELAY_MIN, SKILLBOOK_DELAY_MAX);
 
-					if (distribution_test_server)
-						iReadDelay /= 3;
-
-					//한국 본섭의 경우에는 시간을 24시간 고정
-					if (LC_IsKorea())
-						iReadDelay = 86400;
-
 					SetSkillNextReadTime(dwVnum, get_global_time() + iReadDelay);
 				}
 			}
@@ -3082,7 +3075,6 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 										ITEM_MANAGER::instance().RemoveItem(item);
 
 										int iReadDelay = number(SKILLBOOK_DELAY_MIN, SKILLBOOK_DELAY_MAX);
-										if (distribution_test_server) iReadDelay /= 3;
 
 										SetSkillNextReadTime(SKILL_LEADERSHIP, get_global_time() + iReadDelay);
 									}
@@ -3124,7 +3116,6 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 										ITEM_MANAGER::instance().RemoveItem(item);
 
 										int iReadDelay = number(SKILLBOOK_DELAY_MIN, SKILLBOOK_DELAY_MAX);
-										if (distribution_test_server) iReadDelay /= 3;
 
 										SetSkillNextReadTime(SKILL_COMBO, get_global_time() + iReadDelay);
 									}
@@ -3153,7 +3144,6 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 										ITEM_MANAGER::instance().RemoveItem(item);
 
 										int iReadDelay = number(SKILLBOOK_DELAY_MIN, SKILLBOOK_DELAY_MAX);
-										if (distribution_test_server) iReadDelay /= 3;
 
 										SetSkillNextReadTime(dwSkillVnum, get_global_time() + iReadDelay);
 									}
@@ -3182,7 +3172,6 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 										ITEM_MANAGER::instance().RemoveItem(item);
 
 										int iReadDelay = number(SKILLBOOK_DELAY_MIN, SKILLBOOK_DELAY_MAX);
-										if (distribution_test_server) iReadDelay /= 3;
 
 										SetSkillNextReadTime(dwSkillVnum, get_global_time() + iReadDelay);
 									}
@@ -3255,7 +3244,6 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 										ITEM_MANAGER::instance().RemoveItem(item);
 
 										int iReadDelay = number(SKILLBOOK_DELAY_MIN, SKILLBOOK_DELAY_MAX);
-										if (distribution_test_server) iReadDelay /= 3;
 
 										SetSkillNextReadTime(dwSkillVnum, get_global_time() + iReadDelay);
 									}
@@ -3286,7 +3274,6 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 										ITEM_MANAGER::instance().RemoveItem(item);
 
 										int iReadDelay = number(SKILLBOOK_DELAY_MIN, SKILLBOOK_DELAY_MAX);
-										if (distribution_test_server) iReadDelay /= 3;
 
 										SetSkillNextReadTime(dwSkillVnum, get_global_time() + iReadDelay);
 
@@ -3328,7 +3315,6 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 										ITEM_MANAGER::instance().RemoveItem(item);
 
 										int iReadDelay = number(SKILLBOOK_DELAY_MIN, SKILLBOOK_DELAY_MAX);
-										if (distribution_test_server) iReadDelay /= 3;
 
 										SetSkillNextReadTime(dwSkillVnum, get_global_time() + iReadDelay);
 									}
@@ -3383,7 +3369,6 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 										PointChange(POINT_HORSE_SKILL, 1);
 
 										int iReadDelay = number(SKILLBOOK_DELAY_MIN, SKILLBOOK_DELAY_MAX);
-										if (distribution_test_server) iReadDelay /= 3;
 
 										if (!test_server)
 											SetSkillNextReadTime(dwSkillVnum, get_global_time() + iReadDelay);
