@@ -535,7 +535,7 @@ bool CHARACTER::IsDead() const
 	return false;
 }
 
-#define GetGoldMultipler() (distribution_test_server ? 3 : 1)
+#define GetGoldMultipler() (1)
 
 void CHARACTER::RewardGold(LPCHARACTER pkAttacker)
 {
@@ -2464,10 +2464,6 @@ static void GiveExp(LPCHARACTER from, LPCHARACTER to, int iExp)
 	// 레벨차 경험치 가감비율
 	iExp = CALCULATE_VALUE_LVDELTA(to->GetLevel(), from->GetLevel(), iExp);
 
-	// 외부 테스트 서버 경험치 3배 보너스
-	if (distribution_test_server)
-		iExp *= 3;
-
 	int iBaseExp = iExp;
 
 	// 점술, 회사 경험치 이벤트 적용
@@ -2572,12 +2568,6 @@ static void GiveExp(LPCHARACTER from, LPCHARACTER to, int iExp)
 	iExp += (iExp * to->GetPoint(POINT_MALL_EXPBONUS)/100);
 	iExp += (iExp * to->GetPoint(POINT_EXP)/100);
 
-/*	if (speed_server)
-	{
-		iExp += iExp * CSpeedServerManager::ExpBonus();
-
-	}
-*/
 	if (test_server)
 	{
 		sys_log(0, "Bonus Exp : Ramadan Candy: %d MallExp: %d PointExp: %d", 

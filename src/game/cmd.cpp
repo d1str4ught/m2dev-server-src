@@ -277,9 +277,9 @@ struct command_info cmd_info[] =
 
 	{ "mob",		do_mob,			0,			POS_DEAD,	GM_HIGH_WIZARD	},
 	{ "mob_ld",		do_mob_ld,			0,			POS_DEAD,	GM_HIGH_WIZARD	}, /* 몹의 위치와 방향을 설정해 소환 /mob_ld vnum x y dir */
-	{ "ma",		do_mob_aggresive,	0,			POS_DEAD,	GM_HIGH_WIZARD	},
-	{ "mc",		do_mob_coward,		0,			POS_DEAD,	GM_HIGH_WIZARD	},
-	{ "mm",		do_mob_map,		0,			POS_DEAD,	GM_HIGH_WIZARD	},
+	{ "mob_aggresive",		do_mob_aggresive,	0,			POS_DEAD,	GM_HIGH_WIZARD	},
+	{ "mon_coward",		do_mob_coward,		0,			POS_DEAD,	GM_HIGH_WIZARD	},
+	{ "mob_map",		do_mob_map,		0,			POS_DEAD,	GM_HIGH_WIZARD	},
 	{ "kill",		do_kill,		0,			POS_DEAD,	GM_HIGH_WIZARD	},
 	{ "ipurge",		do_item_purge,		0,			POS_DEAD,	GM_HIGH_WIZARD	},
 	{ "group",		do_group,		0,			POS_DEAD,	GM_HIGH_WIZARD	},
@@ -374,8 +374,8 @@ struct command_info cmd_info[] =
 	{ "delqf",		do_delqf,		0,			POS_DEAD,	GM_LOW_WIZARD	},
 	{ "set_state",	do_set_state,		0,			POS_DEAD,	GM_LOW_WIZARD	},
 
-	{ "로그를보여줘",	do_detaillog,		0,			POS_DEAD,	GM_LOW_WIZARD	},
-	{ "몬스터보여줘",	do_monsterlog,		0,			POS_DEAD,	GM_LOW_WIZARD	},
+	{ "detaillog",	do_detaillog,		0,			POS_DEAD,	GM_LOW_WIZARD	},
+	{ "monsterlog",	do_monsterlog,		0,			POS_DEAD,	GM_LOW_WIZARD	},
 
 	{ "detaillog",	do_detaillog,		0,			POS_DEAD,	GM_LOW_WIZARD	},
 	{ "monsterlog",	do_monsterlog,		0,			POS_DEAD,	GM_LOW_WIZARD	},
@@ -512,7 +512,6 @@ struct command_info cmd_info[] =
 	{ "get_mob_count",		do_get_mob_count,		0,	POS_DEAD,	GM_LOW_WIZARD	},
 
 	{ "dice",				do_dice,				0,	POS_DEAD,	GM_PLAYER		},
-	{ "주사위",				do_dice,				0,	POS_DEAD,	GM_PLAYER		},
 	{ "special_item",			do_special_item,	0,	POS_DEAD,	GM_IMPLEMENTOR		},
 
 	{ "click_mall",			do_click_mall,			0,	POS_DEAD,	GM_PLAYER		},

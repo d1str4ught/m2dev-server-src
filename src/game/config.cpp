@@ -37,8 +37,6 @@ DWORD		g_dwTrafficProfileFlushCycle = 3600;
 // END_OF_TRAFFIC_PROFILER
 
 int			test_server = 0;
-int			speed_server = 0;
-bool		distribution_test_server = false;
 bool		china_event_server = false;
 bool		guild_mark_server = true;
 BYTE		guild_mark_min_level = 3;
@@ -584,21 +582,6 @@ void config_init(const string& st_localeServiceName)
 			printf("TEST_SERVER\n");
 			printf("-----------------------------------------------\n");
 			str_to_number(test_server, value_string);
-			continue;
-		}
-
-		TOKEN("speed_server")
-		{
-			printf("-----------------------------------------------\n");
-			printf("SPEED_SERVER\n");
-			printf("-----------------------------------------------\n");
-			str_to_number(speed_server, value_string);
-			continue;
-		}
-
-		TOKEN("distribution_test_server")
-		{
-			str_to_number(distribution_test_server, value_string);
 			continue;
 		}
 

@@ -6175,16 +6175,6 @@ void CHARACTER::SetGuild(CGuild* pGuild)
 	}
 }
 
-void CHARACTER::SendGreetMessage()
-{
-	__typeof(DBManager::instance().GetGreetMessage()) v = DBManager::instance().GetGreetMessage();
-
-	for (itertype(v) it = v.begin(); it != v.end(); ++it)
-	{
-		ChatPacket(CHAT_TYPE_NOTICE, it->c_str());
-	}
-}
-
 void CHARACTER::BeginStateEmpty()
 {
 	MonsterLog("!");
