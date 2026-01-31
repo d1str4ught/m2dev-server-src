@@ -2098,11 +2098,6 @@ ACMD(do_reload)
 				db_clientdesc->DBPacket(HEADER_GD_RELOAD_PROTO, 0, nullptr, 0);
 				break;
 
-			case 's':
-				ch->ChatPacket(CHAT_TYPE_INFO, "Reloading notice string.");
-				DBManager::instance().LoadDBString();
-				break;
-
 			case 'q':
 				ch->ChatPacket(CHAT_TYPE_INFO, "Reloading quest.");
 				quest::CQuestManager::instance().Reload();
@@ -2132,9 +2127,6 @@ ACMD(do_reload)
 
 		ch->ChatPacket(CHAT_TYPE_INFO, "Reloading prototype tables,");
 		db_clientdesc->DBPacket(HEADER_GD_RELOAD_PROTO, 0, NULL, 0);
-
-		ch->ChatPacket(CHAT_TYPE_INFO, "Reloading notice string.");
-		DBManager::instance().LoadDBString();    
 	}
 }
 
