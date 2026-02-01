@@ -55,7 +55,6 @@
 #include "threeway_war.h"
 #include "DragonLair.h"
 #include "skill_power.h"
-#include "SpeedServer.h"
 #include "DragonSoul.h"
 
 // #ifndef OS_WINDOWS
@@ -122,7 +121,6 @@ int g_shutdown_disconnect_force_pulse;
 int g_shutdown_core_pulse;
 bool g_bShutdown=false;
 
-extern int speed_server;
 extern void CancelReloadSpamEvent();
 
 void ContinueOnFatalError()
@@ -374,8 +372,6 @@ int main(int argc, char **argv)
 	SpamManager		spam_mgr;
 	CThreeWayWar	threeway_war;
 	CDragonLairManager	dl_manager;
-
-	CSpeedServerManager SSManager;
 	DSManager dsManager;
 
 	if (!start(argc, argv)) {
@@ -394,8 +390,6 @@ int main(int argc, char **argv)
 	CGuildManager::instance().Initialize();
 	fishing::Initialize();
 	OXEvent_manager.Initialize();
-	if (speed_server)
-		CSpeedServerManager::instance().Initialize();
 
 	Cube_init();
 	Blend_Item_init();

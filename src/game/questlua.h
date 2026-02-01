@@ -5,7 +5,6 @@
 #include "buffer_manager.h"
 
 extern int test_server;
-extern int speed_server;
 
 namespace quest
 {
@@ -32,7 +31,6 @@ namespace quest
 	extern void RegisterBattleArenaFunctionTable();
 	extern void RegisterDanceEventFunctionTable();
 	extern void RegisterDragonLairFunctionTable();
-	extern void RegisterSpeedServerFunctionTable();
 	extern void RegisterDragonSoulFunctionTable();
 
 	extern void combine_lua_string(lua_State* L, std::ostringstream &s);

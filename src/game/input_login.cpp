@@ -631,8 +631,6 @@ void CInputLogin::Entergame(LPDESC d, const char * data)
 	p2.channel = g_bChannel;
 	d->Packet(&p2, sizeof(p2));
 
-	ch->SendGreetMessage();
-
 	_send_bonus_info(ch);
 	
 	for (int i = 0; i <= PREMIUM_MAX_NUM; ++i)

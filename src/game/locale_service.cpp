@@ -467,7 +467,6 @@ static void __LocaleService_Init_JAPAN()
 
 	check_name = check_name_sjis;
 	is_twobyte = is_twobyte_sjis;
-	exp_table = exp_table_euckr;
 }
 
 static void __LocaleService_Init_English() //Fix (Kinda)
@@ -553,7 +552,6 @@ static void __LocaleService_Init_Korea()
 	g_setQuestObjectDir.insert("locale/korea/quest/object");
 
 	g_iUseLocale = TRUE;
-	exp_table = exp_table_euckr;
 }
 
 static void __LocaleService_Init_France()
@@ -744,8 +742,6 @@ static void __LocaleService_Init_YMIR()
 	g_setQuestObjectDir.insert(g_stQuestDir + "/object");
 
 	PK_PROTECT_LEVEL = 30;
-
-	exp_table = exp_table_euckr;
 }
 
 static void __LocaleService_Init_Russia() 

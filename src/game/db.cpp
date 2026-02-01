@@ -35,11 +35,6 @@ bool DBManager::Connect(const char * host, const int port, const char * user, co
 	if (!m_sql_direct.Setup(host, user, pwd, db, g_stLocale.c_str(), true, port))
 		sys_err("cannot open direct sql connection to host %s", host);
 
-	if (m_bIsConnect && !g_bAuthServer)
-	{
-		LoadDBString();
-	}
-
 	return m_bIsConnect;
 }
 
@@ -448,34 +443,6 @@ void DBManager::AnalyzeReturnQuery(SQLMsg * pMsg)
 			}
 			break;
 
-		case QID_DB_STRING:
-			{
-				m_map_dbstring.clear();
-				m_vec_GreetMessage.clear();
-
-				for (uint i = 0; i < pMsg->Get()->uiNumRows; ++i)
-				{
-					MYSQL_ROW row = mysql_fetch_row(pMsg->Get()->pSQLResult);
-					//ch->SetSafeboxSize(SAFEBOX_PAGE_SIZE * atoi(row[0]));
-					if (row[0] && row[1])
-					{
-						m_map_dbstring.insert(make_pair(std::string(row[0]), std::string(row[1])));
-						sys_log(0, "DBSTR '%s' '%s'", row[0], row[1]);
-					}
-				}
-				if (m_map_dbstring.find("GREET") != m_map_dbstring.end())
-				{
-					std::istringstream is(m_map_dbstring["GREET"]);
-					while (!is.eof())
-					{
-						std::string str;
-						getline(is, str);
-						m_vec_GreetMessage.push_back(str);
-					}
-				}
-			}
-			break;
-
 		case QID_LOTTO:
 			{
 				LPCHARACTER ch = CHARACTER_MANAGER::instance().FindByPID(qi->dwIdent);
@@ -570,25 +537,6 @@ void DBManager::AnalyzeReturnQuery(SQLMsg * pMsg)
 	}
 
 	M2_DELETE(qi);
-}
-
-void DBManager::LoadDBString()
-{
-	ReturnQuery(QID_DB_STRING, 0, NULL, "SELECT name, text FROM string%s", get_table_postfix());
-}
-
-const std::string& DBManager::GetDBString(const std::string& key)
-{
-	static std::string null_str = "";
-	itertype(m_map_dbstring) it = m_map_dbstring.find(key);
-	if (it == m_map_dbstring.end())
-		return null_str;
-	return it->second;
-}
-
-const std::vector<std::string>& DBManager::GetGreetMessage()
-{
-	return m_vec_GreetMessage;
 }
 
 void DBManager::SendMoneyLog(BYTE type, DWORD vnum, int gold)
