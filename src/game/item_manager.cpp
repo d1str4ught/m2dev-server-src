@@ -1,4 +1,4 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "utils.h"
 #include "config.h"
 #include "char.h"
@@ -836,8 +836,6 @@ bool ITEM_MANAGER::GetDropPct(LPCHARACTER pkChr, LPCHARACTER pkKiller, OUT int& 
 		(100 + 
 		 CPrivManager::instance().GetPriv(pkKiller, PRIV_ITEM_DROP) + 
 		 (pkKiller->IsEquipUniqueItem(UNIQUE_ITEM_DOUBLE_ITEM) ? 100 : 0));
-
-	if (distribution_test_server) iRandRange /= 3;
 
 	return true;
 }
