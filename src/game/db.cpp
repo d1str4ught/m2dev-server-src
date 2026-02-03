@@ -13,6 +13,7 @@
 #include "item_manager.h"
 #include "p2p.h"
 #include "log.h"
+#include "input.h"
 #include "login_data.h"
 #include "locale_service.h"
 #include "spam.h"
@@ -206,7 +207,6 @@ void DBManager::SendAuthLogin(LPDESC d)
 	ptod.dwLoginKey = d->GetLoginKey();
 
 	thecore_memcpy(ptod.iPremiumTimes, pkLD->GetPremiumPtr(), sizeof(ptod.iPremiumTimes));
-	thecore_memcpy(&ptod.adwClientKey, pkLD->GetClientKey(), sizeof(DWORD) * 4);
 
 	db_clientdesc->DBPacket(HEADER_GD_AUTH_LOGIN, d->GetHandle(), &ptod, sizeof(TPacketGDAuthLogin));
 	sys_log(0, "SendAuthLogin %s key %u", ptod.szLogin, ptod.dwID);
@@ -214,7 +214,7 @@ void DBManager::SendAuthLogin(LPDESC d)
 	SendLoginPing(r.login);
 }
 
-void DBManager::LoginPrepare(LPDESC d, uint32_t * pdwClientKey, int * paiPremiumTimes)
+void DBManager::LoginPrepare(LPDESC d, int * paiPremiumTimes)
 {
 	const TAccountTable & r = d->GetAccountTable();
 
@@ -223,7 +223,6 @@ void DBManager::LoginPrepare(LPDESC d, uint32_t * pdwClientKey, int * paiPremium
 	pkLD->SetKey(d->GetLoginKey());
 	pkLD->SetLogin(r.login);
 	pkLD->SetIP(d->GetHostName());
-	pkLD->SetClientKey(pdwClientKey);
 
 	if (paiPremiumTimes)
 		pkLD->SetPremium(paiPremiumTimes);
@@ -257,6 +256,7 @@ void DBManager::AnalyzeReturnQuery(SQLMsg * pMsg)
 				if (pMsg->Get()->uiNumRows == 0)
 				{
 					sys_log(0, "   NOID");
+					RecordLoginFailure(d->GetHostName());
 					LoginFailure(d, "NOID");
 					M2_DELETE(pinfo);
 				}
@@ -362,13 +362,9 @@ void DBManager::AnalyzeReturnQuery(SQLMsg * pMsg)
 
 					int nPasswordDiff = strcmp(szEncrytPassword, szPassword);
 
-					if (true == LC_IsBrazil())
-					{
-						nPasswordDiff = 0; // 브라질 버전에서는 비밀번호 체크를 하지 않는다.
-					}
-
 					if (nPasswordDiff)
 					{
+						RecordLoginFailure(d->GetHostName());
 						LoginFailure(d, "WRONGPWD");
 						sys_log(0, "   WRONGPWD");
 						M2_DELETE(pinfo);
@@ -416,8 +412,10 @@ void DBManager::AnalyzeReturnQuery(SQLMsg * pMsg)
 						strlcpy(r.passwd, pinfo->passwd, sizeof(r.passwd));
 						strlcpy(r.social_id, szSocialID, sizeof(r.social_id));
 						DESC_MANAGER::instance().ConnectAccount(r.login, d);
+						DESC_MANAGER::instance().ConsumeLoginKey(d->GetLoginKey());
+						ClearLoginFailure(d->GetHostName());
 
-						LoginPrepare(d, pinfo->adwClientKey, aiPremiumTimes);
+						LoginPrepare(d, aiPremiumTimes);
 						M2_DELETE(pinfo);
 
 						sys_log(0, "QID_AUTH_LOGIN: SUCCESS %s", pinfo->login);

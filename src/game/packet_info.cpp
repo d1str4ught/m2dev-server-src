@@ -137,13 +137,10 @@ CPacketInfoCG::CPacketInfoCG()
 	Set(HEADER_CG_MARK_IDXLIST, sizeof(TPacketCGMarkIDXList), "MarkIdxList", false);
 	Set(HEADER_CG_MARK_CRCLIST, sizeof(TPacketCGMarkCRCList), "MarkCrcList", false);
 	Set(HEADER_CG_MARK_UPLOAD, sizeof(TPacketCGMarkUpload), "MarkUpload", false);
-#ifdef _IMPROVED_PACKET_ENCRYPTION_
-	Set(HEADER_CG_KEY_AGREEMENT, sizeof(TPacketKeyAgreement), "KeyAgreement", false);
-#endif
+	Set(HEADER_CG_KEY_RESPONSE, sizeof(TPacketCGKeyResponse), "KeyResponse", false);
 
 	Set(HEADER_CG_GUILD_SYMBOL_UPLOAD, sizeof(TPacketCGGuildSymbolUpload), "SymbolUpload", false);
 	Set(HEADER_CG_SYMBOL_CRC, sizeof(TPacketCGSymbolCRC), "SymbolCRC", false);
-	Set(HEADER_CG_LOGIN, sizeof(TPacketCGLogin), "Login", true);
 	Set(HEADER_CG_LOGIN2, sizeof(TPacketCGLogin2), "Login2", true);
 	Set(HEADER_CG_LOGIN3, sizeof(TPacketCGLogin3), "Login3", true);
 	Set(HEADER_CG_ATTACK, sizeof(TPacketCGAttack), "Attack", true);

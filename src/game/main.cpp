@@ -51,7 +51,6 @@
 #include "horsename_manager.h"
 #include "MarkManager.h"
 #include "spam.h"
-#include "panama.h"
 #include "threeway_war.h"
 #include "DragonLair.h"
 #include "skill_power.h"
@@ -394,17 +393,9 @@ int main(int argc, char **argv)
 	Cube_init();
 	Blend_Item_init();
 	ani_init();
-	PanamaLoad();
 
 	if ( g_bTrafficProfileOn )
 		TrafficProfiler::instance().Initialize( TRAFFIC_PROFILE_FLUSH_CYCLE, "ProfileLog" );
-
-	//TODO : make it config
-	const std::string strPackageCryptInfoDir = "package/";
-	if( !desc_manager.LoadClientPackageCryptInfo( strPackageCryptInfoDir.c_str() ) )
-	{
-		sys_err("Failed to Load ClientPackageCryptInfo File(%s)", strPackageCryptInfoDir.c_str());	
-	}
 
 	while (idle());
 
