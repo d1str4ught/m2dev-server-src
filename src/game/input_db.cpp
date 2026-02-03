@@ -38,7 +38,6 @@
 
 #include "horsename_manager.h"
 #include "gm.h"
-#include "panama.h"
 #include "map_location.h"
 
 #include "DragonSoul.h"
@@ -1721,8 +1720,6 @@ void CInputDB::AuthLogin(LPDESC d, const char * c_pData)
 
 	if (bResult)
 	{
-		// Panama 암호화 팩에 필요한 키 보내기
-		SendPanamaList(d);
 		ptoc.dwLoginKey = d->GetLoginKey();
 
 		//NOTE: AuthSucess보다 먼저 보내야지 안그러면 PHASE Close가 되서 보내지지 않는다.-_-
