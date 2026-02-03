@@ -166,8 +166,6 @@ class DESC
 		void			SetLoginKey(CLoginKey * pkKey);
 		DWORD			GetLoginKey();
 
-		void			AssembleCRCMagicCube(BYTE bProcPiece, BYTE bFilePiece);
-
 		void			SetClientVersion(const char * c_pszTimestamp) { m_stClientVersion = c_pszTimestamp; }
 		const char *		GetClientVersion() { return m_stClientVersion.c_str(); }
 
@@ -235,11 +233,6 @@ class DESC
 		CLoginKey *		m_pkLoginKey;
 		DWORD			m_dwLoginKey;
 		DWORD			m_dwPanamaKey;
-
-		BYTE                    m_bCRCMagicCubeIdx;
-		DWORD                   m_dwProcCRC;
-		DWORD                   m_dwFileCRC;
-		bool			m_bHackCRCQuery;
 
 		std::string		m_stClientVersion;
 

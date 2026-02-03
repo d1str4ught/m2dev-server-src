@@ -1236,10 +1236,6 @@ namespace quest
 		{
 			CHARACTER_MANAGER::instance().SetMobGoldDropRatePremium(value);
 		}
-		else if (name == "crcdisconnect")
-		{
-			DESC_MANAGER::instance().SetDisconnectInvalidCRCMode(value != 0);
-		}
 		else if (!name.compare(0,5,"xmas_"))
 		{
 			xmas::ProcessEventFlag(name, prev_value, value);

@@ -1,5 +1,4 @@
-﻿
-#ifndef __INC_METIN_II_GAME_CONFIG_H__
+﻿#ifndef __INC_METIN_II_GAME_CONFIG_H__
 #define __INC_METIN_II_GAME_CONFIG_H__
 
 enum
@@ -66,10 +65,6 @@ extern bool	g_bEmpireWhisper;
 extern BYTE	g_bAuthServer;
 
 extern BYTE	PK_PROTECT_LEVEL;
-
-extern void	LoadValidCRCList();
-extern bool	IsValidProcessCRC(DWORD dwCRC);
-extern bool	IsValidFileCRC(DWORD dwCRC);
 
 extern std::string	g_stAuthMasterIP;
 extern WORD		g_wAuthMasterPort;

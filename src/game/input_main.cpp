@@ -1781,8 +1781,6 @@ void CInputMain::Attack(LPCHARACTER ch, const BYTE header, const char* data)
 
 				const TPacketCGAttack* const packMelee = reinterpret_cast<const TPacketCGAttack*>(data);
 
-				ch->GetDesc()->AssembleCRCMagicCube(packMelee->bCRCMagicCubeProcPiece, packMelee->bCRCMagicCubeFilePiece);
-
 				LPCHARACTER	victim = CHARACTER_MANAGER::instance().Find(packMelee->dwVID);
 
 				if (NULL == victim || ch == victim)

@@ -302,7 +302,6 @@ enum
 	HEADER_GG_TRANSFER				= 16,
 	HEADER_GG_XMAS_WARP_SANTA			= 17,
 	HEADER_GG_XMAS_WARP_SANTA_REPLY		= 18,
-	HEADER_GG_RELOAD_CRC_LIST			= 19,
 	HEADER_GG_LOGIN_PING			= 20,
 	HEADER_GG_CHECK_CLIENT_VERSION		= 21,
 	HEADER_GG_BLOCK_CHAT			= 22,
@@ -608,8 +607,6 @@ typedef struct command_attack
 	uint8_t	bHeader;
 	uint8_t	bType;
 	uint32_t	dwVID;
-	uint8_t	bCRCMagicCubeProcPiece;
-	uint8_t	bCRCMagicCubeFilePiece;
 } TPacketCGAttack;
 
 enum EMoveFuncType

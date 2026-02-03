@@ -66,10 +66,7 @@ bool		g_bCheckClientVersion = true;
 string	g_stClientVersion = "1215955205";
 
 string	g_stAuthMasterIP;
-WORD		g_wAuthMasterPort = 0;
-
-static std::set<DWORD> s_set_dwFileCRC;
-static std::set<DWORD> s_set_dwProcessCRC;
+WORD	g_wAuthMasterPort = 0;
 
 string g_stHostname = "";
 string g_table_postfix = "";
@@ -107,7 +104,6 @@ bool		g_bCheckMultiHack = true;
 int			g_iSpamBlockMaxLevel = 10;
 
 void		LoadStateUserCount();
-void		LoadValidCRCList();
 bool		LoadClientVersion();
 bool            g_protectNormalPlayer   = false;        // 범법자가 "평화모드" 인 일반유저를 공격하지 못함
 bool            g_noticeBattleZone      = false;        // 중립지대에 입장하면 안내메세지를 알려줌
@@ -1134,7 +1130,6 @@ void config_init(const string& st_localeServiceName)
 		fclose(fp);
 	}
 
-	LoadValidCRCList();
 	LoadStateUserCount();
 
 	CWarMapManager::instance().LoadWarMapInfo(NULL);
@@ -1145,36 +1140,6 @@ void config_init(const string& st_localeServiceName)
 const char* get_table_postfix()
 {
 	return g_table_postfix.c_str();
-}
-
-void LoadValidCRCList()
-{
-	s_set_dwProcessCRC.clear();
-	s_set_dwFileCRC.clear();
-
-	FILE * fp;
-	char buf[256];
-
-	if ((fp = fopen("CRC", "r")))
-	{
-		while (fgets(buf, 256, fp))
-		{
-			if (!*buf)
-				continue;
-
-			DWORD dwValidClientProcessCRC;
-			DWORD dwValidClientFileCRC;
-
-			sscanf(buf, " %u %u ", &dwValidClientProcessCRC, &dwValidClientFileCRC);
-
-			s_set_dwProcessCRC.insert(dwValidClientProcessCRC);
-			s_set_dwFileCRC.insert(dwValidClientFileCRC);
-
-			fprintf(stderr, "CLIENT_CRC: %u %u\n", dwValidClientProcessCRC, dwValidClientFileCRC);
-		}
-
-		fclose(fp);
-	}
 }
 
 bool LoadClientVersion()
@@ -1244,15 +1209,3 @@ void LoadStateUserCount()
 
 	fclose(fp);
 }
-
-bool IsValidProcessCRC(DWORD dwCRC)
-{
-	return s_set_dwProcessCRC.find(dwCRC) != s_set_dwProcessCRC.end();
-}
-
-bool IsValidFileCRC(DWORD dwCRC)
-{
-	return s_set_dwFileCRC.find(dwCRC) != s_set_dwFileCRC.end();
-}
-
-

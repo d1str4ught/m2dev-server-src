@@ -58,10 +58,6 @@ class DESC_MANAGER : public singleton<DESC_MANAGER>
 		DWORD			CreateLoginKey(LPDESC d);
 		LPDESC			FindByLoginKey(DWORD dwKey);
 		void			ProcessExpiredLoginKey();
-
-		bool			IsDisconnectInvalidCRC() { return m_bDisconnectInvalidCRC; }
-		void			SetDisconnectInvalidCRCMode(bool bMode) { m_bDisconnectInvalidCRC = bMode; }
-
 		bool			IsP2PDescExist(const char * szHost, WORD wPort);
 
 		// for C/S hybrid crypt
@@ -70,8 +66,6 @@ class DESC_MANAGER : public singleton<DESC_MANAGER>
 		void			SendClientPackageSDBToLoadMap( LPDESC desc, const char* pMapName );
 
 	private:
-		bool				m_bDisconnectInvalidCRC;
-
 		DESC_HANDLE_RANDOM_KEY_MAP	m_map_handle_random_key;
 
 		CLIENT_DESC_SET		m_set_pkClientDesc;

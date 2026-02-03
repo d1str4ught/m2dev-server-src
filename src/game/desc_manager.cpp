@@ -32,7 +32,6 @@ void DESC_MANAGER::Initialize()
 	m_iHandleCount = 0;
 	m_iLocalUserCount = 0;
 	memset(m_aiEmpireUserCount, 0, sizeof(m_aiEmpireUserCount));
-	m_bDisconnectInvalidCRC = false;
 }
 
 void DESC_MANAGER::Destroy()
