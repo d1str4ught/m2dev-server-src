@@ -5,7 +5,6 @@
 #include "ClientManager.h"
 #include "GuildManager.h"
 #include "ItemAwardManager.h"
-#include "HB.h"
 #include "PrivManager.h"
 #include "MoneyLog.h"
 #include "Marriage.h"
@@ -22,8 +21,6 @@ std::string g_stLocaleNameColumn = "name";
 std::string g_stLocale = "euckr";
 std::string g_stPlayerDBName = "";
 
-
-bool g_bHotBackup = false;
 BOOL g_test_server = false;
 
 //단위 초
@@ -71,7 +68,6 @@ int main()
 	CNetPoller poller;
 	CDBManager DBManager; 
 	CClientManager ClientManager;
-	PlayerHB player_hb;
 	CGuildManager GuildManager;
 	CPrivManager PrivManager;
 	CMoneyLog MoneyLog;
@@ -169,26 +165,7 @@ int Start()
 	{
 		g_stLocale = szBuf;
 		sys_log(0, "LOCALE set to %s", g_stLocale.c_str());
-
-		// CHINA_DISABLE_HOTBACKUP
-		if ("gb2312" == g_stLocale)
-		{
-			sys_log(0, "CIBN_LOCALE: DISABLE_HOTBACKUP");
-			g_bHotBackup = false;
-		}
-		// END_OF_CHINA_DISABLE_HOTBACKUP
 	}
-
-	int iDisableHotBackup;
-	if (CConfig::instance().GetValue("DISABLE_HOTBACKUP", &iDisableHotBackup))
-	{
-		if (iDisableHotBackup)
-		{	
-			sys_log(0, "CONFIG: DISABLE_HOTBACKUP");
-			g_bHotBackup = false;
-		}
-	}
-
 
 	if (!CConfig::instance().GetValue("TABLE_POSTFIX", szBuf, 256))
 	{
@@ -324,35 +301,6 @@ int Start()
 		sys_err("SQL_COMMON not configured");
 		return false;
 	}
-
-	if (CConfig::instance().GetValue("SQL_HOTBACKUP", line, 256))
-	{
-		sscanf(line, " %s %s %s %s %d ", szAddr, szDB, szUser, szPassword, &iPort);
-		sys_log(0, "connecting to MySQL server (hotbackup)");
-
-		int iRetry = 5;
-
-		do
-		{
-			if (CDBManager::instance().Connect(SQL_HOTBACKUP, szAddr, iPort, szDB, szUser, szPassword))
-			{
-				sys_log(0, "   OK");
-				break;
-			}
-
-			sys_log(0, "   failed, retrying in 5 seconds");
-			fprintf(stderr, "   failed, retrying in 5 seconds");
-			sleep(5);
-		}
-		while (iRetry--);
-
-		fprintf(stderr, "Success HOTBACKUP\n");
-	}
-	else
-	{
-		sys_err("SQL_HOTBACKUP not configured");
-		return false;
-	}
 	
 	if (!CNetPoller::instance().Create())
 	{
@@ -369,12 +317,6 @@ int Start()
 	}
 
 	sys_log(0, "   OK");
-
-	if (!PlayerHB::instance().Initialize())
-	{
-		sys_err("cannot initialize player hotbackup");
-		return false;
-	}
 
 #ifndef OS_WINDOWS
 	signal(SIGUSR1, emergency_sig);

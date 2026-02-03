@@ -6,10 +6,7 @@
 #include "Main.h"
 #include "QID.h"
 #include "ItemAwardManager.h"
-#include "HB.h"
 #include "Cache.h"
-
-extern bool g_bHotBackup;
 
 extern std::string g_stLocale;
 extern int g_test_server;
@@ -195,9 +192,6 @@ void CClientManager::PutPlayerCache(TPlayerTable * pNew)
 		c = new CPlayerTableCache;
 		m_map_playerCache.insert(TPlayerTableCacheMap::value_type(pNew->id, c));
 	}
-
-	if (g_bHotBackup)
-		PlayerHB::instance().Put(pNew->id);
 
 	c->Put(pNew);
 }
