@@ -81,13 +81,18 @@ private:
     uint8_t m_tx_key[KEY_SIZE];  // Key for encrypting outgoing packets
     uint8_t m_rx_key[KEY_SIZE];  // Key for decrypting incoming packets
 
-    // Nonce counters - prevent replay attacks
+    // Byte counters for continuous stream cipher
     uint64_t m_tx_nonce = 0;
     uint64_t m_rx_nonce = 0;
+
+    // Fixed nonces per direction (set during key exchange)
+    uint8_t m_tx_stream_nonce[NONCE_SIZE];
+    uint8_t m_rx_stream_nonce[NONCE_SIZE];
 
     // Server-generated session token
     uint8_t m_session_token[SESSION_TOKEN_SIZE];
 
-    // Build 24-byte nonce from counter
-    void BuildNonce(uint8_t* nonce, uint64_t counter, bool is_tx);
+    // Continuous stream cipher operation (handles arbitrary chunk sizes)
+    void ApplyStreamCipher(void* buffer, size_t len, const uint8_t* key,
+                           uint64_t& byte_counter, const uint8_t* stream_nonce);
 };

@@ -23,6 +23,8 @@ SecureCipher::SecureCipher()
     sodium_memzero(m_sk, sizeof(m_sk));
     sodium_memzero(m_tx_key, sizeof(m_tx_key));
     sodium_memzero(m_rx_key, sizeof(m_rx_key));
+    sodium_memzero(m_tx_stream_nonce, sizeof(m_tx_stream_nonce));
+    sodium_memzero(m_rx_stream_nonce, sizeof(m_rx_stream_nonce));
     sodium_memzero(m_session_token, sizeof(m_session_token));
 }
 
@@ -58,6 +60,8 @@ void SecureCipher::CleanUp()
     sodium_memzero(m_sk, sizeof(m_sk));
     sodium_memzero(m_tx_key, sizeof(m_tx_key));
     sodium_memzero(m_rx_key, sizeof(m_rx_key));
+    sodium_memzero(m_tx_stream_nonce, sizeof(m_tx_stream_nonce));
+    sodium_memzero(m_rx_stream_nonce, sizeof(m_rx_stream_nonce));
     sodium_memzero(m_session_token, sizeof(m_session_token));
 
     m_initialized = false;
@@ -84,6 +88,13 @@ bool SecureCipher::ComputeClientKeys(const uint8_t* server_pk)
         return false;
     }
 
+    // Set up fixed stream nonces per direction
+    // client->server = 0x02, server->client = 0x01
+    sodium_memzero(m_tx_stream_nonce, NONCE_SIZE);
+    m_tx_stream_nonce[0] = 0x02;
+    sodium_memzero(m_rx_stream_nonce, NONCE_SIZE);
+    m_rx_stream_nonce[0] = 0x01;
+
     return true;
 }
 
@@ -100,6 +111,13 @@ bool SecureCipher::ComputeServerKeys(const uint8_t* client_pk)
         return false;
     }
 
+    // Set up fixed stream nonces per direction
+    // server->client = 0x01, client->server = 0x02
+    sodium_memzero(m_tx_stream_nonce, NONCE_SIZE);
+    m_tx_stream_nonce[0] = 0x01;
+    sodium_memzero(m_rx_stream_nonce, NONCE_SIZE);
+    m_rx_stream_nonce[0] = 0x02;
+
     return true;
 }
 
@@ -110,9 +128,9 @@ void SecureCipher::GenerateChallenge(uint8_t* out_challenge)
 
 void SecureCipher::ComputeChallengeResponse(const uint8_t* challenge, uint8_t* out_response)
 {
-    // HMAC the challenge using our rx_key as the authentication key
-    // This proves we derived the correct shared secret
-    crypto_auth(out_response, challenge, CHALLENGE_SIZE, m_rx_key);
+    // HMAC the challenge using our tx_key as the authentication key
+    // Client tx_key == Server rx_key, so the server can verify with its rx_key
+    crypto_auth(out_response, challenge, CHALLENGE_SIZE, m_tx_key);
 }
 
 bool SecureCipher::VerifyChallengeResponse(const uint8_t* challenge, const uint8_t* response)
@@ -121,21 +139,36 @@ bool SecureCipher::VerifyChallengeResponse(const uint8_t* challenge, const uint8
     return crypto_auth_verify(response, challenge, CHALLENGE_SIZE, m_rx_key) == 0;
 }
 
-void SecureCipher::BuildNonce(uint8_t* nonce, uint64_t counter, bool is_tx)
+void SecureCipher::ApplyStreamCipher(void* buffer, size_t len,
+                                     const uint8_t* key, uint64_t& byte_counter,
+                                     const uint8_t* stream_nonce)
 {
-    // 24-byte nonce structure:
-    // [0]:     direction flag (0x01 for tx, 0x02 for rx)
-    // [1-7]:   reserved/zero
-    // [8-15]:  64-bit counter (little-endian)
-    // [16-23]: reserved/zero
+    uint8_t* p = (uint8_t*)buffer;
 
-    sodium_memzero(nonce, NONCE_SIZE);
-    nonce[0] = is_tx ? 0x01 : 0x02;
-
-    // Store counter in little-endian at offset 8
-    for (int i = 0; i < 8; ++i)
+    // Handle partial leading block (if byte_counter isn't block-aligned)
+    uint32_t offset = (uint32_t)(byte_counter % 64);
+    if (offset != 0 && len > 0)
     {
-        nonce[8 + i] = (uint8_t)(counter >> (i * 8));
+        // Generate full keystream block, use only the portion we need
+        uint8_t ks[64];
+        sodium_memzero(ks, 64);
+        crypto_stream_xchacha20_xor_ic(ks, ks, 64, stream_nonce, byte_counter / 64, key);
+
+        size_t use = len < (64 - offset) ? len : (64 - offset);
+        for (size_t i = 0; i < use; ++i)
+            p[i] ^= ks[offset + i];
+
+        p += use;
+        len -= use;
+        byte_counter += use;
+    }
+
+    // Handle remaining data (starts at a block boundary)
+    if (len > 0)
+    {
+        crypto_stream_xchacha20_xor_ic(p, p, (unsigned long long)len,
+                                       stream_nonce, byte_counter / 64, key);
+        byte_counter += len;
     }
 }
 
@@ -146,23 +179,23 @@ size_t SecureCipher::Encrypt(const void* plaintext, size_t plaintext_len, void* 
         return 0;
     }
 
+    // AEAD encryption uses a random nonce (not the stream nonce)
     uint8_t nonce[NONCE_SIZE];
-    BuildNonce(nonce, m_tx_nonce, true);
+    randombytes_buf(nonce, NONCE_SIZE);
 
     unsigned long long ciphertext_len = 0;
 
     if (crypto_aead_xchacha20poly1305_ietf_encrypt(
             (uint8_t*)ciphertext, &ciphertext_len,
             (const uint8_t*)plaintext, plaintext_len,
-            nullptr, 0,  // No additional data
-            nullptr,     // No secret nonce
+            nullptr, 0,
+            nullptr,
             nonce,
             m_tx_key) != 0)
     {
         return 0;
     }
 
-    ++m_tx_nonce;
     return (size_t)ciphertext_len;
 }
 
@@ -179,23 +212,21 @@ size_t SecureCipher::Decrypt(const void* ciphertext, size_t ciphertext_len, void
     }
 
     uint8_t nonce[NONCE_SIZE];
-    BuildNonce(nonce, m_rx_nonce, false);
+    randombytes_buf(nonce, NONCE_SIZE);
 
     unsigned long long plaintext_len = 0;
 
     if (crypto_aead_xchacha20poly1305_ietf_decrypt(
             (uint8_t*)plaintext, &plaintext_len,
-            nullptr,  // No secret nonce output
+            nullptr,
             (const uint8_t*)ciphertext, ciphertext_len,
-            nullptr, 0,  // No additional data
+            nullptr, 0,
             nonce,
             m_rx_key) != 0)
     {
-        // Decryption failed - either wrong key, tampered data, or replay attack
         return 0;
     }
 
-    ++m_rx_nonce;
     return (size_t)plaintext_len;
 }
 
@@ -204,18 +235,7 @@ void SecureCipher::EncryptInPlace(void* buffer, size_t len)
     if (!m_activated || len == 0)
         return;
 
-    uint8_t nonce[NONCE_SIZE];
-    BuildNonce(nonce, m_tx_nonce, true);
-
-    crypto_stream_xchacha20_xor_ic(
-        (uint8_t*)buffer,
-        (const uint8_t*)buffer,
-        (unsigned long long)len,
-        nonce,
-        0,
-        m_tx_key);
-
-    ++m_tx_nonce;
+    ApplyStreamCipher(buffer, len, m_tx_key, m_tx_nonce, m_tx_stream_nonce);
 }
 
 void SecureCipher::DecryptInPlace(void* buffer, size_t len)
@@ -223,18 +243,7 @@ void SecureCipher::DecryptInPlace(void* buffer, size_t len)
     if (!m_activated || len == 0)
         return;
 
-    uint8_t nonce[NONCE_SIZE];
-    BuildNonce(nonce, m_rx_nonce, false);
-
-    crypto_stream_xchacha20_xor_ic(
-        (uint8_t*)buffer,
-        (const uint8_t*)buffer,
-        (unsigned long long)len,
-        nonce,
-        0,
-        m_rx_key);
-
-    ++m_rx_nonce;
+    ApplyStreamCipher(buffer, len, m_rx_key, m_rx_nonce, m_rx_stream_nonce);
 }
 
 bool SecureCipher::EncryptToken(const uint8_t* plaintext, size_t len,
