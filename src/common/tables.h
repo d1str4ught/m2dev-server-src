@@ -1144,12 +1144,6 @@ typedef struct SPacketGDCreateObject
 	float	zRot;
 } TPacketGDCreateObject;
 
-typedef struct SPacketGDHammerOfTor
-{
-	uint32_t 	key;
-	uint32_t	delay;
-} TPacketGDHammerOfTor;
-
 typedef struct SGuildReserve
 {
 	uint32_t       dwID;
