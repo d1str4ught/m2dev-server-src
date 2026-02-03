@@ -16,15 +16,12 @@ extern LPFDWATCH	main_fdw;
 
 LPCLIENT_DESC db_clientdesc = NULL;
 LPCLIENT_DESC g_pkAuthMasterDesc = NULL;
-LPCLIENT_DESC g_NetmarbleDBDesc = NULL;
 
 static const char* GetKnownClientDescName(LPCLIENT_DESC desc) {
 	if (desc == db_clientdesc) {
 		return "db_clientdesc";
 	} else if (desc == g_pkAuthMasterDesc) {
 		return "g_pkAuthMasterDesc";
-	} else if (desc == g_NetmarbleDBDesc) {
-		return "g_NetmarbleDBDesc";
 	}
 	return "unknown";
 }
