@@ -130,7 +130,6 @@ void CPacketInfo::Log(const char * c_pszFileName)
 
 CPacketInfoCG::CPacketInfoCG()
 {
-	Set(HEADER_CG_TEXT, sizeof(TPacketCGText), "Text", false);
 	Set(HEADER_CG_HANDSHAKE, sizeof(TPacketCGHandshake), "Handshake", false);
 	Set(HEADER_CG_TIME_SYNC, sizeof(TPacketCGHandshake), "TimeSync", true);
 	Set(HEADER_CG_MARK_LOGIN, sizeof(TPacketCGMarkLogin), "MarkLogin", false);

@@ -77,10 +77,6 @@ extern std::string	g_stQuestDir;
 //extern std::string	g_stQuestObjectDir;
 extern std::set<std::string> g_setQuestObjectDir;
 
-
-extern std::vector<std::string>	g_stAdminPageIP;
-extern std::string	g_stAdminPagePassword;
-
 extern int	SPEEDHACK_LIMIT_COUNT;
 extern int 	SPEEDHACK_LIMIT_BONUS;
 
