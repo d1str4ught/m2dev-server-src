@@ -3,8 +3,6 @@
 
 #include <atomic>
 
-extern void GOST_Init();
-
 LPHEART		thecore_heart = NULL;
 
 std::atomic<int> shutdowned = FALSE;
@@ -59,8 +57,6 @@ int thecore_init(int fps, HEARTFUNC heartbeat_func)
 
 	if (!pid_init())
 		return false;
-
-	GOST_Init();
 
 	thecore_heart = heart_new(1000000 / fps, heartbeat_func);
 	return true;
