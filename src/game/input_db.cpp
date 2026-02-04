@@ -434,12 +434,6 @@ void CInputDB::PlayerLoad(LPDESC d, const char * data)
 
 	long lPublicMapIndex = lMapIndex >= 10000 ? lMapIndex / 10000 : lMapIndex;
 
-	//Send Supplementary Data Block if new map requires security packages in loading this map
-	const TMapRegion * rMapRgn = SECTREE_MANAGER::instance().GetMapRegion(lPublicMapIndex);
-	if( rMapRgn )
-	{
-		DESC_MANAGER::instance().SendClientPackageSDBToLoadMap( d, rMapRgn->strMapName.c_str() );	
-	}
 	//if (!map_allow_find(lMapIndex >= 10000 ? lMapIndex / 10000 : lMapIndex) || !CheckEmpire(ch, lMapIndex))
 	if (!map_allow_find(lPublicMapIndex))
 	{
@@ -1721,13 +1715,6 @@ void CInputDB::AuthLogin(LPDESC d, const char * c_pData)
 	if (bResult)
 	{
 		ptoc.dwLoginKey = d->GetLoginKey();
-
-		//NOTE: AuthSucess보다 먼저 보내야지 안그러면 PHASE Close가 되서 보내지지 않는다.-_-
-		//Send Client Package CryptKey
-		{
-			DESC_MANAGER::instance().SendClientPackageCryptKey(d);
-			DESC_MANAGER::instance().SendClientPackageSDBToLoadMap(d, MAPNAME_DEFAULT);
-		}
 	}
 	else
 	{

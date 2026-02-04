@@ -8,9 +8,6 @@ class CLoginData
 	CLoginData();
 
 	TAccountTable & GetAccountRef();
-	void            SetClientKey(const uint32_t * c_pdwClientKey);
-
-	const uint32_t*   GetClientKey();
 	void            SetKey(DWORD dwKey);
 	DWORD           GetKey();
 
@@ -40,7 +37,6 @@ class CLoginData
 
     private:
 	DWORD           m_dwKey;
-	uint32_t           m_adwClientKey[4];
 	DWORD           m_dwConnectedPeerHandle;
 	DWORD           m_dwLogonTime;
 	char		m_szIP[MAX_HOST_LENGTH+1];

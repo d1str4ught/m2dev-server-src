@@ -8,7 +8,6 @@ typedef	uint32_t IDENT;
  */
 enum
 {
-	HEADER_GD_LOGIN				= 1,
 	HEADER_GD_LOGOUT			= 2,
 
 	HEADER_GD_PLAYER_LOAD		= 3,
@@ -1010,7 +1009,6 @@ typedef struct SPacketGDAuthLogin
 	uint32_t	dwLoginKey;
 	char	szLogin[LOGIN_MAX_LEN + 1];
 	char	szSocialID[SOCIAL_ID_MAX_LEN + 1];
-	uint32_t	adwClientKey[4];
 	int32_t		iPremiumTimes[PREMIUM_MAX_NUM];
 } TPacketGDAuthLogin;
 
@@ -1018,7 +1016,6 @@ typedef struct SPacketGDLoginByKey
 {
 	char	szLogin[LOGIN_MAX_LEN + 1];
 	uint32_t	dwLoginKey;
-	uint32_t	adwClientKey[4];
 	char	szIP[MAX_HOST_LENGTH + 1];
 } TPacketGDLoginByKey;
 
@@ -1130,7 +1127,6 @@ typedef struct SPacketLoginOnSetup
 	char    szSocialID[SOCIAL_ID_MAX_LEN + 1];
 	char    szHost[MAX_HOST_LENGTH + 1];
 	uint32_t   dwLoginKey;
-	uint32_t   adwClientKey[4];
 } TPacketLoginOnSetup;
 
 typedef struct SPacketGDCreateObject

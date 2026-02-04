@@ -1,5 +1,5 @@
 ﻿#include "stdafx.h"
-#include "libthecore/xmd5.h"
+#include <sodium.h>
 
 #include "utils.h"
 #include "config.h"
@@ -2365,26 +2365,21 @@ ACMD(do_in_game_mall)
 
 		char buf[512+1];
 		char sas[33];
-		MD5_CTX ctx;
 		const char sas_key[] = "GF9001";
 
 		snprintf(buf, sizeof(buf), "%u%u%s", ch->GetPlayerID(), ch->GetAID(), sas_key);
 
-		MD5Init(&ctx);
-		MD5Update(&ctx, (const unsigned char *) buf, strlen(buf));
-#ifdef OS_FREEBSD
-		MD5End(&ctx, sas);
-#else
-		static const char hex[] = "0123456789abcdef";
 		unsigned char digest[16];
-		MD5Final(digest, &ctx);
-		int i;
-		for (i = 0; i < 16; ++i) {
+		crypto_generichash(digest, sizeof(digest),
+			(const unsigned char*)buf, strlen(buf),
+			NULL, 0);
+
+		static const char hex[] = "0123456789abcdef";
+		for (int i = 0; i < 16; ++i) {
 			sas[i+i] = hex[digest[i] >> 4];
 			sas[i+i+1] = hex[digest[i] & 0x0f];
 		}
-		sas[i+i] = '\0';
-#endif
+		sas[32] = '\0';
 
 		snprintf(buf, sizeof(buf), "mall http://%s/ishop?pid=%u&c=%s&sid=%d&sas=%s",
 				g_strWebMallURL.c_str(), ch->GetPlayerID(), country_code, g_server_id, sas);

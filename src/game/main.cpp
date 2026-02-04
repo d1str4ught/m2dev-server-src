@@ -397,13 +397,6 @@ int main(int argc, char **argv)
 	if ( g_bTrafficProfileOn )
 		TrafficProfiler::instance().Initialize( TRAFFIC_PROFILE_FLUSH_CYCLE, "ProfileLog" );
 
-	//TODO : make it config
-	const std::string strPackageCryptInfoDir = "package/";
-	if( !desc_manager.LoadClientPackageCryptInfo( strPackageCryptInfoDir.c_str() ) )
-	{
-		sys_err("Failed to Load ClientPackageCryptInfo File(%s)", strPackageCryptInfoDir.c_str());	
-	}
-
 	while (idle());
 
 	sys_log(0, "<shutdown> Starting...");

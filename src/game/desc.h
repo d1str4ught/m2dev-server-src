@@ -3,9 +3,7 @@
 
 #include "constants.h"
 #include "input.h"
-#ifdef _IMPROVED_PACKET_ENCRYPTION_
-#include "cipher.h"
-#endif
+#include "SecureCipher.h"
 
 #include <pcg_random.hpp>
 
@@ -128,17 +126,13 @@ class DESC
 		DWORD			GetHandshake() const	{ return m_dwHandshake; }
 		DWORD			GetClientTime();
 
-#ifdef _IMPROVED_PACKET_ENCRYPTION_
-		void SendKeyAgreement();
-		void SendKeyAgreementCompleted();
-		bool FinishHandshake(size_t agreed_length, const void* buffer, size_t length);
-		bool IsCipherPrepared();
-#else
-		// Obsolete encryption stuff here
-		void			SetSecurityKey(const DWORD * c_pdwKey);
-		const DWORD *	GetEncryptionKey() const { return &m_adwEncryptionKey[0]; }
-		const DWORD *	GetDecryptionKey() const { return &m_adwDecryptionKey[0]; }
-#endif
+		// Secure key exchange (libsodium/XChaCha20-Poly1305)
+		void SendKeyChallenge();
+		bool HandleKeyResponse(const uint8_t* client_pk, const uint8_t* challenge_response);
+		void SendKeyComplete();
+		SecureCipher& GetSecureCipher() { return m_secureCipher; }
+		const uint8_t* GetSessionToken() const { return m_secureCipher.GetSessionToken(); }
+		bool IsSecureCipherActivated() const { return m_secureCipher.IsActivated(); }
 
 		// 제국
 		BYTE			GetEmpire();
@@ -243,14 +237,9 @@ class DESC
 		// Handshake timeout protection
 		uint32_t		m_handshake_time;
 
-#ifdef _IMPROVED_PACKET_ENCRYPTION_
-		Cipher cipher_;
-#else
-		// Obsolete encryption stuff here
-		bool			m_bEncrypted;
-		DWORD			m_adwDecryptionKey[4];
-		DWORD			m_adwEncryptionKey[4];
-#endif
+		// Secure cipher (libsodium/XChaCha20-Poly1305)
+		SecureCipher	m_secureCipher;
+		uint8_t			m_challenge[SecureCipher::CHALLENGE_SIZE];
 
 	public:
 		LPEVENT			m_pkDisconnectEvent;

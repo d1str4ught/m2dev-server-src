@@ -17,6 +17,8 @@ enum
 };
 
 void LoginFailure(LPDESC d, const char * c_pszStatus);
+void RecordLoginFailure(const char* hostName);
+void ClearLoginFailure(const char* hostName);
 void BroadcastGuildMarkUpdate(DWORD dwGuildID, WORD wImgIdx);
 
 
@@ -78,7 +80,6 @@ class CInputLogin : public CInputProcessor
 		virtual int	Analyze(LPDESC d, BYTE bHeader, const char * c_pData);
 
 	protected:
-		void		Login(LPDESC d, const char * data);
 		void		LoginByKey(LPDESC d, const char * data);
 
 		void		CharacterSelect(LPDESC d, const char * data);

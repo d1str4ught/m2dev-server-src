@@ -10,20 +10,15 @@
 #include "protocol.h"
 #include "messenger_manager.h"
 #include "p2p.h"
-#include "ClientPackageCryptInfo.h"
 
 DESC_MANAGER::DESC_MANAGER() : m_bDestroyed(false)
 {
 	Initialize();
-	//NOTE : Destroy 끝에서 Initialize 를 부르는건 또 무슨 짓이냐..-_-; 정말 
-
-	m_pPackageCrypt = new CClientPackageCryptInfo;
 }
 
 DESC_MANAGER::~DESC_MANAGER()
 {
 	Destroy();
-	delete m_pPackageCrypt;
 }
 
 void DESC_MANAGER::Initialize()
@@ -426,7 +421,7 @@ DWORD DESC_MANAGER::CreateLoginKey(LPDESC d)
 
 	do
 	{
-		dwKey = number(1, INT_MAX);
+		dwKey = randombytes_uniform(INT_MAX) + 1;  // CSPRNG: [1, INT_MAX]
 
 		if (m_map_pkLoginKey.find(dwKey) != m_map_pkLoginKey.end())
 			continue;
@@ -438,6 +433,17 @@ DWORD DESC_MANAGER::CreateLoginKey(LPDESC d)
 	} while (1);
 
 	return dwKey;
+}
+
+void DESC_MANAGER::ConsumeLoginKey(DWORD dwKey)
+{
+	std::map<DWORD, CLoginKey *>::iterator it = m_map_pkLoginKey.find(dwKey);
+
+	if (it != m_map_pkLoginKey.end())
+	{
+		M2_DELETE(it->second);
+		m_map_pkLoginKey.erase(it);
+	}
 }
 
 void DESC_MANAGER::ProcessExpiredLoginKey()
@@ -452,10 +458,18 @@ void DESC_MANAGER::ProcessExpiredLoginKey()
 	{
 		it2 = it++;
 
+		// Clean up orphaned keys (descriptor gone but never expired)
+		if (it2->second->m_dwExpireTime == 0 && it2->second->m_pkDesc == NULL)
+		{
+			M2_DELETE(it2->second);
+			m_map_pkLoginKey.erase(it2);
+			continue;
+		}
+
 		if (it2->second->m_dwExpireTime == 0)
 			continue;
 
-		if (dwCurrentTime - it2->second->m_dwExpireTime > 60000)
+		if (dwCurrentTime - it2->second->m_dwExpireTime > 15000)
 		{
 			M2_DELETE(it2->second);
 			m_map_pkLoginKey.erase(it2);
@@ -463,47 +477,4 @@ void DESC_MANAGER::ProcessExpiredLoginKey()
 	}
 }
 
-bool DESC_MANAGER::LoadClientPackageCryptInfo(const char* pDirName)
-{
-	return m_pPackageCrypt->LoadPackageCryptInfo(pDirName);
-}
-
-void DESC_MANAGER::SendClientPackageCryptKey( LPDESC desc )
-{
-	if( !desc )
-	{
-		return;
-	}
-
-	TPacketGCHybridCryptKeys packet;
-	{
-		packet.bHeader = HEADER_GC_HYBRIDCRYPT_KEYS;
-		m_pPackageCrypt->GetPackageCryptKeys( &(packet.pDataKeyStream), packet.KeyStreamLen );
-	}
-
-	if( packet.KeyStreamLen > 0 )
-	{
-		desc->Packet( packet.GetStreamData(), packet.GetStreamSize() );
-	}
-}
-
-void DESC_MANAGER::SendClientPackageSDBToLoadMap( LPDESC desc, const char* pMapName )
-{
-	if( !desc )
-	{
-		return;
-	}
-
-	TPacketGCPackageSDB packet;
-	{
-		packet.bHeader      = HEADER_GC_HYBRIDCRYPT_SDB;
-		if( !m_pPackageCrypt->GetRelatedMapSDBStreams( pMapName, &(packet.m_pDataSDBStream), packet.iStreamLen ) )
-			return; 
-	}
-
-	if( packet.iStreamLen > 0 )
-	{
-		desc->Packet( packet.GetStreamData(), packet.GetStreamSize());
-	}
-}
 

@@ -1,4 +1,4 @@
-﻿#include "stdafx.h" 
+﻿#include "stdafx.h"
 #include "constants.h"
 #include "config.h"
 #include "input.h"
@@ -8,7 +8,60 @@
 #include "locale_service.h"
 #include "db.h"
 
+#include <unordered_map>
+
 extern time_t get_global_time();
+
+static const int LOGIN_MAX_ATTEMPTS = 5;
+static const DWORD LOGIN_BLOCK_DURATION_MS = 60000;
+
+struct LoginAttemptInfo
+{
+	int failCount;
+	DWORD lastAttemptTime;
+};
+
+static std::unordered_map<std::string, LoginAttemptInfo> s_loginAttempts;
+
+void RecordLoginFailure(const char* hostName)
+{
+	DWORD now = get_dword_time();
+	auto it = s_loginAttempts.find(hostName);
+
+	if (it == s_loginAttempts.end())
+	{
+		s_loginAttempts[hostName] = { 1, now };
+	}
+	else
+	{
+		if (now - it->second.lastAttemptTime >= LOGIN_BLOCK_DURATION_MS)
+			it->second.failCount = 0;
+
+		it->second.failCount++;
+		it->second.lastAttemptTime = now;
+	}
+}
+
+void ClearLoginFailure(const char* hostName)
+{
+	s_loginAttempts.erase(hostName);
+}
+
+static bool IsLoginRateLimited(const char* hostName)
+{
+	auto it = s_loginAttempts.find(hostName);
+	if (it == s_loginAttempts.end())
+		return false;
+
+	DWORD now = get_dword_time();
+	if (now - it->second.lastAttemptTime >= LOGIN_BLOCK_DURATION_MS)
+	{
+		s_loginAttempts.erase(it);
+		return false;
+	}
+
+	return it->second.failCount >= LOGIN_MAX_ATTEMPTS;
+}
 
 bool FN_IS_VALID_LOGIN_STRING(const char *str)
 {
@@ -105,9 +158,18 @@ void CInputAuth::Login(LPDESC d, const char * c_pData)
 
 	if (!g_bAuthServer)
 	{
-		sys_err ("CInputAuth class is not for game server. IP %s might be a hacker.", 
+		sys_err ("CInputAuth class is not for game server. IP %s might be a hacker.",
 			inet_ntoa(d->GetAddr().sin_addr));
 		d->DelayedDisconnect(5);
+		return;
+	}
+
+	// Rate limiting: block IPs with too many failed attempts
+	if (IsLoginRateLimited(d->GetHostName()))
+	{
+		sys_log(0, "InputAuth::Login : RATE LIMITED IP %s", d->GetHostName());
+		LoginFailure(d, "BLOCK");
+		d->DelayedDisconnect(3);
 		return;
 	}
 
