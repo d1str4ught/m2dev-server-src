@@ -754,7 +754,7 @@ bool regen_load(const char* filename, long lMapIndex, int base_x, int base_y)
 					SECTREE_MANAGER::instance().InsertNPCPosition(lMapIndex,
 							p->m_table.bType,
 							p->m_table.dwVnum,
-							p->m_table.szLocaleName,
+							p->m_table.szName,
 							(regen->sx+regen->ex) / 2 - base_x,
 							(regen->sy+regen->ey) / 2 - base_y);
 				}

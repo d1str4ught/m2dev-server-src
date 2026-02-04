@@ -370,7 +370,7 @@ bool CompareShopItemName(const SShopItemTable& lhs, const SShopItemTable& rhs)
 	TItemTable* lItem = ITEM_MANAGER::instance().GetTable(lhs.vnum);
 	TItemTable* rItem = ITEM_MANAGER::instance().GetTable(rhs.vnum);
 	if (lItem && rItem)
-		return strcmp(lItem->szLocaleName, rItem->szLocaleName) < 0;
+		return strcmp(lItem->szName, rItem->szName) < 0;
 	else
 		return true;
 }

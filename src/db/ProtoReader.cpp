@@ -586,17 +586,14 @@ bool Set_Proto_Mob_Table(TMobTable *mobTable, cCsvTable &csvTable,std::map<int,c
 {
 	int col = 0;
 	str_to_number(mobTable->dwVnum, csvTable.AsStringByIndex(col++));
-	strlcpy(mobTable->szName, csvTable.AsStringByIndex(col++), sizeof(mobTable->szName));
 
-	//3. 지역별 이름 넣어주기.
-	map<int,const char*>::iterator it;
-	it = nameMap.find(mobTable->dwVnum);
-	if (it != nameMap.end()) {
-		const char * localeName = it->second;
-		strlcpy(mobTable->szLocaleName, localeName, sizeof (mobTable->szLocaleName));
-	} else {
-		strlcpy(mobTable->szLocaleName, mobTable->szName, sizeof (mobTable->szLocaleName));
-	}
+    /*======== NAME =======*/
+    strlcpy(mobTable->szName, csvTable.AsStringByIndex(col++), sizeof(mobTable->szName));
+    // Overwrite name with localized name if found
+    if (auto it = nameMap.find(mobTable->dwVnum); it != nameMap.end())
+    {
+        strlcpy(mobTable->szName, it->second, sizeof(mobTable->szName));
+    }
 
 	//RANK
 	int rankValue = get_Mob_Rank_Value(csvTable.AsStringByIndex(col++));
@@ -684,7 +681,7 @@ bool Set_Proto_Mob_Table(TMobTable *mobTable, cCsvTable &csvTable,std::map<int,c
 	str_to_number(mobTable->bDeathBlowPoint, csvTable.AsStringByIndex(col++));
 	str_to_number(mobTable->bRevivePoint, csvTable.AsStringByIndex(col++));
 
-	sys_log(0, "MOB #%-5d %-24s level: %-3u rank: %u empire: %d", mobTable->dwVnum, mobTable->szLocaleName, mobTable->bLevel, mobTable->bRank, mobTable->bEmpire);
+	sys_log(0, "MOB #%-5d %-24s level: %-3u rank: %u empire: %d", mobTable->dwVnum, mobTable->szName, mobTable->bLevel, mobTable->bRank, mobTable->bEmpire);
 
 	return true;
 }
@@ -778,15 +775,13 @@ bool Set_Proto_Item_Table(TItemTable *itemTable, cCsvTable &csvTable,std::map<in
 	}
 
 	strlcpy(itemTable->szName, csvTable.AsStringByIndex(1), sizeof(itemTable->szName));
-	//지역별 이름 넣어주기.
-	map<int,const char*>::iterator it;
-	it = nameMap.find(itemTable->dwVnum);
-	if (it != nameMap.end()) {
-		const char * localeName = it->second;
-		strlcpy(itemTable->szLocaleName, localeName, sizeof (itemTable->szLocaleName));
-	} else {
-		strlcpy(itemTable->szLocaleName, itemTable->szName, sizeof (itemTable->szLocaleName));
-	}
+
+    // Overwrite name with localized name if found
+    if (auto it = nameMap.find(itemTable->dwVnum); it != nameMap.end())
+    {
+        strlcpy(itemTable->szName, it->second, sizeof(itemTable->szName));
+    }
+
 	itemTable->bType = dataArray[2];
 	itemTable->bSubType = dataArray[3];
 	itemTable->bSize = dataArray[4];

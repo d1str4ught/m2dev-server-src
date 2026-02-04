@@ -38,8 +38,7 @@ class CItem : public CEntity
 
 		int		GetGold();
 		int		GetShopBuyPrice();
-		const char *	GetName()		{ return m_pProto ? m_pProto->szLocaleName : NULL; }
-		const char *	GetBaseName()		{ return m_pProto ? m_pProto->szName : NULL; }
+		const char *	GetName()		{ return m_pProto ? m_pProto->szName : NULL; }
 		BYTE		GetSize()		{ return m_pProto ? m_pProto->bSize : 0;	}
 
 		void		SetFlag(long flag)	{ m_lFlag = flag;	}

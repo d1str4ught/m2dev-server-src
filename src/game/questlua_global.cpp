@@ -635,7 +635,7 @@ namespace quest
 			DWORD dwVnum = (DWORD)lua_tonumber(L,1);
 			TItemTable* pTable = ITEM_MANAGER::instance().GetTable(dwVnum);
 			if (pTable)
-				lua_pushstring(L,pTable->szLocaleName);
+				lua_pushstring(L, pTable->szName);
 			else
 				lua_pushstring(L,"");
 		}
@@ -652,7 +652,7 @@ namespace quest
 			const CMob * pkMob = CMobManager::instance().Get(dwVnum);
 
 			if (pkMob)
-				lua_pushstring(L, pkMob->m_table.szLocaleName);
+				lua_pushstring(L, pkMob->m_table.szName);
 			else
 				lua_pushstring(L, "");
 		}

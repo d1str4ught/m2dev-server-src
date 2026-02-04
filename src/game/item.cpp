@@ -1294,7 +1294,7 @@ DWORD CItem::GetRefineFromVnum()
 
 int CItem::GetRefineLevel()
 {
-	const char* name = GetBaseName();
+	const char* name = GetName();
 	char* p = const_cast<char*>(strrchr(name, '+'));
 
 	if (!p)
@@ -1302,19 +1302,6 @@ int CItem::GetRefineLevel()
 
 	int	rtn = 0;
 	str_to_number(rtn, p+1);
-
-	const char* locale_name = GetName();
-	p = const_cast<char*>(strrchr(locale_name, '+'));
-
-	if (p)
-	{
-		int	locale_rtn = 0;
-		str_to_number(locale_rtn, p+1);
-		if (locale_rtn != rtn)
-		{
-			sys_err("refine_level_based_on_NAME(%d) is not equal to refine_level_based_on_LOCALE_NAME(%d).", rtn, locale_rtn);
-		}
-	}
 
 	return rtn;
 }
