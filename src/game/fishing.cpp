@@ -1,10 +1,8 @@
-﻿//#define __FISHING_MAIN__
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "constants.h"
 #include "fishing.h"
 #include "locale_service.h"
 
-#ifndef __FISHING_MAIN__
 #include "item_manager.h"
 
 #include "config.h"
@@ -23,7 +21,6 @@
 
 #include "affect.h"
 #include "unique_item.h"
-#endif
 
 namespace fishing
 {
@@ -363,7 +360,6 @@ int GetProbIndexByMapIndex(int index)
 	return -1;
 }
 
-#ifndef __FISHING_MAIN__
 int DetermineFish(LPCHARACTER ch)
 {
 	int map_idx = ch->GetMapIndex();
@@ -915,63 +911,4 @@ int RealRefineRod(LPCHARACTER ch, LPITEM item)
 		return 2;
 	}
 }
-#endif
 }
-
-#ifdef __FISHING_MAIN__
-int main(int argc, char **argv)
-{
-	//srandom(time(0) + getpid());
-	srandomdev();
-	/*
-	   struct SFishInfo
-	   {
-	   const char* name;
-
-	   DWORD vnum;
-	   DWORD dead_vnum;
-	   DWORD grill_vnum;
-
-	   int prob[3];
-	   int difficulty;
-
-	   int limit_type;
-	   int limits[3];
-
-	   int time_type;
-	   int length_range[3]; // MIN MAX EXTRA_MAX : 99% MIN~MAX, 1% MAX~EXTRA_MAX
-
-	   int used_table[NUM_USE_RESULT_COUNT];
-	// 6000 2000 1000 500 300 100 50 30 10 5 4 1
-	};
-	 */
-	using namespace fishing;
-
-	Initialize();
-
-	for (int i = 0; i < g_fish_count; ++i)
-	{
-		printf("%s\t%u\t%u\t%u\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d",
-				fish_info[i].name,
-				fish_info[i].vnum,
-				fish_info[i].dead_vnum,
-				fish_info[i].grill_vnum,
-				fish_info[i].prob[0], 
-				fish_info[i].prob[1], 
-				fish_info[i].prob[2],
-				fish_info[i].difficulty,
-				fish_info[i].time_type,
-				fish_info[i].length_range[0],
-				fish_info[i].length_range[1],
-				fish_info[i].length_range[2]);
-
-		for (int j = 0; j < NUM_USE_RESULT_COUNT; ++j)
-			printf("\t%d", fish_info[i].used_table[j]);
-
-		puts("");
-	}
-
-	return 1;
-}
-
-#endif
