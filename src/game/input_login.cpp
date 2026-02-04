@@ -80,58 +80,6 @@ static bool FN_is_battle_zone(LPCHARACTER ch)
 	return true;
 }
 
-void CInputLogin::Login(LPDESC d, const char * data)
-{
-	TPacketCGLogin * pinfo = (TPacketCGLogin *) data;
-
-	char login[LOGIN_MAX_LEN + 1];
-	trim_and_lower(pinfo->login, login, sizeof(login));
-
-	sys_log(0, "InputLogin::Login : %s", login);
-
-	TPacketGCLoginFailure failurePacket;
-
-	if (g_iUseLocale && !test_server)
-	{
-		failurePacket.header = HEADER_GC_LOGIN_FAILURE;
-		strlcpy(failurePacket.szStatus, "VERSION", sizeof(failurePacket.szStatus));
-		d->Packet(&failurePacket, sizeof(TPacketGCLoginFailure));
-		return;
-	}
-
-	if (g_bNoMoreClient)
-	{
-		failurePacket.header = HEADER_GC_LOGIN_FAILURE;
-		strlcpy(failurePacket.szStatus, "SHUTDOWN", sizeof(failurePacket.szStatus));
-		d->Packet(&failurePacket, sizeof(TPacketGCLoginFailure));
-		return;
-	}
-
-	if (g_iUserLimit > 0)
-	{
-		int iTotal;
-		int * paiEmpireUserCount;
-		int iLocal;
-
-		DESC_MANAGER::instance().GetUserCount(iTotal, &paiEmpireUserCount, iLocal);
-
-		if (g_iUserLimit <= iTotal)
-		{
-			failurePacket.header = HEADER_GC_LOGIN_FAILURE;
-			strlcpy(failurePacket.szStatus, "FULL", sizeof(failurePacket.szStatus));
-			d->Packet(&failurePacket, sizeof(TPacketGCLoginFailure));
-			return;
-		}
-	}
-
-	TLoginPacket login_packet;
-
-	strlcpy(login_packet.login, login, sizeof(login_packet.login));
-	strlcpy(login_packet.passwd, pinfo->passwd, sizeof(login_packet.passwd));
-
-	db_clientdesc->DBPacket(HEADER_GD_LOGIN, d->GetHandle(), &login_packet, sizeof(TLoginPacket)); 
-}
-
 void CInputLogin::LoginByKey(LPDESC d, const char * data)
 {
 	TPacketCGLogin2 * pinfo = (TPacketCGLogin2 *) data;
@@ -172,15 +120,11 @@ void CInputLogin::LoginByKey(LPDESC d, const char * data)
 	sys_log(0, "LOGIN_BY_KEY: %s key %u", login, pinfo->dwLoginKey);
 
 	d->SetLoginKey(pinfo->dwLoginKey);
-#ifndef _IMPROVED_PACKET_ENCRYPTION_
-	d->SetSecurityKey(pinfo->adwClientKey);
-#endif
 
 	TPacketGDLoginByKey ptod;
 
 	strlcpy(ptod.szLogin, login, sizeof(ptod.szLogin));
 	ptod.dwLoginKey = pinfo->dwLoginKey;
-	thecore_memcpy(ptod.adwClientKey, pinfo->adwClientKey, sizeof(DWORD) * 4);
 	strlcpy(ptod.szIP, d->GetHostName(), sizeof(ptod.szIP));
 
 	db_clientdesc->DBPacket(HEADER_GD_LOGIN_BY_KEY, d->GetHandle(), &ptod, sizeof(TPacketGDLoginByKey));
@@ -1052,10 +996,6 @@ int CInputLogin::Analyze(LPDESC d, BYTE bHeader, const char * c_pData)
 
 		case HEADER_CG_TIME_SYNC:
 			Handshake(d, c_pData);
-			break;
-
-		case HEADER_CG_LOGIN:
-			Login(d, c_pData);
 			break;
 
 		case HEADER_CG_LOGIN2:

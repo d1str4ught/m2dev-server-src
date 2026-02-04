@@ -5,7 +5,6 @@
 CLoginData::CLoginData()
 {
 	m_dwKey = 0;
-	memset(m_adwClientKey, 0, sizeof(m_adwClientKey));
 	m_dwConnectedPeerHandle = 0;
 	m_dwLogonTime = 0;
 	memset(m_szIP, 0, sizeof(m_szIP));
@@ -20,16 +19,6 @@ CLoginData::CLoginData()
 TAccountTable & CLoginData::GetAccountRef()
 {
 	return m_data;
-}
-
-void CLoginData::SetClientKey(const uint32_t* c_pdwClientKey)
-{
-	thecore_memcpy(&m_adwClientKey, c_pdwClientKey, sizeof(uint32_t) * 4);
-}
-
-const uint32_t * CLoginData::GetClientKey()
-{
-	return &m_adwClientKey[0];
 }
 
 void CLoginData::SetKey(DWORD dwKey)

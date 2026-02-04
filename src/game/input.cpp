@@ -178,14 +178,8 @@ void CInputProcessor::Handshake(LPDESC d, const char * c_pData)
 		{
 			if (d->HandshakeProcess(p->dwTime, p->lDelta, false))
 			{
-#ifdef _IMPROVED_PACKET_ENCRYPTION_
-				d->SendKeyAgreement();
-#else
-				if (g_bAuthServer)
-					d->SetPhase(PHASE_AUTH);
-				else
-					d->SetPhase(PHASE_LOGIN);
-#endif // #ifdef _IMPROVED_PACKET_ENCRYPTION_
+				// Use secure key exchange (libsodium/XChaCha20-Poly1305)
+				d->SendKeyChallenge();
 			}
 		}
 		else
@@ -570,36 +564,37 @@ int CInputHandshake::Analyze(LPDESC d, BYTE bHeader, const char * c_pData)
 		Pong(d);
 	else if (bHeader == HEADER_CG_HANDSHAKE)
 		Handshake(d, c_pData);
-#ifdef _IMPROVED_PACKET_ENCRYPTION_
-	else if (bHeader == HEADER_CG_KEY_AGREEMENT)
+	// Secure key exchange (libsodium/XChaCha20-Poly1305)
+	else if (bHeader == HEADER_CG_KEY_RESPONSE)
 	{
-		// Send out the key agreement completion packet first
-		// to help client to enter encryption mode
-		d->SendKeyAgreementCompleted();
-		// Flush socket output before going encrypted
-		d->ProcessOutput();
+		TPacketCGKeyResponse* p = (TPacketCGKeyResponse*)c_pData;
 
-		TPacketKeyAgreement* p = (TPacketKeyAgreement*)c_pData;
-		if (!d->IsCipherPrepared())
+		if (!d->GetSecureCipher().IsInitialized())
 		{
-			sys_err ("Cipher isn't prepared. %s maybe a Hacker.", inet_ntoa(d->GetAddr().sin_addr));
+			sys_err("SecureCipher not initialized. %s maybe a Hacker.", inet_ntoa(d->GetAddr().sin_addr));
 			d->DelayedDisconnect(5);
 			return 0;
 		}
-		if (d->FinishHandshake(p->wAgreedLength, p->data, p->wDataLength)) {
-			// Handshaking succeeded
+
+		if (d->HandleKeyResponse(p->client_pk, p->challenge_response))
+		{
+			// Key exchange succeeded, send completion
+			d->SendKeyComplete();
+
+			// Move to next phase
 			if (g_bAuthServer) {
 				d->SetPhase(PHASE_AUTH);
 			} else {
 				d->SetPhase(PHASE_LOGIN);
 			}
-		} else {
-			sys_log(0, "[CInputHandshake] Key agreement failed: al=%u dl=%u",
-				p->wAgreedLength, p->wDataLength);
+		}
+		else
+		{
+			sys_err("[CInputHandshake] Secure key response verification failed for %s",
+				inet_ntoa(d->GetAddr().sin_addr));
 			d->SetPhase(PHASE_CLOSE);
 		}
 	}
-#endif // _IMPROVED_PACKET_ENCRYPTION_
 	else
 		sys_err("Handshake phase does not handle packet %d (fd %d)", bHeader, d->GetSocket());
 

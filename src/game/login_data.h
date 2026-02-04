@@ -6,9 +6,6 @@ class CLoginData
 	public:
 		CLoginData();
 
-		void            SetClientKey(const uint32_t * c_pdwClientKey);
-
-		const uint32_t *   GetClientKey();
 		void            SetKey(uint32_t dwKey);
 		uint32_t           GetKey();
 
@@ -37,7 +34,6 @@ class CLoginData
 
 	private:
 		uint32_t           m_dwKey;
-		uint32_t           m_adwClientKey[4];
 		uint32_t           m_dwConnectedPeerHandle;
 		uint32_t           m_dwLogonTime;
 		long		m_lRemainSecs;

@@ -1211,7 +1211,6 @@ void CClientManager::QUERY_SETUP(CPeer * peer, DWORD dwHandle, const char * c_pD
 		CLoginData * pkLD = new CLoginData;
 
 		pkLD->SetKey(pck->dwLoginKey);
-		pkLD->SetClientKey(pck->adwClientKey);
 		pkLD->SetIP(pck->szHost);
 
 		TAccountTable & r = pkLD->GetAccountRef();
@@ -1748,7 +1747,6 @@ void CClientManager::QUERY_AUTH_LOGIN(CPeer * pkPeer, DWORD dwHandle, TPacketGDA
 		CLoginData * pkLD = new CLoginData;
 
 		pkLD->SetKey(p->dwLoginKey);
-		pkLD->SetClientKey(p->adwClientKey);
 		pkLD->SetPremium(p->iPremiumTimes);
 
 		TAccountTable & r = pkLD->GetAccountRef();
@@ -1758,9 +1756,8 @@ void CClientManager::QUERY_AUTH_LOGIN(CPeer * pkPeer, DWORD dwHandle, TPacketGDA
 		strlcpy(r.social_id, p->szSocialID, sizeof(r.social_id));
 		strlcpy(r.passwd, "TEMP", sizeof(r.passwd));
 
-		sys_log(0, "AUTH_LOGIN id(%u) login(%s) social_id(%s) login_key(%u), client_key(%u %u %u %u)",
-				p->dwID, p->szLogin, p->szSocialID, p->dwLoginKey,
-				p->adwClientKey[0], p->adwClientKey[1], p->adwClientKey[2], p->adwClientKey[3]);
+		sys_log(0, "AUTH_LOGIN id(%u) login(%s) social_id(%s) login_key(%u)",
+				p->dwID, p->szLogin, p->szSocialID, p->dwLoginKey);
 
 		bResult = 1;
 

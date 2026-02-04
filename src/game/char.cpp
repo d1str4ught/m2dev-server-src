@@ -5411,14 +5411,6 @@ bool CHARACTER::WarpSet(long x, long y, long lPrivateMapIndex)
 
 		CMapLocation::instance().Get(GetX(), GetY(), lCurMapIndex, lCurAddr, wCurPort);
 
-		//do not send SDB files if char is in the same map
-		if( lCurMapIndex != lMapIndex )
-		{
-			const TMapRegion * rMapRgn = SECTREE_MANAGER::instance().GetMapRegion(lMapIndex);
-			{
-				DESC_MANAGER::instance().SendClientPackageSDBToLoadMap( GetDesc(), rMapRgn->strMapName.c_str() );	
-			}
-		}
 	}
 
 	if (lPrivateMapIndex >= 10000)
