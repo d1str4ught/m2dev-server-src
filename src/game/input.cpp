@@ -3,6 +3,7 @@
 
 #include "desc.h"
 #include "desc_manager.h"
+#include "desc_client.h"
 #include "char.h"
 #include "buffer_manager.h"
 #include "config.h"
@@ -11,7 +12,6 @@
 #include "log.h"
 #include "db.h"
 #include "questmanager.h"
-#include "login_sim.h"
 #include "fishing.h"
 #include "TrafficProfiler.h"
 #include "priv_manager.h"
@@ -213,9 +213,6 @@ CInputHandshake::~CInputHandshake()
 	}
 }
 
-
-std::map<DWORD, CLoginSim *> g_sim;
-std::map<DWORD, CLoginSim *> g_simByPID;
 std::vector<TPlayerTable> g_vec_save;
 
 // BLOCK_CHAT
