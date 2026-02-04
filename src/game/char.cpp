@@ -263,8 +263,6 @@ void CHARACTER::Initialize()
 	m_dwQuestByVnum = 0;
 	m_pQuestItem = NULL;
 
-	m_szMobileAuth[0] = '\0';
-
 	m_dwUnderGuildWarInfoMessageTime = get_dword_time()-60000;
 
 	m_bUnderRefine = false;
@@ -1275,9 +1273,6 @@ void CHARACTER::CreatePlayerProto(TPlayerTable & tab)
 	for (int i = 0; i < QUICKSLOT_MAX_NUM; ++i)
 		tab.quickslot[i] = m_quickslot[i];
 
-	if (m_stMobile.length() && !*m_szMobileAuth)
-		strlcpy(tab.szMobile, m_stMobile.c_str(), sizeof(tab.szMobile));
-
 	thecore_memcpy(tab.parts, m_pointsInstant.parts, sizeof(tab.parts));
 
 	// REMOVE_REAL_SKILL_LEVLES
@@ -1609,8 +1604,6 @@ void CHARACTER::MainCharacterPacket()
 			strlcpy(mainChrPacket.szBGMName, bgmInfo.name.c_str(), sizeof(mainChrPacket.szBGMName));
 			GetDesc()->Packet(&mainChrPacket, sizeof(TPacketGCMainCharacter3_BGM));
 		}
-		//if (m_stMobile.length())
-		//		ChatPacket(CHAT_TYPE_COMMAND, "sms");
 	}
 	// END_OF_SUPPORT_BGM
 	else
@@ -1628,9 +1621,6 @@ void CHARACTER::MainCharacterPacket()
 		pack.skill_group = GetSkillGroup();
 		strlcpy(pack.szName, GetName(), sizeof(pack.szName));
 		GetDesc()->Packet(&pack, sizeof(TPacketGCMainCharacter));
-
-		if (m_stMobile.length())
-			ChatPacket(CHAT_TYPE_COMMAND, "sms");
 	}
 }
 
@@ -1852,8 +1842,6 @@ void CHARACTER::SetPlayerProto(const TPlayerTable * t)
 
 	if (GetLevel() < PK_PROTECT_LEVEL)
 		m_bPKMode = PK_MODE_PROTECT;
-
-	m_stMobile = t->szMobile;
 
 	SetHorseData(t->horse);
 

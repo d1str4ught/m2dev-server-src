@@ -1589,22 +1589,6 @@ void CClientManager::QUERY_FLUSH_CACHE(CPeer * pkPeer, const char * c_pData)
 	delete pkCache;
 }
 
-void CClientManager::QUERY_SMS(CPeer * pkPeer, TPacketGDSMS * pack)
-{
-	char szQuery[QUERY_MAX_LEN];
-
-	char szMsg[256+1];
-	//unsigned long len = CDBManager::instance().EscapeString(szMsg, pack->szMsg, strlen(pack->szMsg), SQL_ACCOUNT);
-	unsigned long len = CDBManager::instance().EscapeString(szMsg, pack->szMsg, strlen(pack->szMsg));
-	szMsg[len] = '\0';
-
-	snprintf(szQuery, sizeof(szQuery),
-			"INSERT INTO sms_pool (server, sender, receiver, mobile, msg) VALUES(%d, '%s', '%s', '%s', '%s')",
-			(m_iPlayerIDStart + 2) / 3, pack->szFrom, pack->szTo, pack->szMobile, szMsg);
-
-	CDBManager::instance().AsyncQuery(szQuery);
-}
-
 void CClientManager::QUERY_RELOAD_PROTO()
 {
 	if (!InitializeTables())
@@ -2292,10 +2276,6 @@ void CClientManager::ProcessPackets(CPeer * peer)
 
 			case HEADER_GD_CHANGE_NAME:
 				QUERY_CHANGE_NAME(peer, dwHandle, (TPacketGDChangeName *) data);
-				break;
-
-			case HEADER_GD_SMS:
-				QUERY_SMS(peer, (TPacketGDSMS *) data);
 				break;
 
 			case HEADER_GD_AUTH_LOGIN:

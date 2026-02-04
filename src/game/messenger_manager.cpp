@@ -117,7 +117,6 @@ void MessengerManager::Logout(MessengerManager::keyA account)
 	}
 
 	m_Relation.erase(account);
-	//m_map_stMobile.erase(account);
 
 	// remove any pending requests from/to this account so they don't get stuck
 	EraseRequestsForAccount(account);

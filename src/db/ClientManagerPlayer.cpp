@@ -359,7 +359,7 @@ void CClientManager::QUERY_PLAYER_LOAD(CPeer * peer, DWORD dwHandle, TPlayerLoad
 				"id,name,job,voice,dir,x,y,z,map_index,exit_x,exit_y,exit_map_index,hp,mp,stamina,random_hp,random_sp,playtime,"
 				"gold,level,level_step,st,ht,dx,iq,exp,"
 				"stat_point,skill_point,sub_skill_point,stat_reset_count,part_base,part_hair,"
-				"skill_level,quickslot,skill_group,alignment,mobile,horse_level,horse_riding,horse_hp,horse_hp_droptime,horse_stamina,"
+				"skill_level,quickslot,skill_group,alignment,horse_level,horse_riding,horse_hp,horse_hp_droptime,horse_stamina,"
 				"UNIX_TIMESTAMP(NOW())-UNIX_TIMESTAMP(last_play),horse_skill_point FROM player%s WHERE id=%d",
 				GetTablePostfix(), packet->player_id);
 
@@ -455,7 +455,7 @@ bool CreatePlayerTableFromRes(MYSQL_RES * res, TPlayerTable * pkTab)
 	// "id,name,job,voice,dir,x,y,z,map_index,exit_x,exit_y,exit_map_index,hp,mp,stamina,random_hp,random_sp,playtime,"
 	// "gold,level,level_step,st,ht,dx,iq,exp,"
 	// "stat_point,skill_point,sub_skill_point,stat_reset_count,part_base,part_hair,"
-	// "skill_level,quickslot,skill_group,alignment,mobile,horse_level,horse_riding,horse_hp,horse_stamina FROM player%s WHERE id=%d",
+	// "skill_level,quickslot,skill_group,alignment,horse_level,horse_riding,horse_hp,horse_stamina FROM player%s WHERE id=%d",
 	str_to_number(pkTab->id, row[col++]);
 	strlcpy(pkTab->name, row[col++], sizeof(pkTab->name));
 	str_to_number(pkTab->job, row[col++]);
@@ -505,14 +505,6 @@ bool CreatePlayerTableFromRes(MYSQL_RES * res, TPlayerTable * pkTab)
 
 	str_to_number(pkTab->skill_group, row[col++]);
 	str_to_number(pkTab->lAlignment, row[col++]);
-
-	if (row[col])
-	{
-		strlcpy(pkTab->szMobile, row[col], sizeof(pkTab->szMobile));
-	}
-
-	col++;
-
 	str_to_number(pkTab->horse.bLevel, row[col++]);
 	str_to_number(pkTab->horse.bRiding, row[col++]);
 	str_to_number(pkTab->horse.sHealth, row[col++]);
