@@ -104,9 +104,6 @@ class CClientManager : public CNetBase, public singleton<CClientManager>
 
 	int	GetPlayerDeleteLevelLimit() { return m_iPlayerDeleteLevelLimit; }
 
-	void	SetChinaEventServer(bool flag) { m_bChinaEventServer = flag; }
-	bool	IsChinaEventServer() { return m_bChinaEventServer; }
-
 	DWORD	GetUserCount();	// 접속된 사용자 수를 리턴 한다.
 
 	void	SendAllGuildSkillRechargePacket();
@@ -399,7 +396,6 @@ class CClientManager : public CNetBase, public singleton<CClientManager>
 	int					m_iPlayerIDStart;
 	int					m_iPlayerDeleteLevelLimit;
 	int					m_iPlayerDeleteLevelLimitLower;
-	bool					m_bChinaEventServer;
 
 	std::vector<TMobTable>			m_vec_mobTable;
 	std::vector<TItemTable>			m_vec_itemTable;

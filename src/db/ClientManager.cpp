@@ -42,7 +42,6 @@ CClientManager::CClientManager() :
 	m_iPlayerIDStart(0),
 	m_iPlayerDeleteLevelLimit(0),
 	m_iPlayerDeleteLevelLimitLower(0),
-	m_bChinaEventServer(false),
 	m_iShopTableSize(0),
 	m_pShopTable(NULL),
 	m_iRefineTableSize(0),
@@ -150,16 +149,6 @@ bool CClientManager::Initialize()
 
 	sys_log(0, "PLAYER_DELETE_LEVEL_LIMIT set to %d", m_iPlayerDeleteLevelLimit);
 	sys_log(0, "PLAYER_DELETE_LEVEL_LIMIT_LOWER set to %d", m_iPlayerDeleteLevelLimitLower);
-
-	m_bChinaEventServer = false;
-
-	int	iChinaEventServer = 0;
-
-	if (CConfig::instance().GetValue("CHINA_EVENT_SERVER", &iChinaEventServer))
-		m_bChinaEventServer = (iChinaEventServer);
-
-	sys_log(0, "CHINA_EVENT_SERVER %s", CClientManager::instance().IsChinaEventServer()?"true":"false");
-
 
 	LoadEventFlag();
 

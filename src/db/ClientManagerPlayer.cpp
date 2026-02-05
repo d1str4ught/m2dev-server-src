@@ -990,36 +990,33 @@ void CClientManager::__QUERY_PLAYER_DELETE(CPeer* peer, DWORD dwHandle, TPlayerD
 	// block for japan 
 	if (g_stLocale != "sjis")
 	{
-		if (!IsChinaEventServer())
+		if (strlen(r.social_id) < 7 || strncmp(packet->private_code, r.social_id + strlen(r.social_id) - 7, 7))
 		{
-			if (strlen(r.social_id) < 7 || strncmp(packet->private_code, r.social_id + strlen(r.social_id) - 7, 7))
+			sys_log(0, "PLAYER_DELETE FAILED len(%d)", strlen(r.social_id));
+			peer->EncodeHeader(HEADER_DG_PLAYER_DELETE_FAILED, dwHandle, 1);
+			peer->EncodeBYTE(packet->account_index);
+			return;
+		}
+
+		CPlayerTableCache * pkPlayerCache = GetPlayerCache(packet->player_id);
+		if (pkPlayerCache)
+		{
+			TPlayerTable * pTab = pkPlayerCache->Get();
+
+			if (pTab->level >= m_iPlayerDeleteLevelLimit)
 			{
-				sys_log(0, "PLAYER_DELETE FAILED len(%d)", strlen(r.social_id));
+				sys_log(0, "PLAYER_DELETE FAILED LEVEL %u >= DELETE LIMIT %d", pTab->level, m_iPlayerDeleteLevelLimit);
 				peer->EncodeHeader(HEADER_DG_PLAYER_DELETE_FAILED, dwHandle, 1);
 				peer->EncodeBYTE(packet->account_index);
 				return;
 			}
 
-			CPlayerTableCache * pkPlayerCache = GetPlayerCache(packet->player_id);
-			if (pkPlayerCache)
+			if (pTab->level < m_iPlayerDeleteLevelLimitLower)
 			{
-				TPlayerTable * pTab = pkPlayerCache->Get();
-
-				if (pTab->level >= m_iPlayerDeleteLevelLimit)
-				{
-					sys_log(0, "PLAYER_DELETE FAILED LEVEL %u >= DELETE LIMIT %d", pTab->level, m_iPlayerDeleteLevelLimit);
-					peer->EncodeHeader(HEADER_DG_PLAYER_DELETE_FAILED, dwHandle, 1);
-					peer->EncodeBYTE(packet->account_index);
-					return;
-				}
-
-				if (pTab->level < m_iPlayerDeleteLevelLimitLower)
-				{
-					sys_log(0, "PLAYER_DELETE FAILED LEVEL %u < DELETE LIMIT %d", pTab->level, m_iPlayerDeleteLevelLimitLower);
-					peer->EncodeHeader(HEADER_DG_PLAYER_DELETE_FAILED, dwHandle, 1);
-					peer->EncodeBYTE(packet->account_index);
-					return;
-				}
+				sys_log(0, "PLAYER_DELETE FAILED LEVEL %u < DELETE LIMIT %d", pTab->level, m_iPlayerDeleteLevelLimitLower);
+				peer->EncodeHeader(HEADER_DG_PLAYER_DELETE_FAILED, dwHandle, 1);
+				peer->EncodeBYTE(packet->account_index);
+				return;
 			}
 		}
 	}
@@ -1056,7 +1053,7 @@ void CClientManager::__RESULT_PLAYER_DELETE(CPeer *peer, SQLMsg* msg)
 		char szName[64];
 		strlcpy(szName, row[2], sizeof(szName));
 
-		if (deletedLevelLimit >= m_iPlayerDeleteLevelLimit && !IsChinaEventServer())
+		if (deletedLevelLimit >= m_iPlayerDeleteLevelLimit)
 		{
 			sys_log(0, "PLAYER_DELETE FAILED LEVEL %u >= DELETE LIMIT %d", deletedLevelLimit, m_iPlayerDeleteLevelLimit);
 			peer->EncodeHeader(HEADER_DG_PLAYER_DELETE_FAILED, pi->dwHandle, 1);
