@@ -223,8 +223,6 @@ enum
 	//	HEADER_GC_USE_POTION			= 114,
 	HEADER_GC_SEPCIAL_EFFECT		= 114,
 
-	HEADER_GC_NPC_POSITION			= 115,
-
 	HEADER_GC_LOGIN_KEY				= 118,
 	HEADER_GC_REFINE_INFORMATION		= 119,
 	HEADER_GC_CHANNEL				= 121,
@@ -1944,15 +1942,6 @@ struct TNPCPosition
 	int32_t x;
 	int32_t y;
 };
-
-typedef struct SPacketGCNPCPosition
-{
-	uint8_t header;
-	uint16_t size;
-	uint16_t count;
-
-	// array of TNPCPosition
-} TPacketGCNPCPosition;
 
 typedef struct SPacketGCSpecialEffect
 {

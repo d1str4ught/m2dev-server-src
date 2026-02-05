@@ -1123,46 +1123,6 @@ TAreaMap& SECTREE_MANAGER::GetDungeonArea(long lMapIndex)
 	return it->second;
 }
 
-void SECTREE_MANAGER::SendNPCPosition(LPCHARACTER ch)
-{
-	LPDESC d = ch->GetDesc();
-	if (!d)
-		return;
-
-	long lMapIndex = ch->GetMapIndex();
-
-	if (m_mapNPCPosition[lMapIndex].empty())
-		return;
-
-	TEMP_BUFFER buf;
-	TPacketGCNPCPosition p;
-	p.header = HEADER_GC_NPC_POSITION;
-	p.count = m_mapNPCPosition[lMapIndex].size();
-
-	TNPCPosition np;
-
-	// TODO m_mapNPCPosition[lMapIndex] 를 보내주세요
-	for (auto it = m_mapNPCPosition[lMapIndex].begin(); it != m_mapNPCPosition[lMapIndex].end(); ++it)
-	{
-		np.bType = it->bType;
-		np.dwVnum = it->dwVnum;
-		strlcpy(np.name, it->name, sizeof(np.name));
-		np.x = it->x;
-		np.y = it->y;
-		buf.write(&np, sizeof(np));
-	}
-
-	p.size = sizeof(p) + buf.size();
-
-	if (buf.size())
-	{
-		d->BufferedPacket(&p, sizeof(TPacketGCNPCPosition));
-		d->Packet(buf.read_peek(), buf.size());
-	}
-	else
-		d->Packet(&p, sizeof(TPacketGCNPCPosition));
-}
-
 void SECTREE_MANAGER::InsertNPCPosition(long lMapIndex, BYTE bType, DWORD dwVnum, const char* szName, long x, long y)
 {
     m_mapNPCPosition[lMapIndex].push_back(npc_info(bType, dwVnum, szName, x, y));
