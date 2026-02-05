@@ -516,54 +516,6 @@ bool CClientManager::InitializeShopTable()
 	return true;
 }
 
-bool CClientManager::InitializeQuestItemTable()
-{
-    using namespace std;
-
-    static const char * s_szQuery = "SELECT vnum, name FROM quest_item_proto ORDER BY vnum";
-
-    char query[1024];
-    snprintf(query, sizeof(query), s_szQuery);
-
-    auto pkMsg = CDBManager::instance().DirectQuery(query);
-    SQLResult * pRes = pkMsg->Get();
-
-    if (!pRes->uiNumRows)
-    {
-        sys_err("query error or no rows: %s", query);
-        return false;
-    }
-
-    MYSQL_ROW row;
-
-    while ((row = mysql_fetch_row(pRes->pSQLResult)))
-    {
-        int col = 0;
-
-        TItemTable tbl;
-        memset(&tbl, 0, sizeof(tbl));
-
-        str_to_number(tbl.dwVnum, row[col++]);
-
-        if (row[col])
-            strlcpy(tbl.szName, row[col], sizeof(tbl.szName));
-        col++;
-
-        if (m_map_itemTableByVnum.find(tbl.dwVnum) != m_map_itemTableByVnum.end())
-        {
-            sys_err("QUEST_ITEM_ERROR! %lu vnum already exist! (name %s)", tbl.dwVnum, tbl.szName);
-            continue;
-        }
-
-        tbl.bType = ITEM_QUEST;
-        tbl.bSize = 1;
-
-        m_vec_itemTable.push_back(tbl);
-    }
-
-    return true;
-}
-
 bool CClientManager::InitializeItemTable()
 {
 	//================== 함수 설명 ==================//
@@ -802,12 +754,6 @@ bool CClientManager::InitializeItemTable()
 
 		}
 	}
-
-
-
-	// QUEST_ITEM_PROTO_DISABLE
-	// InitializeQuestItemTable();
-	// END_OF_QUEST_ITEM_PROTO_DISABLE
 
 	m_map_itemTableByVnum.clear();
 
