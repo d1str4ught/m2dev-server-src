@@ -388,66 +388,6 @@ ACMD(do_cmd)
 	}
 }
 
-ACMD(do_mount)
-{
-	/*
-	   char			arg1[256];
-	   struct action_mount_param	param;
-
-	// 이미 타고 있으면
-	if (ch->GetMountingChr())
-	{
-	char arg2[256];
-	two_arguments(argument, arg1, sizeof(arg1), arg2, sizeof(arg2));
-
-	if (!*arg1 || !*arg2)
-	return;
-
-	param.x		= atoi(arg1);
-	param.y		= atoi(arg2);
-	param.vid	= ch->GetMountingChr()->GetVID();
-	param.is_unmount = true;
-
-	float distance = DISTANCE_SQRT(param.x - (DWORD) ch->GetX(), param.y - (DWORD) ch->GetY());
-
-	if (distance > 600.0f)
-	{
-	ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("좀 더 가까이 가서 내리세요."));
-	return;
-	}
-
-	action_enqueue(ch, ACTION_TYPE_MOUNT, &param, 0.0f, true);
-	return;
-	}
-
-	one_argument(argument, arg1, sizeof(arg1));
-
-	if (!*arg1)
-	return;
-
-	LPCHARACTER tch = CHARACTER_MANAGER::instance().Find(atoi(arg1));
-
-	if (!tch->IsNPC() || !tch->IsMountable())
-	{
-	ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("거기에는 탈 수 없어요."));
-	return;
-	}
-
-	float distance = DISTANCE_SQRT(tch->GetX() - ch->GetX(), tch->GetY() - ch->GetY());
-
-	if (distance > 600.0f)
-	{
-	ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("좀 더 가까이 가서 타세요."));
-	return;
-	}
-
-	param.vid		= tch->GetVID();
-	param.is_unmount	= false;
-
-	action_enqueue(ch, ACTION_TYPE_MOUNT, &param, 0.0f, true);
-	 */
-}
-
 ACMD(do_fishing)
 {
 	char arg1[256];

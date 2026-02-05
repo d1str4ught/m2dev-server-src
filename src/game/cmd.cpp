@@ -41,7 +41,6 @@ ACMD(do_set);
 ACMD(do_cmd);
 ACMD(do_reset);
 ACMD(do_greset);
-ACMD(do_mount);
 ACMD(do_fishing);
 ACMD(do_refine_rod);
 
@@ -309,7 +308,6 @@ struct command_info cmd_info[] =
 	{ "makeguild",	do_makeguild,		0,			POS_DEAD,	GM_HIGH_WIZARD	},
 	{ "deleteguild",	do_deleteguild,		0,			POS_DEAD,	GM_HIGH_WIZARD	},
 
-	{ "mount",		do_mount,		0,			POS_MOUNTING,	GM_PLAYER	},
 	{ "restart_here",	do_restart,		SCMD_RESTART_HERE,	POS_DEAD,	GM_PLAYER	},
 	{ "restart_town",	do_restart,		SCMD_RESTART_TOWN,	POS_DEAD,	GM_PLAYER	},
 	{ "phase_selec",	do_inputall,		0,			POS_DEAD,	GM_PLAYER	},
