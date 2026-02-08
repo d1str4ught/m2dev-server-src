@@ -1,4 +1,4 @@
-﻿
+
 #include "stdafx.h"
 #include "horsename_manager.h"
 #include "desc_client.h"
@@ -52,7 +52,7 @@ void CHorseNameManager::BroadcastHorseName(DWORD dwPlayerID, const char* szHorse
 	packet.dwPlayerID = dwPlayerID;
 	strlcpy(packet.szHorseName, szHorseName, sizeof(packet.szHorseName));
 
-	db_clientdesc->DBPacket(HEADER_GD_UPDATE_HORSE_NAME, 0, &packet, sizeof(TPacketUpdateHorseName));
+	db_clientdesc->DBPacket(GD::UPDATE_HORSE_NAME, 0, &packet, sizeof(TPacketUpdateHorseName));
 }
 
 void CHorseNameManager::Validate(LPCHARACTER pChar)

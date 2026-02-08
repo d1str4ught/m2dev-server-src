@@ -303,7 +303,7 @@ void Cube_open (LPCHARACTER ch)
 
 	if ( FN_check_valid_npc(npc->GetRaceNum()) == false )
 	{
-		if ( test_server == true )
+		if (test_server)
 		{
 			sys_log(1, "cube not valid NPC");
 		}

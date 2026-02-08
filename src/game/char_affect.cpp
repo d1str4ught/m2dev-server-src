@@ -1,11 +1,11 @@
-﻿
+
 #include "stdafx.h"
 
 #include "config.h"
 #include "char.h"
 #include "char_manager.h"
 #include "affect.h"
-#include "packet.h"
+#include "packet_structs.h"
 #include "buffer_manager.h"
 #include "desc_client.h"
 #include "battle.h"
@@ -24,7 +24,8 @@
 void SendAffectRemovePacket(LPDESC d, DWORD pid, DWORD type, BYTE point)
 {
 	TPacketGCAffectRemove ptoc;
-	ptoc.bHeader	= HEADER_GC_AFFECT_REMOVE;
+	ptoc.header	= GC::AFFECT_REMOVE;
+	ptoc.length = sizeof(ptoc);
 	ptoc.dwType		= type;
 	ptoc.bApplyOn	= point;
 	d->Packet(&ptoc, sizeof(TPacketGCAffectRemove));
@@ -33,13 +34,14 @@ void SendAffectRemovePacket(LPDESC d, DWORD pid, DWORD type, BYTE point)
 	ptod.dwPID		= pid;
 	ptod.dwType		= type;
 	ptod.bApplyOn	= point;
-	db_clientdesc->DBPacket(HEADER_GD_REMOVE_AFFECT, 0, &ptod, sizeof(ptod));
+	db_clientdesc->DBPacket(GD::REMOVE_AFFECT, 0, &ptod, sizeof(ptod));
 }
 
 void SendAffectAddPacket(LPDESC d, CAffect * pkAff)
 {
 	TPacketGCAffectAdd ptoc;
-	ptoc.bHeader		= HEADER_GC_AFFECT_ADD;
+	ptoc.header		= GC::AFFECT_ADD;
+	ptoc.length = sizeof(ptoc);
 	ptoc.elem.dwType		= pkAff->dwType;
 	ptoc.elem.bApplyOn		= pkAff->bApplyOn;
 	ptoc.elem.lApplyValue	= pkAff->lApplyValue;
@@ -364,7 +366,7 @@ void CHARACTER::SaveAffect()
 		p.elem.dwFlag		= pkAff->dwFlag;
 		p.elem.lDuration	= pkAff->lDuration;
 		p.elem.lSPCost		= pkAff->lSPCost;
-		db_clientdesc->DBPacket(HEADER_GD_ADD_AFFECT, 0, &p, sizeof(p));
+		db_clientdesc->DBPacket(GD::ADD_AFFECT, 0, &p, sizeof(p));
 	}
 }
 
@@ -620,7 +622,7 @@ bool CHARACTER::AddAffect(DWORD dwType, BYTE bApplyOn, long lApplyValue, DWORD d
 		p.elem.dwFlag		= pkAff->dwFlag;
 		p.elem.lDuration	= pkAff->lDuration;
 		p.elem.lSPCost		= pkAff->lSPCost;
-		db_clientdesc->DBPacket(HEADER_GD_ADD_AFFECT, 0, &p, sizeof(p));
+		db_clientdesc->DBPacket(GD::ADD_AFFECT, 0, &p, sizeof(p));
 	}
 
 	return true;

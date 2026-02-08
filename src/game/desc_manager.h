@@ -14,7 +14,6 @@ class DESC_MANAGER : public singleton<DESC_MANAGER>
 		typedef std::unordered_set<LPDESC>			DESC_SET;
 		typedef std::unordered_set<LPCLIENT_DESC>	CLIENT_DESC_SET;
 		typedef std::map<int, LPDESC>					DESC_HANDLE_MAP;
-		typedef std::map<DWORD, LPDESC>					DESC_HANDSHAKE_MAP;
 		typedef std::map<DWORD, LPDESC>					DESC_ACCOUNTID_MAP;
 		typedef std::unordered_map<std::string, LPDESC>	DESC_LOGINNAME_MAP;
 		typedef std::map<DWORD, DWORD>					DESC_HANDLE_RANDOM_KEY_MAP;
@@ -30,13 +29,10 @@ class DESC_MANAGER : public singleton<DESC_MANAGER>
 		LPDESC			AcceptP2PDesc(LPFDWATCH fdw, socket_t s);
 		void			DestroyDesc(LPDESC d, bool erase_from_set = true);
 
-		DWORD			CreateHandshake();
-
 		LPCLIENT_DESC		CreateConnectionDesc(LPFDWATCH fdw, const char * host, WORD port, int iPhaseWhenSucceed, bool bRetryWhenClosed);
 		void			TryConnect();
 
 		LPDESC			FindByHandle(DWORD handle);
-		LPDESC			FindByHandshake(DWORD dwHandshake);
 
 		LPDESC			FindByCharacterName(const char* name);
 		LPDESC			FindByLoginName(const std::string& login);
@@ -72,8 +68,9 @@ class DESC_MANAGER : public singleton<DESC_MANAGER>
 		CLIENT_DESC_SET		m_set_pkClientDesc;
 		DESC_SET			m_set_pkDesc;
 
+		std::unordered_map<std::string, int>	m_map_ipConnCount;
+
 		DESC_HANDLE_MAP			m_map_handle;
-		DESC_HANDSHAKE_MAP		m_map_handshake;
 		//DESC_ACCOUNTID_MAP		m_AccountIDMap;
 		DESC_LOGINNAME_MAP		m_map_loginName;
 		std::map<DWORD, CLoginKey *>	m_map_pkLoginKey;

@@ -9,7 +9,6 @@
 #include "PrivManager.h"
 #include "MoneyLog.h"
 #include "Marriage.h"
-#include "Monarch.h"
 #include "ItemIDRangeManager.h"
 #include <signal.h>
 #undef OS_FREEBSD
@@ -77,7 +76,6 @@ int main()
 	CMoneyLog MoneyLog;
 	ItemAwardManager ItemAwardManager;
 	marriage::CManager MarriageManager;
-	CMonarch Monarch;
 	CItemIDRangeManager ItemIDRangeManager;
 
 	if (!Start())

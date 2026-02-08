@@ -1,4 +1,4 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "config.h"
 #include "utils.h"
 #include "desc_client.h"
@@ -106,7 +106,6 @@ bool CLIENT_DESC::Connect(int iPhaseWhenSucceed)
 
 void CLIENT_DESC::Setup(LPFDWATCH _fdw, const char * _host, WORD _port)
 {
-	// 1MB input/output buffer
 	m_lpFdw = _fdw;
 	m_stHost = _host;
 	m_wPort = _port;
@@ -140,7 +139,7 @@ void CLIENT_DESC::SetPhase(int iPhase)
 						p.dwItemIDRange[0] = 0;
 						p.dwItemIDRange[1] = 0;
 						memcpy(p.szIP, g_szPublicIP, 16);
-						DBPacket(HEADER_GD_BOOT, 0, &p, sizeof(p));
+						DBPacket(GD::BOOT, 0, &p, sizeof(p));
 					}
 				}
 
@@ -207,19 +206,16 @@ void CLIENT_DESC::SetPhase(int iPhase)
 					buf.write(&p, sizeof(p));
 				}
 
-				DBPacket(HEADER_GD_SETUP, 0, buf.read_peek(), buf.size());
+				DBPacket(GD::SETUP, 0, buf.read_peek(), buf.size());
 				m_pInputProcessor = &m_inputDB;
 			}
 			break;
 
 		case PHASE_P2P:
 			sys_log(1, "PHASE_P2P");
-			
-			if (m_lpInputBuffer)
-				buffer_reset(m_lpInputBuffer);
 
-			if (m_lpOutputBuffer)
-				buffer_reset(m_lpOutputBuffer);
+			m_inputBuffer.Clear();
+			m_outputBuffer.Clear();
 
 			m_pInputProcessor = &m_inputP2P;
 			break;
@@ -233,25 +229,25 @@ void CLIENT_DESC::SetPhase(int iPhase)
 	m_iPhase = iPhase;
 }
 
-void CLIENT_DESC::DBPacketHeader(BYTE bHeader, DWORD dwHandle, DWORD dwSize)
+void CLIENT_DESC::DBPacketHeader(uint16_t wHeader, DWORD dwHandle, DWORD dwSize)
 {
-	buffer_write(m_lpOutputBuffer, encode_byte(bHeader), sizeof(BYTE));
-	buffer_write(m_lpOutputBuffer, encode_4bytes(dwHandle), sizeof(DWORD));
-	buffer_write(m_lpOutputBuffer, encode_4bytes(dwSize), sizeof(DWORD));
+	m_outputBuffer.Write(&wHeader, sizeof(wHeader));
+	m_outputBuffer.Write(&dwHandle, sizeof(dwHandle));
+	m_outputBuffer.Write(&dwSize, sizeof(dwSize));
 }
 
-void CLIENT_DESC::DBPacket(BYTE bHeader, DWORD dwHandle, const void * c_pvData, DWORD dwSize)
+void CLIENT_DESC::DBPacket(uint16_t wHeader, DWORD dwHandle, const void * c_pvData, DWORD dwSize)
 {
 	if (m_sock == INVALID_SOCKET) {
 		sys_log(0, "CLIENT_DESC [%s] trying DBPacket() while not connected",
 			GetKnownClientDescName(this));
 		return;
 	}
-	sys_log(1, "DB_PACKET: header %d handle %d size %d buffer_size %d", bHeader, dwHandle, dwSize, buffer_size(m_lpOutputBuffer));
-	DBPacketHeader(bHeader, dwHandle, dwSize);
+	sys_log(1, "DB_PACKET: header %u handle %u size %u buffer_size %zu", wHeader, dwHandle, dwSize, m_outputBuffer.ReadableBytes());
+	DBPacketHeader(wHeader, dwHandle, dwSize);
 
 	if (c_pvData)
-		buffer_write(m_lpOutputBuffer, c_pvData, dwSize);
+		m_outputBuffer.Write(c_pvData, dwSize);
 }
 
 void CLIENT_DESC::Packet(const void * c_pvData, int iSize)
@@ -261,7 +257,7 @@ void CLIENT_DESC::Packet(const void * c_pvData, int iSize)
 			GetKnownClientDescName(this));
 		return;
 	}
-	buffer_write(m_lpOutputBuffer, c_pvData, iSize);
+	m_outputBuffer.Write(c_pvData, iSize);
 }
 
 bool CLIENT_DESC::IsRetryWhenClosed()
@@ -282,7 +278,7 @@ void CLIENT_DESC::UpdateChannelStatus(DWORD t, bool fForce)
 		CHANNELSTATUS_UPDATE_PERIOD = 5*60*1000,	// 5분마다
 	};
 	if (fForce || m_tLastChannelStatusUpdateTime+CHANNELSTATUS_UPDATE_PERIOD < t) {
-		int iTotal; 
+		int iTotal;
 		int * paiEmpireUserCount;
 		int iLocal;
 		DESC_MANAGER::instance().GetUserCount(iTotal, &paiEmpireUserCount, iLocal);
@@ -293,7 +289,7 @@ void CLIENT_DESC::UpdateChannelStatus(DWORD t, bool fForce)
 		if (g_bNoMoreClient) channelStatus.bStatus = 0;
 		else channelStatus.bStatus = iTotal > g_iFullUserCount ? 3 : iTotal > g_iBusyUserCount ? 2 : 1;
 
-		DBPacket(HEADER_GD_UPDATE_CHANNELSTATUS, 0, &channelStatus, sizeof(channelStatus));
+		DBPacket(GD::UPDATE_CHANNELSTATUS, 0, &channelStatus, sizeof(channelStatus));
 		m_tLastChannelStatusUpdateTime = t;
 	}
 }
@@ -318,7 +314,6 @@ void CLIENT_DESC::Reset()
 
 void CLIENT_DESC::InitializeBuffers()
 {
-	m_lpOutputBuffer = buffer_new(1024 * 1024);
-	m_lpInputBuffer = buffer_new(1024 * 1024);
-	m_iMinInputBufferLen = 1024 * 1024;
+	m_outputBuffer.Reserve(1024 * 1024);
+	m_inputBuffer.Reserve(1024 * 1024);
 }

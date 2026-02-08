@@ -1,4 +1,4 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "war_map.h"
 #include "sectree_manager.h"
 #include "char.h"
@@ -11,7 +11,7 @@
 #include "guild_manager.h"
 #include "buffer_manager.h"
 #include "db.h"
-#include "packet.h"
+#include "packet_structs.h"
 #include "locale_service.h"
 
 EVENTINFO(war_map_info)
@@ -625,9 +625,9 @@ void CWarMap::SendWarPacket(LPDESC d)
 	TPacketGCGuild pack;
 	TPacketGCGuildWar pack2;
 
-	pack.header		= HEADER_GC_GUILD;
-	pack.subheader	= GUILD_SUBHEADER_GC_WAR;
-	pack.size		= sizeof(pack) + sizeof(pack2);
+	pack.header		= GC::GUILD;
+	pack.subheader	= GuildSub::GC::WAR;
+	pack.length		= sizeof(pack) + sizeof(pack2);
 
 	pack2.dwGuildSelf	= m_TeamData[0].dwID;
 	pack2.dwGuildOpp	= m_TeamData[1].dwID;
@@ -642,9 +642,9 @@ void CWarMap::SendScorePacket(BYTE bIdx, LPDESC d)
 {
 	TPacketGCGuild p;
 
-	p.header = HEADER_GC_GUILD;
-	p.subheader = GUILD_SUBHEADER_GC_WAR_SCORE;
-	p.size = sizeof(p) + sizeof(DWORD) + sizeof(DWORD) + sizeof(long);
+	p.header = GC::GUILD;
+	p.subheader = GuildSub::GC::WAR_SCORE;
+	p.length = sizeof(p) + sizeof(DWORD) + sizeof(DWORD) + sizeof(long);
 
 	TEMP_BUFFER buf;
 	buf.write(&p, sizeof(p));

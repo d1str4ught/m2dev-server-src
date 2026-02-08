@@ -4,14 +4,10 @@
 #include "constants.h"
 #include "input.h"
 #include "SecureCipher.h"
+#include "libthecore/ring_buffer.h"
 
-#include <pcg_random.hpp>
-
-#define SEQUENCE_SEED 0
 //#define MAX_INPUT_LEN			2048
 #define MAX_INPUT_LEN			65536
-
-#define HANDSHAKE_RETRY_LIMIT		32
 
 class CInputProcessor;
 
@@ -46,14 +42,6 @@ class CLoginKey
 };
 
 
-// sequence 버그 찾기용 데이타
-struct seq_t
-{
-	BYTE	hdr;
-	BYTE	seq;
-};
-typedef std::vector<seq_t>	seq_vector_t;
-// sequence 버그 찾기용 데이타
 
 class DESC
 {
@@ -62,7 +50,7 @@ class DESC
 		{
 			LPDESC desc;
 
-			desc_event_info() 
+			desc_event_info()
 			: desc(0)
 			{
 			}
@@ -78,7 +66,7 @@ class DESC
 
 		void			FlushOutput();
 
-		bool			Setup(LPFDWATCH _fdw, socket_t _fd, const struct sockaddr_in & c_rSockAddr, DWORD _handle, DWORD _handshake);
+		bool			Setup(LPFDWATCH _fdw, socket_t _fd, const struct sockaddr_in & c_rSockAddr, DWORD _handle);
 
 		socket_t		GetSocket() const	{ return m_sock; }
 		const char *	GetHostName()		{ return m_stHost.c_str(); }
@@ -99,7 +87,7 @@ class DESC
 		CInputProcessor	*	GetInputProcessor()	{ return m_pInputProcessor; }
 
 		DWORD			GetHandle() const	{ return m_dwHandle; }
-		LPBUFFER		GetOutputBuffer()	{ return m_lpOutputBuffer; }
+		size_t			GetOutputBufferSize() const	{ return m_outputBuffer.ReadableBytes(); }
 
 		void			BindAccountTable(TAccountTable * pTable);
 		TAccountTable &		GetAccountTable()	{ return m_accountTable; }
@@ -112,18 +100,8 @@ class DESC
 
 		const struct sockaddr_in & GetAddr()		{ return m_SockAddr;	}
 
-		void			   UDPGrant(const struct sockaddr_in & c_rSockAddr);
-		const struct sockaddr_in & GetUDPAddr()		{ return m_UDPSockAddr; }
-
 		void			Log(const char * format, ...);
 
-		// 핸드쉐이크 (시간 동기화)
-		void			StartHandshake(DWORD _dw);
-		void			SendHandshake(DWORD dwCurTime, int32_t lNewDelta);
-		bool			HandshakeProcess(DWORD dwTime, int32_t lDelta, bool bInfiniteRetry=false);
-		bool			IsHandshaking();
-
-		DWORD			GetHandshake() const	{ return m_dwHandshake; }
 		DWORD			GetClientTime();
 
 		// Secure key exchange (libsodium/XChaCha20-Poly1305)
@@ -148,8 +126,6 @@ class DESC
 		void			SetPong(bool b);
 		bool			IsPong();
 
-		BYTE			GetSequence();
-
 		void			SendLoginSuccessPacket();
 		//void			SendServerStatePacket(int nIndex);
 
@@ -169,6 +145,11 @@ class DESC
 		// Handshake timeout check
 		bool			IsExpiredHandshake() const;
 		void			SetHandshakeTime(uint32_t handshake_time) { m_handshake_time = handshake_time; }
+
+		// Flood protection
+		bool			CheckPacketFlood();
+		void			SetIPCountTracked(bool b) { m_bIPCountTracked = b; }
+		bool			IsIPCountTracked() const { return m_bIPCountTracked; }
 
 	protected:
 		void			Initialize();
@@ -192,24 +173,19 @@ class DESC
 		WORD			m_wPort;
 		time_t			m_LastTryToConnectTime;
 
-		LPBUFFER		m_lpInputBuffer;
-		int				m_iMinInputBufferLen;
-	
-		DWORD			m_dwHandshake;
-		DWORD			m_dwHandshakeSentTime;
-		int				m_iHandshakeRetry;
-		DWORD			m_dwClientTime;
-		bool			m_bHandshaking;
+		RingBuffer		m_inputBuffer;
 
-		LPBUFFER		m_lpBufferedOutputBuffer;
-		LPBUFFER		m_lpOutputBuffer;
+		DWORD			m_dwClientTime;
+
+		RingBuffer		m_bufferedOutputBuffer;
+		bool			m_hasBufferedOutput;
+		RingBuffer		m_outputBuffer;
 
 		LPEVENT			m_pkPingEvent;
 		LPCHARACTER		m_lpCharacter;
 		TAccountTable		m_accountTable;
 
 		struct sockaddr_in	m_SockAddr;
-		struct sockaddr_in 	m_UDPSockAddr;
 
 		FILE *			m_pLogFile;
 		std::string		m_stRelayName;
@@ -220,9 +196,6 @@ class DESC
 
 		bool			m_bAdminMode; // Handshake 에서 어드민 명령을 쓸수있나?
 		bool			m_bPong;
-
-		pcg32 			m_SequenceGenerator;
-		BYTE			m_bNextExpectedSequence; // Next expected sequence number from client
 
 		CLoginKey *		m_pkLoginKey;
 		DWORD			m_dwLoginKey;
@@ -245,6 +218,11 @@ class DESC
 		// Handshake timeout protection
 		uint32_t		m_handshake_time;
 
+		// Flood protection
+		int				m_iFloodCheckPulse;
+		uint32_t		m_dwFloodPacketCount;
+		bool			m_bIPCountTracked;
+
 		// Secure cipher (libsodium/XChaCha20-Poly1305)
 		SecureCipher	m_secureCipher;
 		uint8_t			m_challenge[SecureCipher::CHALLENGE_SIZE];
@@ -263,6 +241,29 @@ class DESC
 
 		void RawPacket(const void * c_pvData, int iSize);
 		void ChatPacket(BYTE type, const char * format, ...);
+
+	// --- Packet sequence tracking (debug aid) ---
+	public:
+		struct PacketLogEntry
+		{
+			uint32_t seq;
+			uint16_t header;
+			uint16_t length;
+		};
+
+		static constexpr size_t PACKET_LOG_SIZE = 32;
+
+		void		LogRecvPacket(uint16_t header, uint16_t length);
+		void		LogSentPacket(uint16_t header, uint16_t length);
+		void		DumpRecentPackets() const;
+		uint32_t	GetRecvPacketSeq() const { return m_dwRecvPacketSeq; }
+		uint32_t	GetSentPacketSeq() const { return m_dwSentPacketSeq; }
+
+	private:
+		PacketLogEntry	m_aRecentRecvPackets[PACKET_LOG_SIZE] = {};
+		PacketLogEntry	m_aRecentSentPackets[PACKET_LOG_SIZE] = {};
+		uint32_t		m_dwRecvPacketSeq = 0;
+		uint32_t		m_dwSentPacketSeq = 0;
 };
 
 #endif

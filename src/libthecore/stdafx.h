@@ -117,7 +117,7 @@ inline double rint(double x)
 #include "socket.h"
 #include "kstbl.h"
 #include "hangul.h"
-#include "buffer.h"
+
 #include "signal.h"
 #include "log.h"
 #include "main.h"

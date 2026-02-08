@@ -1,4 +1,4 @@
-﻿// vim:ts=8 sw=4
+// vim:ts=8 sw=4
 #ifndef __INC_CLIENTMANAGER_H__
 #define __INC_CLIENTMANAGER_H__
 
@@ -157,7 +157,7 @@ class CClientManager : public CNetBase, public singleton<CClientManager>
 
 	CPeer *		GetAnyPeer();
 
-	void			ForwardPacket(BYTE header, const void* data, int size, BYTE bChannel = 0, CPeer * except = NULL);
+	void			ForwardPacket(uint16_t wHeader, const void* data, int size, BYTE bChannel = 0, CPeer * except = NULL);
 
 	void			SendNotice(const char * c_pszFormat, ...);
 
@@ -181,8 +181,6 @@ class CClientManager : public CNetBase, public singleton<CClientManager>
 	bool		InitializeLandTable();
 	bool		InitializeObjectProto();
 	bool		InitializeObjectTable();
-	bool		InitializeMonarch();
-
 	// mob_proto.txt, item_proto.txt에서 읽은 mob_proto, item_proto를 real db에 반영.
 	//	item_proto, mob_proto를 db에 반영하지 않아도, 게임 돌아가는데는 문제가 없지만,
 	//	운영툴 등에서 db의 item_proto, mob_proto를 읽어 쓰기 때문에 문제가 발생한다.
@@ -317,7 +315,6 @@ class CClientManager : public CNetBase, public singleton<CClientManager>
 	void		QUERY_CHANGE_NAME(CPeer * peer, DWORD dwHandle, TPacketGDChangeName * p);
 	void		GetPlayerFromRes(TPlayerTable * player_table, MYSQL_RES* res);
 
-	void		QUERY_SMS(CPeer * pkPeer, TPacketGDSMS * p);
 	void		QUERY_LOGIN_KEY(CPeer * pkPeer, TPacketGDLoginKey * p);
 
 	void		AddGuildPriv(TPacketGiveGuildPriv* p);
@@ -349,14 +346,14 @@ class CClientManager : public CNetBase, public singleton<CClientManager>
 	// MYSHOP_PRICE_LIST
 	// 개인상점 가격정보
 
-	/// 아이템 가격정보 리스트 업데이트 패킷(HEADER_GD_MYSHOP_PRICELIST_UPDATE) 처리함수
+	/// 아이템 가격정보 리스트 업데이트 패킷(GD::MYSHOP_PRICELIST_UPDATE) 처리함수
 	/**
 	 * @param [in]	pPacket 패킷 데이터의 포인터
 	 */
 	// void		MyshopPricelistUpdate(const TPacketMyshopPricelistHeader* pPacket);
 	void		MyshopPricelistUpdate(const TItemPriceListTable* pPacket);
 
-	/// 아이템 가격정보 리스트 요청 패킷(HEADER_GD_MYSHOP_PRICELIST_REQ) 처리함수
+	/// 아이템 가격정보 리스트 요청 패킷(GD::MYSHOP_PRICELIST_REQ) 처리함수
 	/**
 	 * @param	peer 패킷을 보낸 Game server 의 peer 객체의 포인터
 	 * @param [in]	dwHandle 가격정보를 요청한 peer 의 핸들
@@ -452,7 +449,7 @@ class CClientManager : public CNetBase, public singleton<CClientManager>
 	typedef std::map<std::string, long>	TEventFlagMap;
 	TEventFlagMap m_map_lEventFlag;
 
-	BYTE					m_bLastHeader;
+	uint16_t				m_wLastHeader;
 	int					m_iCacheFlushCount;
 	int					m_iCacheFlushCountLimit;
 
@@ -506,22 +503,6 @@ class CClientManager : public CNetBase, public singleton<CClientManager>
 	void UpdateItemCacheSet(DWORD pid);
 
 	void FlushPlayerCacheSet(DWORD pid);
-
-	//MONARCH
-	void Election(CPeer * peer, DWORD dwHandle, const char * p);
-	void Candidacy(CPeer * peer, DWORD dwHandle, const char * p);
-	void AddMonarchMoney(CPeer * peer, DWORD dwHandle, const char * p);
-	void TakeMonarchMoney(CPeer * peer, DWORD dwHandle, const char * p);
-	void ComeToVote(CPeer * peer, DWORD dwHandle, const char * p);
-	void RMCandidacy(CPeer * peer, DWORD dwHandle, const char * p);
-	void SetMonarch(CPeer * peer, DWORD dwHandle, const char * p);
-	void RMMonarch(CPeer * peer, DWORD dwHandle, const char * p);
-								
-
-	void DecMonarchMoney(CPeer * peer, DWORD dwHandle, const char * p);
-	//END_MONARCH
-
-	void ChangeMonarchLord(CPeer* peer, DWORD dwHandle, TPacketChangeMonarchLord* info);
 
 	void SendSpareItemIDRange(CPeer* peer);
 

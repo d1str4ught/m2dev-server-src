@@ -1,4 +1,4 @@
-﻿
+
 #include "stdafx.h"
 #include "desc_client.h"
 #include "item_manager.h"
@@ -35,7 +35,7 @@ DWORD ITEM_MANAGER::GetNewID()
 			sys_log(0, "ItemIDRange: First Range is full. Change to SpareRange %u ~ %u %u",
 					m_ItemIDSpareRange.dwMin, m_ItemIDSpareRange.dwMax, m_ItemIDSpareRange.dwUsableItemIDMin);
 
-			db_clientdesc->DBPacket(HEADER_GD_REQ_SPARE_ITEM_ID_RANGE, 0, &m_ItemIDRange.dwMax, sizeof(DWORD));
+			db_clientdesc->DBPacket(GD::REQ_SPARE_ITEM_ID_RANGE, 0, &m_ItemIDRange.dwMax, sizeof(DWORD));
 
 			SetMaxItemID(m_ItemIDSpareRange);
 

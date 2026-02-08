@@ -1,4 +1,4 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "QID.h"
 #include "DBManager.h"
 #include "ItemAwardManager.h"
@@ -67,7 +67,7 @@ void ItemAwardManager::Load(SQLMsg * pMsg)
 				strcpy(giftData.login, kData->szLogin);	//로그인 아이디 복사
 				strcpy(giftData.command, command);					//명령어 복사
 				giftData.vnum = kData->dwVnum;				//아이템 vnum도 복사
-				CClientManager::instance().ForwardPacket(HEADER_DG_ITEMAWARD_INFORMER,&giftData,sizeof(TPacketItemAwardInfromer));
+				CClientManager::instance().ForwardPacket(DG::ITEMAWARD_INFORMER,&giftData,sizeof(TPacketItemAwardInfromer));
 			}
 		}
 

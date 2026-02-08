@@ -14,7 +14,7 @@
 #include "item_manager.h"
 #include "motion.h"
 #include "vector.h"
-#include "packet.h"
+#include "packet_structs.h"
 #include "cmd.h"
 #include "fishing.h"
 #include "exchange.h"
@@ -43,7 +43,6 @@
 #include "wedding.h"
 #include "mob_manager.h"
 #include "mining.h"
-#include "monarch.h"
 #include "castle.h"
 #include "arena.h"
 #include "horsename_manager.h"
@@ -263,8 +262,6 @@ void CHARACTER::Initialize()
 	m_dwQuestByVnum = 0;
 	m_pQuestItem = NULL;
 
-	m_szMobileAuth[0] = '\0';
-
 	m_dwUnderGuildWarInfoMessageTime = get_dword_time()-60000;
 
 	m_bUnderRefine = false;
@@ -334,8 +331,6 @@ void CHARACTER::Initialize()
 	m_iSafeboxLoadTime = 0;
 
 	m_iMyShopTime = 0;
-
-	InitMC();
 
 	m_deposit_pulse = 0;
 
@@ -715,7 +710,7 @@ void CHARACTER::OpenMyShop(const char * c_pszSign, TShopItemTable * pTable, BYTE
 			// buf.write(&info, sizeof(info));
 		// }
 
-		// db_clientdesc->DBPacket(HEADER_GD_MYSHOP_PRICELIST_UPDATE, 0, buf.read_peek(), buf.size());
+		// db_clientdesc->DBPacket(GD::MYSHOP_PRICELIST_UPDATE, 0, buf.read_peek(), buf.size());
 		
 		// Fixed code:
 		TItemPriceListTable header;
@@ -732,7 +727,7 @@ void CHARACTER::OpenMyShop(const char * c_pszSign, TShopItemTable * pTable, BYTE
 			idx++;
 		}
 
-		db_clientdesc->DBPacket(HEADER_GD_MYSHOP_PRICELIST_UPDATE, GetDesc()->GetHandle(), &header, sizeof(TItemPriceListTable));
+		db_clientdesc->DBPacket(GD::MYSHOP_PRICELIST_UPDATE, GetDesc()->GetHandle(), &header, sizeof(TItemPriceListTable));
 	} 
 	// END_OF_MYSHOP_PRICE_LIST
 	else if (CountSpecifyItem(50200))
@@ -745,7 +740,8 @@ void CHARACTER::OpenMyShop(const char * c_pszSign, TShopItemTable * pTable, BYTE
 
 	TPacketGCShopSign p;
 
-	p.bHeader = HEADER_GC_SHOP_SIGN;
+	p.header = GC::SHOP_SIGN;
+	p.length = sizeof(p);
 	p.dwVID = GetVID();
 	strlcpy(p.szSign, c_pszSign, sizeof(p.szSign));
 
@@ -784,7 +780,8 @@ void CHARACTER::CloseMyShop()
 
 		TPacketGCShopSign p;
 
-		p.bHeader = HEADER_GC_SHOP_SIGN;
+		p.header = GC::SHOP_SIGN;
+		p.length = sizeof(p);
 		p.dwVID = GetVID();
 		p.szSign[0] = '\0';
 
@@ -797,7 +794,8 @@ void CHARACTER::CloseMyShop()
 
 void EncodeMovePacket(TPacketGCMove & pack, DWORD dwVID, BYTE bFunc, BYTE bArg, DWORD x, DWORD y, DWORD dwDuration, DWORD dwTime, BYTE bRot)
 {
-	pack.bHeader = HEADER_GC_MOVE;
+	pack.header = GC::MOVE;
+	pack.length = sizeof(pack);
 	pack.bFunc   = bFunc;
 	pack.bArg    = bArg;
 	pack.dwVID   = dwVID;
@@ -862,7 +860,8 @@ void CHARACTER::EncodeInsertPacket(LPENTITY entity)
 
 	TPacketGCCharacterAdd pack;
 
-	pack.header		= HEADER_GC_CHARACTER_ADD;
+	pack.header		= GC::CHARACTER_ADD;
+	pack.length = sizeof(pack);
 	pack.dwVID		= m_vid;
 	pack.bType		= GetCharType();
 	pack.angle		= GetRotation();
@@ -904,7 +903,8 @@ void CHARACTER::EncodeInsertPacket(LPENTITY entity)
 		TPacketGCCharacterAdditionalInfo addPacket;
 		memset(&addPacket, 0, sizeof(TPacketGCCharacterAdditionalInfo));
 
-		addPacket.header = HEADER_GC_CHAR_ADDITIONAL_INFO;
+		addPacket.header = GC::CHAR_ADDITIONAL_INFO;
+		addPacket.length = sizeof(addPacket);
 		addPacket.dwVID = m_vid;
 
 		addPacket.awPart[CHR_EQUIPPART_ARMOR] = GetPart(PART_MAIN);
@@ -967,8 +967,9 @@ void CHARACTER::EncodeInsertPacket(LPENTITY entity)
 		d->Packet(&pack, sizeof(pack));
 
 		TPacketGCWalkMode p;
+		p.header = GC::WALK_MODE;
+		p.length = sizeof(p);
 		p.vid = GetVID();
-		p.header = HEADER_GC_WALK_MODE;
 		p.mode = m_bNowWalking ? WALKMODE_WALK : WALKMODE_RUN;
 
 		d->Packet(&p, sizeof(p));
@@ -980,8 +981,9 @@ void CHARACTER::EncodeInsertPacket(LPENTITY entity)
 		if (ch->IsWalking())
 		{
 			TPacketGCWalkMode p;
+			p.header = GC::WALK_MODE;
+			p.length = sizeof(p);
 			p.vid = ch->GetVID();
-			p.header = HEADER_GC_WALK_MODE;
 			p.mode = ch->m_bNowWalking ? WALKMODE_WALK : WALKMODE_RUN;
 			GetDesc()->Packet(&p, sizeof(p));
 		}
@@ -991,7 +993,8 @@ void CHARACTER::EncodeInsertPacket(LPENTITY entity)
 	{
 		TPacketGCShopSign p;
 
-		p.bHeader = HEADER_GC_SHOP_SIGN;
+		p.header = GC::SHOP_SIGN;
+		p.length = sizeof(p);
 		p.dwVID = GetVID();
 		strlcpy(p.szSign, m_stShopSign.c_str(), sizeof(p.szSign));
 
@@ -1017,7 +1020,8 @@ void CHARACTER::EncodeRemovePacket(LPENTITY entity)
 
 	TPacketGCCharacterDelete pack;
 
-	pack.header	= HEADER_GC_CHARACTER_DEL;
+	pack.header	= GC::CHARACTER_DEL;
+	pack.length = sizeof(pack);
 	pack.id	= m_vid;
 
 	d->Packet(&pack, sizeof(TPacketGCCharacterDelete));
@@ -1036,7 +1040,8 @@ void CHARACTER::UpdatePacket()
 	TPacketGCCharacterUpdate pack;
 	TPacketGCCharacterUpdate pack2;
 
-	pack.header = HEADER_GC_CHARACTER_UPDATE;
+	pack.header = GC::CHARACTER_UPDATE;
+	pack.length = sizeof(pack);
 	pack.dwVID = m_vid;
 
 	pack.awPart[CHR_EQUIPPART_ARMOR] = GetPart(PART_MAIN);
@@ -1275,9 +1280,6 @@ void CHARACTER::CreatePlayerProto(TPlayerTable & tab)
 	for (int i = 0; i < QUICKSLOT_MAX_NUM; ++i)
 		tab.quickslot[i] = m_quickslot[i];
 
-	if (m_stMobile.length() && !*m_szMobileAuth)
-		strlcpy(tab.szMobile, m_stMobile.c_str(), sizeof(tab.szMobile));
-
 	thecore_memcpy(tab.parts, m_pointsInstant.parts, sizeof(tab.parts));
 
 	// REMOVE_REAL_SKILL_LEVLES
@@ -1302,7 +1304,7 @@ void CHARACTER::SaveReal()
 	TPlayerTable table;
 	CreatePlayerProto(table);
 
-	db_clientdesc->DBPacket(HEADER_GD_PLAYER_SAVE, GetDesc()->GetHandle(), &table, sizeof(TPlayerTable));
+	db_clientdesc->DBPacket(GD::PLAYER_SAVE, GetDesc()->GetHandle(), &table, sizeof(TPlayerTable));
 
 	quest::PC * pkQuestPC = quest::CQuestManager::instance().GetPCForce(GetPlayerID());
 
@@ -1354,7 +1356,8 @@ void CHARACTER::Disconnect(const char * c_pszReason)
 
 	// P2P Logout
 	TPacketGGLogout p;
-	p.bHeader = HEADER_GG_LOGOUT;
+	p.header = GG::LOGOUT;
+	p.length = sizeof(p);
 	strlcpy(p.szName, GetName(), sizeof(p.szName));
 	P2P_MANAGER::instance().Send(&p, sizeof(TPacketGGLogout));
 	char buf[51];
@@ -1422,7 +1425,8 @@ void CHARACTER::Disconnect(const char * c_pszReason)
 		PointsPacket();
 
 		packet_point_change pack;
-		pack.header = HEADER_GC_CHARACTER_POINT_CHANGE;
+		pack.header = GC::PLAYER_POINT_CHANGE;
+		pack.length = sizeof(pack);
 		pack.dwVID = m_vid;
 		pack.type = POINT_PLAYTIME;
 		pack.value = GetRealPoint(POINT_PLAYTIME) + (get_dword_time() - m_dwPlayStartTime) / 60000;
@@ -1572,66 +1576,33 @@ void CHARACTER::MainCharacterPacket()
 	const unsigned mapIndex = GetMapIndex();
 	const BGMInfo& bgmInfo = CHARACTER_GetBGMInfo(mapIndex);
 
-	// SUPPORT_BGM
+	TPacketGCMainCharacter pack;
+	pack.header = GC::MAIN_CHARACTER;
+	pack.length = sizeof(pack);
+	pack.dwVID = m_vid;
+	pack.wRaceNum = GetRaceNum();
+	pack.lx = GetX();
+	pack.ly = GetY();
+	pack.lz = GetZ();
+	pack.empire = GetDesc()->GetEmpire();
+	pack.skill_group = GetSkillGroup();
+	strlcpy(pack.szName, GetName(), sizeof(pack.szName));
+
 	if (!bgmInfo.name.empty())
 	{
-		if (CHARACTER_IsBGMVolumeEnable())
-		{
-			sys_log(1, "bgm_info.play_bgm_vol(%d, name='%s', vol=%f)", mapIndex, bgmInfo.name.c_str(), bgmInfo.vol);
-			TPacketGCMainCharacter4_BGM_VOL mainChrPacket;
-			mainChrPacket.header = HEADER_GC_MAIN_CHARACTER4_BGM_VOL;
-			mainChrPacket.dwVID = m_vid;
-			mainChrPacket.wRaceNum = GetRaceNum();
-			mainChrPacket.lx = GetX();
-			mainChrPacket.ly = GetY();
-			mainChrPacket.lz = GetZ();
-			mainChrPacket.empire = GetDesc()->GetEmpire();
-			mainChrPacket.skill_group = GetSkillGroup();
-			strlcpy(mainChrPacket.szChrName, GetName(), sizeof(mainChrPacket.szChrName));
-
-			mainChrPacket.fBGMVol = bgmInfo.vol;
-			strlcpy(mainChrPacket.szBGMName, bgmInfo.name.c_str(), sizeof(mainChrPacket.szBGMName));
-			GetDesc()->Packet(&mainChrPacket, sizeof(TPacketGCMainCharacter4_BGM_VOL));
-		}
-		else
-		{
-			sys_log(1, "bgm_info.play(%d, '%s')", mapIndex, bgmInfo.name.c_str());
-			TPacketGCMainCharacter3_BGM mainChrPacket;
-			mainChrPacket.header = HEADER_GC_MAIN_CHARACTER3_BGM;
-			mainChrPacket.dwVID = m_vid;
-			mainChrPacket.wRaceNum = GetRaceNum();
-			mainChrPacket.lx = GetX();
-			mainChrPacket.ly = GetY();
-			mainChrPacket.lz = GetZ();
-			mainChrPacket.empire = GetDesc()->GetEmpire();
-			mainChrPacket.skill_group = GetSkillGroup();
-			strlcpy(mainChrPacket.szChrName, GetName(), sizeof(mainChrPacket.szChrName));
-			strlcpy(mainChrPacket.szBGMName, bgmInfo.name.c_str(), sizeof(mainChrPacket.szBGMName));
-			GetDesc()->Packet(&mainChrPacket, sizeof(TPacketGCMainCharacter3_BGM));
-		}
-		//if (m_stMobile.length())
-		//		ChatPacket(CHAT_TYPE_COMMAND, "sms");
+		strlcpy(pack.szBGMName, bgmInfo.name.c_str(), sizeof(pack.szBGMName));
+		pack.fBGMVol = CHARACTER_IsBGMVolumeEnable() ? bgmInfo.vol : 0.0f;
+		sys_log(1, "bgm_info.play(%d, name='%s', vol=%f)", mapIndex, bgmInfo.name.c_str(), pack.fBGMVol);
 	}
-	// END_OF_SUPPORT_BGM
 	else
 	{
+		pack.szBGMName[0] = '\0';
+		pack.fBGMVol = 0.0f;
 		sys_log(0, "bgm_info.play(%d, DEFAULT_BGM_NAME)", mapIndex);
-
-		TPacketGCMainCharacter pack;
-		pack.header = HEADER_GC_MAIN_CHARACTER;
-		pack.dwVID = m_vid;
-		pack.wRaceNum = GetRaceNum();
-		pack.lx = GetX();
-		pack.ly = GetY();
-		pack.lz = GetZ();
-		pack.empire = GetDesc()->GetEmpire();
-		pack.skill_group = GetSkillGroup();
-		strlcpy(pack.szName, GetName(), sizeof(pack.szName));
-		GetDesc()->Packet(&pack, sizeof(TPacketGCMainCharacter));
-
-		if (m_stMobile.length())
-			ChatPacket(CHAT_TYPE_COMMAND, "sms");
 	}
+
+	GetDesc()->Packet(&pack, sizeof(pack));
+
 }
 
 void CHARACTER::PointsPacket()
@@ -1641,7 +1612,8 @@ void CHARACTER::PointsPacket()
 
 	TPacketGCPoints pack;
 
-	pack.header	= HEADER_GC_CHARACTER_POINTS;
+	pack.header	= GC::PLAYER_POINTS;
+	pack.length = sizeof(pack);
 
 	pack.points[POINT_LEVEL]		= GetLevel();
 	pack.points[POINT_EXP]		= GetExp();
@@ -1852,8 +1824,6 @@ void CHARACTER::SetPlayerProto(const TPlayerTable * t)
 
 	if (GetLevel() < PK_PROTECT_LEVEL)
 		m_bPKMode = PK_MODE_PROTECT;
-
-	m_stMobile = t->szMobile;
 
 	SetHorseData(t->horse);
 
@@ -2598,7 +2568,8 @@ void CHARACTER::Standup()
 
 	sys_log(1, "STANDUP: %s", GetName());
 
-	pack_position.header	= HEADER_GC_CHARACTER_POSITION;
+	pack_position.header	= GC::CHARACTER_POSITION;
+	pack_position.length = sizeof(pack_position);
 	pack_position.vid		= GetVID();
 	pack_position.position	= POSITION_GENERAL;
 
@@ -2615,7 +2586,8 @@ void CHARACTER::Sitdown(int is_ground)
 	SetPosition(POS_SITTING);
 	sys_log(1, "SITDOWN: %s", GetName());
 
-	pack_position.header	= HEADER_GC_CHARACTER_POSITION;
+	pack_position.header	= GC::CHARACTER_POSITION;
+	pack_position.length = sizeof(pack_position);
 	pack_position.vid		= GetVID();
 	pack_position.position	= POSITION_SITTING_GROUND;
 	PacketAround(&pack_position, sizeof(pack_position));
@@ -3768,7 +3740,8 @@ void CHARACTER::PointChange(BYTE type, int amount, bool bAmount, bool bBroadcast
 	{
 		struct packet_point_change pack;
 
-		pack.header = HEADER_GC_CHARACTER_POINT_CHANGE;
+		pack.header = GC::PLAYER_POINT_CHANGE;
+		pack.length = sizeof(pack);
 		pack.dwVID = m_vid;
 		pack.type = type;
 		pack.value = val;
@@ -3947,7 +3920,8 @@ void CHARACTER::ApplyPoint(BYTE bApplyType, int iVal)
 
 void CHARACTER::MotionPacketEncode(BYTE motion, LPCHARACTER victim, struct packet_motion * packet)
 {
-	packet->header	= HEADER_GC_MOTION;
+	packet->header	= GC::MOTION;
+	packet->length	= sizeof(*packet);
 	packet->vid		= m_vid;
 	packet->motion	= motion;
 
@@ -4027,8 +4001,8 @@ void CHARACTER::MonsterLog(const char* format, ...)
 
 	TPacketGCChat pack_chat;
 
-	pack_chat.header    = HEADER_GC_CHAT;
-	pack_chat.size		= sizeof(TPacketGCChat) + len;
+	pack_chat.header    = GC::CHAT;
+	pack_chat.length		= sizeof(TPacketGCChat) + len;
 	pack_chat.type      = CHAT_TYPE_TALKING;
 	pack_chat.id        = (DWORD)GetVID();
 	pack_chat.bEmpire	= 0;
@@ -4056,8 +4030,8 @@ void CHARACTER::ChatPacket(BYTE type, const char * format, ...)
 
 	struct packet_chat pack_chat;
 
-	pack_chat.header    = HEADER_GC_CHAT;
-	pack_chat.size      = sizeof(struct packet_chat) + len;
+	pack_chat.header    = GC::CHAT;
+	pack_chat.length      = sizeof(struct packet_chat) + len;
 	pack_chat.type      = type;
 	pack_chat.id        = 0;
 	pack_chat.bEmpire   = d->GetEmpire();
@@ -4080,7 +4054,8 @@ void CHARACTER::ItemGetPacket(DWORD dwItemVnum, BYTE bCount, const char* szName,
 		return;
 
 	TPacketGCItemGet pack;
-	pack.header = HEADER_GC_ITEM_GET;
+	pack.header = GC::ITEM_GET;
+	pack.length = sizeof(pack);
 	pack.dwItemVnum = dwItemVnum;
 	pack.bCount = bCount;
 	// bArg: 0 = normal, 1 = from party member, 2 = delivered to party member
@@ -4134,7 +4109,8 @@ void CHARACTER::mining(LPCHARACTER chLoad)
 
 	// 채광 동작을 보여줌
 	TPacketGCDigMotion p;
-	p.header = HEADER_GC_DIG_MOTION;
+	p.header = GC::DIG_MOTION;
+	p.length = sizeof(p);
 	p.vid = GetVID();
 	p.target_vid = chLoad->GetVID();
 	p.count = count;
@@ -4391,7 +4367,8 @@ bool CHARACTER::SetSyncOwner(LPCHARACTER ch, bool bRemoveFromList)
 	//       보내는 방식으로 하면 패킷을 줄일 수 있다.
 	TPacketGCOwnership pack;
 
-	pack.bHeader	= HEADER_GC_OWNERSHIP;
+	pack.header	= GC::OWNERSHIP;
+	pack.length = sizeof(pack);
 	pack.dwOwnerVID	= ch ? ch->GetVID() : 0;
 	pack.dwVictimVID	= GetVID();
 
@@ -4757,7 +4734,8 @@ void CHARACTER::PartyInvite(LPCHARACTER pchInvitee)
 	// 
 
 	TPacketGCPartyInvite p;
-	p.header = HEADER_GC_PARTY_INVITE;
+	p.header = GC::PARTY_INVITE;
+	p.length = sizeof(p);
 	p.leader_vid = GetVID();
 	pchInvitee->GetDesc()->Packet(&p, sizeof(p));
 }
@@ -5232,7 +5210,8 @@ void CHARACTER::ClearTarget()
 
 	TPacketGCTarget p;
 
-	p.header = HEADER_GC_TARGET;
+	p.header = GC::TARGET;
+	p.length = sizeof(p);
 	p.dwVID = 0;
 	p.bHPPercent = 0;
 
@@ -5272,7 +5251,8 @@ void CHARACTER::SetTarget(LPCHARACTER pkChrTarget)
 
 	TPacketGCTarget p;
 
-	p.header = HEADER_GC_TARGET;
+	p.header = GC::TARGET;
+	p.length = sizeof(p);
 
 	if (m_pkChrTarget)
 	{
@@ -5329,7 +5309,8 @@ void CHARACTER::BroadcastTargetPacket()
 
 	TPacketGCTarget p;
 
-	p.header = HEADER_GC_TARGET;
+	p.header = GC::TARGET;
+	p.length = sizeof(p);
 	p.dwVID = GetVID();
 
 	if (IsPC())
@@ -5443,7 +5424,8 @@ bool CHARACTER::WarpSet(long x, long y, long lPrivateMapIndex)
 
 	TPacketGCWarp p;
 
-	p.bHeader	= HEADER_GC_WARP;
+	p.header	= GC::WARP;
+	p.length = sizeof(p);
 	p.lX	= x;
 	p.lY	= y;
 	p.lAddr	= lAddr;
@@ -5500,7 +5482,8 @@ void CHARACTER::WarpEnd()
 		// P2P Login
 		TPacketGGLogin p;
 
-		p.bHeader = HEADER_GG_LOGIN;
+		p.header = GG::LOGIN;
+		p.length = sizeof(p);
 		strlcpy(p.szName, GetName(), sizeof(p.szName));
 		p.dwPID = GetPlayerID();
 		p.bEmpire = GetEmpire();
@@ -5750,7 +5733,7 @@ void CHARACTER::ReqSafeboxLoad(const char* pszPassword)
 	strlcpy(p.szLogin, GetDesc()->GetAccountTable().login, sizeof(p.szLogin));
 	strlcpy(p.szPassword, pszPassword, sizeof(p.szPassword));
 
-	db_clientdesc->DBPacket(HEADER_GD_SAFEBOX_LOAD, GetDesc()->GetHandle(), &p, sizeof(p));
+	db_clientdesc->DBPacket(GD::SAFEBOX_LOAD, GetDesc()->GetHandle(), &p, sizeof(p));
 }
 
 void CHARACTER::LoadSafebox(int iSize, DWORD dwGold, int iItemCount, TPlayerItem * pItems)
@@ -5773,7 +5756,8 @@ void CHARACTER::LoadSafebox(int iSize, DWORD dwGold, int iItemCount, TPlayerItem
 
 	TPacketCGSafeboxSize p;
 
-	p.bHeader = HEADER_GC_SAFEBOX_SIZE;
+	p.header = GC::SAFEBOX_SIZE;
+	p.length = sizeof(p);
 	p.bSize = iSize;
 
 	GetDesc()->Packet(&p, sizeof(TPacketCGSafeboxSize));
@@ -5814,7 +5798,8 @@ void CHARACTER::ChangeSafeboxSize(BYTE bSize)
 
 	TPacketCGSafeboxSize p;
 
-	p.bHeader = HEADER_GC_SAFEBOX_SIZE;
+	p.header = GC::SAFEBOX_SIZE;
+	p.length = sizeof(p);
 	p.bSize = bSize;
 
 	GetDesc()->Packet(&p, sizeof(TPacketCGSafeboxSize));
@@ -5868,7 +5853,8 @@ void CHARACTER::LoadMall(int iItemCount, TPlayerItem * pItems)
 
 	TPacketCGSafeboxSize p;
 
-	p.bHeader = HEADER_GC_MALL_OPEN;
+	p.header = GC::MALL_OPEN;
+	p.length = sizeof(p);
 	p.bSize = 3 * SAFEBOX_PAGE_SIZE;
 
 	GetDesc()->Packet(&p, sizeof(TPacketCGSafeboxSize));
@@ -5920,7 +5906,8 @@ bool CHARACTER::BuildUpdatePartyPacket(TPacketGCPartyUpdate & out)
 
 	memset(&out, 0, sizeof(out));
 
-	out.header		= HEADER_GC_PARTY_UPDATE;
+	out.header		= GC::PARTY_UPDATE;
+	out.length = sizeof(out);
 	out.pid		= GetPlayerID();
 	out.percent_hp	= MINMAX(0, GetHP() * 100 / GetMaxHP(), 100);
 	out.role		= GetParty()->GetRole(GetPlayerID());
@@ -5995,7 +5982,8 @@ void CHARACTER::SetNowWalking(bool bWalkFlag)
 		{
 			TPacketGCWalkMode p;
 			p.vid = GetVID();
-			p.header = HEADER_GC_WALK_MODE;
+			p.header = GC::WALK_MODE;
+			p.length = sizeof(p);
 			p.mode = m_bNowWalking ? WALKMODE_WALK : WALKMODE_RUN;
 
 			PacketView(&p, sizeof(p));
@@ -6176,7 +6164,8 @@ void CHARACTER::EffectPacket(int enumEffectType)
 {
 	TPacketGCSpecialEffect p;
 
-	p.header = HEADER_GC_SEPCIAL_EFFECT;
+	p.header = GC::SEPCIAL_EFFECT;
+	p.length = sizeof(p);
 	p.type = enumEffectType;
 	p.vid = GetVID();
 
@@ -6187,7 +6176,8 @@ void CHARACTER::SpecificEffectPacket(const std::string& stEffectName)
 {
 	TPacketGCSpecificEffect p;
 
-	p.header = HEADER_GC_SPECIFIC_EFFECT;
+	p.header = GC::SPECIFIC_EFFECT;
+	p.length = sizeof(p);
 	p.vid = GetVID();
 	strlcpy(p.effect_file, stEffectName.c_str(), sizeof(p.effect_file));
 
@@ -6236,8 +6226,8 @@ void CHARACTER::MonsterChat(BYTE bMonsterChatType)
 
 	struct packet_chat pack_chat;
 
-	pack_chat.header    = HEADER_GC_CHAT;
-	pack_chat.size	= sizeof(struct packet_chat) + text.size() + 1;
+	pack_chat.header    = GC::CHAT;
+	pack_chat.length	= sizeof(struct packet_chat) + text.size() + 1;
 	pack_chat.type      = CHAT_TYPE_TALKING;
 	pack_chat.id        = GetVID();
 	pack_chat.bEmpire	= 0;
@@ -6430,7 +6420,8 @@ void CHARACTER::DetermineDropMetinStone()
 void CHARACTER::SendEquipment(LPCHARACTER ch)
 {
 	TPacketViewEquip p;
-	p.header = HEADER_GC_VIEW_EQUIP;
+	p.header = GC::VIEW_EQUIP;
+	p.length = sizeof(p);
 	p.vid    = GetVID();
 	for (int i = 0; i<WEAR_MAX_NUM; i++)
 	{
@@ -6647,8 +6638,8 @@ void CHARACTER::SyncPacket()
 
 	TPacketGCSyncPosition pack;
 
-	pack.bHeader = HEADER_GC_SYNC_POSITION;
-	pack.wSize = sizeof(TPacketGCSyncPosition) + sizeof(elem);
+	pack.header = GC::SYNC_POSITION;
+	pack.length = sizeof(TPacketGCSyncPosition) + sizeof(elem);
 
 	buf.write(&pack, sizeof(pack));
 	buf.write(&elem, sizeof(elem));
@@ -6686,7 +6677,8 @@ void CHARACTER::ConfirmWithMsg(const char* szMsg, int iTimeout, DWORD dwRequestP
 
 	TPacketGCQuestConfirm p;
 
-	p.header = HEADER_GC_QUEST_CONFIRM;
+	p.header = GC::QUEST_CONFIRM;
+	p.length = sizeof(p);
 	p.requestPID = dwRequestPID;
 	p.timeout = iTimeout;
 	strlcpy(p.msg, szMsg, sizeof(p.msg));
@@ -6759,7 +6751,8 @@ bool CHARACTER::WarpToPID(DWORD dwPID)
 			}
 
 			TPacketGGFindPosition p;
-			p.header = HEADER_GG_FIND_POSITION;
+			p.header = GG::FIND_POSITION;
+			p.length = sizeof(p);
 			p.dwFromPID = GetPlayerID();
 			p.dwTargetPID = dwPID;
 			pcci->pkDesc->Packet(&p, sizeof(TPacketGGFindPosition));
@@ -6894,24 +6887,14 @@ bool CHARACTER::IsHack(bool bSendMsg, bool bCheckShopOwner, int limittime)
 	return false;
 }
 
-BOOL CHARACTER::IsMonarch() const
-{
-	//MONARCH_LIMIT
-	if (CMonarch::instance().IsMonarch(GetPlayerID(), GetEmpire()))
-		return true;
-
-	return false;
-
-	//END_MONARCH_LIMIT
-}
 void CHARACTER::Say(const std::string & s)
 {
 	struct ::packet_script packet_script;
 
-	packet_script.header = HEADER_GC_SCRIPT;
+	packet_script.header = GC::SCRIPT;
 	packet_script.skin = 1;
 	packet_script.src_size = s.size();
-	packet_script.size = packet_script.src_size + sizeof(struct packet_script);
+	packet_script.length = packet_script.src_size + sizeof(struct packet_script);
 	
 	TEMP_BUFFER buf;
 
@@ -6922,72 +6905,6 @@ void CHARACTER::Say(const std::string & s)
 	{
 		GetDesc()->Packet(buf.read_peek(), buf.size());
 	}
-}
-
-//
-// Monarch
-//
-void CHARACTER::InitMC()
-{
-	for (int n = 0; n < MI_MAX; ++n)
-	{
-		m_dwMonarchCooltime[n] = thecore_pulse(); 
-	}
-
-	m_dwMonarchCooltimelimit[MI_HEAL] = PASSES_PER_SEC(MC_HEAL);
-	m_dwMonarchCooltimelimit[MI_WARP] = PASSES_PER_SEC(MC_WARP);
-	m_dwMonarchCooltimelimit[MI_TRANSFER] = PASSES_PER_SEC(MC_TRANSFER);
-	m_dwMonarchCooltimelimit[MI_TAX] = PASSES_PER_SEC(MC_TAX);
-	m_dwMonarchCooltimelimit[MI_SUMMON] = PASSES_PER_SEC(MC_SUMMON);
-
-	m_dwMonarchCooltime[MI_HEAL] -= PASSES_PER_SEC(GetMCL(MI_HEAL));
-	m_dwMonarchCooltime[MI_WARP] -= PASSES_PER_SEC(GetMCL(MI_WARP));
-	m_dwMonarchCooltime[MI_TRANSFER] -= PASSES_PER_SEC(GetMCL(MI_TRANSFER));
-	m_dwMonarchCooltime[MI_TAX] -= PASSES_PER_SEC(GetMCL(MI_TAX));
-	m_dwMonarchCooltime[MI_SUMMON] -= PASSES_PER_SEC(GetMCL(MI_SUMMON));
-}
-
-DWORD CHARACTER::GetMC(enum MONARCH_INDEX e) const
-{
-	return m_dwMonarchCooltime[e];
-}
-
-void CHARACTER::SetMC(enum MONARCH_INDEX e)
-{
-	m_dwMonarchCooltime[e] = thecore_pulse();
-}
-
-bool CHARACTER::IsMCOK(enum MONARCH_INDEX e) const
-{
-	int iPulse = thecore_pulse();
-
-	if ((iPulse -  GetMC(e)) <  GetMCL(e))
-	{
-		if (test_server)
-			sys_log(0, " Pulse %d cooltime %d, limit %d", iPulse, GetMC(e), GetMCL(e));
-		
-		return false;
-	}
-	
-	if (test_server)
-		sys_log(0, " Pulse %d cooltime %d, limit %d", iPulse, GetMC(e), GetMCL(e));
-
-	return true;
-}
-
-DWORD CHARACTER::GetMCL(enum MONARCH_INDEX e) const
-{
-	return m_dwMonarchCooltimelimit[e];
-}
-
-DWORD CHARACTER::GetMCLTime(enum MONARCH_INDEX e) const
-{
-	int iPulse = thecore_pulse();
-
-	if (test_server)
-		sys_log(0, " Pulse %d cooltime %d, limit %d", iPulse, GetMC(e), GetMCL(e));
-
-	return  (GetMCL(e)) / passes_per_sec   -  (iPulse - GetMC(e)) / passes_per_sec;
 }
 
 bool CHARACTER::IsSiegeNPC() const
@@ -7222,9 +7139,9 @@ void CHARACTER::SendGuildName(CGuild* pGuild)
 	TPacketGCGuildName	pack;
 	memset(&pack, 0x00, sizeof(pack));
 
-	pack.header		= HEADER_GC_GUILD;
-	pack.subheader	= GUILD_SUBHEADER_GC_GUILD_NAME;
-	pack.size		= sizeof(TPacketGCGuildName);
+	pack.header		= GC::GUILD;
+	pack.subheader	= GuildSub::GC::GUILD_NAME;
+	pack.length		= sizeof(TPacketGCGuildName);
 	pack.guildID	= pGuild->GetID();
 	memcpy(pack.guildName, pGuild->GetName(), GUILD_NAME_MAX_LEN);
 

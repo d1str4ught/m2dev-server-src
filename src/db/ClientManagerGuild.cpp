@@ -1,4 +1,4 @@
-﻿// vim:ts=4 sw=4
+// vim:ts=4 sw=4
 #include "stdafx.h"
 #include "ClientManager.h"
 #include "Main.h"
@@ -11,7 +11,7 @@
 void CClientManager::GuildCreate(CPeer * peer, DWORD dwGuildID)
 {
 	sys_log(0, "GuildCreate %u", dwGuildID);
-	ForwardPacket(HEADER_DG_GUILD_LOAD, &dwGuildID, sizeof(DWORD));
+	ForwardPacket(DG::GUILD_LOAD, &dwGuildID, sizeof(DWORD));
 
 	CGuildManager::instance().Load(dwGuildID);
 }
@@ -19,7 +19,7 @@ void CClientManager::GuildCreate(CPeer * peer, DWORD dwGuildID)
 void CClientManager::GuildChangeGrade(CPeer* peer, TPacketGuild* p)
 {
 	sys_log(0, "GuildChangeGrade %u %u", p->dwGuild, p->dwInfo);
-	ForwardPacket(HEADER_DG_GUILD_CHANGE_GRADE, p, sizeof(TPacketGuild));
+	ForwardPacket(DG::GUILD_CHANGE_GRADE, p, sizeof(TPacketGuild));
 }
 
 void CClientManager::GuildAddMember(CPeer* peer, TPacketGDGuildAddMember * p)
@@ -62,7 +62,7 @@ void CClientManager::GuildAddMember(CPeer* peer, TPacketGDGuildAddMember * p)
 	str_to_number(dg.bJob, row[5]);
 	strlcpy(dg.szName, row[6], sizeof(dg.szName));
 
-	ForwardPacket(HEADER_DG_GUILD_ADD_MEMBER, &dg, sizeof(TPacketDGGuildMember));
+	ForwardPacket(DG::GUILD_ADD_MEMBER, &dg, sizeof(TPacketDGGuildMember));
 }
 
 void CClientManager::GuildRemoveMember(CPeer* peer, TPacketGuild* p)
@@ -76,25 +76,25 @@ void CClientManager::GuildRemoveMember(CPeer* peer, TPacketGuild* p)
 	snprintf(szQuery, sizeof(szQuery), "REPLACE INTO quest%s (dwPID, szName, szState, lValue) VALUES(%u, 'guild_manage', 'withdraw_time', %u)", GetTablePostfix(), p->dwInfo, (DWORD) GetCurrentTime());
 	CDBManager::instance().AsyncQuery(szQuery);
 
-	ForwardPacket(HEADER_DG_GUILD_REMOVE_MEMBER, p, sizeof(TPacketGuild));
+	ForwardPacket(DG::GUILD_REMOVE_MEMBER, p, sizeof(TPacketGuild));
 }
 
 void CClientManager::GuildSkillUpdate(CPeer* peer, TPacketGuildSkillUpdate* p)
 {
 	sys_log(0, "GuildSkillUpdate %d", p->amount);
-	ForwardPacket(HEADER_DG_GUILD_SKILL_UPDATE, p, sizeof(TPacketGuildSkillUpdate));
+	ForwardPacket(DG::GUILD_SKILL_UPDATE, p, sizeof(TPacketGuildSkillUpdate));
 }
 
 void CClientManager::GuildExpUpdate(CPeer* peer, TPacketGuildExpUpdate* p)
 {
 	sys_log(0, "GuildExpUpdate %d", p->amount);
-	ForwardPacket(HEADER_DG_GUILD_EXP_UPDATE, p, sizeof(TPacketGuildExpUpdate), 0, peer);
+	ForwardPacket(DG::GUILD_EXP_UPDATE, p, sizeof(TPacketGuildExpUpdate), 0, peer);
 }
 
 void CClientManager::GuildChangeMemberData(CPeer* peer, TPacketGuildChangeMemberData* p)
 {
 	sys_log(0, "GuildChangeMemberData %u %u %d %d", p->pid, p->offer, p->level, p->grade);
-	ForwardPacket(HEADER_DG_GUILD_CHANGE_MEMBER_DATA, p, sizeof(TPacketGuildChangeMemberData), 0, peer);
+	ForwardPacket(DG::GUILD_CHANGE_MEMBER_DATA, p, sizeof(TPacketGuildChangeMemberData), 0, peer);
 }
 
 void CClientManager::GuildDisband(CPeer* peer, TPacketGuild* p)
@@ -118,7 +118,7 @@ void CClientManager::GuildDisband(CPeer* peer, TPacketGuild* p)
 	snprintf(szQuery, sizeof(szQuery), "DELETE FROM guild_comment%s WHERE guild_id=%u", GetTablePostfix(), p->dwGuild);
 	CDBManager::instance().AsyncQuery(szQuery);
 
-	ForwardPacket(HEADER_DG_GUILD_DISBAND, p, sizeof(TPacketGuild));
+	ForwardPacket(DG::GUILD_DISBAND, p, sizeof(TPacketGuild));
 }
 
 const char* __GetWarType(int n)
@@ -195,7 +195,7 @@ void CClientManager::GuildWar(CPeer* peer, TPacketGuildWar* p)
 			break;
 	}
 
-	ForwardPacket(HEADER_DG_GUILD_WAR, p, sizeof(TPacketGuildWar));
+	ForwardPacket(DG::GUILD_WAR, p, sizeof(TPacketGuildWar));
 }
 
 void CClientManager::GuildWarScore(CPeer* peer, TPacketGuildWarScore * p)
@@ -226,7 +226,7 @@ void CClientManager::SendGuildSkillUsable(DWORD guild_id, DWORD dwSkillVnum, boo
 	p.dwSkillVnum = dwSkillVnum;
 	p.bUsable = bUsable;
 
-	ForwardPacket(HEADER_DG_GUILD_SKILL_USABLE_CHANGE, &p, sizeof(TPacketGuildSkillUsableChange));
+	ForwardPacket(DG::GUILD_SKILL_USABLE_CHANGE, &p, sizeof(TPacketGuildSkillUsableChange));
 }
 
 void CClientManager::GuildChangeMaster(TPacketChangeGuildMaster* p)
@@ -238,7 +238,7 @@ void CClientManager::GuildChangeMaster(TPacketChangeGuildMaster* p)
 		packet.idFrom = 0;
 		packet.idTo = 0;
 
-		ForwardPacket(HEADER_DG_ACK_CHANGE_GUILD_MASTER, &packet, sizeof(packet));
+		ForwardPacket(DG::ACK_CHANGE_GUILD_MASTER, &packet, sizeof(packet));
 	}
 }
 

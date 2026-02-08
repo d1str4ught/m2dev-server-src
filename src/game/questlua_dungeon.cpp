@@ -1,4 +1,4 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "constants.h"
 #include "questmanager.h"
 #include "questlua.h"
@@ -7,7 +7,7 @@
 #include "party.h"
 #include "buffer_manager.h"
 #include "char_manager.h"
-#include "packet.h"
+#include "packet_structs.h"
 #include "desc_client.h"
 #include "desc_manager.h"
 
@@ -1268,10 +1268,10 @@ namespace quest
 					{
 						if(ch->CountSpecifyItem(it->first) >= it->second)
 						{
-							packet_script.header = HEADER_GC_SCRIPT;
+							packet_script.header = GC::SCRIPT;
 							packet_script.skin = quest::CQuestManager::QUEST_SKIN_NORMAL;
 							packet_script.src_size = can_enter_ment.size();
-							packet_script.size = packet_script.src_size + sizeof(struct packet_script);
+							packet_script.length = packet_script.src_size + sizeof(struct packet_script);
 
 							buf.write(&packet_script, sizeof(struct packet_script));
 							buf.write(&can_enter_ment[0], can_enter_ment.size());
@@ -1280,10 +1280,10 @@ namespace quest
 						}
 					}
 
-					packet_script.header = HEADER_GC_SCRIPT;
+					packet_script.header = GC::SCRIPT;
 					packet_script.skin = quest::CQuestManager::QUEST_SKIN_NORMAL;
 					packet_script.src_size = cant_enter_ment.size();
-					packet_script.size = packet_script.src_size + sizeof(struct packet_script);
+					packet_script.length = packet_script.src_size + sizeof(struct packet_script);
 
 					buf.write(&packet_script, sizeof(struct packet_script));
 					buf.write(&cant_enter_ment[0], cant_enter_ment.size());

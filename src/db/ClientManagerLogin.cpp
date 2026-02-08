@@ -1,4 +1,4 @@
-﻿
+
 #include "stdafx.h"
 
 #include "ClientManager.h"
@@ -87,7 +87,7 @@ void CClientManager::QUERY_LOGIN_BY_KEY(CPeer * pkPeer, DWORD dwHandle, TPacketG
 	if (!pkLoginData)
 	{
 		sys_log(0, "LOGIN_BY_KEY key not exist %s %lu", szLogin, p->dwLoginKey);
-		pkPeer->EncodeReturn(HEADER_DG_LOGIN_NOT_EXIST, dwHandle);
+		pkPeer->EncodeReturn(DG::LOGIN_NOT_EXIST, dwHandle);
 		return;
 	}
 
@@ -98,7 +98,7 @@ void CClientManager::QUERY_LOGIN_BY_KEY(CPeer * pkPeer, DWORD dwHandle, TPacketG
 		sys_log(0, "LOGIN_BY_KEY already login %s %lu", r.login, p->dwLoginKey);
 		TPacketDGLoginAlready ptog;
 		strlcpy(ptog.szLogin, r.login, sizeof(ptog.szLogin));
-		pkPeer->EncodeHeader(HEADER_DG_LOGIN_ALREADY, dwHandle, sizeof(TPacketDGLoginAlready));
+		pkPeer->EncodeHeader(DG::LOGIN_ALREADY, dwHandle, sizeof(TPacketDGLoginAlready));
 		pkPeer->Encode(&ptog, sizeof(TPacketDGLoginAlready));
 		return;
 	}
@@ -106,7 +106,7 @@ void CClientManager::QUERY_LOGIN_BY_KEY(CPeer * pkPeer, DWORD dwHandle, TPacketG
 	if (strcasecmp(r.login, szLogin))
 	{
 		sys_log(0, "LOGIN_BY_KEY login differ %s %lu input %s", r.login, p->dwLoginKey, szLogin);
-		pkPeer->EncodeReturn(HEADER_DG_LOGIN_NOT_EXIST, dwHandle);
+		pkPeer->EncodeReturn(DG::LOGIN_NOT_EXIST, dwHandle);
 		return;
 	}
 
@@ -136,7 +136,7 @@ void CClientManager::RESULT_LOGIN_BY_KEY(CPeer * peer, SQLMsg * msg)
 
 	if (msg->uiSQLErrno != 0)
 	{
-		peer->EncodeReturn(HEADER_DG_LOGIN_NOT_EXIST, info->dwHandle);
+		peer->EncodeReturn(DG::LOGIN_NOT_EXIST, info->dwHandle);
 		delete info;
 		return;
 	}
@@ -345,7 +345,7 @@ void CClientManager::RESULT_LOGIN(CPeer * peer, SQLMsg * msg)
 		if (msg->Get()->uiNumRows == 0)
 		{
 			sys_log(0, "RESULT_LOGIN: no account");
-			peer->EncodeHeader(HEADER_DG_LOGIN_NOT_EXIST, info->dwHandle, 0);
+			peer->EncodeHeader(DG::LOGIN_NOT_EXIST, info->dwHandle, 0);
 			delete info;
 			return;
 		}
@@ -355,7 +355,7 @@ void CClientManager::RESULT_LOGIN(CPeer * peer, SQLMsg * msg)
 		if (!info->pAccountTable)
 		{
 			sys_log(0, "RESULT_LOGIN: no account : WRONG_PASSWD");
-			peer->EncodeReturn(HEADER_DG_LOGIN_WRONG_PASSWD, info->dwHandle);
+			peer->EncodeReturn(DG::LOGIN_WRONG_PASSWD, info->dwHandle);
 			delete info;
 		}
 		else
@@ -385,7 +385,7 @@ void CClientManager::RESULT_LOGIN(CPeer * peer, SQLMsg * msg)
 	{
 		if (!info->pAccountTable) // 이럴리는 없겠지만;;
 		{
-			peer->EncodeReturn(HEADER_DG_LOGIN_WRONG_PASSWD, info->dwHandle);
+			peer->EncodeReturn(DG::LOGIN_WRONG_PASSWD, info->dwHandle);
 			delete info;
 			return;
 		}
@@ -398,7 +398,7 @@ void CClientManager::RESULT_LOGIN(CPeer * peer, SQLMsg * msg)
 			TPacketDGLoginAlready p;
 			strlcpy(p.szLogin, info->pAccountTable->login, sizeof(p.szLogin));
 
-			peer->EncodeHeader(HEADER_DG_LOGIN_ALREADY, info->dwHandle, sizeof(TPacketDGLoginAlready));
+			peer->EncodeHeader(DG::LOGIN_ALREADY, info->dwHandle, sizeof(TPacketDGLoginAlready));
 			peer->Encode(&p, sizeof(p));
 		}
 		else
@@ -413,7 +413,7 @@ void CClientManager::RESULT_LOGIN(CPeer * peer, SQLMsg * msg)
 			memcpy(&p->GetAccountRef(), info->pAccountTable, sizeof(TAccountTable));
 
 			//END_PREVENT_COPY_ITEM
-			peer->EncodeHeader(HEADER_DG_LOGIN_SUCCESS, info->dwHandle, sizeof(TAccountTable));
+			peer->EncodeHeader(DG::LOGIN_SUCCESS, info->dwHandle, sizeof(TAccountTable));
 			peer->Encode(info->pAccountTable, sizeof(TAccountTable));
 
 		}
@@ -480,7 +480,7 @@ void CClientManager::QUERY_CHANGE_NAME(CPeer * peer, DWORD dwHandle, TPacketGDCh
 	{
 		if (!pMsg->Get()->pSQLResult)
 		{
-			peer->EncodeHeader(HEADER_DG_PLAYER_CREATE_FAILED, dwHandle, 0);
+			peer->EncodeHeader(DG::PLAYER_CREATE_FAILED, dwHandle, 0);
 			return;
 		}
 
@@ -488,13 +488,13 @@ void CClientManager::QUERY_CHANGE_NAME(CPeer * peer, DWORD dwHandle, TPacketGDCh
 
 		if (*row[0] != '0')
 		{
-			peer->EncodeHeader(HEADER_DG_PLAYER_CREATE_ALREADY, dwHandle, 0);
+			peer->EncodeHeader(DG::PLAYER_CREATE_ALREADY, dwHandle, 0);
 			return;
 		}
 	}   
 	else
 	{
-		peer->EncodeHeader(HEADER_DG_PLAYER_CREATE_FAILED, dwHandle, 0);
+		peer->EncodeHeader(DG::PLAYER_CREATE_FAILED, dwHandle, 0);
 		return;
 	}
 
@@ -504,7 +504,7 @@ void CClientManager::QUERY_CHANGE_NAME(CPeer * peer, DWORD dwHandle, TPacketGDCh
 	auto pMsg0 = CDBManager::instance().DirectQuery(queryStr, SQL_PLAYER);
 
 	TPacketDGChangeName pdg;
-	peer->EncodeHeader(HEADER_DG_CHANGE_NAME, dwHandle, sizeof(TPacketDGChangeName));
+	peer->EncodeHeader(DG::CHANGE_NAME, dwHandle, sizeof(TPacketDGChangeName));
 	pdg.pid = p->pid;
 	strlcpy(pdg.name, p->name, sizeof(pdg.name));
 	peer->Encode(&pdg, sizeof(TPacketDGChangeName));

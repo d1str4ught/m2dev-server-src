@@ -1,4 +1,4 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "PrivManager.h"
 #include "ClientManager.h"
 
@@ -194,7 +194,7 @@ struct FSendChangeGuildPriv
 
 	void operator() (CPeer* peer)
 	{
-		peer->EncodeHeader(HEADER_DG_CHANGE_GUILD_PRIV, 0, sizeof(TPacketDGChangeGuildPriv));
+		peer->EncodeHeader(DG::CHANGE_GUILD_PRIV, 0, sizeof(TPacketDGChangeGuildPriv));
 		peer->Encode(&p, sizeof(TPacketDGChangeGuildPriv));
 		p.bLog = 0;
 	}
@@ -217,7 +217,7 @@ struct FSendChangeEmpirePriv
 
 	void operator ()(CPeer* peer)
 	{
-		peer->EncodeHeader(HEADER_DG_CHANGE_EMPIRE_PRIV, 0, sizeof(TPacketDGChangeEmpirePriv));
+		peer->EncodeHeader(DG::CHANGE_EMPIRE_PRIV, 0, sizeof(TPacketDGChangeEmpirePriv));
 		peer->Encode(&p, sizeof(TPacketDGChangeEmpirePriv));
 		p.bLog = 0;
 	}
@@ -236,7 +236,7 @@ struct FSendChangeCharPriv
 	}
 	void operator()(CPeer* peer)
 	{
-		peer->EncodeHeader(HEADER_DG_CHANGE_CHARACTER_PRIV, 0, sizeof(TPacketDGChangeCharacterPriv));
+		peer->EncodeHeader(DG::CHANGE_CHARACTER_PRIV, 0, sizeof(TPacketDGChangeCharacterPriv));
 		peer->Encode(&p, sizeof(TPacketDGChangeCharacterPriv));
 		p.bLog = 0;
 	}

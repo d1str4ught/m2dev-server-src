@@ -18,8 +18,8 @@ class CLIENT_DESC : public DESC
 
 		void		SetRetryWhenClosed(bool);
 
-		void		DBPacketHeader(BYTE bHeader, DWORD dwHandle, DWORD dwSize);
-		void		DBPacket(BYTE bHeader, DWORD dwHandle, const void * c_pvData, DWORD dwSize);
+		void		DBPacketHeader(uint16_t wHeader, DWORD dwHandle, DWORD dwSize);
+		void		DBPacket(uint16_t wHeader, DWORD dwHandle, const void * c_pvData, DWORD dwSize);
 		void		Packet(const void * c_pvData, int iSize);
 		bool		IsRetryWhenClosed();
 

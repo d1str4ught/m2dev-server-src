@@ -1,4 +1,4 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "common/stl.h"
 
 #include "constants.h"
@@ -40,7 +40,8 @@ void P2P_MANAGER::Boot(LPDESC d)
 		LPCHARACTER ch = it->second;
 		it++;
 
-		p.bHeader = HEADER_GG_LOGIN;
+		p.header = GG::LOGIN;
+		p.length = sizeof(p);
 		strlcpy(p.szName, ch->GetName(), sizeof(p.szName));
 		p.dwPID = ch->GetPlayerID();
 		p.bEmpire = ch->GetEmpire();
@@ -83,7 +84,8 @@ void P2P_MANAGER::RegisterConnector(LPDESC d)
 	Boot(d);
 
 	TPacketGGSetup p;
-	p.bHeader = HEADER_GG_SETUP;
+	p.header = GG::SETUP;
+	p.length = sizeof(p);
 	p.wPort = p2p_port;
 	p.bChannel = g_bChannel;
 	d->Packet(&p, sizeof(p));

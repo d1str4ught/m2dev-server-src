@@ -37,14 +37,6 @@ public:
     void ComputeChallengeResponse(const uint8_t* challenge, uint8_t* out_response);
     bool VerifyChallengeResponse(const uint8_t* challenge, const uint8_t* response);
 
-    // AEAD encryption - output is len + TAG_SIZE bytes
-    // Returns actual ciphertext length (plaintext_len + TAG_SIZE)
-    size_t Encrypt(const void* plaintext, size_t plaintext_len, void* ciphertext);
-
-    // AEAD decryption - input must be ciphertext_len bytes (includes TAG_SIZE)
-    // Returns actual plaintext length, or 0 on failure
-    size_t Decrypt(const void* ciphertext, size_t ciphertext_len, void* plaintext);
-
     // In-place stream encryption for network buffers (XChaCha20, no tag overhead)
     // Same length in/out. Nonce counter prevents replay.
     void EncryptInPlace(void* buffer, size_t len);

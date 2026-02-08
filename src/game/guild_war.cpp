@@ -1,10 +1,10 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "constants.h"
 #include "utils.h"
 #include "config.h"
 #include "log.h"
 #include "char.h"
-#include "packet.h"
+#include "packet_structs.h"
 #include "desc_client.h"
 #include "buffer_manager.h"
 #include "char_manager.h"
@@ -30,9 +30,9 @@ void CGuild::GuildWarPacket(DWORD dwOppGID, BYTE bWarType, BYTE bWarState)
 	TPacketGCGuild pack;
 	TPacketGCGuildWar pack2;
 
-	pack.header		= HEADER_GC_GUILD;
-	pack.subheader	= GUILD_SUBHEADER_GC_WAR;
-	pack.size		= sizeof(pack) + sizeof(pack2);
+	pack.header		= GC::GUILD;
+	pack.subheader	= GuildSub::GC::WAR;
+	pack.length		= sizeof(pack) + sizeof(pack2);
 	pack2.dwGuildSelf	= GetID();
 	pack2.dwGuildOpp	= dwOppGID;
 	pack2.bWarState	= bWarState;
@@ -66,15 +66,15 @@ void CGuild::SendEnemyGuild(LPCHARACTER ch)
 
 	TPacketGCGuild pack;
 	TPacketGCGuildWar pack2;
-	pack.header = HEADER_GC_GUILD;
-	pack.subheader = GUILD_SUBHEADER_GC_WAR;
-	pack.size = sizeof(pack) + sizeof(pack2);
+	pack.header = GC::GUILD;
+	pack.subheader = GuildSub::GC::WAR;
+	pack.length = sizeof(pack) + sizeof(pack2);
 	pack2.dwGuildSelf = GetID();
 
 	TPacketGCGuild p;
-	p.header = HEADER_GC_GUILD;
-	p.subheader = GUILD_SUBHEADER_GC_WAR_SCORE;
-	p.size = sizeof(p) + sizeof(DWORD) + sizeof(DWORD) + sizeof(long);
+	p.header = GC::GUILD;
+	p.subheader = GuildSub::GC::WAR_SCORE;
+	p.length = sizeof(p) + sizeof(DWORD) + sizeof(DWORD) + sizeof(long);
 
 	for (itertype(m_EnemyGuild) it = m_EnemyGuild.begin(); it != m_EnemyGuild.end(); ++it)
 	{
@@ -199,9 +199,9 @@ void CGuild::SetWarScoreAgainstTo(DWORD dwOppGID, int iScore)
 		{
 			TPacketGCGuild p;
 
-			p.header = HEADER_GC_GUILD;
-			p.subheader = GUILD_SUBHEADER_GC_WAR_SCORE;
-			p.size = sizeof(p) + sizeof(DWORD) + sizeof(DWORD) + sizeof(long);
+			p.header = GC::GUILD;
+			p.subheader = GuildSub::GC::WAR_SCORE;
+			p.length = sizeof(p) + sizeof(DWORD) + sizeof(DWORD) + sizeof(long);
 
 			TEMP_BUFFER buf;
 			buf.write(&p, sizeof(p));
@@ -323,7 +323,7 @@ void CGuild::RequestDeclareWar(DWORD dwOppGID, BYTE type)
 		p.bWar = GUILD_WAR_SEND_DECLARE;
 		p.dwGuildFrom = GetID();
 		p.dwGuildTo = dwOppGID;
-		db_clientdesc->DBPacket(HEADER_GD_GUILD_WAR, 0, &p, sizeof(p));
+		db_clientdesc->DBPacket(GD::GUILD_WAR, 0, &p, sizeof(p));
 		sys_log(0, "GuildWar.DeclareWar id(%d -> %d), type(%d)", GetID(), dwOppGID, type);
 		return;
 	}
@@ -342,7 +342,7 @@ void CGuild::RequestDeclareWar(DWORD dwOppGID, BYTE type)
 					p.bWar = GUILD_WAR_ON_WAR;
 					p.dwGuildFrom = GetID();
 					p.dwGuildTo = dwOppGID;
-					db_clientdesc->DBPacket(HEADER_GD_GUILD_WAR, 0, &p, sizeof(p));
+					db_clientdesc->DBPacket(GD::GUILD_WAR, 0, &p, sizeof(p));
 					sys_log(0, "GuildWar.AcceptWar id(%d -> %d), type(%d)", GetID(), dwOppGID, saved_type);
 					return;
 				}
@@ -370,7 +370,7 @@ void CGuild::RequestDeclareWar(DWORD dwOppGID, BYTE type)
 				if (test_server) 
 					p.lInitialScore /= 10;
 
-				db_clientdesc->DBPacket(HEADER_GD_GUILD_WAR, 0, &p, sizeof(p));
+				db_clientdesc->DBPacket(GD::GUILD_WAR, 0, &p, sizeof(p));
 
 				sys_log(0, "GuildWar.WaitStartSendToDB id(%d vs %d), type(%d), bet(%d), map_index(%d)", 
 						GetID(), dwOppGID, saved_type, guildWarInfo.iWarPrice, guildWarInfo.lMapIndex);
@@ -526,7 +526,8 @@ bool CGuild::WaitStartWar(DWORD dwOppGID)
 	///////////////////////////////////////////////////////
 	TPacketGGGuildWarMapIndex p;
 
-	p.bHeader	= HEADER_GG_GUILD_WAR_ZONE_MAP_INDEX;
+	p.header	= GG::GUILD_WAR_ZONE_MAP_INDEX;
+	p.length	= sizeof(p);
 	p.dwGuildID1	= id1;
 	p.dwGuildID2 	= id2;
 	p.lMapIndex	= lMapIndex;
@@ -552,7 +553,7 @@ void CGuild::RequestRefuseWar(DWORD dwOppGID)
 		p.dwGuildFrom = GetID();
 		p.dwGuildTo = dwOppGID;
 
-		db_clientdesc->DBPacket(HEADER_GD_GUILD_WAR, 0, &p, sizeof(p));
+		db_clientdesc->DBPacket(GD::GUILD_WAR, 0, &p, sizeof(p));
 	}
 }
 
@@ -742,7 +743,7 @@ void CGuild::ChangeLadderPoint(int iChange)
 	TPacketGuildLadderPoint p;
 	p.dwGuild = GetID();
 	p.lChange = iChange;
-	db_clientdesc->DBPacket(HEADER_GD_GUILD_CHANGE_LADDER_POINT, 0, &p, sizeof(p));
+	db_clientdesc->DBPacket(GD::GUILD_CHANGE_LADDER_POINT, 0, &p, sizeof(p));
 }
 
 

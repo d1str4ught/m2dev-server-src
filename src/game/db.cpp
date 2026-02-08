@@ -1,4 +1,4 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include <sstream>
 #include "common/length.h"
 
@@ -177,7 +177,7 @@ void DBManager::SendLoginPing(const char * c_pszLogin)
 {
 	TPacketGGLoginPing ptog;
 
-	ptog.bHeader = HEADER_GG_LOGIN_PING;
+	ptog.header = GG::LOGIN_PING; ptog.length = sizeof(ptog);
 	strlcpy(ptog.szLogin, c_pszLogin, sizeof(ptog.szLogin));
 
 	if (!g_pkAuthMasterDesc)  // If I am master, broadcast to others
@@ -208,7 +208,7 @@ void DBManager::SendAuthLogin(LPDESC d)
 
 	thecore_memcpy(ptod.iPremiumTimes, pkLD->GetPremiumPtr(), sizeof(ptod.iPremiumTimes));
 
-	db_clientdesc->DBPacket(HEADER_GD_AUTH_LOGIN, d->GetHandle(), &ptod, sizeof(TPacketGDAuthLogin));
+	db_clientdesc->DBPacket(GD::AUTH_LOGIN, d->GetHandle(), &ptod, sizeof(TPacketGDAuthLogin));
 	sys_log(0, "SendAuthLogin %s key %u", ptod.szLogin, ptod.dwID);
 
 	SendLoginPing(r.login);
@@ -545,7 +545,7 @@ void DBManager::SendMoneyLog(BYTE type, DWORD vnum, int gold)
 	p.type = type;
 	p.vnum = vnum;
 	p.gold = gold;
-	db_clientdesc->DBPacket(HEADER_GD_MONEY_LOG, 0, &p, sizeof(p));
+	db_clientdesc->DBPacket(GD::MONEY_LOG, 0, &p, sizeof(p));
 }
 
 size_t DBManager::EscapeString(char* dst, size_t dstSize, const char *src, size_t srcSize)

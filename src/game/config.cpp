@@ -31,11 +31,6 @@ int		ping_event_second_cycle = passes_per_sec * 60;
 bool	g_bNoMoreClient = false;
 bool	g_bNoRegen = false;
 
-// TRAFFIC_PROFILER
-bool		g_bTrafficProfileOn = false;
-DWORD		g_dwTrafficProfileFlushCycle = 3600;
-// END_OF_TRAFFIC_PROFILER
-
 int			test_server = 0;
 bool		china_event_server = false;
 bool		guild_mark_server = true;
@@ -106,6 +101,14 @@ bool		g_bCheckMultiHack = true;
 
 int			g_iSpamBlockMaxLevel = 10;
 
+int			g_iFloodMaxPacketsPerSec = 300;
+int			g_iFloodMaxConnectionsPerIP = 10;
+int			g_iFloodMaxGlobalConnections = 8192;
+
+bool		g_bFirewallEnable = false;
+int			g_iFirewallTcpSynLimit = 500;
+int			g_iFirewallTcpSynBurst = 1000;
+
 void		LoadStateUserCount();
 void		LoadValidCRCList();
 bool		LoadClientVersion();
@@ -117,11 +120,11 @@ bool g_BlockCharCreation = false;
 
 bool is_string_true(const char * string)
 {
-	bool	result = 0;
+	int	result = 0;
 	if (isnhdigit(*string))
 	{
 		str_to_number(result, string);
-		return result > 0 ? true : false;
+		return result > 0;
 	}
 	else if (LOWER(*string) == 't')
 		return true;
@@ -603,12 +606,6 @@ void config_init(const string& st_localeServiceName)
 			continue;
 		}
 
-		TOKEN("traffic_profile")
-		{
-			g_bTrafficProfileOn = true;
-			continue;
-		}
-
 		TOKEN("no_wander")
 		{
 			no_wander = true;
@@ -705,6 +702,42 @@ void config_init(const string& st_localeServiceName)
 		{
 			str_to_number(g_iSpamBlockMaxLevel, value_string);
 		}
+
+		TOKEN("flood_max_packets_per_sec")
+		{
+			str_to_number(g_iFloodMaxPacketsPerSec, value_string);
+			g_iFloodMaxPacketsPerSec = MAX(50, g_iFloodMaxPacketsPerSec);
+		}
+
+		TOKEN("flood_max_connections_per_ip")
+		{
+			str_to_number(g_iFloodMaxConnectionsPerIP, value_string);
+			g_iFloodMaxConnectionsPerIP = MAX(1, g_iFloodMaxConnectionsPerIP);
+		}
+
+		TOKEN("flood_max_global_connections")
+		{
+			str_to_number(g_iFloodMaxGlobalConnections, value_string);
+			g_iFloodMaxGlobalConnections = MAX(64, g_iFloodMaxGlobalConnections);
+		}
+
+		TOKEN("firewall_enable")
+		{
+			str_to_number(g_bFirewallEnable, value_string);
+		}
+
+		TOKEN("firewall_tcp_syn_limit")
+		{
+			str_to_number(g_iFirewallTcpSynLimit, value_string);
+			g_iFirewallTcpSynLimit = MAX(10, g_iFirewallTcpSynLimit);
+		}
+
+		TOKEN("firewall_tcp_syn_burst")
+		{
+			str_to_number(g_iFirewallTcpSynBurst, value_string);
+			g_iFirewallTcpSynBurst = MAX(10, g_iFirewallTcpSynBurst);
+		}
+
 		TOKEN("protect_normal_player")
 		{
 			str_to_number(g_protectNormalPlayer, value_string);
@@ -1199,14 +1232,7 @@ bool LoadClientVersion()
 
 void CheckClientVersion()
 {
-	if (LC_IsEurope())
-	{
-		g_bCheckClientVersion = true;
-	}
-	else
-	{
-		g_bCheckClientVersion = false;
-	}
+	g_bCheckClientVersion = true;
 
 	const DESC_MANAGER::DESC_SET & set = DESC_MANAGER::instance().GetClientSet();
 	DESC_MANAGER::DESC_SET::const_iterator it = set.begin();

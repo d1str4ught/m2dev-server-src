@@ -1,4 +1,4 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "Marriage.h"
 #include "Main.h"
 #include "DBManager.h"
@@ -123,7 +123,7 @@ namespace marriage
 		p.tMarryTime = now;
 		strlcpy(p.szName1, szName1, sizeof(p.szName1));
 		strlcpy(p.szName2, szName2, sizeof(p.szName2));
-		CClientManager::instance().ForwardPacket(HEADER_DG_MARRIAGE_ADD, &p, sizeof(p));
+		CClientManager::instance().ForwardPacket(DG::MARRIAGE_ADD, &p, sizeof(p));
 	}
 
 	void CManager::Update(DWORD dwPID1, DWORD dwPID2, INT iLovePoint, BYTE byMarried)
@@ -159,7 +159,7 @@ namespace marriage
 		p.dwPID2 = dwPID2;
 		p.iLovePoint = pMarriage->love_point;
 		p.byMarried = pMarriage->is_married;
-		CClientManager::instance().ForwardPacket(HEADER_DG_MARRIAGE_UPDATE, &p, sizeof(p));
+		CClientManager::instance().ForwardPacket(DG::MARRIAGE_UPDATE, &p, sizeof(p));
 	}
 
 	void CManager::Remove(DWORD dwPID1, DWORD dwPID2)
@@ -205,7 +205,7 @@ namespace marriage
 		TPacketMarriageRemove p;
 		p.dwPID1 = dwPID1;
 		p.dwPID2 = dwPID2;
-		CClientManager::instance().ForwardPacket(HEADER_DG_MARRIAGE_REMOVE, &p, sizeof(p));
+		CClientManager::instance().ForwardPacket(DG::MARRIAGE_REMOVE, &p, sizeof(p));
 
 		delete pMarriage;
 	}
@@ -248,7 +248,7 @@ namespace marriage
 		p.dwPID2 = dwPID2;
 		p.iLovePoint = pMarriage->love_point;
 		p.byMarried = pMarriage->is_married;
-		CClientManager::instance().ForwardPacket(HEADER_DG_MARRIAGE_UPDATE, &p, sizeof(p));
+		CClientManager::instance().ForwardPacket(DG::MARRIAGE_UPDATE, &p, sizeof(p));
 	}
 
 	void CManager::OnSetup(CPeer* peer)
@@ -265,7 +265,7 @@ namespace marriage
 				p.tMarryTime = pMarriage->time;
 				strlcpy(p.szName1, pMarriage->name1.c_str(), sizeof(p.szName1));
 				strlcpy(p.szName2, pMarriage->name2.c_str(), sizeof(p.szName2));
-				peer->EncodeHeader(HEADER_DG_MARRIAGE_ADD, 0, sizeof(p));
+				peer->EncodeHeader(DG::MARRIAGE_ADD, 0, sizeof(p));
 				peer->Encode(&p, sizeof(p));
 			}
 
@@ -275,7 +275,7 @@ namespace marriage
 				p.dwPID2 = pMarriage->pid2;
 				p.iLovePoint = pMarriage->love_point;
 				p.byMarried	= pMarriage->is_married;
-				peer->EncodeHeader(HEADER_DG_MARRIAGE_UPDATE, 0, sizeof(p));
+				peer->EncodeHeader(DG::MARRIAGE_UPDATE, 0, sizeof(p));
 				peer->Encode(&p, sizeof(p));
 			}
 		}
@@ -290,14 +290,14 @@ namespace marriage
 			p.dwPID2 = t.dwPID2;
 			p.dwMapIndex = t.dwMapIndex;
 
-			peer->EncodeHeader(HEADER_DG_WEDDING_READY, 0, sizeof(p));
+			peer->EncodeHeader(DG::WEDDING_READY, 0, sizeof(p));
 			peer->Encode(&p, sizeof(p));
 
 			TPacketWeddingStart p2;
 			p2.dwPID1 = t.dwPID1;
 			p2.dwPID2 = t.dwPID2;
 
-			peer->EncodeHeader(HEADER_DG_WEDDING_START, 0, sizeof(p2));
+			peer->EncodeHeader(DG::WEDDING_START, 0, sizeof(p2));
 			peer->Encode(&p2, sizeof(p2));
 		}
 	}
@@ -322,7 +322,7 @@ namespace marriage
 		TPacketWeddingEnd p;
 		p.dwPID1 = w.dwPID1;
 		p.dwPID2 = w.dwPID2;
-		CClientManager::instance().ForwardPacket(HEADER_DG_WEDDING_END, &p, sizeof(p));
+		CClientManager::instance().ForwardPacket(DG::WEDDING_END, &p, sizeof(p));
 		m_mapRunningWedding.erase(it);
 	}
 
@@ -347,7 +347,7 @@ namespace marriage
 				TPacketWeddingEnd p;
 				p.dwPID1 = w.dwPID1;
 				p.dwPID2 = w.dwPID2;
-				CClientManager::instance().ForwardPacket(HEADER_DG_WEDDING_END, &p, sizeof(p));
+				CClientManager::instance().ForwardPacket(DG::WEDDING_END, &p, sizeof(p));
 
 				itertype(m_MarriageByPID) it_marriage = m_MarriageByPID.find(w.dwPID1);
 
@@ -371,7 +371,7 @@ namespace marriage
 				TPacketWeddingStart p;
 				p.dwPID1 = w.dwPID1;
 				p.dwPID2 = w.dwPID2;
-				CClientManager::instance().ForwardPacket(HEADER_DG_WEDDING_START, &p, sizeof(p));
+				CClientManager::instance().ForwardPacket(DG::WEDDING_START, &p, sizeof(p));
 
 				w.dwTime += WEDDING_LENGTH;
 				m_pqWeddingEnd.push(TWeddingInfo(w.dwTime, w.dwPID1, w.dwPID2));

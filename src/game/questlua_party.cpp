@@ -1,4 +1,4 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include <sstream>
 
 #include "desc.h"
@@ -6,7 +6,7 @@
 #include "char.h"
 #include "questlua.h"
 #include "questmanager.h"
-#include "packet.h"
+#include "packet_structs.h"
 
 #undef sys_err
 #define sys_err(fmt, ...) quest::CQuestManager::instance().QuestError(std::source_location::current(), fmt __VA_OPT__(, __VA_ARGS__))
@@ -53,11 +53,11 @@ namespace quest
             data += str;
             data += "]";
 
-            pack.header = HEADER_GC_SCRIPT;
+            pack.header = GC::SCRIPT;
             pack.skin = CQuestManager::QUEST_SKIN_CINEMATIC;
             //pack.skin = CQuestManager::QUEST_SKIN_NOWINDOW;
             pack.src_size = data.size();
-            pack.size = pack.src_size + sizeof(struct packet_script);
+            pack.length = pack.src_size + sizeof(struct packet_script);
         }
 
         void operator()(LPCHARACTER ch)
@@ -103,10 +103,10 @@ namespace quest
 		{
 			len = strlen(str);
 
-			packet_script.header = HEADER_GC_SCRIPT;
+			packet_script.header = GC::SCRIPT;
 			packet_script.skin = CQuestManager::QUEST_SKIN_CINEMATIC;
 			packet_script.src_size = len;
-			packet_script.size = packet_script.src_size + sizeof(struct packet_script);
+			packet_script.length = packet_script.src_size + sizeof(struct packet_script);
 		}
 
 		void operator()(LPCHARACTER ch)

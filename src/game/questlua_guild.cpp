@@ -1,4 +1,4 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 
 #include "questlua.h"
 #include "questmanager.h"
@@ -194,7 +194,7 @@ namespace quest
 		sys_log(0, "GUILD_WAR_BET: %s login %s war_id %u guild %u gold %u", 
 				ch->GetName(), p.szLogin, p.dwWarID, p.dwGuild, p.dwGold);
 
-		db_clientdesc->DBPacket(HEADER_GD_GUILD_WAR_BET, 0, &p, sizeof(p));
+		db_clientdesc->DBPacket(GD::GUILD_WAR_BET, 0, &p, sizeof(p));
 		return 0;
 	}
 
@@ -386,7 +386,7 @@ namespace quest
 							int nBeOtherLeader = pNewMaster->GetQuestFlag("change_guild_master.be_other_leader");
 							CQuestManager::instance().GetPC( ch->GetPlayerID() );
 
-							if ( lua_toboolean(L, 6) == true ) nBeOtherLeader = 0;
+							if (lua_toboolean(L, 6)) nBeOtherLeader = 0;
 
 							if ( nBeOtherLeader > get_global_time() )
 							{

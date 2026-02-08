@@ -76,31 +76,6 @@ void DESC_MANAGER::Destroy()
 	Initialize();
 }
 
-DWORD DESC_MANAGER::CreateHandshake()
-{
-	char crc_buf[8];
-	crc_t crc;
-	DESC_HANDSHAKE_MAP::iterator it;
-
-RETRY:
-	do
-	{
-		DWORD val = number(0, (1024 * 1024));
-
-		*(DWORD *) (crc_buf    ) = val;
-		*((DWORD *) crc_buf + 1) = get_global_time();
-
-		crc = GetCRC32(crc_buf, 8);
-		it = m_map_handshake.find(crc);
-	}
-	while (it != m_map_handshake.end());
-
-	if (crc == 0)
-		goto RETRY;
-
-	return (crc);
-}
-
 LPDESC DESC_MANAGER::AcceptDesc(LPFDWATCH fdw, socket_t s)
 {
 	socket_t                    desc;
@@ -113,21 +88,45 @@ LPDESC DESC_MANAGER::AcceptDesc(LPFDWATCH fdw, socket_t s)
 
 	strlcpy(host, inet_ntoa(peer.sin_addr), sizeof(host));
 
-	newd = M2_NEW DESC;
-	crc_t handshake = CreateHandshake();
+	// Global connection limit
+	extern int g_iFloodMaxGlobalConnections;
+	if (m_iSocketsConnected >= g_iFloodMaxGlobalConnections)
+	{
+		sys_log(0, "FLOOD: rejecting connection from %s (global limit %d/%d reached)",
+			host, m_iSocketsConnected, g_iFloodMaxGlobalConnections);
+		socket_close(desc);
+		return NULL;
+	}
 
-	if (!newd->Setup(fdw, desc, peer, ++m_iHandleCount, handshake))
+	// Per-IP connection limit
+	extern int g_iFloodMaxConnectionsPerIP;
+	auto itIP = m_map_ipConnCount.find(host);
+	if (itIP != m_map_ipConnCount.end() && itIP->second >= g_iFloodMaxConnectionsPerIP)
+	{
+		sys_log(0, "FLOOD: rejecting connection from %s (%d/%d connections)",
+			host, itIP->second, g_iFloodMaxConnectionsPerIP);
+		socket_close(desc);
+		return NULL;
+	}
+
+	newd = M2_NEW DESC;
+
+	if (!newd->Setup(fdw, desc, peer, ++m_iHandleCount))
 	{
 		socket_close(desc);
 		M2_DELETE(newd);
 		return NULL;
 	}
 
-	m_map_handshake.insert(DESC_HANDSHAKE_MAP::value_type(handshake, newd));
 	m_map_handle.insert(DESC_HANDLE_MAP::value_type(newd->GetHandle(), newd));
 
 	m_set_pkDesc.insert(newd);
 	++m_iSocketsConnected;
+
+	// Track per-IP count
+	++m_map_ipConnCount[host];
+	newd->SetIPCountTracked(true);
+
 	return (newd);
 }
 
@@ -177,13 +176,21 @@ void DESC_MANAGER::DestroyDesc(LPDESC d, bool bEraseFromSet)
 	if (bEraseFromSet)
 		m_set_pkDesc.erase(d);
 
-	if (d->GetHandshake())
-		m_map_handshake.erase(d->GetHandshake());
-
 	if (d->GetHandle() != 0)
 		m_map_handle.erase(d->GetHandle());
 	else
 		m_set_pkClientDesc.erase((LPCLIENT_DESC) d);
+
+	// Decrement per-IP connection count (before Destroy invalidates state)
+	if (d->IsIPCountTracked())
+	{
+		auto it = m_map_ipConnCount.find(d->GetHostName());
+		if (it != m_map_ipConnCount.end())
+		{
+			if (--it->second <= 0)
+				m_map_ipConnCount.erase(it);
+		}
+	}
 
 	// Explicit call to the virtual function Destroy()
 	d->Destroy();
@@ -325,16 +332,6 @@ bool DESC_MANAGER::IsP2PDescExist(const char * szHost, WORD wPort)
 	}
 
 	return false;
-}
-
-LPDESC DESC_MANAGER::FindByHandshake(DWORD dwHandshake)
-{
-	DESC_HANDSHAKE_MAP::iterator it = m_map_handshake.find(dwHandshake);
-
-	if (it == m_map_handshake.end())
-		return NULL;
-
-	return (it->second);
 }
 
 class FuncWho

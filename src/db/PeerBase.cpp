@@ -1,7 +1,7 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "PeerBase.h"
 
-CPeerBase::CPeerBase() : m_fd(INVALID_SOCKET), m_BytesRemain(0), m_outBuffer(NULL), m_inBuffer(NULL)
+CPeerBase::CPeerBase() : m_fd(INVALID_SOCKET), m_BytesRemain(0)
 {
 }
 
@@ -24,18 +24,8 @@ void CPeerBase::Disconnect()
 void CPeerBase::Destroy()
 {
 	Disconnect();
-
-	if (m_outBuffer)
-	{
-		buffer_delete(m_outBuffer);
-		m_outBuffer = NULL;
-	}
-
-	if (m_inBuffer)
-	{
-		buffer_delete(m_inBuffer);
-		m_inBuffer = NULL;
-	}
+	m_outBuffer.Clear();
+	m_inBuffer.Clear();
 }
 
 bool CPeerBase::Accept(socket_t fd_accept)
@@ -53,14 +43,8 @@ bool CPeerBase::Accept(socket_t fd_accept)
 	socket_rcvbuf(m_fd, 233016);
 
 	strlcpy(m_host, inet_ntoa(peer.sin_addr), sizeof(m_host));
-	m_outBuffer = buffer_new(DEFAULT_PACKET_BUFFER_SIZE);
-	m_inBuffer = buffer_new(MAX_INPUT_LEN);
-
-	if (!m_outBuffer || !m_inBuffer)
-	{
-		Destroy();
-		return false;
-	}
+	m_outBuffer.Reserve(DEFAULT_PACKET_BUFFER_SIZE);
+	m_inBuffer.Reserve(MAX_INPUT_LEN);
 
 	fdwatch_add_fd(m_fdWatcher, m_fd, this, FDW_READ, false);
 
@@ -76,13 +60,7 @@ bool CPeerBase::Connect(const char* host, WORD port)
 	if ((m_fd = socket_connect(host, port)) == INVALID_SOCKET)
 		return false;
 
-	m_outBuffer = buffer_new(DEFAULT_PACKET_BUFFER_SIZE);
-
-	if (!m_outBuffer)
-	{
-		Destroy();
-		return false;
-	}
+	m_outBuffer.Reserve(DEFAULT_PACKET_BUFFER_SIZE);
 
 	fdwatch_add_fd(m_fdWatcher, m_fd, this, FDW_READ, false);
 
@@ -97,63 +75,33 @@ void CPeerBase::Close()
 
 void CPeerBase::EncodeBYTE(uint8_t b)
 {
-	if (!m_outBuffer)
-	{
-		sys_err("Not ready to write");
-		return;
-	}
-
-	buffer_write(m_outBuffer, &b, sizeof(uint8_t));
+	m_outBuffer.Write(&b, sizeof(uint8_t));
 	fdwatch_add_fd(m_fdWatcher, m_fd, this, FDW_WRITE, true);
 }
 
 void CPeerBase::EncodeWORD(uint16_t w)
 {
-	if (!m_outBuffer)
-	{
-		sys_err("Not ready to write");
-		return;
-	}
-
-	buffer_write(m_outBuffer, &w, sizeof(uint16_t));
+	m_outBuffer.Write(&w, sizeof(uint16_t));
 	fdwatch_add_fd(m_fdWatcher, m_fd, this, FDW_WRITE, true);
 }
 
 void CPeerBase::EncodeDWORD(uint32_t dw)
 {
-	if (!m_outBuffer)
-	{
-		sys_err("Not ready to write");
-		return;
-	}
-
-	buffer_write(m_outBuffer, &dw, sizeof(uint32_t));
+	m_outBuffer.Write(&dw, sizeof(uint32_t));
 	fdwatch_add_fd(m_fdWatcher, m_fd, this, FDW_WRITE, true);
 }
 
 void CPeerBase::Encode(const void* data, uint32_t size)
 {
-	if (!m_outBuffer)
-	{
-		sys_err("Not ready to write");
-		return;
-	}
-
-	buffer_write(m_outBuffer, data, size);
+	m_outBuffer.Write(data, size);
 	fdwatch_add_fd(m_fdWatcher, m_fd, this, FDW_WRITE, true);
 }
 
 int CPeerBase::Recv()
 {
-	if (!m_inBuffer)
-	{
-		sys_err("input buffer nil");
-		return -1;
-	}
-
-	buffer_adjust_size(m_inBuffer, MAX_INPUT_LEN >> 2);
-	int bytes_to_read = buffer_has_space(m_inBuffer);
-	ssize_t bytes_read = socket_read(m_fd, (char *) buffer_write_peek(m_inBuffer), bytes_to_read);
+	m_inBuffer.EnsureWritable(MAX_INPUT_LEN >> 2);
+	int bytes_to_read = static_cast<int>(m_inBuffer.WritableBytes());
+	ssize_t bytes_read = socket_read(m_fd, (char *) m_inBuffer.WritePtr(), bytes_to_read);
 
 	if (bytes_read < 0)
 	{
@@ -163,15 +111,15 @@ int CPeerBase::Recv()
 	else if (bytes_read == 0)
 		return 0;
 
-	buffer_write_proceed(m_inBuffer, bytes_read);
-	m_BytesRemain = buffer_size(m_inBuffer);
+	m_inBuffer.CommitWrite(bytes_read);
+	m_BytesRemain = static_cast<int>(m_inBuffer.ReadableBytes());
 	return 1;
 }
 
 void CPeerBase::RecvEnd(int proceed_bytes)
 {
-	buffer_read_proceed(m_inBuffer, proceed_bytes);
-	m_BytesRemain = buffer_size(m_inBuffer);
+	m_inBuffer.Discard(proceed_bytes);
+	m_BytesRemain = static_cast<int>(m_inBuffer.ReadableBytes());
 }
 
 int CPeerBase::GetRecvLength()
@@ -181,32 +129,32 @@ int CPeerBase::GetRecvLength()
 
 const void * CPeerBase::GetRecvBuffer()
 {
-	return buffer_read_peek(m_inBuffer);
+	return m_inBuffer.ReadPtr();
 }
 
 int CPeerBase::GetSendLength()
 {
-	return buffer_size(m_outBuffer);
+	return static_cast<int>(m_outBuffer.ReadableBytes());
 }
 
 int CPeerBase::Send()
 {
-	if (buffer_size(m_outBuffer) <= 0)
+	if (m_outBuffer.ReadableBytes() <= 0)
 		return 0;
 
 	int iBufferLeft = fdwatch_get_buffer_size(m_fdWatcher, m_fd);
-	int iBytesToWrite = MIN(iBufferLeft, buffer_size(m_outBuffer));
+	int iBytesToWrite = MIN(iBufferLeft, static_cast<int>(m_outBuffer.ReadableBytes()));
 
 	if (iBytesToWrite == 0)
 		return 0;
 
-	int result = socket_write(m_fd, (const char *) buffer_read_peek(m_outBuffer), iBytesToWrite);
+	int result = socket_write(m_fd, (const char *) m_outBuffer.ReadPtr(), iBytesToWrite);
 
 	if (result == 0)
 	{
-		buffer_read_proceed(m_outBuffer, iBytesToWrite);
+		m_outBuffer.Discard(iBytesToWrite);
 
-		if (buffer_size(m_outBuffer) != 0)
+		if (m_outBuffer.ReadableBytes() != 0)
 			fdwatch_add_fd(m_fdWatcher, m_fd, this, FDW_WRITE, true);
 	}
 

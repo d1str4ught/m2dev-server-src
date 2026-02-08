@@ -1,4 +1,4 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "utils.h"
 #include "config.h"
 #include "desc.h"
@@ -22,13 +22,12 @@
 #include "marriage.h"
 #include "arena.h"
 #include "regen.h"
-#include "monarch.h"
 #include "exchange.h"
 #include "shop_manager.h"
 #include "castle.h"
 #include "ani.h"
 #include "BattleArena.h"
-#include "packet.h"
+#include "packet_structs.h"
 #include "party.h"
 #include "affect.h"
 #include "guild.h"
@@ -91,7 +90,8 @@ void CHARACTER::CreateFly(BYTE bType, LPCHARACTER pkVictim)
 {
 	TPacketGCCreateFly packFly;
 
-	packFly.bHeader         = HEADER_GC_CREATE_FLY;
+	packFly.header         = GC::CREATE_FLY;
+	packFly.length = sizeof(packFly);
 	packFly.bType           = bType;
 	packFly.dwStartVID      = GetVID();
 	packFly.dwEndVID        = pkVictim->GetVID();
@@ -232,12 +232,12 @@ bool CHARACTER::Attack(LPCHARACTER pkVictim, BYTE bType)
 				break;
 
 			case BATTLE_TYPE_RANGE:
-				FlyTarget(pkVictim->GetVID(), pkVictim->GetX(), pkVictim->GetY(), HEADER_CG_FLY_TARGETING);
+				FlyTarget(pkVictim->GetVID(), pkVictim->GetX(), pkVictim->GetY(), CG::FLY_TARGETING);
 				iRet = Shoot(0) ? BATTLE_DAMAGE : BATTLE_NONE;
 				break;
 
 			case BATTLE_TYPE_MAGIC:
-				FlyTarget(pkVictim->GetVID(), pkVictim->GetX(), pkVictim->GetY(), HEADER_CG_FLY_TARGETING);
+				FlyTarget(pkVictim->GetVID(), pkVictim->GetX(), pkVictim->GetY(), CG::FLY_TARGETING);
 				iRet = Shoot(1) ? BATTLE_DAMAGE : BATTLE_NONE;
 				break;
 
@@ -422,7 +422,8 @@ void CHARACTER::Stun()
 	event_cancel(&m_pkRecoveryEvent); // 회복 이벤트를 죽인다.
 
 	TPacketGCStun pack;
-	pack.header	= HEADER_GC_STUN;
+	pack.header	= GC::STUN;
+	pack.length = sizeof(pack);
 	pack.vid	= m_vid;
 	PacketAround(&pack, sizeof(pack));
 
@@ -1491,7 +1492,8 @@ void CHARACTER::Dead(LPCHARACTER pkKiller, bool bImmediateDead)
 	// END_OF_BOSS_KILL_LOG
 
 	TPacketGCDead pack;
-	pack.header	= HEADER_GC_DEAD;
+	pack.header	= GC::DEAD;
+	pack.length = sizeof(pack);
 	pack.vid	= m_vid;
 	PacketAround(&pack, sizeof(pack));
 
@@ -1613,7 +1615,8 @@ void CHARACTER::SendDamagePacket(LPCHARACTER pAttacker, int Damage, BYTE DamageF
 		TPacketGCDamageInfo damageInfo;
 		memset(&damageInfo, 0, sizeof(TPacketGCDamageInfo));
 
-		damageInfo.header = HEADER_GC_DAMAGE_INFO;
+		damageInfo.header = GC::DAMAGE_INFO;
+		damageInfo.length = sizeof(damageInfo);
 		damageInfo.dwVID = (DWORD)GetVID();
 		damageInfo.flag = DamageFlag;
 		damageInfo.damage = Damage;
@@ -1785,7 +1788,8 @@ bool CHARACTER::Damage(LPCHARACTER pAttacker, int dam, EDamageType type) // retu
 
 				memset(&damageInfo, 0, sizeof(TPacketGCDamageInfo));
 
-				damageInfo.header = HEADER_GC_DAMAGE_INFO;
+				damageInfo.header = GC::DAMAGE_INFO;
+				damageInfo.length = sizeof(damageInfo);
 				damageInfo.dwVID = (DWORD)GetVID();
 				damageInfo.flag = DAMAGE_DODGE;
 				damageInfo.damage = 0;
@@ -2245,20 +2249,6 @@ bool CHARACTER::Damage(LPCHARACTER pAttacker, int dam, EDamageType type) // retu
 			return true;
 		}
 
-		//
-		// 군주의 금강권 & 사자후 
-		//
-		if (pAttacker->IsPC() && CMonarch::instance().IsPowerUp(pAttacker->GetEmpire()))
-		{
-			// 10% 피해 증가
-			dam += dam / 10;
-		}
-
-		if (IsPC() && CMonarch::instance().IsDefenceUp(GetEmpire()))
-		{
-			// 10% 피해 감소
-			dam -= dam / 10;
-		}
 	}
 	//puAttr.Pop();
 
@@ -3235,7 +3225,7 @@ class CFuncShoot
 
 bool CHARACTER::Shoot(BYTE bType)
 {
-	sys_log(1, "Shoot %s type %u flyTargets.size %zu", GetName(), bType, m_vec_dwFlyTargets.size());
+	sys_log(1, "Shoot %s type %u flyTargets.length %zu", GetName(), bType, m_vec_dwFlyTargets.size());
 
 	if (!CanMove())
 	{
@@ -3256,13 +3246,14 @@ bool CHARACTER::Shoot(BYTE bType)
 	return f.m_bSucceed;
 }
 
-void CHARACTER::FlyTarget(DWORD dwTargetVID, long x, long y, BYTE bHeader)
+void CHARACTER::FlyTarget(DWORD dwTargetVID, long x, long y, uint16_t wHeader)
 {
 	LPCHARACTER pkVictim = CHARACTER_MANAGER::instance().Find(dwTargetVID);
 	TPacketGCFlyTargeting pack;
 
-	//pack.bHeader	= HEADER_GC_FLY_TARGETING;
-	pack.bHeader	= (bHeader == HEADER_CG_FLY_TARGETING) ? HEADER_GC_FLY_TARGETING : HEADER_GC_ADD_FLY_TARGETING;
+	//pack.header	= GC::FLY_TARGETING;
+	pack.header	= (wHeader == CG::FLY_TARGETING) ? GC::FLY_TARGETING : GC::ADD_FLY_TARGETING;
+	pack.length = sizeof(pack);
 	pack.dwShooterVID	= GetVID();
 
 	if (pkVictim)
@@ -3271,7 +3262,7 @@ void CHARACTER::FlyTarget(DWORD dwTargetVID, long x, long y, BYTE bHeader)
 		pack.x = pkVictim->GetX();
 		pack.y = pkVictim->GetY();
 
-		if (bHeader == HEADER_CG_FLY_TARGETING)
+		if (wHeader == CG::FLY_TARGETING)
 			m_dwFlyTargetID = dwTargetVID;
 		else
 			m_vec_dwFlyTargets.push_back(dwTargetVID);

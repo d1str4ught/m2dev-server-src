@@ -1,4 +1,4 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "utils.h"
 #include "config.h"
 #include "desc_client.h"
@@ -8,7 +8,7 @@
 #include "item_manager.h"
 #include "sectree_manager.h"
 #include "mob_manager.h"
-#include "packet.h"
+#include "packet_structs.h"
 #include "cmd.h"
 #include "regen.h"
 #include "guild.h"
@@ -27,7 +27,6 @@
 #include "arena.h"
 #include "start_position.h"
 #include "party.h"
-#include "monarch.h"
 #include "castle.h"
 #include "BattleArena.h"
 #include "xmas_event.h"
@@ -119,7 +118,8 @@ ACMD(do_transfer)
 
 			TPacketGGTransfer pgg;
 
-			pgg.bHeader = HEADER_GG_TRANSFER;
+			pgg.header = GG::TRANSFER;
+			pgg.length = sizeof(pgg);
 			strlcpy(pgg.szName, arg1, sizeof(pgg.szName));
 			pgg.lX = ch->GetX();
 			pgg.lY = ch->GetY();
@@ -1096,38 +1096,10 @@ struct notice_packet_func
 	}
 };
 
-struct monarch_notice_packet_func
-{
-	const char * m_str;
-	BYTE m_bEmpire;
-
-	monarch_notice_packet_func(BYTE bEmpire, const char * str) : m_str(str), m_bEmpire(bEmpire)
-	{
-	}
-
-	void operator () (LPDESC d)
-	{
-		if (!d->GetCharacter())
-			return;
-
-		if (m_bEmpire == d->GetCharacter()->GetEmpire())
-		{
-			d->GetCharacter()->ChatPacket(CHAT_TYPE_NOTICE, "%s", m_str);
-		}
-	}
-};
-
-
 void SendNotice(const char * c_pszBuf)
 {
 	const DESC_MANAGER::DESC_SET & c_ref_set = DESC_MANAGER::instance().GetClientSet();
 	std::for_each(c_ref_set.begin(), c_ref_set.end(), notice_packet_func(c_pszBuf));
-}
-
-void SendMonarchNotice(BYTE bEmpire, const char* c_pszBuf)
-{
-	const DESC_MANAGER::DESC_SET & c_ref_set = DESC_MANAGER::instance().GetClientSet();
-	std::for_each(c_ref_set.begin(), c_ref_set.end(), monarch_notice_packet_func(bEmpire, c_pszBuf));
 }
 
 struct notice_map_packet_func
@@ -1183,32 +1155,17 @@ void SendLog(const char * c_pszBuf)
 void BroadcastNotice(const char * c_pszBuf)
 {
 	TPacketGGNotice p;
-	p.bHeader = HEADER_GG_NOTICE;
+	p.header = GG::NOTICE;
 	p.lSize = strlen(c_pszBuf) + 1;
+	p.length = sizeof(TPacketGGNotice) + p.lSize;
 
 	TEMP_BUFFER buf;
 	buf.write(&p, sizeof(p));
 	buf.write(c_pszBuf, p.lSize);
 
-	P2P_MANAGER::instance().Send(buf.read_peek(), buf.size()); // HEADER_GG_NOTICE
+	P2P_MANAGER::instance().Send(buf.read_peek(), buf.size()); // GG::NOTICE
 
 	SendNotice(c_pszBuf);
-}
-
-void BroadcastMonarchNotice(BYTE bEmpire, const char * c_pszBuf)
-{
-	TPacketGGMonarchNotice p;
-	p.bHeader = HEADER_GG_MONARCH_NOTICE;
-	p.bEmpire = bEmpire;
-	p.lSize = strlen(c_pszBuf) + 1;
-
-	TEMP_BUFFER buf;
-	buf.write(&p, sizeof(p));
-	buf.write(c_pszBuf, p.lSize);
-
-	P2P_MANAGER::instance().Send(buf.read_peek(), buf.size());
-
-	SendMonarchNotice(bEmpire, c_pszBuf);
 }
 
 ACMD(do_notice)
@@ -1224,18 +1181,6 @@ ACMD(do_map_notice)
 ACMD(do_big_notice)
 {
 	ch->ChatPacket(CHAT_TYPE_BIG_NOTICE, "%s", argument);
-}
-
-ACMD(do_monarch_notice)
-{
-	if (ch->IsMonarch() == true)
-	{
-		BroadcastMonarchNotice(ch->GetEmpire(), argument);
-	}
-	else
-	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("군주만이 사용 가능한 기능입니다"));
-	}
 }
 
 ACMD(do_who)
@@ -2095,7 +2040,7 @@ ACMD(do_reload)
 
 			case 'p':
 				ch->ChatPacket(CHAT_TYPE_INFO, "Reloading prototype tables,");
-				db_clientdesc->DBPacket(HEADER_GD_RELOAD_PROTO, 0, nullptr, 0);
+				db_clientdesc->DBPacket(GD::RELOAD_PROTO, 0, nullptr, 0);
 				break;
 
 			case 'q':
@@ -2110,7 +2055,7 @@ ACMD(do_reload)
 				//RELOAD_ADMIN
 			case 'a':
 				ch->ChatPacket(CHAT_TYPE_INFO, "Reloading Admin infomation.");
-				db_clientdesc->DBPacket(HEADER_GD_RELOAD_ADMIN, 0, nullptr, 0);
+				db_clientdesc->DBPacket(GD::RELOAD_ADMIN, 0, nullptr, 0);
 				sys_log(0, "Reloading admin infomation.");
 				break;
 				//END_RELOAD_ADMIN
@@ -2126,7 +2071,7 @@ ACMD(do_reload)
 		LoadStateUserCount();
 
 		ch->ChatPacket(CHAT_TYPE_INFO, "Reloading prototype tables,");
-		db_clientdesc->DBPacket(HEADER_GD_RELOAD_PROTO, 0, NULL, 0);
+		db_clientdesc->DBPacket(GD::RELOAD_PROTO, 0, NULL, 0);
 	}
 }
 
@@ -2711,7 +2656,8 @@ ACMD(do_vote_block_chat)
 		{
 			TPacketGGBlockChat p;
 
-			p.bHeader = HEADER_GG_BLOCK_CHAT;
+			p.header = GG::BLOCK_CHAT;
+			p.length = sizeof(p);
 			strlcpy(p.szName, name, sizeof(p.szName));
 			p.lBlockDuration = lBlockDuration;
 			P2P_MANAGER::instance().Send(&p, sizeof(TPacketGGBlockChat));
@@ -2722,7 +2668,7 @@ ACMD(do_vote_block_chat)
 
 			strlcpy(p.szName, name, sizeof(p.szName));
 			p.lDuration = lBlockDuration;
-			db_clientdesc->DBPacket(HEADER_GD_BLOCK_CHAT, ch ? ch->GetDesc()->GetHandle() : 0, &p, sizeof(p));
+			db_clientdesc->DBPacket(GD::BLOCK_CHAT, ch ? ch->GetDesc()->GetHandle() : 0, &p, sizeof(p));
 
 		}
 
@@ -2781,7 +2727,8 @@ ACMD(do_block_chat)
 		{
 			TPacketGGBlockChat p;
 
-			p.bHeader = HEADER_GG_BLOCK_CHAT;
+			p.header = GG::BLOCK_CHAT;
+			p.length = sizeof(p);
 			strlcpy(p.szName, name, sizeof(p.szName));
 			p.lBlockDuration = lBlockDuration;
 			P2P_MANAGER::instance().Send(&p, sizeof(TPacketGGBlockChat));
@@ -2792,7 +2739,7 @@ ACMD(do_block_chat)
 
 			strlcpy(p.szName, name, sizeof(p.szName));
 			p.lDuration = lBlockDuration;
-			db_clientdesc->DBPacket(HEADER_GD_BLOCK_CHAT, ch ? ch->GetDesc()->GetHandle() : 0, &p, sizeof(p));
+			db_clientdesc->DBPacket(GD::BLOCK_CHAT, ch ? ch->GetDesc()->GetHandle() : 0, &p, sizeof(p));
 		}
 
 		if (ch)
@@ -3534,7 +3481,7 @@ ACMD(do_break_marriage)
 	str_to_number(pids.pid2, arg2);
 	
 	ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("플레이어 %d 와 플레이어  %d를 파혼시킵니다.."), pids.pid1, pids.pid2);
-	db_clientdesc->DBPacket(HEADER_GD_BREAK_MARRIAGE, 0, &pids, sizeof(pids));
+	db_clientdesc->DBPacket(GD::BREAK_MARRIAGE, 0, &pids, sizeof(pids));
 }
 
 ACMD(do_effect)
@@ -3596,85 +3543,6 @@ ACMD(do_threeway_war_myinfo)
 			CThreeWayWar::instance().GetReviveTokenForPlayer(ch->GetPlayerID()));
 }
 
-ACMD(do_rmcandidacy)
-{
-	char arg1[256];
-
-	one_argument(argument, arg1, sizeof(arg1));
-
-	if (!*arg1)
-	{
-		ch->ChatPacket(CHAT_TYPE_INFO, "Usage: rmcandidacy <name>");
-		return;
-	}
-		
-	LPCHARACTER tch = CHARACTER_MANAGER::instance().FindPC(arg1); 
-
-	if (!tch)
-	{
-		CCI * pkCCI = P2P_MANAGER::instance().Find(arg1);
-
-		if (pkCCI)
-		{
-			if (pkCCI->bChannel != g_bChannel)
-			{
-				ch->ChatPacket(CHAT_TYPE_INFO, "Target is in %d channel (my channel %d)", pkCCI->bChannel, g_bChannel);
-				return;
-			}
-		}
-	}
-
-	db_clientdesc->DBPacket(HEADER_GD_RMCANDIDACY, 0, NULL, 32);
-	db_clientdesc->Packet(arg1, 32); 
-}
-
-ACMD(do_setmonarch)
-{
-	char arg1[256];
-
-	one_argument(argument, arg1, sizeof(arg1));
-
-	if (!*arg1)
-	{
-		ch->ChatPacket(CHAT_TYPE_INFO, "Usage: setmonarch <name>");
-		return;
-	}
-
-	db_clientdesc->DBPacket(HEADER_GD_SETMONARCH, 0, NULL, 32);
-	db_clientdesc->Packet(arg1, 32); 
-}
-
-ACMD(do_rmmonarch)
-{
-	char arg1[256];
-
-	one_argument(argument, arg1, sizeof(arg1));
-
-	if (!*arg1)
-	{
-		ch->ChatPacket(CHAT_TYPE_INFO, "Usage: rmmonarch <name>");
-		return;
-	}
-
-	db_clientdesc->DBPacket(HEADER_GD_RMMONARCH, 0, NULL, 32);
-	db_clientdesc->Packet(arg1, 32); 
-}
-
-ACMD(do_check_monarch_money)
-{
-	char arg1[256];
-
-	one_argument(argument, arg1, sizeof(arg1));
-
-	if (!*arg1)
-		return;
-
-	int empire = 0;
-	str_to_number(empire, arg1);
-	int NationMoney = CMonarch::instance().GetMoney(empire);
-
-	ch->ChatPacket(CHAT_TYPE_INFO, "국고: %d 원", NationMoney);
-}
 
 ACMD(do_reset_subskill)
 {
@@ -3709,7 +3577,8 @@ ACMD(do_siege)
 	if (tower_count < 5 || tower_count > 10) tower_count = number(5, 10);
 
 	TPacketGGSiege packet;
-	packet.bHeader = HEADER_GG_SIEGE;
+	packet.header = GG::SIEGE;
+	packet.length = sizeof(packet);
 	packet.bEmpire = empire;
 	packet.bTowerCount = tower_count;
 
@@ -3733,22 +3602,6 @@ ACMD(do_temp)
 {
 	if (false == test_server)
 		return;
-
-	char	arg1[256], arg2[256];
-	two_arguments(argument, arg1, sizeof(arg1), arg2, sizeof(arg2));
-
-	if (0 == arg1[0] || 0 == arg2[0])
-	{
-		ch->ChatPacket(CHAT_TYPE_INFO, "Usage: empire money");
-		return;
-	}
-
-	int	empire = 0;
-	str_to_number(empire, arg1);
-	int	money = 0;
-	str_to_number(money, arg2);
-
-	CMonarch::instance().SendtoDBAddMoney(money, empire, ch);
 }
 
 ACMD(do_frog)
@@ -3799,7 +3652,7 @@ ACMD(do_flush)
 
 	DWORD pid = (DWORD) strtoul(arg1, NULL, 10);
 
-	db_clientdesc->DBPacketHeader(HEADER_GD_FLUSH_CACHE, 0, sizeof(DWORD));
+	db_clientdesc->DBPacketHeader(GD::FLUSH_CACHE, 0, sizeof(DWORD));
 	db_clientdesc->Packet(&pid, sizeof(DWORD));
 }
 

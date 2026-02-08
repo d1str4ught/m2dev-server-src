@@ -220,7 +220,7 @@ namespace quest
 		// 1 : 잘못된 이름이다
 		// 2 : 이름 바꾸기 성공
 
-		if ( lua_isstring(L, -1) != true ) return 0;
+		if (!lua_isstring(L, -1)) return 0;
 
 		LPCHARACTER ch = CQuestManager::instance().GetCurrentCharacterPtr();
 
@@ -234,7 +234,7 @@ namespace quest
 			}
 			else
 			{
-				int nHorseNameDuration = test_server == true ? 60*5 : 60*60*24*30;
+				int nHorseNameDuration = test_server ? 60*5 : 60*60*24*30;
 
 				ch->SetQuestFlag("horse_name.valid_till", get_global_time() + nHorseNameDuration);
 				ch->AddAffect(AFFECT_HORSE_NAME, 0, 0, 0, PASSES_PER_SEC(nHorseNameDuration), 0, true);

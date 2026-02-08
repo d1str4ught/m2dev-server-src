@@ -1,4 +1,4 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "GuildManager.h"
 #include "Main.h"
 #include "ClientManager.h"
@@ -70,7 +70,7 @@ namespace
 			if (peer->GetChannel() == 0)
 				return;
 
-			peer->EncodeHeader(HEADER_DG_GUILD_WAR, 0, sizeof(TPacketGuildWar));
+			peer->EncodeHeader(DG::GUILD_WAR, 0, sizeof(TPacketGuildWar));
 			peer->Encode(&p, sizeof(TPacketGuildWar));
 		}
 
@@ -92,7 +92,7 @@ namespace
 			if (peer->GetChannel() == 0)
 				return;
 
-			peer->EncodeHeader(HEADER_DG_GUILD_WAR_SCORE, 0, sizeof(pck));
+			peer->EncodeHeader(DG::GUILD_WAR_SCORE, 0, sizeof(pck));
 			peer->Encode(&pck, sizeof(pck));
 		}
 
@@ -306,7 +306,7 @@ void CGuildManager::Update()
 		p.dwGuildFrom	= ws.GID[0];
 		p.dwGuildTo	= ws.GID[1];
 
-		CClientManager::instance().ForwardPacket(HEADER_DG_GUILD_WAR, &p, sizeof(p));
+		CClientManager::instance().ForwardPacket(DG::GUILD_WAR, &p, sizeof(p));
 		sys_log(0, "GuildWar: GUILD sending start of wait start war %d %d", ws.GID[0], ws.GID[1]);
 	}
 }
@@ -754,7 +754,7 @@ void CGuildManager::ChangeLadderPoint(DWORD GID, int change)
 	p.lDraw = r.draw;
 	p.lLoss = r.loss;
 
-	CClientManager::instance().ForwardPacket(HEADER_DG_GUILD_LADDER, &p, sizeof(TPacketGuildLadder));
+	CClientManager::instance().ForwardPacket(DG::GUILD_LADDER, &p, sizeof(TPacketGuildLadder));
 }
 
 void CGuildManager::UseSkill(DWORD GID, DWORD dwSkillVnum, DWORD dwCooltime)
@@ -772,7 +772,7 @@ void CGuildManager::MoneyChange(DWORD dwGuild, DWORD dwGold)
 	TPacketDGGuildMoneyChange p;
 	p.dwGuild = dwGuild;
 	p.iTotalGold = dwGold;
-	CClientManager::instance().ForwardPacket(HEADER_DG_GUILD_MONEY_CHANGE, &p, sizeof(p));
+	CClientManager::instance().ForwardPacket(DG::GUILD_MONEY_CHANGE, &p, sizeof(p));
 
 	char buf[1024];
 	snprintf(buf, sizeof(buf), "UPDATE guild%s SET gold=%u WHERE id = %u", GetTablePostfix(), dwGold, dwGuild);
@@ -818,7 +818,7 @@ void CGuildManager::WithdrawMoney(CPeer* peer, DWORD dwGuild, INT iGold)
 		p.dwGuild = dwGuild;
 		p.iChangeGold = iGold;
 
-		peer->EncodeHeader(HEADER_DG_GUILD_WITHDRAW_MONEY_GIVE, 0, sizeof(TPacketDGGuildMoneyWithdraw));
+		peer->EncodeHeader(DG::GUILD_WITHDRAW_MONEY_GIVE, 0, sizeof(TPacketDGGuildMoneyWithdraw));
 		peer->Encode(&p, sizeof(TPacketDGGuildMoneyWithdraw));
 	}
 }
@@ -1077,7 +1077,7 @@ bool CGuildManager::ReserveWar(TPacketGuildWar * p)
 
 	m_map_kWarReserve.insert(std::make_pair(t.dwID, new CGuildWarReserve(t)));
 
-	CClientManager::instance().ForwardPacket(HEADER_DG_GUILD_WAR_RESERVE_ADD, &t, sizeof(TGuildWarReserve));
+	CClientManager::instance().ForwardPacket(DG::GUILD_WAR_RESERVE_ADD, &t, sizeof(TGuildWarReserve));
 	return true;
 }
 
@@ -1109,7 +1109,7 @@ void CGuildManager::ProcessReserveWar()
 				snprintf(szQuery, sizeof(szQuery), "UPDATE guild_war_reservation SET started=1 WHERE id=%u", r.dwID);
 				CDBManager::instance().AsyncQuery(szQuery);
 
-				CClientManager::instance().ForwardPacket(HEADER_DG_GUILD_WAR_RESERVE_DEL, &r.dwID, sizeof(DWORD));
+				CClientManager::instance().ForwardPacket(DG::GUILD_WAR_RESERVE_DEL, &r.dwID, sizeof(DWORD));
 
 				r.bStarted = true;
 
@@ -1125,7 +1125,7 @@ void CGuildManager::ProcessReserveWar()
 				pck.lWarPrice = r.lWarPrice;
 				pck.lInitialScore = r.lInitialScore;
 
-				CClientManager::instance().ForwardPacket(HEADER_DG_GUILD_WAR, &pck, sizeof(TPacketGuildWar));
+				CClientManager::instance().ForwardPacket(DG::GUILD_WAR, &pck, sizeof(TPacketGuildWar));
 				//m_map_kWarReserve.erase(it2);
 			}
 			else
@@ -1244,7 +1244,7 @@ void CGuildWarReserve::OnSetup(CPeer * peer)
 
 	FSendPeerWar(m_data.bType, GUILD_WAR_RESERVE, m_data.dwGuildFrom, m_data.dwGuildTo) (peer);
 
-	peer->EncodeHeader(HEADER_DG_GUILD_WAR_RESERVE_ADD, 0, sizeof(TGuildWarReserve));
+	peer->EncodeHeader(DG::GUILD_WAR_RESERVE_ADD, 0, sizeof(TGuildWarReserve));
 	peer->Encode(&m_data, sizeof(TGuildWarReserve));
 
 	TPacketGDGuildWarBet pckBet;
@@ -1258,7 +1258,7 @@ void CGuildWarReserve::OnSetup(CPeer * peer)
 		pckBet.dwGuild = it->second.first;
 		pckBet.dwGold = it->second.second;
 
-		peer->EncodeHeader(HEADER_DG_GUILD_WAR_BET, 0, sizeof(TPacketGDGuildWarBet));
+		peer->EncodeHeader(DG::GUILD_WAR_BET, 0, sizeof(TPacketGDGuildWarBet));
 		peer->Encode(&pckBet, sizeof(TPacketGDGuildWarBet));
 
 		++it;
@@ -1304,7 +1304,7 @@ bool CGuildWarReserve::Bet(const char * pszLogin, DWORD dwGold, DWORD dwGuild)
 	else
 		m_data.dwBetTo += dwGold;
 
-	CClientManager::instance().ForwardPacket(HEADER_DG_GUILD_WAR_RESERVE_ADD, &m_data, sizeof(TGuildWarReserve));
+	CClientManager::instance().ForwardPacket(DG::GUILD_WAR_RESERVE_ADD, &m_data, sizeof(TGuildWarReserve));
 
 	snprintf(szQuery, sizeof(szQuery), "UPDATE guild_war_reservation SET bet_from=%u,bet_to=%u WHERE id=%u", 
 			m_data.dwBetFrom, m_data.dwBetTo, m_data.dwID);
@@ -1320,7 +1320,7 @@ bool CGuildWarReserve::Bet(const char * pszLogin, DWORD dwGold, DWORD dwGuild)
 	pckBet.dwGuild = dwGuild;
 	pckBet.dwGold = dwGold;
 
-	CClientManager::instance().ForwardPacket(HEADER_DG_GUILD_WAR_BET, &pckBet, sizeof(TPacketGDGuildWarBet));
+	CClientManager::instance().ForwardPacket(DG::GUILD_WAR_BET, &pckBet, sizeof(TPacketGDGuildWarBet));
 	return true;
 }
 

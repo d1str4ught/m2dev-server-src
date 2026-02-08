@@ -1,11 +1,11 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "constants.h"
 #include "config.h"
 #include "utils.h"
 #include "desc_client.h"
 #include "desc_manager.h"
 #include "buffer_manager.h"
-#include "packet.h"
+#include "packet_structs.h"
 #include "protocol.h"
 #include "char.h"
 #include "char_manager.h"
@@ -42,6 +42,21 @@
 
 extern void SendShout(const char * szText, BYTE bEmpire);
 extern int g_nPortalLimitTime;
+
+// Template adapter definitions (declared in input.h, defined here where DESC is complete)
+template<void (CInputMain::*fn)(LPCHARACTER, const char*)>
+int CInputMain::SimpleHandler(LPDESC d, const char* p)
+{
+	(this->*fn)(d->GetCharacter(), p);
+	return 0;
+}
+
+template<void (CInputMain::*fn)(LPCHARACTER, const void*)>
+int CInputMain::SimpleHandlerV(LPDESC d, const char* p)
+{
+	(this->*fn)(d->GetCharacter(), p);
+	return 0;
+}
 
 static int __deposit_limit()
 {
@@ -281,14 +296,14 @@ int CInputMain::Whisper(LPCHARACTER ch, const char * data, size_t uiBytes)
 {
 	const TPacketCGWhisper* pinfo = reinterpret_cast<const TPacketCGWhisper*>(data);
 
-	if (uiBytes < pinfo->wSize)
+	if (uiBytes < pinfo->length)
 		return -1;
 
-	int iExtraLen = pinfo->wSize - sizeof(TPacketCGWhisper);
+	int iExtraLen = pinfo->length - sizeof(TPacketCGWhisper);
 
 	if (iExtraLen < 0)
 	{
-		sys_err("invalid packet length (len %d size %u buffer %u)", iExtraLen, pinfo->wSize, uiBytes);
+		sys_err("invalid packet length (len %d size %u buffer %u)", iExtraLen, pinfo->length, uiBytes);
 		ch->GetDesc()->SetPhase(PHASE_CLOSE);
 		return -1;
 	}
@@ -333,9 +348,9 @@ int CInputMain::Whisper(LPCHARACTER ch, const char * data, size_t uiBytes)
 		if (ch->GetDesc())
 		{
 			TPacketGCWhisper pack;
-			pack.bHeader = HEADER_GC_WHISPER;
+			pack.header = GC::WHISPER;
 			pack.bType = WHISPER_TYPE_SENDER_BLOCKED;
-			pack.wSize = sizeof(TPacketGCWhisper);
+			pack.length = sizeof(TPacketGCWhisper);
 			strlcpy(pack.szNameFrom, pinfo->szNameTo, sizeof(pack.szNameFrom));
 			ch->GetDesc()->Packet(&pack, sizeof(pack));
 		}
@@ -368,9 +383,9 @@ int CInputMain::Whisper(LPCHARACTER ch, const char * data, size_t uiBytes)
 		{
 			TPacketGCWhisper pack;
 
-			pack.bHeader = HEADER_GC_WHISPER;
+			pack.header = GC::WHISPER;
 			pack.bType = WHISPER_TYPE_NOT_EXIST;
-			pack.wSize = sizeof(TPacketGCWhisper);
+			pack.length = sizeof(TPacketGCWhisper);
 			strlcpy(pack.szNameFrom, pinfo->szNameTo, sizeof(pack.szNameFrom));
 			ch->GetDesc()->Packet(&pack, sizeof(TPacketGCWhisper));
 			sys_log(0, "WHISPER: no player");
@@ -383,9 +398,9 @@ int CInputMain::Whisper(LPCHARACTER ch, const char * data, size_t uiBytes)
 			if (ch->GetDesc())
 			{
 				TPacketGCWhisper pack;
-				pack.bHeader = HEADER_GC_WHISPER;
+				pack.header = GC::WHISPER;
 				pack.bType = WHISPER_TYPE_SENDER_BLOCKED;
-				pack.wSize = sizeof(TPacketGCWhisper);
+				pack.length = sizeof(TPacketGCWhisper);
 				strlcpy(pack.szNameFrom, pinfo->szNameTo, sizeof(pack.szNameFrom));
 				ch->GetDesc()->Packet(&pack, sizeof(pack));
 			}
@@ -395,9 +410,9 @@ int CInputMain::Whisper(LPCHARACTER ch, const char * data, size_t uiBytes)
 			if (ch->GetDesc())
 			{
 				TPacketGCWhisper pack;
-				pack.bHeader = HEADER_GC_WHISPER;
+				pack.header = GC::WHISPER;
 				pack.bType = WHISPER_TYPE_TARGET_BLOCKED;
-				pack.wSize = sizeof(TPacketGCWhisper);
+				pack.length = sizeof(TPacketGCWhisper);
 				strlcpy(pack.szNameFrom, pinfo->szNameTo, sizeof(pack.szNameFrom));
 				ch->GetDesc()->Packet(&pack, sizeof(pack));
 			}
@@ -471,9 +486,9 @@ int CInputMain::Whisper(LPCHARACTER ch, const char * data, size_t uiBytes)
 
 						TPacketGCWhisper pack;
 
-						pack.bHeader = HEADER_GC_WHISPER;
+						pack.header = GC::WHISPER;
 						pack.bType = WHISPER_TYPE_ERROR;
-						pack.wSize = sizeof(TPacketGCWhisper) + len;
+						pack.length = sizeof(TPacketGCWhisper) + len;
 						strlcpy(pack.szNameFrom, pinfo->szNameTo, sizeof(pack.szNameFrom));
 
 						ch->GetDesc()->BufferedPacket(&pack, sizeof(pack));
@@ -495,8 +510,8 @@ int CInputMain::Whisper(LPCHARACTER ch, const char * data, size_t uiBytes)
 			{
 				TPacketGCWhisper pack;
 
-				pack.bHeader = HEADER_GC_WHISPER;
-				pack.wSize = sizeof(TPacketGCWhisper) + buflen;
+				pack.header = GC::WHISPER;
+				pack.length = sizeof(TPacketGCWhisper) + buflen;
 				pack.bType = bType;
 				strlcpy(pack.szNameFrom, ch->GetName(), sizeof(pack.szNameFrom));
 
@@ -637,14 +652,14 @@ struct FYmirChatPacket
 			d->GetCharacter()->GetGMLevel() > GM_PLAYER ||
 			d->GetCharacter()->IsEquipUniqueGroup(UNIQUE_GROUP_RING_OF_LANGUAGE))
 		{
-			packet.size = m_len_orig_msg + sizeof(TPacketGCChat);
+			packet.length = m_len_orig_msg + sizeof(TPacketGCChat);
 
 			d->BufferedPacket(&packet, sizeof(packet_chat));
 			d->Packet(m_orig_msg, m_len_orig_msg);
 		}
 		else
 		{
-			packet.size = m_len_conv_msg + sizeof(TPacketGCChat);
+			packet.length = m_len_conv_msg + sizeof(TPacketGCChat);
 
 			d->BufferedPacket(&packet, sizeof(packet_chat));
 			d->Packet(m_conv_msg, m_len_conv_msg);
@@ -656,14 +671,14 @@ int CInputMain::Chat(LPCHARACTER ch, const char * data, size_t uiBytes)
 {
 	const TPacketCGChat* pinfo = reinterpret_cast<const TPacketCGChat*>(data);
 
-	if (uiBytes < pinfo->size)
+	if (uiBytes < pinfo->length)
 		return -1;
 
-	const int iExtraLen = pinfo->size - sizeof(TPacketCGChat);
+	const int iExtraLen = pinfo->length - sizeof(TPacketCGChat);
 
 	if (iExtraLen < 0)
 	{
-		sys_err("invalid packet length (len %d size %u buffer %u)", iExtraLen, pinfo->size, uiBytes);
+		sys_err("invalid packet length (len %d size %u buffer %u)", iExtraLen, pinfo->length, uiBytes);
 		ch->GetDesc()->SetPhase(PHASE_CLOSE);
 		return -1;
 	}
@@ -753,7 +768,7 @@ int CInputMain::Chat(LPCHARACTER ch, const char * data, size_t uiBytes)
 
 		TPacketGGShout p;
 
-		p.bHeader = HEADER_GG_SHOUT;
+		p.header = GG::SHOUT; p.length = sizeof(p);
 		p.bEmpire = ch->GetEmpire();
 		strlcpy(p.szText, chatbuf, sizeof(p.szText));
 
@@ -766,8 +781,8 @@ int CInputMain::Chat(LPCHARACTER ch, const char * data, size_t uiBytes)
 
 	TPacketGCChat pack_chat;
 
-	pack_chat.header = HEADER_GC_CHAT;
-	pack_chat.size = sizeof(TPacketGCChat) + len;
+	pack_chat.header = GC::CHAT;
+	pack_chat.length = sizeof(TPacketGCChat) + len;
 	pack_chat.type = pinfo->type;
 	pack_chat.id = ch->GetVID();
 
@@ -852,10 +867,6 @@ void CInputMain::ItemDrop(LPCHARACTER ch, const char * data)
 {
 	struct command_item_drop * pinfo = (struct command_item_drop *) data;
 
-	//MONARCH_LIMIT
-	//if (ch->IsMonarch())	
-	//	return;
-	//END_MONARCH_LIMIT
 	if (!ch)
 		return;
 
@@ -868,11 +879,6 @@ void CInputMain::ItemDrop(LPCHARACTER ch, const char * data)
 
 void CInputMain::ItemDrop2(LPCHARACTER ch, const char * data)
 {
-	//MONARCH_LIMIT
-	//if (ch->IsMonarch())	
-	//	return;
-	//END_MONARCH_LIMIT
-
 	TPacketCGItemDrop2 * pinfo = (TPacketCGItemDrop2 *) data;
 
 	// 엘크가 0보다 크면 엘크를 버리는 것 이다.
@@ -930,7 +936,7 @@ int CInputMain::Messenger(LPCHARACTER ch, const char* c_pData, size_t uiBytes)
 
 	switch (p->subheader)
 	{
-		case MESSENGER_SUBHEADER_CG_ADD_BY_VID:
+		case MessengerSub::CG::ADD_BY_VID:
 			{
 				if (uiBytes < sizeof(TPacketCGMessengerAddByVID))
 					return -1;
@@ -969,7 +975,7 @@ int CInputMain::Messenger(LPCHARACTER ch, const char* c_pData, size_t uiBytes)
 			}
 			return sizeof(TPacketCGMessengerAddByVID);
 
-		case MESSENGER_SUBHEADER_CG_ADD_BY_NAME:
+		case MessengerSub::CG::ADD_BY_NAME:
 			{
 				if (uiBytes < CHARACTER_NAME_MAX_LEN)
 					return -1;
@@ -1027,7 +1033,7 @@ int CInputMain::Messenger(LPCHARACTER ch, const char* c_pData, size_t uiBytes)
 			}
 			return CHARACTER_NAME_MAX_LEN;
 
-		case MESSENGER_SUBHEADER_CG_REMOVE:
+		case MessengerSub::CG::REMOVE:
 			{
 				if (uiBytes < CHARACTER_NAME_MAX_LEN)
 					return -1;
@@ -1065,12 +1071,12 @@ int CInputMain::Shop(LPCHARACTER ch, const char * data, size_t uiBytes)
 
 	switch (p->subheader)
 	{
-		case SHOP_SUBHEADER_CG_END:
+		case ShopSub::CG::END:
 			sys_log(1, "INPUT: %s SHOP: END", ch->GetName());
 			CShopManager::instance().StopShopping(ch);
 			return 0;
 
-		case SHOP_SUBHEADER_CG_BUY:
+		case ShopSub::CG::BUY:
 			{
 				if (uiBytes < sizeof(BYTE) + sizeof(BYTE))
 					return -1;
@@ -1081,7 +1087,7 @@ int CInputMain::Shop(LPCHARACTER ch, const char * data, size_t uiBytes)
 				return (sizeof(BYTE) + sizeof(BYTE));
 			}
 
-		case SHOP_SUBHEADER_CG_SELL:
+		case ShopSub::CG::SELL:
 			{
 				if (uiBytes < sizeof(BYTE))
 					return -1;
@@ -1093,7 +1099,7 @@ int CInputMain::Shop(LPCHARACTER ch, const char * data, size_t uiBytes)
 				return sizeof(BYTE);
 			}
 
-		case SHOP_SUBHEADER_CG_SELL2:
+		case ShopSub::CG::SELL2:
 			{
 				if (uiBytes < sizeof(BYTE) + sizeof(BYTE))
 					return -1;
@@ -1162,20 +1168,11 @@ void CInputMain::Exchange(LPCHARACTER ch, const char * data)
 
 	switch (pinfo->sub_header)
 	{
-		case EXCHANGE_SUBHEADER_CG_START:	// arg1 == vid of target character
+		case ExchangeSub::CG::START:	// arg1 == vid of target character
 			if (!ch->GetExchange())
 			{
 				if ((to_ch = CHARACTER_MANAGER::instance().Find(pinfo->arg1)))
 				{
-					//MONARCH_LIMIT
-					/*
-					if (to_ch->IsMonarch() || ch->IsMonarch())
-					{
-						ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("군주와는 거래를 할수가 없습니다"), g_nPortalLimitTime);
-						return;
-					}
-					//END_MONARCH_LIMIT
-					*/
 					if (iPulse - ch->GetSafeboxLoadTime() < PASSES_PER_SEC(g_nPortalLimitTime))
 					{
 						ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("창고를 연후 %d초 이내에는 거래를 할수 없습니다."), g_nPortalLimitTime);
@@ -1224,7 +1221,7 @@ void CInputMain::Exchange(LPCHARACTER ch, const char * data)
 			}
 			break;
 
-		case EXCHANGE_SUBHEADER_CG_ITEM_ADD:	// arg1 == position of item, arg2 == position in exchange window
+		case ExchangeSub::CG::ITEM_ADD:	// arg1 == position of item, arg2 == position in exchange window
 			if (ch->GetExchange())
 			{
 				if (ch->GetExchange()->GetCompany()->GetAcceptStatus() != true)
@@ -1232,7 +1229,7 @@ void CInputMain::Exchange(LPCHARACTER ch, const char * data)
 			}
 			break;
 
-		case EXCHANGE_SUBHEADER_CG_ITEM_DEL:	// arg1 == position of item
+		case ExchangeSub::CG::ITEM_DEL:	// arg1 == position of item
 			if (ch->GetExchange())
 			{
 				if (ch->GetExchange()->GetCompany()->GetAcceptStatus() != true)
@@ -1240,7 +1237,7 @@ void CInputMain::Exchange(LPCHARACTER ch, const char * data)
 			}
 			break;
 
-		case EXCHANGE_SUBHEADER_CG_ELK_ADD:	// arg1 == amount of gold
+		case ExchangeSub::CG::ELK_ADD:	// arg1 == amount of gold
 			if (ch->GetExchange())
 			{
 				const int64_t nTotalGold = static_cast<int64_t>(ch->GetExchange()->GetCompany()->GetOwner()->GetGold()) + static_cast<int64_t>(pinfo->arg1);
@@ -1262,7 +1259,7 @@ void CInputMain::Exchange(LPCHARACTER ch, const char * data)
 			}
 			break;
 
-		case EXCHANGE_SUBHEADER_CG_ACCEPT:	// arg1 == not used
+		case ExchangeSub::CG::ACCEPT:	// arg1 == not used
 			if (ch->GetExchange())
 			{
 				sys_log(0, "CInputMain()::Exchange() ==> ACCEPT "); 
@@ -1271,7 +1268,7 @@ void CInputMain::Exchange(LPCHARACTER ch, const char * data)
 
 			break;
 
-		case EXCHANGE_SUBHEADER_CG_CANCEL:	// arg1 == not used
+		case ExchangeSub::CG::CANCEL:	// arg1 == not used
 			if (ch->GetExchange())
 				ch->GetExchange()->Cancel();
 			break;
@@ -1603,7 +1600,7 @@ void CInputMain::Move(LPCHARACTER ch, const char * data)
 		//
 		DWORD dwCurTime = get_dword_time();
 		// 시간을 Sync하고 7초 후 부터 검사한다. (20090702 이전엔 5초였음)
-		bool CheckSpeedHack = (false == ch->GetDesc()->IsHandshaking() && dwCurTime - ch->GetDesc()->GetClientTime() > 7000);
+		bool CheckSpeedHack = (dwCurTime - ch->GetDesc()->GetClientTime() > 7000);
 
 		if (CheckSpeedHack)
 		{
@@ -1689,7 +1686,8 @@ void CInputMain::Move(LPCHARACTER ch, const char * data)
 
 	TPacketGCMove pack;
 
-	pack.bHeader      = HEADER_GC_MOVE;
+	pack.header      = GC::MOVE;
+	pack.length = sizeof(pack);
 	pack.bFunc        = pinfo->bFunc;
 	pack.bArg         = pinfo->bArg;
 	pack.bRot         = pinfo->bRot;
@@ -1726,15 +1724,17 @@ void CInputMain::Move(LPCHARACTER ch, const char * data)
 	*/
 }
 
-void CInputMain::Attack(LPCHARACTER ch, const BYTE header, const char* data)
+void CInputMain::Attack(LPCHARACTER ch, const uint16_t header, const char* data)
 {
 	if (NULL == ch)
 		return;
 
+	// Updated for new packet format: [header:2][length:2][bType:1]
 	struct type_identifier
 	{
-		BYTE header;
-		BYTE type;
+		uint16_t header;
+		uint16_t length;
+		uint8_t type;
 	};
 
 	const struct type_identifier* const type = reinterpret_cast<const struct type_identifier*>(data);
@@ -1762,7 +1762,7 @@ void CInputMain::Attack(LPCHARACTER ch, const BYTE header, const char* data)
 			case SKILL_NOEJEON:
 			case SKILL_CHAIN:
 			case SKILL_HORSE_WILDATTACK_RANGE:
-				if (HEADER_CG_SHOOT != type->header)
+				if (CG::SHOOT != type->header)
 				{
 					if (test_server) 
 						ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Attack :name[%s] Vnum[%d] can't use skill by attack(warning)"), type->type);
@@ -1774,25 +1774,43 @@ void CInputMain::Attack(LPCHARACTER ch, const BYTE header, const char* data)
 
 	switch (header)
 	{
-		case HEADER_CG_ATTACK:
+		case CG::ATTACK:
 			{
+				sys_log(0, "ATTACK: Processing attack from %s", ch->GetName());
+
 				if (NULL == ch->GetDesc())
+				{
+					sys_log(0, "ATTACK: REJECTED - ch->GetDesc() is NULL");
 					return;
+				}
 
 				const TPacketCGAttack* const packMelee = reinterpret_cast<const TPacketCGAttack*>(data);
+				sys_log(0, "ATTACK: dwVID=%u bType=%d CRC1=%d CRC2=%d",
+					packMelee->dwVID, packMelee->bType,
+					packMelee->bCRCMagicCubeProcPiece, packMelee->bCRCMagicCubeFilePiece);
 
 				ch->GetDesc()->AssembleCRCMagicCube(packMelee->bCRCMagicCubeProcPiece, packMelee->bCRCMagicCubeFilePiece);
 
 				LPCHARACTER	victim = CHARACTER_MANAGER::instance().Find(packMelee->dwVID);
 
 				if (NULL == victim || ch == victim)
+				{
+					sys_log(0, "ATTACK: REJECTED - victim is NULL or self (victim=%p, ch=%p)", victim, ch);
 					return;
+				}
+
+				sys_log(0, "ATTACK: victim=%s charType=%d", victim->GetName(), victim->GetCharType());
 
 				switch (victim->GetCharType())
 				{
 					case CHAR_TYPE_NPC:
+						sys_log(0, "ATTACK: REJECTED - victim is CHAR_TYPE_NPC");
+						return;
 					case CHAR_TYPE_WARP:
+						sys_log(0, "ATTACK: REJECTED - victim is CHAR_TYPE_WARP");
+						return;
 					case CHAR_TYPE_GOTO:
+						sys_log(0, "ATTACK: REJECTED - victim is CHAR_TYPE_GOTO");
 						return;
 				}
 
@@ -1800,15 +1818,17 @@ void CInputMain::Attack(LPCHARACTER ch, const BYTE header, const char* data)
 				{
 					if (false == ch->CheckSkillHitCount(packMelee->bType, victim->GetVID()))
 					{
+						sys_log(0, "ATTACK: REJECTED - CheckSkillHitCount failed for bType=%d", packMelee->bType);
 						return;
 					}
 				}
 
+				sys_log(0, "ATTACK: Calling ch->Attack(victim=%s, bType=%d)", victim->GetName(), packMelee->bType);
 				ch->Attack(victim, packMelee->bType);
 			}
 			break;
 
-		case HEADER_CG_SHOOT:
+		case CG::SHOOT:
 			{
 				const TPacketCGShoot* const packShoot = reinterpret_cast<const TPacketCGShoot*>(data);
 
@@ -1822,21 +1842,21 @@ int CInputMain::SyncPosition(LPCHARACTER ch, const char * c_pcData, size_t uiByt
 {
 	const TPacketCGSyncPosition* pinfo = reinterpret_cast<const TPacketCGSyncPosition*>( c_pcData );
 
-	if (uiBytes < pinfo->wSize)
+	if (uiBytes < pinfo->length)
 		return -1;
 
-	int iExtraLen = pinfo->wSize - sizeof(TPacketCGSyncPosition);
+	int iExtraLen = pinfo->length - sizeof(TPacketCGSyncPosition);
 
 	if (iExtraLen < 0)
 	{
-		sys_err("invalid packet length (len %d size %u buffer %u)", iExtraLen, pinfo->wSize, uiBytes);
+		sys_err("invalid packet length (len %d size %u buffer %u)", iExtraLen, pinfo->length, uiBytes);
 		ch->GetDesc()->SetPhase(PHASE_CLOSE);
 		return -1;
 	}
 
 	if (0 != (iExtraLen % sizeof(TPacketCGSyncPositionElement)))
 	{
-		sys_err("invalid packet length %d (name: %s)", pinfo->wSize, ch->GetName());
+		sys_err("invalid packet length %d (name: %s)", pinfo->length, ch->GetName());
 		return iExtraLen;
 	}
 
@@ -1857,10 +1877,9 @@ int CInputMain::SyncPosition(LPCHARACTER ch, const char * c_pcData, size_t uiByt
 	}
 
 	TEMP_BUFFER tbuf;
-	LPBUFFER lpBuf = tbuf.getptr();
 
-	TPacketGCSyncPosition * pHeader = (TPacketGCSyncPosition *) buffer_write_peek(lpBuf);
-	buffer_write_proceed(lpBuf, sizeof(TPacketGCSyncPosition));
+	TPacketGCSyncPosition * pHeader = (TPacketGCSyncPosition *) tbuf.write_peek(sizeof(TPacketGCSyncPosition));
+	tbuf.write_proceed(sizeof(TPacketGCSyncPosition));
 
 	const TPacketCGSyncPositionElement* e = 
 		reinterpret_cast<const TPacketCGSyncPositionElement*>(c_pcData + sizeof(TPacketCGSyncPosition));
@@ -1960,25 +1979,25 @@ int CInputMain::SyncPosition(LPCHARACTER ch, const char * c_pcData, size_t uiByt
 		{
 			victim->SetLastSyncTime(tvCurTime);
 			victim->Sync(e->lX, e->lY);
-			buffer_write(lpBuf, e, sizeof(TPacketCGSyncPositionElement));
+			tbuf.write(e, sizeof(TPacketCGSyncPositionElement));
 		}
 	}
 
-	if (buffer_size(lpBuf) != sizeof(TPacketGCSyncPosition))
+	if (tbuf.size() != sizeof(TPacketGCSyncPosition))
 	{
-		pHeader->bHeader = HEADER_GC_SYNC_POSITION;
-		pHeader->wSize = buffer_size(lpBuf);
+		pHeader->header = GC::SYNC_POSITION;
+		pHeader->length = tbuf.size();
 
-		ch->PacketAround(buffer_read_peek(lpBuf), buffer_size(lpBuf), ch);
+		ch->PacketAround(tbuf.read_peek(), tbuf.size(), ch);
 	}
 
 	return iExtraLen;
 }
 
-void CInputMain::FlyTarget(LPCHARACTER ch, const char * pcData, BYTE bHeader)
+void CInputMain::FlyTarget(LPCHARACTER ch, const char * pcData, uint16_t wHeader)
 {
 	TPacketCGFlyTargeting * p = (TPacketCGFlyTargeting *) pcData;
-	ch->FlyTarget(p->dwTargetVID, p->x, p->y, bHeader);
+	ch->FlyTarget(p->dwTargetVID, p->x, p->y, wHeader);
 }
 
 void CInputMain::UseSkill(LPCHARACTER ch, const char * pcData)
@@ -2071,7 +2090,8 @@ void CInputMain::Target(LPCHARACTER ch, const char * pcData)
 	if (pkObj)
 	{
 		TPacketGCTarget pckTarget;
-		pckTarget.header = HEADER_GC_TARGET;
+		pckTarget.header = GC::TARGET;
+		pckTarget.length = sizeof(pckTarget);
 		pckTarget.dwVID = p->dwVID;
 		ch->GetDesc()->Packet(&pckTarget, sizeof(TPacketGCTarget));
 	}
@@ -2227,7 +2247,7 @@ void CInputMain::SafeboxCheckout(LPCHARACTER ch, const char * c_pData, bool bMal
 	}
 
 	DWORD dwID = pkItem->GetID();
-	db_clientdesc->DBPacketHeader(HEADER_GD_ITEM_FLUSH, 0, sizeof(DWORD));
+	db_clientdesc->DBPacketHeader(GD::ITEM_FLUSH, 0, sizeof(DWORD));
 	db_clientdesc->Packet(&dwID, sizeof(DWORD));
 
 	char szHint[128];
@@ -2342,7 +2362,7 @@ void CInputMain::PartySetState(LPCHARACTER ch, const char* c_pData)
 				pack.dwPID = p->pid;
 				pack.bRole = p->byRole;
 				pack.bFlag = p->flag;
-				db_clientdesc->DBPacket(HEADER_GD_PARTY_STATE_CHANGE, 0, &pack, sizeof(pack));
+				db_clientdesc->DBPacket(GD::PARTY_STATE_CHANGE, 0, &pack, sizeof(pack));
 			}
 			/* else
 			   ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<파티> 어태커 설정에 실패하였습니다.")); */
@@ -2567,29 +2587,34 @@ void CInputMain::PartyParameter(LPCHARACTER ch, const char * c_pData)
 		ch->GetParty()->SetParameter(p->bDistributeMode);
 }
 
-size_t GetSubPacketSize(const GUILD_SUBHEADER_CG& header)
+size_t GetSubPacketSize(uint8_t header)
 {
 	switch (header)
 	{
-		case GUILD_SUBHEADER_CG_DEPOSIT_MONEY:				return sizeof(int);
-		case GUILD_SUBHEADER_CG_WITHDRAW_MONEY:				return sizeof(int);
-		case GUILD_SUBHEADER_CG_ADD_MEMBER:					return sizeof(DWORD);
-		case GUILD_SUBHEADER_CG_REMOVE_MEMBER:				return sizeof(DWORD);
-		case GUILD_SUBHEADER_CG_CHANGE_GRADE_NAME:			return 10;
-		case GUILD_SUBHEADER_CG_CHANGE_GRADE_AUTHORITY:		return sizeof(BYTE) + sizeof(BYTE);
-		case GUILD_SUBHEADER_CG_OFFER:						return sizeof(DWORD);
-		case GUILD_SUBHEADER_CG_CHARGE_GSP:					return sizeof(int);
-		case GUILD_SUBHEADER_CG_POST_COMMENT:				return 1;
-		case GUILD_SUBHEADER_CG_DELETE_COMMENT:				return sizeof(DWORD);
-		case GUILD_SUBHEADER_CG_REFRESH_COMMENT:			return 0;
-		case GUILD_SUBHEADER_CG_CHANGE_MEMBER_GRADE:		return sizeof(DWORD) + sizeof(BYTE);
-		case GUILD_SUBHEADER_CG_USE_SKILL:					return sizeof(TPacketCGGuildUseSkill);
-		case GUILD_SUBHEADER_CG_CHANGE_MEMBER_GENERAL:		return sizeof(DWORD) + sizeof(BYTE);
-		case GUILD_SUBHEADER_CG_GUILD_INVITE_ANSWER:		return sizeof(DWORD) + sizeof(BYTE);
+		case GuildSub::CG::DEPOSIT_MONEY:				return sizeof(int);
+		case GuildSub::CG::WITHDRAW_MONEY:				return sizeof(int);
+		case GuildSub::CG::ADD_MEMBER:					return sizeof(DWORD);
+		case GuildSub::CG::REMOVE_MEMBER:				return sizeof(DWORD);
+		case GuildSub::CG::CHANGE_GRADE_NAME:			return 10;
+		case GuildSub::CG::CHANGE_GRADE_AUTHORITY:		return sizeof(BYTE) + sizeof(BYTE);
+		case GuildSub::CG::OFFER:						return sizeof(DWORD);
+		case GuildSub::CG::CHARGE_GSP:					return sizeof(int);
+		case GuildSub::CG::POST_COMMENT:				return 1;
+		case GuildSub::CG::DELETE_COMMENT:				return sizeof(DWORD);
+		case GuildSub::CG::REFRESH_COMMENT:			return 0;
+		case GuildSub::CG::CHANGE_MEMBER_GRADE:		return sizeof(DWORD) + sizeof(BYTE);
+		case GuildSub::CG::USE_SKILL:					return sizeof(TPacketCGGuildUseSkill);
+		case GuildSub::CG::CHANGE_MEMBER_GENERAL:		return sizeof(DWORD) + sizeof(BYTE);
+		case GuildSub::CG::GUILD_INVITE_ANSWER:		return sizeof(DWORD) + sizeof(BYTE);
 	}
 
 	return 0;
 }
+
+// ---------------------------------------------------------------------------
+// Guild sub-handler type and dispatch table
+// ---------------------------------------------------------------------------
+using GuildSubHandler = int (CInputMain::*)(LPCHARACTER, const char*, size_t);
 
 int CInputMain::Guild(LPCHARACTER ch, const char * data, size_t uiBytes)
 {
@@ -2597,11 +2622,10 @@ int CInputMain::Guild(LPCHARACTER ch, const char * data, size_t uiBytes)
 		return -1;
 
 	const TPacketCGGuild* p = reinterpret_cast<const TPacketCGGuild*>(data);
-	const char* c_pData = data + sizeof(TPacketCGGuild);
 
 	uiBytes -= sizeof(TPacketCGGuild);
 
-	const GUILD_SUBHEADER_CG SubHeader = static_cast<GUILD_SUBHEADER_CG>(p->subheader);
+	const uint8_t SubHeader = p->subheader;
 	const size_t SubPacketLen = GetSubPacketSize(SubHeader);
 
 	if (uiBytes < SubPacketLen)
@@ -2613,347 +2637,439 @@ int CInputMain::Guild(LPCHARACTER ch, const char * data, size_t uiBytes)
 
 	if (NULL == pGuild)
 	{
-		if (SubHeader != GUILD_SUBHEADER_CG_GUILD_INVITE_ANSWER)
+		if (SubHeader != GuildSub::CG::GUILD_INVITE_ANSWER)
 		{
 			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<길드> 길드에 속해있지 않습니다."));
 			return SubPacketLen;
 		}
 	}
 
-	switch (SubHeader)
+	static const std::unordered_map<uint8_t, GuildSubHandler> handlers = {
+		{ GuildSub::CG::DEPOSIT_MONEY,			&CInputMain::GuildSub_DepositMoney },
+		{ GuildSub::CG::WITHDRAW_MONEY,		&CInputMain::GuildSub_WithdrawMoney },
+		{ GuildSub::CG::ADD_MEMBER,			&CInputMain::GuildSub_AddMember },
+		{ GuildSub::CG::REMOVE_MEMBER,			&CInputMain::GuildSub_RemoveMember },
+		{ GuildSub::CG::CHANGE_GRADE_NAME,		&CInputMain::GuildSub_ChangeGradeName },
+		{ GuildSub::CG::CHANGE_GRADE_AUTHORITY,	&CInputMain::GuildSub_ChangeGradeAuthority },
+		{ GuildSub::CG::OFFER,				&CInputMain::GuildSub_Offer },
+		{ GuildSub::CG::CHARGE_GSP,			&CInputMain::GuildSub_ChargeGSP },
+		{ GuildSub::CG::POST_COMMENT,			&CInputMain::GuildSub_PostComment },
+		{ GuildSub::CG::DELETE_COMMENT,			&CInputMain::GuildSub_DeleteComment },
+		{ GuildSub::CG::REFRESH_COMMENT,		&CInputMain::GuildSub_RefreshComment },
+		{ GuildSub::CG::CHANGE_MEMBER_GRADE,		&CInputMain::GuildSub_ChangeMemberGrade },
+		{ GuildSub::CG::USE_SKILL,			&CInputMain::GuildSub_UseSkill },
+		{ GuildSub::CG::CHANGE_MEMBER_GENERAL,		&CInputMain::GuildSub_ChangeMemberGeneral },
+		{ GuildSub::CG::GUILD_INVITE_ANSWER,		&CInputMain::GuildSub_InviteAnswer },
+	};
+
+	auto it = handlers.find(SubHeader);
+	if (it == handlers.end())
 	{
-		case GUILD_SUBHEADER_CG_DEPOSIT_MONEY:
-			{
-				// by mhh : 길드자금은 당분간 넣을 수 없다.
-				return SubPacketLen;
-
-				const int gold = MIN(*reinterpret_cast<const int*>(c_pData), __deposit_limit());
-
-				if (gold < 0)
-				{
-					ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<길드> 잘못된 금액입니다."));
-					return SubPacketLen;
-				}
-
-				if (ch->GetGold() < gold)
-				{
-					ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<길드> 가지고 있는 돈이 부족합니다."));
-					return SubPacketLen;
-				}
-
-				pGuild->RequestDepositMoney(ch, gold);
-			}
-			return SubPacketLen;
-
-		case GUILD_SUBHEADER_CG_WITHDRAW_MONEY:
-			{
-				// by mhh : 길드자금은 당분간 뺄 수 없다.
-				return SubPacketLen;
-
-				const int gold = MIN(*reinterpret_cast<const int*>(c_pData), 500000);
-
-				if (gold < 0)
-				{
-					ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<길드> 잘못된 금액입니다."));
-					return SubPacketLen;
-				}
-
-				pGuild->RequestWithdrawMoney(ch, gold);
-			}
-			return SubPacketLen;
-
-		case GUILD_SUBHEADER_CG_ADD_MEMBER:
-			{
-				const DWORD vid = *reinterpret_cast<const DWORD*>(c_pData);
-				LPCHARACTER newmember = CHARACTER_MANAGER::instance().Find(vid);
-
-				// if (!newmember)
-				if (!newmember || !newmember->IsPC()) // Fix
-				{
-					ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<길드> 그러한 사람을 찾을 수 없습니다."));
-					return SubPacketLen;
-				}
-
-				if (!ch->IsPC())
-					return SubPacketLen;
-
-				if (LC_IsCanada() == true)
-				{
-					if (newmember->GetQuestFlag("change_guild_master.be_other_member") > get_global_time())
-					{
-						ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<길드> 아직 가입할 수 없는 캐릭터입니다"));
-						return SubPacketLen;
-					}
-				}
-
-				pGuild->Invite(ch, newmember);
-			}
-			return SubPacketLen;
-
-		case GUILD_SUBHEADER_CG_REMOVE_MEMBER:
-			{
-				if (pGuild->UnderAnyWar() != 0)
-				{
-					ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<길드> 길드전 중에는 길드원을 탈퇴시킬 수 없습니다."));
-					return SubPacketLen;
-				}
-
-				const DWORD pid = *reinterpret_cast<const DWORD*>(c_pData);
-				const TGuildMember* m = pGuild->GetMember(ch->GetPlayerID());
-
-				if (NULL == m)
-					return -1;
-
-				LPCHARACTER member = CHARACTER_MANAGER::instance().FindByPID(pid);
-
-				if (member)
-				{
-					if (member->GetGuild() != pGuild)
-					{
-						ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<길드> 상대방이 같은 길드가 아닙니다."));
-						return SubPacketLen;
-					}
-
-					if (!pGuild->HasGradeAuth(m->grade, GUILD_AUTH_REMOVE_MEMBER))
-					{
-						ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<길드> 길드원을 강제 탈퇴 시킬 권한이 없습니다."));
-						return SubPacketLen;
-					}
-
-					member->SetQuestFlag("guild_manage.new_withdraw_time", get_global_time());
-					pGuild->RequestRemoveMember(member->GetPlayerID());
-
-					if (LC_IsBrazil() == true)
-					{
-						DBManager::instance().Query("REPLACE INTO guild_invite_limit VALUES(%d, %d)", pGuild->GetID(), get_global_time());
-					}
-				}
-				else
-				{
-					if (!pGuild->HasGradeAuth(m->grade, GUILD_AUTH_REMOVE_MEMBER))
-					{
-						ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<길드> 길드원을 강제 탈퇴 시킬 권한이 없습니다."));
-						return SubPacketLen;
-					}
-
-					if (pGuild->RequestRemoveMember(pid))
-						ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<길드> 길드원을 강제 탈퇴 시켰습니다."));
-					else
-						ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<길드> 그러한 사람을 찾을 수 없습니다."));
-				}
-			}
-			return SubPacketLen;
-
-		case GUILD_SUBHEADER_CG_CHANGE_GRADE_NAME:
-			{
-				char gradename[GUILD_GRADE_NAME_MAX_LEN + 1];
-				strlcpy(gradename, c_pData + 1, sizeof(gradename));
-
-				const TGuildMember * m = pGuild->GetMember(ch->GetPlayerID());
-
-				if (NULL == m)
-					return -1;
-
-				if (m->grade != GUILD_LEADER_GRADE)
-				{
-					ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<길드> 직위 이름을 변경할 권한이 없습니다."));
-				}
-				else if (*c_pData == GUILD_LEADER_GRADE)
-				{
-					ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<길드> 길드장의 직위 이름은 변경할 수 없습니다."));
-				}
-				else if (!check_name(gradename))
-				{
-					ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<길드> 적합하지 않은 직위 이름 입니다."));
-				}
-				else
-				{
-					pGuild->ChangeGradeName(*c_pData, gradename);
-				}
-			}
-			return SubPacketLen;
-
-		case GUILD_SUBHEADER_CG_CHANGE_GRADE_AUTHORITY:
-			{
-				const TGuildMember* m = pGuild->GetMember(ch->GetPlayerID());
-
-				if (NULL == m)
-					return -1;
-
-				if (m->grade != GUILD_LEADER_GRADE)
-				{
-					ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<길드> 직위 권한을 변경할 권한이 없습니다."));
-				}
-				else if (*c_pData == GUILD_LEADER_GRADE)
-				{
-					ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<길드> 길드장의 권한은 변경할 수 없습니다."));
-				}
-				else
-				{
-					pGuild->ChangeGradeAuth(*c_pData, *(c_pData + 1));
-				}
-			}
-			return SubPacketLen;
-
-		case GUILD_SUBHEADER_CG_OFFER:
-			{
-				DWORD offer = *reinterpret_cast<const DWORD*>(c_pData);
-
-				if (pGuild->GetLevel() >= GUILD_MAX_LEVEL && LC_IsHongKong() == false)
-				{
-					ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<길드> 길드가 이미 최고 레벨입니다."));
-				}
-				else
-				{
-					offer /= 100;
-					offer *= 100;
-
-					if (pGuild->OfferExp(ch, offer))
-					{
-						ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<길드> %u의 경험치를 투자하였습니다."), offer);
-					}
-					else
-					{
-						ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<길드> 경험치 투자에 실패하였습니다."));
-					}
-				}
-			}
-			return SubPacketLen;
-
-		case GUILD_SUBHEADER_CG_CHARGE_GSP:
-			{
-				const int offer = *reinterpret_cast<const int*>(c_pData);
-				const int gold = offer * 100;
-
-				if (offer < 0 || gold < offer || gold < 0 || ch->GetGold() < gold)
-				{
-					ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<길드> 돈이 부족합니다."));
-					return SubPacketLen;
-				}
-
-				if (!pGuild->ChargeSP(ch, offer))
-				{
-					ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<길드> 용신력 회복에 실패하였습니다."));
-				}
-			}
-			return SubPacketLen;
-
-		case GUILD_SUBHEADER_CG_POST_COMMENT:
-			{
-				const size_t length = *c_pData;
-
-				if (length > GUILD_COMMENT_MAX_LEN)
-				{
-					// 잘못된 길이.. 끊어주자.
-					sys_err("POST_COMMENT: %s comment too long (length: %u)", ch->GetName(), length);
-					ch->GetDesc()->SetPhase(PHASE_CLOSE);
-					return -1;
-				}
-
-				if (uiBytes < 1 + length)
-					return -1;
-
-				const TGuildMember* m = pGuild->GetMember(ch->GetPlayerID());
-
-				if (NULL == m)
-					return -1;
-
-				if (length && !pGuild->HasGradeAuth(m->grade, GUILD_AUTH_NOTICE) && *(c_pData + 1) == '!')
-				{
-					ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<길드> 공지글을 작성할 권한이 없습니다."));
-				}
-				else
-				{
-					std::string str(c_pData + 1, length);
-					pGuild->AddComment(ch, str);
-				}
-
-				return (1 + length);
-			}
-
-		case GUILD_SUBHEADER_CG_DELETE_COMMENT:
-			{
-				const DWORD comment_id = *reinterpret_cast<const DWORD*>(c_pData);
-
-				pGuild->DeleteComment(ch, comment_id);
-			}
-			return SubPacketLen;
-
-		case GUILD_SUBHEADER_CG_REFRESH_COMMENT:
-			pGuild->RefreshComment(ch);
-			return SubPacketLen;
-
-		case GUILD_SUBHEADER_CG_CHANGE_MEMBER_GRADE:
-			{
-				const DWORD pid = *reinterpret_cast<const DWORD*>(c_pData);
-				const BYTE grade = *(c_pData + sizeof(DWORD));
-				const TGuildMember* m = pGuild->GetMember(ch->GetPlayerID());
-
-				if (NULL == m)
-					return -1;
-
-				if (m->grade != GUILD_LEADER_GRADE)
-					ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<길드> 직위를 변경할 권한이 없습니다."));
-				else if (ch->GetPlayerID() == pid)
-					ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<길드> 길드장의 직위는 변경할 수 없습니다."));
-				else if (grade == 1)
-					ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<길드> 길드장으로 직위를 변경할 수 없습니다."));
-				else
-					pGuild->ChangeMemberGrade(pid, grade);
-			}
-			return SubPacketLen;
-
-		case GUILD_SUBHEADER_CG_USE_SKILL:
-			{
-				const TPacketCGGuildUseSkill* p = reinterpret_cast<const TPacketCGGuildUseSkill*>(c_pData);
-
-				pGuild->UseSkill(p->dwVnum, ch, p->dwPID);
-			}
-			return SubPacketLen;
-
-		case GUILD_SUBHEADER_CG_CHANGE_MEMBER_GENERAL:
-			{
-				const DWORD pid = *reinterpret_cast<const DWORD*>(c_pData);
-				const BYTE is_general = *(c_pData + sizeof(DWORD));
-				const TGuildMember* m = pGuild->GetMember(ch->GetPlayerID());
-
-				if (NULL == m)
-					return -1;
-
-				if (m->grade != GUILD_LEADER_GRADE)
-				{
-					ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<길드> 장군을 지정할 권한이 없습니다."));
-				}
-				else
-				{
-					if (!pGuild->ChangeMemberGeneral(pid, is_general))
-					{
-						ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<길드> 더이상 장수를 지정할 수 없습니다."));
-					}
-				}
-			}
-			return SubPacketLen;
-
-		case GUILD_SUBHEADER_CG_GUILD_INVITE_ANSWER:
-			{
-				const DWORD guild_id = *reinterpret_cast<const DWORD*>(c_pData);
-				const BYTE accept = *(c_pData + sizeof(DWORD));
-
-				CGuild * g = CGuildManager::instance().FindGuild(guild_id);
-
-				if (g)
-				{
-					if (accept)
-						g->InviteAccept(ch);
-					else
-						g->InviteDeny(ch->GetPlayerID());
-				}
-			}
-			return SubPacketLen;
-
+		sys_err("Guild: unknown subheader %d from %s", SubHeader, ch->GetName());
+		return 0;
 	}
 
-	return 0;
+	return (this->*(it->second))(ch, data, uiBytes);
+}
+
+// ---------------------------------------------------------------------------
+// Guild sub-handlers — extracted from Guild() switch cases
+// ---------------------------------------------------------------------------
+
+int CInputMain::GuildSub_DepositMoney(LPCHARACTER ch, const char* data, size_t uiBytes)
+{
+	const char* c_pData = data + sizeof(TPacketCGGuild);
+	const size_t SubPacketLen = GetSubPacketSize(GuildSub::CG::DEPOSIT_MONEY);
+	CGuild* pGuild = ch->GetGuild();
+
+	// by mhh : 길드자금은 당분간 넣을 수 없다.
+	return SubPacketLen;
+
+	const int gold = MIN(*reinterpret_cast<const int*>(c_pData), __deposit_limit());
+
+	if (gold < 0)
+	{
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<길드> 잘못된 금액입니다."));
+		return SubPacketLen;
+	}
+
+	if (ch->GetGold() < gold)
+	{
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<길드> 가지고 있는 돈이 부족합니다."));
+		return SubPacketLen;
+	}
+
+	pGuild->RequestDepositMoney(ch, gold);
+	return SubPacketLen;
+}
+
+int CInputMain::GuildSub_WithdrawMoney(LPCHARACTER ch, const char* data, size_t uiBytes)
+{
+	const char* c_pData = data + sizeof(TPacketCGGuild);
+	const size_t SubPacketLen = GetSubPacketSize(GuildSub::CG::WITHDRAW_MONEY);
+	CGuild* pGuild = ch->GetGuild();
+
+	// by mhh : 길드자금은 당분간 뺄 수 없다.
+	return SubPacketLen;
+
+	const int gold = MIN(*reinterpret_cast<const int*>(c_pData), 500000);
+
+	if (gold < 0)
+	{
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<길드> 잘못된 금액입니다."));
+		return SubPacketLen;
+	}
+
+	pGuild->RequestWithdrawMoney(ch, gold);
+	return SubPacketLen;
+}
+
+int CInputMain::GuildSub_AddMember(LPCHARACTER ch, const char* data, size_t uiBytes)
+{
+	const char* c_pData = data + sizeof(TPacketCGGuild);
+	const size_t SubPacketLen = GetSubPacketSize(GuildSub::CG::ADD_MEMBER);
+	CGuild* pGuild = ch->GetGuild();
+
+	const DWORD vid = *reinterpret_cast<const DWORD*>(c_pData);
+	LPCHARACTER newmember = CHARACTER_MANAGER::instance().Find(vid);
+
+	// if (!newmember)
+	if (!newmember || !newmember->IsPC()) // Fix
+	{
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<길드> 그러한 사람을 찾을 수 없습니다."));
+		return SubPacketLen;
+	}
+
+	if (!ch->IsPC())
+		return SubPacketLen;
+
+	if (LC_IsCanada() == true)
+	{
+		if (newmember->GetQuestFlag("change_guild_master.be_other_member") > get_global_time())
+		{
+			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<길드> 아직 가입할 수 없는 캐릭터입니다"));
+			return SubPacketLen;
+		}
+	}
+
+	pGuild->Invite(ch, newmember);
+	return SubPacketLen;
+}
+
+int CInputMain::GuildSub_RemoveMember(LPCHARACTER ch, const char* data, size_t uiBytes)
+{
+	const char* c_pData = data + sizeof(TPacketCGGuild);
+	const size_t SubPacketLen = GetSubPacketSize(GuildSub::CG::REMOVE_MEMBER);
+	CGuild* pGuild = ch->GetGuild();
+
+	if (pGuild->UnderAnyWar() != 0)
+	{
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<길드> 길드전 중에는 길드원을 탈퇴시킬 수 없습니다."));
+		return SubPacketLen;
+	}
+
+	const DWORD pid = *reinterpret_cast<const DWORD*>(c_pData);
+	const TGuildMember* m = pGuild->GetMember(ch->GetPlayerID());
+
+	if (NULL == m)
+		return -1;
+
+	LPCHARACTER member = CHARACTER_MANAGER::instance().FindByPID(pid);
+
+	if (member)
+	{
+		if (member->GetGuild() != pGuild)
+		{
+			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<길드> 상대방이 같은 길드가 아닙니다."));
+			return SubPacketLen;
+		}
+
+		if (!pGuild->HasGradeAuth(m->grade, GUILD_AUTH_REMOVE_MEMBER))
+		{
+			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<길드> 길드원을 강제 탈퇴 시킬 권한이 없습니다."));
+			return SubPacketLen;
+		}
+
+		member->SetQuestFlag("guild_manage.new_withdraw_time", get_global_time());
+		pGuild->RequestRemoveMember(member->GetPlayerID());
+
+		if (LC_IsBrazil() == true)
+		{
+			DBManager::instance().Query("REPLACE INTO guild_invite_limit VALUES(%d, %d)", pGuild->GetID(), get_global_time());
+		}
+	}
+	else
+	{
+		if (!pGuild->HasGradeAuth(m->grade, GUILD_AUTH_REMOVE_MEMBER))
+		{
+			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<길드> 길드원을 강제 탈퇴 시킬 권한이 없습니다."));
+			return SubPacketLen;
+		}
+
+		if (pGuild->RequestRemoveMember(pid))
+			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<길드> 길드원을 강제 탈퇴 시켰습니다."));
+		else
+			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<길드> 그러한 사람을 찾을 수 없습니다."));
+	}
+
+	return SubPacketLen;
+}
+
+int CInputMain::GuildSub_ChangeGradeName(LPCHARACTER ch, const char* data, size_t uiBytes)
+{
+	const char* c_pData = data + sizeof(TPacketCGGuild);
+	const size_t SubPacketLen = GetSubPacketSize(GuildSub::CG::CHANGE_GRADE_NAME);
+	CGuild* pGuild = ch->GetGuild();
+
+	char gradename[GUILD_GRADE_NAME_MAX_LEN + 1];
+	strlcpy(gradename, c_pData + 1, sizeof(gradename));
+
+	const TGuildMember * m = pGuild->GetMember(ch->GetPlayerID());
+
+	if (NULL == m)
+		return -1;
+
+	if (m->grade != GUILD_LEADER_GRADE)
+	{
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<길드> 직위 이름을 변경할 권한이 없습니다."));
+	}
+	else if (*c_pData == GUILD_LEADER_GRADE)
+	{
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<길드> 길드장의 직위 이름은 변경할 수 없습니다."));
+	}
+	else if (!check_name(gradename))
+	{
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<길드> 적합하지 않은 직위 이름 입니다."));
+	}
+	else
+	{
+		pGuild->ChangeGradeName(*c_pData, gradename);
+	}
+
+	return SubPacketLen;
+}
+
+int CInputMain::GuildSub_ChangeGradeAuthority(LPCHARACTER ch, const char* data, size_t uiBytes)
+{
+	const char* c_pData = data + sizeof(TPacketCGGuild);
+	const size_t SubPacketLen = GetSubPacketSize(GuildSub::CG::CHANGE_GRADE_AUTHORITY);
+	CGuild* pGuild = ch->GetGuild();
+
+	const TGuildMember* m = pGuild->GetMember(ch->GetPlayerID());
+
+	if (NULL == m)
+		return -1;
+
+	if (m->grade != GUILD_LEADER_GRADE)
+	{
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<길드> 직위 권한을 변경할 권한이 없습니다."));
+	}
+	else if (*c_pData == GUILD_LEADER_GRADE)
+	{
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<길드> 길드장의 권한은 변경할 수 없습니다."));
+	}
+	else
+	{
+		pGuild->ChangeGradeAuth(*c_pData, *(c_pData + 1));
+	}
+
+	return SubPacketLen;
+}
+
+int CInputMain::GuildSub_Offer(LPCHARACTER ch, const char* data, size_t uiBytes)
+{
+	const char* c_pData = data + sizeof(TPacketCGGuild);
+	const size_t SubPacketLen = GetSubPacketSize(GuildSub::CG::OFFER);
+	CGuild* pGuild = ch->GetGuild();
+
+	DWORD offer = *reinterpret_cast<const DWORD*>(c_pData);
+
+	if (pGuild->GetLevel() >= GUILD_MAX_LEVEL && LC_IsHongKong() == false)
+	{
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<길드> 길드가 이미 최고 레벨입니다."));
+	}
+	else
+	{
+		offer /= 100;
+		offer *= 100;
+
+		if (pGuild->OfferExp(ch, offer))
+		{
+			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<길드> %u의 경험치를 투자하였습니다."), offer);
+		}
+		else
+		{
+			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<길드> 경험치 투자에 실패하였습니다."));
+		}
+	}
+
+	return SubPacketLen;
+}
+
+int CInputMain::GuildSub_ChargeGSP(LPCHARACTER ch, const char* data, size_t uiBytes)
+{
+	const char* c_pData = data + sizeof(TPacketCGGuild);
+	const size_t SubPacketLen = GetSubPacketSize(GuildSub::CG::CHARGE_GSP);
+	CGuild* pGuild = ch->GetGuild();
+
+	const int offer = *reinterpret_cast<const int*>(c_pData);
+	const int gold = offer * 100;
+
+	if (offer < 0 || gold < offer || gold < 0 || ch->GetGold() < gold)
+	{
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<길드> 돈이 부족합니다."));
+		return SubPacketLen;
+	}
+
+	if (!pGuild->ChargeSP(ch, offer))
+	{
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<길드> 용신력 회복에 실패하였습니다."));
+	}
+
+	return SubPacketLen;
+}
+
+int CInputMain::GuildSub_PostComment(LPCHARACTER ch, const char* data, size_t uiBytes)
+{
+	const char* c_pData = data + sizeof(TPacketCGGuild);
+	CGuild* pGuild = ch->GetGuild();
+
+	const size_t length = *c_pData;
+
+	if (length > GUILD_COMMENT_MAX_LEN)
+	{
+		// 잘못된 길이.. 끊어주자.
+		sys_err("POST_COMMENT: %s comment too long (length: %u)", ch->GetName(), length);
+		ch->GetDesc()->SetPhase(PHASE_CLOSE);
+		return -1;
+	}
+
+	if (uiBytes < 1 + length)
+		return -1;
+
+	const TGuildMember* m = pGuild->GetMember(ch->GetPlayerID());
+
+	if (NULL == m)
+		return -1;
+
+	if (length && !pGuild->HasGradeAuth(m->grade, GUILD_AUTH_NOTICE) && *(c_pData + 1) == '!')
+	{
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<길드> 공지글을 작성할 권한이 없습니다."));
+	}
+	else
+	{
+		std::string str(c_pData + 1, length);
+		pGuild->AddComment(ch, str);
+	}
+
+	return (1 + length);
+}
+
+int CInputMain::GuildSub_DeleteComment(LPCHARACTER ch, const char* data, size_t uiBytes)
+{
+	const char* c_pData = data + sizeof(TPacketCGGuild);
+	const size_t SubPacketLen = GetSubPacketSize(GuildSub::CG::DELETE_COMMENT);
+	CGuild* pGuild = ch->GetGuild();
+
+	const DWORD comment_id = *reinterpret_cast<const DWORD*>(c_pData);
+
+	pGuild->DeleteComment(ch, comment_id);
+	return SubPacketLen;
+}
+
+int CInputMain::GuildSub_RefreshComment(LPCHARACTER ch, const char* data, size_t uiBytes)
+{
+	const size_t SubPacketLen = GetSubPacketSize(GuildSub::CG::REFRESH_COMMENT);
+	CGuild* pGuild = ch->GetGuild();
+
+	pGuild->RefreshComment(ch);
+	return SubPacketLen;
+}
+
+int CInputMain::GuildSub_ChangeMemberGrade(LPCHARACTER ch, const char* data, size_t uiBytes)
+{
+	const char* c_pData = data + sizeof(TPacketCGGuild);
+	const size_t SubPacketLen = GetSubPacketSize(GuildSub::CG::CHANGE_MEMBER_GRADE);
+	CGuild* pGuild = ch->GetGuild();
+
+	const DWORD pid = *reinterpret_cast<const DWORD*>(c_pData);
+	const BYTE grade = *(c_pData + sizeof(DWORD));
+	const TGuildMember* m = pGuild->GetMember(ch->GetPlayerID());
+
+	if (NULL == m)
+		return -1;
+
+	if (m->grade != GUILD_LEADER_GRADE)
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<길드> 직위를 변경할 권한이 없습니다."));
+	else if (ch->GetPlayerID() == pid)
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<길드> 길드장의 직위는 변경할 수 없습니다."));
+	else if (grade == 1)
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<길드> 길드장으로 직위를 변경할 수 없습니다."));
+	else
+		pGuild->ChangeMemberGrade(pid, grade);
+
+	return SubPacketLen;
+}
+
+int CInputMain::GuildSub_UseSkill(LPCHARACTER ch, const char* data, size_t uiBytes)
+{
+	const char* c_pData = data + sizeof(TPacketCGGuild);
+	const size_t SubPacketLen = GetSubPacketSize(GuildSub::CG::USE_SKILL);
+	CGuild* pGuild = ch->GetGuild();
+
+	const TPacketCGGuildUseSkill* p = reinterpret_cast<const TPacketCGGuildUseSkill*>(c_pData);
+
+	pGuild->UseSkill(p->dwVnum, ch, p->dwPID);
+	return SubPacketLen;
+}
+
+int CInputMain::GuildSub_ChangeMemberGeneral(LPCHARACTER ch, const char* data, size_t uiBytes)
+{
+	const char* c_pData = data + sizeof(TPacketCGGuild);
+	const size_t SubPacketLen = GetSubPacketSize(GuildSub::CG::CHANGE_MEMBER_GENERAL);
+	CGuild* pGuild = ch->GetGuild();
+
+	const DWORD pid = *reinterpret_cast<const DWORD*>(c_pData);
+	const BYTE is_general = *(c_pData + sizeof(DWORD));
+	const TGuildMember* m = pGuild->GetMember(ch->GetPlayerID());
+
+	if (NULL == m)
+		return -1;
+
+	if (m->grade != GUILD_LEADER_GRADE)
+	{
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<길드> 장군을 지정할 권한이 없습니다."));
+	}
+	else
+	{
+		if (!pGuild->ChangeMemberGeneral(pid, is_general))
+		{
+			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<길드> 더이상 장수를 지정할 수 없습니다."));
+		}
+	}
+
+	return SubPacketLen;
+}
+
+int CInputMain::GuildSub_InviteAnswer(LPCHARACTER ch, const char* data, size_t uiBytes)
+{
+	const char* c_pData = data + sizeof(TPacketCGGuild);
+	const size_t SubPacketLen = GetSubPacketSize(GuildSub::CG::GUILD_INVITE_ANSWER);
+
+	const DWORD guild_id = *reinterpret_cast<const DWORD*>(c_pData);
+	const BYTE accept = *(c_pData + sizeof(DWORD));
+
+	CGuild * g = CGuildManager::instance().FindGuild(guild_id);
+
+	if (g)
+	{
+		if (accept)
+			g->InviteAccept(ch);
+		else
+			g->InviteDeny(ch->GetPlayerID());
+	}
+
+	return SubPacketLen;
 }
 
 void CInputMain::Fishing(LPCHARACTER ch, const char* c_pData)
@@ -3089,350 +3205,288 @@ void CInputMain::Refine(LPCHARACTER ch, const char* c_pData)
 	ch->ClearRefineMode();
 }
 
-int CInputMain::Analyze(LPDESC d, BYTE bHeader, const char * c_pData)
-{
-	LPCHARACTER ch;
+// ---------------------------------------------------------------------------
+// Handler map constructors + registration
+// ---------------------------------------------------------------------------
 
-	if (!(ch = d->GetCharacter()))
+CInputMain::CInputMain()
+{
+	RegisterHandlers();
+}
+
+// Custom adapter methods — bridge varied handler signatures to unified MainHandler
+
+int CInputMain::HandlePong(LPDESC d, const char*)
+{
+	Pong(d);
+	return 0;
+}
+
+int CInputMain::HandleChat(LPDESC d, const char* c_pData)
+{
+	if (test_server)
+	{
+		char* pBuf = (char*)c_pData;
+		sys_log(0, "%s", pBuf + sizeof(TPacketCGChat));
+	}
+	return Chat(d->GetCharacter(), c_pData, m_iBufferLeft);
+}
+
+int CInputMain::HandleWhisper(LPDESC d, const char* c_pData)
+{
+	return Whisper(d->GetCharacter(), c_pData, m_iBufferLeft);
+}
+
+int CInputMain::HandleMove(LPDESC d, const char* c_pData)
+{
+	LPCHARACTER ch = d->GetCharacter();
+	Move(ch, c_pData);
+
+	if (g_bCheckClientVersion)
+	{
+		int version = atoi(g_stClientVersion.c_str());
+		int date = atoi(d->GetClientVersion());
+
+		if (version != date)
+		{
+			ch->ChatPacket(CHAT_TYPE_NOTICE, LC_TEXT("클라이언트 버전이 틀려 로그아웃 됩니다. 정상적으로 패치 후 접속하세요."));
+			d->DelayedDisconnect(10);
+			LogManager::instance().HackLog("VERSION_CONFLICT", d->GetAccountTable().login, ch->GetName(), d->GetHostName());
+		}
+	}
+	else if (!*d->GetClientVersion())
+	{
+		sys_err("Version not recieved name %s", ch->GetName());
+		d->SetPhase(PHASE_CLOSE);
+	}
+	return 0;
+}
+
+int CInputMain::HandleAttack(LPDESC d, const char* c_pData)
+{
+	Attack(d->GetCharacter(), CG::ATTACK, c_pData);
+	return 0;
+}
+
+int CInputMain::HandleShoot(LPDESC d, const char* c_pData)
+{
+	Attack(d->GetCharacter(), CG::SHOOT, c_pData);
+	return 0;
+}
+
+int CInputMain::HandleShop(LPDESC d, const char* c_pData)
+{
+	return Shop(d->GetCharacter(), c_pData, m_iBufferLeft);
+}
+
+int CInputMain::HandleMessenger(LPDESC d, const char* c_pData)
+{
+	return Messenger(d->GetCharacter(), c_pData, m_iBufferLeft);
+}
+
+int CInputMain::HandleSyncPosition(LPDESC d, const char* c_pData)
+{
+	return SyncPosition(d->GetCharacter(), c_pData, m_iBufferLeft);
+}
+
+int CInputMain::HandleFlyTargeting(LPDESC d, const char* c_pData)
+{
+	FlyTarget(d->GetCharacter(), c_pData, CG::FLY_TARGETING);
+	return 0;
+}
+
+int CInputMain::HandleAddFlyTargeting(LPDESC d, const char* c_pData)
+{
+	FlyTarget(d->GetCharacter(), c_pData, CG::ADD_FLY_TARGETING);
+	return 0;
+}
+
+int CInputMain::HandleQuestCancel(LPDESC d, const char*)
+{
+	QuestCancel(d->GetCharacter());
+	return 0;
+}
+
+int CInputMain::HandleSafeboxCheckout(LPDESC d, const char* c_pData)
+{
+	SafeboxCheckout(d->GetCharacter(), c_pData, false);
+	return 0;
+}
+
+int CInputMain::HandleMallCheckout(LPDESC d, const char* c_pData)
+{
+	SafeboxCheckout(d->GetCharacter(), c_pData, true);
+	return 0;
+}
+
+int CInputMain::HandleGuild(LPDESC d, const char* c_pData)
+{
+	return Guild(d->GetCharacter(), c_pData, m_iBufferLeft);
+}
+
+int CInputMain::HandleMyShop(LPDESC d, const char* c_pData)
+{
+	return MyShop(d->GetCharacter(), c_pData, m_iBufferLeft);
+}
+
+int CInputMain::HandleClientVersion(LPDESC d, const char* c_pData)
+{
+	Version(d->GetCharacter(), c_pData);
+	return 0;
+}
+
+int CInputMain::HandleDragonSoulRefine(LPDESC d, const char* c_pData)
+{
+	LPCHARACTER ch = d->GetCharacter();
+	TPacketCGDragonSoulRefine* p = reinterpret_cast<TPacketCGDragonSoulRefine*>((void*)c_pData);
+	switch (p->bSubType)
+	{
+		case DragonSoulSub::CLOSE:
+			ch->DragonSoul_RefineWindow_Close();
+			break;
+		case DragonSoulSub::DO_REFINE_GRADE:
+			DSManager::instance().DoRefineGrade(ch, p->ItemGrid);
+			break;
+		case DragonSoulSub::DO_REFINE_STEP:
+			DSManager::instance().DoRefineStep(ch, p->ItemGrid);
+			break;
+		case DragonSoulSub::DO_REFINE_STRENGTH:
+			DSManager::instance().DoRefineStrength(ch, p->ItemGrid);
+			break;
+	}
+	return 0;
+}
+
+// ---------------------------------------------------------------------------
+// Handler registration tables
+// ---------------------------------------------------------------------------
+
+void CInputMain::RegisterHandlers()
+{
+	auto reg = [this](uint16_t h, MainHandler fn, bool blockObs = false) {
+		m_handlers[h] = { fn, blockObs };
+	};
+
+	// Pong
+	reg(CG::PONG,              &CInputMain::HandlePong);
+
+	// Variable-length (custom adapters)
+	reg(CG::CHAT,              &CInputMain::HandleChat);
+	reg(CG::WHISPER,           &CInputMain::HandleWhisper);
+	reg(CG::SHOP,              &CInputMain::HandleShop);
+	reg(CG::MESSENGER,         &CInputMain::HandleMessenger);
+	reg(CG::SYNC_POSITION,     &CInputMain::HandleSyncPosition);
+	reg(CG::GUILD,             &CInputMain::HandleGuild);
+	reg(CG::MYSHOP,            &CInputMain::HandleMyShop);
+
+	// Special (custom adapters)
+	reg(CG::MOVE,              &CInputMain::HandleMove);
+	reg(CG::ATTACK,            &CInputMain::HandleAttack,          true);
+	reg(CG::SHOOT,             &CInputMain::HandleShoot,           true);
+	reg(CG::FLY_TARGETING,     &CInputMain::HandleFlyTargeting);
+	reg(CG::ADD_FLY_TARGETING, &CInputMain::HandleAddFlyTargeting);
+	reg(CG::QUEST_CANCEL,      &CInputMain::HandleQuestCancel);
+	reg(CG::SAFEBOX_CHECKOUT,  &CInputMain::HandleSafeboxCheckout);
+	reg(CG::MALL_CHECKOUT,     &CInputMain::HandleMallCheckout);
+	reg(CG::CLIENT_VERSION,    &CInputMain::HandleClientVersion);
+	reg(CG::DRAGON_SOUL_REFINE,&CInputMain::HandleDragonSoulRefine);
+
+	// Simple void(LPCHARACTER, const char*) — via template adapter
+	reg(CG::CHARACTER_POSITION,&CInputMain::SimpleHandler<&CInputMain::Position>);
+	reg(CG::ITEM_USE,          &CInputMain::SimpleHandler<&CInputMain::ItemUse>,        true);
+	reg(CG::ITEM_DROP,         &CInputMain::SimpleHandler<&CInputMain::ItemDrop>,       true);
+	reg(CG::ITEM_DROP2,        &CInputMain::SimpleHandler<&CInputMain::ItemDrop2>,      true);
+	reg(CG::ITEM_MOVE,         &CInputMain::SimpleHandler<&CInputMain::ItemMove>,       true);
+	reg(CG::ITEM_PICKUP,       &CInputMain::SimpleHandler<&CInputMain::ItemPickup>,     true);
+	reg(CG::ITEM_USE_TO_ITEM,  &CInputMain::SimpleHandler<&CInputMain::ItemToItem>,     true);
+	reg(CG::ITEM_GIVE,         &CInputMain::SimpleHandler<&CInputMain::ItemGive>,       true);
+	reg(CG::EXCHANGE,          &CInputMain::SimpleHandler<&CInputMain::Exchange>,        true);
+	reg(CG::USE_SKILL,         &CInputMain::SimpleHandler<&CInputMain::UseSkill>,        true);
+	reg(CG::QUICKSLOT_ADD,     &CInputMain::SimpleHandler<&CInputMain::QuickslotAdd>);
+	reg(CG::QUICKSLOT_DEL,     &CInputMain::SimpleHandler<&CInputMain::QuickslotDelete>);
+	reg(CG::QUICKSLOT_SWAP,    &CInputMain::SimpleHandler<&CInputMain::QuickslotSwap>);
+	reg(CG::ON_CLICK,          &CInputMain::SimpleHandler<&CInputMain::OnClick>);
+	reg(CG::TARGET,            &CInputMain::SimpleHandler<&CInputMain::Target>);
+	reg(CG::WARP,              &CInputMain::SimpleHandler<&CInputMain::Warp>);
+	reg(CG::SAFEBOX_CHECKIN,   &CInputMain::SimpleHandler<&CInputMain::SafeboxCheckin>);
+	reg(CG::SAFEBOX_ITEM_MOVE, &CInputMain::SimpleHandler<&CInputMain::SafeboxItemMove>);
+	reg(CG::PARTY_INVITE,      &CInputMain::SimpleHandler<&CInputMain::PartyInvite>);
+	reg(CG::PARTY_REMOVE,      &CInputMain::SimpleHandler<&CInputMain::PartyRemove>);
+	reg(CG::PARTY_INVITE_ANSWER,&CInputMain::SimpleHandler<&CInputMain::PartyInviteAnswer>);
+	reg(CG::PARTY_SET_STATE,   &CInputMain::SimpleHandler<&CInputMain::PartySetState>);
+	reg(CG::PARTY_USE_SKILL,   &CInputMain::SimpleHandler<&CInputMain::PartyUseSkill>);
+	reg(CG::PARTY_PARAMETER,   &CInputMain::SimpleHandler<&CInputMain::PartyParameter>);
+	reg(CG::ANSWER_MAKE_GUILD, &CInputMain::SimpleHandler<&CInputMain::AnswerMakeGuild>);
+	reg(CG::FISHING,           &CInputMain::SimpleHandler<&CInputMain::Fishing>);
+	reg(CG::HACK,              &CInputMain::SimpleHandler<&CInputMain::Hack>);
+	reg(CG::REFINE,            &CInputMain::SimpleHandler<&CInputMain::Refine>);
+
+	// void(LPCHARACTER, const void*) — via template adapter
+	reg(CG::SCRIPT_ANSWER,      &CInputMain::SimpleHandlerV<&CInputMain::ScriptAnswer>);
+	reg(CG::SCRIPT_BUTTON,      &CInputMain::SimpleHandlerV<&CInputMain::ScriptButton>);
+	reg(CG::SCRIPT_SELECT_ITEM, &CInputMain::SimpleHandlerV<&CInputMain::ScriptSelectItem>);
+	reg(CG::QUEST_INPUT_STRING,  &CInputMain::SimpleHandlerV<&CInputMain::QuestInputString>);
+	reg(CG::QUEST_CONFIRM,      &CInputMain::SimpleHandlerV<&CInputMain::QuestConfirm>);
+}
+
+// ---------------------------------------------------------------------------
+// Table-driven Analyze — replaces switch statement
+// ---------------------------------------------------------------------------
+
+int CInputMain::Analyze(LPDESC d, uint16_t wHeader, const char * c_pData)
+{
+	LPCHARACTER ch = d->GetCharacter();
+
+	if (!ch)
 	{
 		sys_err("no character on desc");
 		d->SetPhase(PHASE_CLOSE);
-		return (0);
+		return 0;
 	}
 
-	int iExtraLen = 0;
-	
-	if (test_server && bHeader != HEADER_CG_MOVE)
-		sys_log(0, "CInputMain::Analyze() ==> Header [%d] ", bHeader);
-
-	switch (bHeader)
+	auto it = m_handlers.find(wHeader);
+	if (it == m_handlers.end())
 	{
-		case HEADER_CG_PONG:
-			Pong(d); 
-			break;
-
-		case HEADER_CG_TIME_SYNC:
-			Handshake(d, c_pData);
-			break;
-
-		case HEADER_CG_CHAT:
-			if (test_server)
-			{
-				char* pBuf = (char*)c_pData;
-				sys_log(0, "%s", pBuf + sizeof(TPacketCGChat));
-			}
-	
-			if ((iExtraLen = Chat(ch, c_pData, m_iBufferLeft)) < 0)
-				return -1;
-			break;
-
-		case HEADER_CG_WHISPER:
-			if ((iExtraLen = Whisper(ch, c_pData, m_iBufferLeft)) < 0)
-				return -1;
-			break;
-
-		case HEADER_CG_MOVE:
-			Move(ch, c_pData);
-
-			if (LC_IsEurope())
-			{
-				if (g_bCheckClientVersion)
-				{
-					int version = atoi(g_stClientVersion.c_str());
-					int date	= atoi(d->GetClientVersion());
-
-					//if (0 != g_stClientVersion.compare(d->GetClientVersion()))
-					// if (version > date)
-					if (version != date) // Fix
-					{
-						ch->ChatPacket(CHAT_TYPE_NOTICE, LC_TEXT("클라이언트 버전이 틀려 로그아웃 됩니다. 정상적으로 패치 후 접속하세요."));
-						d->DelayedDisconnect(10);
-						LogManager::instance().HackLog("VERSION_CONFLICT", d->GetAccountTable().login, ch->GetName(), d->GetHostName());
-					}
-				}
-			}
-			else
-			{
-				if (!*d->GetClientVersion())
-				{   
-					sys_err("Version not recieved name %s", ch->GetName());
-					d->SetPhase(PHASE_CLOSE);
-				}
-			}
-			break;
-
-		case HEADER_CG_CHARACTER_POSITION:
-			Position(ch, c_pData);
-			break;
-
-		case HEADER_CG_ITEM_USE:
-			if (!ch->IsObserverMode())
-				ItemUse(ch, c_pData);
-			break;
-
-		case HEADER_CG_ITEM_DROP:
-			if (!ch->IsObserverMode())
-			{
-				ItemDrop(ch, c_pData);
-			}
-			break;
-
-		case HEADER_CG_ITEM_DROP2:
-			if (!ch->IsObserverMode())
-				ItemDrop2(ch, c_pData);
-			break;
-
-		case HEADER_CG_ITEM_MOVE:
-			if (!ch->IsObserverMode())
-				ItemMove(ch, c_pData);
-			break;
-
-		case HEADER_CG_ITEM_PICKUP:
-			if (!ch->IsObserverMode())
-				ItemPickup(ch, c_pData);
-			break;
-
-		case HEADER_CG_ITEM_USE_TO_ITEM:
-			if (!ch->IsObserverMode())
-				ItemToItem(ch, c_pData);
-			break;
-
-		case HEADER_CG_ITEM_GIVE:
-			if (!ch->IsObserverMode())
-				ItemGive(ch, c_pData);
-			break;
-
-		case HEADER_CG_EXCHANGE:
-			if (!ch->IsObserverMode())
-				Exchange(ch, c_pData);
-			break;
-
-		case HEADER_CG_ATTACK:
-		case HEADER_CG_SHOOT:
-			if (!ch->IsObserverMode())
-			{
-				Attack(ch, bHeader, c_pData);
-			}
-			break;
-
-		case HEADER_CG_USE_SKILL:
-			if (!ch->IsObserverMode())
-				UseSkill(ch, c_pData);
-			break;
-
-		case HEADER_CG_QUICKSLOT_ADD:
-			QuickslotAdd(ch, c_pData);
-			break;
-
-		case HEADER_CG_QUICKSLOT_DEL:
-			QuickslotDelete(ch, c_pData);
-			break;
-
-		case HEADER_CG_QUICKSLOT_SWAP:
-			QuickslotSwap(ch, c_pData);
-			break;
-
-		case HEADER_CG_SHOP:
-			if ((iExtraLen = Shop(ch, c_pData, m_iBufferLeft)) < 0)
-				return -1;
-			break;
-
-		case HEADER_CG_MESSENGER:
-			if ((iExtraLen = Messenger(ch, c_pData, m_iBufferLeft))<0)
-				return -1;
-			break;
-
-		case HEADER_CG_ON_CLICK:
-			OnClick(ch, c_pData);
-			break;
-
-		case HEADER_CG_SYNC_POSITION:
-			if ((iExtraLen = SyncPosition(ch, c_pData, m_iBufferLeft)) < 0)
-				return -1;
-			break;
-
-		case HEADER_CG_ADD_FLY_TARGETING:
-		case HEADER_CG_FLY_TARGETING:
-			FlyTarget(ch, c_pData, bHeader);
-			break;
-
-		case HEADER_CG_SCRIPT_BUTTON:
-			ScriptButton(ch, c_pData);
-			break;
-
-			// SCRIPT_SELECT_ITEM
-		case HEADER_CG_SCRIPT_SELECT_ITEM:
-			ScriptSelectItem(ch, c_pData);
-			break;
-			// END_OF_SCRIPT_SELECT_ITEM
-
-		case HEADER_CG_SCRIPT_ANSWER:
-			ScriptAnswer(ch, c_pData);
-			break;
-
-		case HEADER_CG_QUEST_INPUT_STRING:
-			QuestInputString(ch, c_pData);
-			break;
-
-		case HEADER_CG_QUEST_CONFIRM:
-			QuestConfirm(ch, c_pData);
-			break;
-
-		case HEADER_CG_QUEST_CANCEL:
-			QuestCancel(ch);
-			break;
-
-		case HEADER_CG_TARGET:
-			Target(ch, c_pData);
-			break;
-
-		case HEADER_CG_WARP:
-			Warp(ch, c_pData);
-			break;
-
-		case HEADER_CG_SAFEBOX_CHECKIN:
-			SafeboxCheckin(ch, c_pData);
-			break;
-
-		case HEADER_CG_SAFEBOX_CHECKOUT:
-			SafeboxCheckout(ch, c_pData, false);
-			break;
-
-		case HEADER_CG_SAFEBOX_ITEM_MOVE:
-			SafeboxItemMove(ch, c_pData);
-			break;
-
-		case HEADER_CG_MALL_CHECKOUT:
-			SafeboxCheckout(ch, c_pData, true);
-			break;
-
-		case HEADER_CG_PARTY_INVITE:
-			PartyInvite(ch, c_pData);
-			break;
-
-		case HEADER_CG_PARTY_REMOVE:
-			PartyRemove(ch, c_pData);
-			break;
-
-		case HEADER_CG_PARTY_INVITE_ANSWER:
-			PartyInviteAnswer(ch, c_pData);
-			break;
-
-		case HEADER_CG_PARTY_SET_STATE:
-			PartySetState(ch, c_pData);
-			break;
-
-		case HEADER_CG_PARTY_USE_SKILL:
-			PartyUseSkill(ch, c_pData);
-			break;
-
-		case HEADER_CG_PARTY_PARAMETER:
-			PartyParameter(ch, c_pData);
-			break;
-
-		case HEADER_CG_ANSWER_MAKE_GUILD:
-			AnswerMakeGuild(ch, c_pData);
-			break;
-
-		case HEADER_CG_GUILD:
-			if ((iExtraLen = Guild(ch, c_pData, m_iBufferLeft)) < 0)
-				return -1;
-			break;
-
-		case HEADER_CG_FISHING:
-			Fishing(ch, c_pData);
-			break;
-
-		case HEADER_CG_HACK:
-			Hack(ch, c_pData);
-			break;
-
-		case HEADER_CG_MYSHOP:
-			if ((iExtraLen = MyShop(ch, c_pData, m_iBufferLeft)) < 0)
-				return -1;
-			break;
-
-		case HEADER_CG_REFINE:
-			Refine(ch, c_pData);
-			break;
-
-		case HEADER_CG_CLIENT_VERSION:
-			Version(ch, c_pData);
-			break;
-			
-		case HEADER_CG_DRAGON_SOUL_REFINE:
-			{
-				TPacketCGDragonSoulRefine* p = reinterpret_cast <TPacketCGDragonSoulRefine*>((void*)c_pData);
-				switch(p->bSubType)
-				{
-				case DS_SUB_HEADER_CLOSE:
-					ch->DragonSoul_RefineWindow_Close();
-					break;
-				case DS_SUB_HEADER_DO_REFINE_GRADE:
-					{
-						DSManager::instance().DoRefineGrade(ch, p->ItemGrid);
-					}
-					break;
-				case DS_SUB_HEADER_DO_REFINE_STEP:
-					{
-						DSManager::instance().DoRefineStep(ch, p->ItemGrid);
-					}
-					break;
-				case DS_SUB_HEADER_DO_REFINE_STRENGTH:
-					{
-						DSManager::instance().DoRefineStrength(ch, p->ItemGrid);
-					}
-					break;
-				}
-			}
-
-			break;
+		sys_err("CInputMain::Analyze: unknown header %d (0x%04X) from %s", wHeader, wHeader, ch->GetName());
+		return 0;
 	}
-	return (iExtraLen);
+
+	if (it->second.blockInObserverMode && ch->IsObserverMode())
+		return 0;
+
+	return (this->*(it->second.handler))(d, c_pData);
 }
 
-int CInputDead::Analyze(LPDESC d, BYTE bHeader, const char * c_pData)
-{
-	LPCHARACTER ch;
+// ---------------------------------------------------------------------------
+// CInputDead — only allows PONG, CHAT, WHISPER, HACK
+// ---------------------------------------------------------------------------
 
-	if (!(ch = d->GetCharacter()))
+CInputDead::CInputDead()
+{
+	RegisterHandlers();
+}
+
+void CInputDead::RegisterHandlers()
+{
+	m_handlers.clear();
+	m_handlers[CG::PONG]    = { &CInputDead::HandlePong,    false };
+	m_handlers[CG::CHAT]    = { &CInputDead::HandleChat,    false };
+	m_handlers[CG::WHISPER] = { &CInputDead::HandleWhisper, false };
+	m_handlers[CG::HACK]    = { &CInputDead::SimpleHandler<&CInputDead::Hack>, false };
+}
+
+int CInputDead::Analyze(LPDESC d, uint16_t wHeader, const char * c_pData)
+{
+	if (!d->GetCharacter())
 	{
 		sys_err("no character on desc");
 		return 0;
 	}
 
-	int iExtraLen = 0;
+	auto it = m_handlers.find(wHeader);
+	if (it == m_handlers.end())
+		return 0;
 
-	switch (bHeader)
-	{
-		case HEADER_CG_PONG:
-			Pong(d); 
-			break;
-
-		case HEADER_CG_TIME_SYNC:
-			Handshake(d, c_pData);
-			break;
-
-		case HEADER_CG_CHAT:
-			if ((iExtraLen = Chat(ch, c_pData, m_iBufferLeft)) < 0)
-				return -1;
-
-			break;
-
-		case HEADER_CG_WHISPER:
-			if ((iExtraLen = Whisper(ch, c_pData, m_iBufferLeft)) < 0)
-				return -1;
-
-			break;
-
-		case HEADER_CG_HACK:
-			Hack(ch, c_pData);
-			break;
-
-		default:
-			return (0);
-	}
-
-	return (iExtraLen);
+	return (this->*(it->second.handler))(d, c_pData);
 }
 

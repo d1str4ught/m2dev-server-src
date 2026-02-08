@@ -441,7 +441,7 @@ void ITEM_MANAGER::SaveSingleItem(LPITEM item)
 		DWORD dwID = item->GetID();
 		DWORD dwOwnerID = item->GetLastOwnerPID();
 
-		db_clientdesc->DBPacketHeader(HEADER_GD_ITEM_DESTROY, 0, sizeof(DWORD) + sizeof(DWORD));
+		db_clientdesc->DBPacketHeader(GD::ITEM_DESTROY, 0, sizeof(DWORD) + sizeof(DWORD));
 		db_clientdesc->Packet(&dwID, sizeof(DWORD));
 		db_clientdesc->Packet(&dwOwnerID, sizeof(DWORD));
 
@@ -462,7 +462,7 @@ void ITEM_MANAGER::SaveSingleItem(LPITEM item)
 	thecore_memcpy(t.alSockets, item->GetSockets(), sizeof(t.alSockets));
 	thecore_memcpy(t.aAttr, item->GetAttributes(), sizeof(t.aAttr));
 
-	db_clientdesc->DBPacketHeader(HEADER_GD_ITEM_SAVE, 0, sizeof(TPlayerItem));
+	db_clientdesc->DBPacketHeader(GD::ITEM_SAVE, 0, sizeof(TPlayerItem));
 	db_clientdesc->Packet(&t, sizeof(TPlayerItem));
 }
 
@@ -561,7 +561,7 @@ void ITEM_MANAGER::DestroyItem(LPITEM item, const char* file, size_t line)
 	{
 		DWORD dwOwnerID = item->GetLastOwnerPID();
 
-		db_clientdesc->DBPacketHeader(HEADER_GD_ITEM_DESTROY, 0, sizeof(DWORD) + sizeof(DWORD));
+		db_clientdesc->DBPacketHeader(GD::ITEM_DESTROY, 0, sizeof(DWORD) + sizeof(DWORD));
 		db_clientdesc->Packet(&dwID, sizeof(DWORD));
 		db_clientdesc->Packet(&dwOwnerID, sizeof(DWORD));
 	}

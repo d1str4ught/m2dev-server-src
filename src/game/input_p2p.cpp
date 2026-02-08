@@ -1,4 +1,4 @@
-﻿#include "stdafx.h" 
+#include "stdafx.h" 
 #include "config.h"
 #include "desc_client.h"
 #include "desc_manager.h"
@@ -25,6 +25,7 @@
 CInputP2P::CInputP2P()
 {
 	BindPacketInfo(&m_packetInfoGG);
+	RegisterHandlers();
 }
 
 void CInputP2P::Login(LPDESC d, const char * c_pData)
@@ -56,12 +57,12 @@ int CInputP2P::Relay(LPDESC d, const char * c_pData, size_t uiBytes)
 
 	LPCHARACTER pkChr = CHARACTER_MANAGER::instance().FindPC(p->szName);
 
-	const BYTE* c_pbData = (const BYTE *) (c_pData + sizeof(TPacketGGRelay));
+	const char* c_pbData = c_pData + sizeof(TPacketGGRelay);
 
 	if (!pkChr)
 		return p->lSize;
 
-	if (*c_pbData == HEADER_GC_WHISPER)
+	if (*(const uint16_t*)c_pbData == GC::WHISPER)
 	{
 		if (pkChr->IsBlockMode(BLOCK_WHISPER))
 		{
@@ -86,7 +87,7 @@ int CInputP2P::Relay(LPDESC d, const char * c_pData, size_t uiBytes)
 				{
 					ConvertEmpireText(bToEmpire,
 							buf + sizeof(TPacketGCWhisper), 
-							p2->wSize - sizeof(TPacketGCWhisper),
+							p2->length - sizeof(TPacketGCWhisper),
 							10+2*pkChr->GetSkillPower(SKILL_LANGUAGE1 + bToEmpire - 1));
 				}
 		}
@@ -119,46 +120,6 @@ int CInputP2P::Notice(LPDESC d, const char * c_pData, size_t uiBytes)
 	return (p->lSize);
 }
 
-int CInputP2P::MonarchNotice(LPDESC d, const char * c_pData, size_t uiBytes)
-{
-	TPacketGGMonarchNotice * p = (TPacketGGMonarchNotice *) c_pData;
-
-	if (uiBytes < p->lSize + sizeof(TPacketGGMonarchNotice))
-		return -1;
-
-	if (p->lSize < 0)
-	{
-		sys_err("invalid packet length %d", p->lSize);
-		d->SetPhase(PHASE_CLOSE);
-		return -1;
-	}
-
-	char szBuf[256+1];
-	strlcpy(szBuf, c_pData + sizeof(TPacketGGMonarchNotice), MIN(p->lSize + 1, sizeof(szBuf)));
-	SendMonarchNotice(p->bEmpire, szBuf);
-	return (p->lSize);
-}
-
-int CInputP2P::MonarchTransfer(LPDESC d, const char* c_pData)
-{
-	TPacketMonarchGGTransfer* p = (TPacketMonarchGGTransfer*) c_pData;
-	LPCHARACTER pTargetChar = CHARACTER_MANAGER::instance().FindByPID(p->dwTargetPID);
-
-	if (pTargetChar != NULL)
-	{
-		unsigned int qIndex = quest::CQuestManager::instance().GetQuestIndexByName("monarch_transfer");
-
-		if (qIndex != 0)
-		{
-			pTargetChar->SetQuestFlag("monarch_transfer.x", p->x);
-			pTargetChar->SetQuestFlag("monarch_transfer.y", p->y);
-			quest::CQuestManager::instance().Letter(pTargetChar->GetPlayerID(), qIndex, 0);
-		}
-	}
-
-	return 0;
-}
-
 int CInputP2P::Guild(LPDESC d, const char* c_pData, size_t uiBytes)
 {
 	TPacketGGGuild * p = (TPacketGGGuild *) c_pData;
@@ -169,7 +130,7 @@ int CInputP2P::Guild(LPDESC d, const char* c_pData, size_t uiBytes)
 
 	switch (p->bSubHeader)
 	{
-		case GUILD_SUBHEADER_GG_CHAT:
+		case GuildSub::GG::CHAT:
 			{
 				if (uiBytes < sizeof(TPacketGGGuildChat))
 					return -1;
@@ -182,7 +143,7 @@ int CInputP2P::Guild(LPDESC d, const char* c_pData, size_t uiBytes)
 				return sizeof(TPacketGGGuildChat);
 			}
 			
-		case GUILD_SUBHEADER_GG_SET_MEMBER_COUNT_BONUS:
+		case GuildSub::GG::SET_MEMBER_COUNT_BONUS:
 			{
 				if (uiBytes < sizeof(int))
 					return -1;
@@ -314,9 +275,9 @@ void CInputP2P::MessengerRemove(const char * c_pData)
     if (deletee && deletee->GetDesc())
     {
         TPacketGCMessenger pack;
-        pack.header = HEADER_GC_MESSENGER;
-        pack.subheader = MESSENGER_SUBHEADER_GC_REMOVE_FRIEND;
-        pack.size = sizeof(TPacketGCMessenger) + sizeof(BYTE) + strlen(p->szAccount);
+        pack.header = GC::MESSENGER;
+        pack.subheader = MessengerSub::GC::REMOVE_FRIEND;
+        pack.length = sizeof(TPacketGCMessenger) + sizeof(BYTE) + strlen(p->szAccount);
 
         BYTE bLen = strlen(p->szAccount);
         deletee->GetDesc()->BufferedPacket(&pack, sizeof(pack));
@@ -336,7 +297,8 @@ void CInputP2P::FindPosition(LPDESC d, const char* c_pData)
 	if (ch && ch->GetMapIndex() < 10000)
 	{
 		TPacketGGWarpCharacter pw;
-		pw.header = HEADER_GG_WARP_CHARACTER;
+		pw.header = GG::WARP_CHARACTER;
+		pw.length = sizeof(pw);
 		pw.pid = p->dwFromPID;
 		pw.x = ch->GetX();
 		pw.y = ch->GetY();
@@ -397,7 +359,8 @@ void CInputP2P::XmasWarpSanta(const char * c_pData)
 		xmas::SpawnSanta(p->lMapIndex, iNextSpawnDelay); // 50분있다가 새로운 산타가 나타남 (한국은 20분)
 
 		TPacketGGXmasWarpSantaReply pack_reply;
-		pack_reply.bHeader = HEADER_GG_XMAS_WARP_SANTA_REPLY;
+		pack_reply.header = GG::XMAS_WARP_SANTA_REPLY;
+		pack_reply.length = sizeof(pack_reply);
 		pack_reply.bChannel = g_bChannel;
 		P2P_MANAGER::instance().Send(&pack_reply, sizeof(pack_reply));
 	}
@@ -461,7 +424,8 @@ void CInputP2P::IamAwake(LPDESC d, const char * c_pData)
 void BroadcastGuildMarkUpdate(DWORD dwGuildID, WORD wImgIdx)
 {
 	TPacketGCMarkUpdate packet;
-	packet.header = HEADER_GC_MARK_UPDATE;
+	packet.header = GC::MARK_UPDATE;
+	packet.length = sizeof(packet);
 	packet.guildID = dwGuildID;
 	packet.imgIdx = wImgIdx;
 
@@ -485,136 +449,96 @@ void CInputP2P::GuildMarkUpdate(const char * c_pData)
 	BroadcastGuildMarkUpdate(p->dwGuildID, p->wImgIdx);
 }
 
-int CInputP2P::Analyze(LPDESC d, BYTE bHeader, const char * c_pData)
+
+// Custom adapters for non-standard handler signatures
+
+int CInputP2P::HandleRelay(LPDESC d, const char* c_pData)
 {
-	if (test_server)
-		sys_log(0, "CInputP2P::Anlayze[Header %d]", bHeader);
-
-	int iExtraLen = 0;
-
-	switch (bHeader)
-	{
-		case HEADER_GG_SETUP:
-			Setup(d, c_pData);
-			break;
-
-		case HEADER_GG_LOGIN:
-			Login(d, c_pData);
-			break;
-
-		case HEADER_GG_LOGOUT:
-			Logout(d, c_pData);
-			break;
-
-		case HEADER_GG_RELAY:
-			if ((iExtraLen = Relay(d, c_pData, m_iBufferLeft)) < 0)
-				return -1;
-			break;
-
-		case HEADER_GG_NOTICE:
-			if ((iExtraLen = Notice(d, c_pData, m_iBufferLeft)) < 0)
-				return -1;
-			break;
-
-		case HEADER_GG_SHUTDOWN:
-			sys_err("Accept shutdown p2p command from %s.", d->GetHostName());
-			Shutdown(10);
-			break;
-
-		case HEADER_GG_GUILD:
-			if ((iExtraLen = Guild(d, c_pData, m_iBufferLeft)) < 0)
-				return -1;
-			break;
-
-		case HEADER_GG_SHOUT:
-			Shout(c_pData);
-			break;
-
-		case HEADER_GG_DISCONNECT:
-			Disconnect(c_pData);
-			break;
-
-		case HEADER_GG_MESSENGER_ADD:
-			MessengerAdd(c_pData);
-			break;
-
-		case HEADER_GG_MESSENGER_REQUEST_ADD:
-			MessengerRequestAdd(c_pData);
-			break;
-
-		case HEADER_GG_MESSENGER_RESPONSE:
-			MessengerResponse(c_pData);
-			break;
-
-		case HEADER_GG_MESSENGER_REMOVE:
-			MessengerRemove(c_pData);
-			break;
-
-		case HEADER_GG_FIND_POSITION:
-			FindPosition(d, c_pData);
-			break;
-
-		case HEADER_GG_WARP_CHARACTER:
-			WarpCharacter(c_pData);
-			break;
-
-		case HEADER_GG_GUILD_WAR_ZONE_MAP_INDEX:
-			GuildWarZoneMapIndex(c_pData);
-			break;
-
-		case HEADER_GG_TRANSFER:
-			Transfer(c_pData);
-			break;
-
-		case HEADER_GG_XMAS_WARP_SANTA:
-			XmasWarpSanta(c_pData);
-			break;
-
-		case HEADER_GG_XMAS_WARP_SANTA_REPLY:
-			XmasWarpSantaReply(c_pData);
-			break;
-
-		case HEADER_GG_RELOAD_CRC_LIST:
-			LoadValidCRCList();
-			break;
-
-		case HEADER_GG_CHECK_CLIENT_VERSION:
-			CheckClientVersion();
-			break;
-
-		case HEADER_GG_LOGIN_PING:
-			LoginPing(d, c_pData);
-			break;
-
-		case HEADER_GG_BLOCK_CHAT:
-			BlockChat(c_pData);
-			break;
-
-		case HEADER_GG_SIEGE:
-			{
-				TPacketGGSiege* pSiege = (TPacketGGSiege*)c_pData;
-				castle_siege(pSiege->bEmpire, pSiege->bTowerCount);
-			}
-			break;
-
-		case HEADER_GG_MONARCH_NOTICE:
-			if ((iExtraLen = MonarchNotice(d, c_pData, m_iBufferLeft)) < 0)
-				return -1;
-			break;
-
-		case HEADER_GG_MONARCH_TRANSFER :
-			MonarchTransfer(d, c_pData);
-			break;
-
-		case HEADER_GG_CHECK_AWAKENESS:
-			IamAwake(d, c_pData);
-			break;
-
-		case HEADER_GG_MARK_UPDATE:
-			GuildMarkUpdate(c_pData);
-			break;
-	}
-
-	return (iExtraLen);
+	return Relay(d, c_pData, m_iBufferLeft);
 }
 
+int CInputP2P::HandleNotice(LPDESC d, const char* c_pData)
+{
+	return Notice(d, c_pData, m_iBufferLeft);
+}
+
+int CInputP2P::HandleGuild(LPDESC d, const char* c_pData)
+{
+	return Guild(d, c_pData, m_iBufferLeft);
+}
+
+int CInputP2P::HandleShutdown(LPDESC d, const char*)
+{
+	sys_err("Accept shutdown p2p command from %s.", d->GetHostName());
+	Shutdown(10);
+	return 0;
+}
+
+int CInputP2P::HandleSiege(LPDESC, const char* c_pData)
+{
+	TPacketGGSiege* p = (TPacketGGSiege*)c_pData;
+	castle_siege(p->bEmpire, p->bTowerCount);
+	return 0;
+}
+
+int CInputP2P::HandleReloadCRC(LPDESC, const char*)
+{
+	LoadValidCRCList();
+	return 0;
+}
+
+int CInputP2P::HandleCheckClientVersion(LPDESC, const char*)
+{
+	CheckClientVersion();
+	return 0;
+}
+
+void CInputP2P::RegisterHandlers()
+{
+	// void(LPDESC, const char*) â€” via DescHandler template
+	m_handlers[GG::SETUP]              = &CInputP2P::DescHandler<&CInputP2P::Setup>;
+	m_handlers[GG::LOGIN]              = &CInputP2P::DescHandler<&CInputP2P::Login>;
+	m_handlers[GG::LOGOUT]             = &CInputP2P::DescHandler<&CInputP2P::Logout>;
+	m_handlers[GG::FIND_POSITION]      = &CInputP2P::DescHandler<&CInputP2P::FindPosition>;
+	m_handlers[GG::LOGIN_PING]         = &CInputP2P::DescHandler<&CInputP2P::LoginPing>;
+	m_handlers[GG::CHECK_AWAKENESS]    = &CInputP2P::DescHandler<&CInputP2P::IamAwake>;
+
+	// void(const char*) â€” via DataHandler template
+	m_handlers[GG::SHOUT]              = &CInputP2P::DataHandler<&CInputP2P::Shout>;
+	m_handlers[GG::DISCONNECT]         = &CInputP2P::DataHandler<&CInputP2P::Disconnect>;
+	m_handlers[GG::MESSENGER_ADD]      = &CInputP2P::DataHandler<&CInputP2P::MessengerAdd>;
+	m_handlers[GG::MESSENGER_REMOVE]   = &CInputP2P::DataHandler<&CInputP2P::MessengerRemove>;
+	m_handlers[GG::MESSENGER_REQUEST_ADD] = &CInputP2P::DataHandler<&CInputP2P::MessengerRequestAdd>;
+	m_handlers[GG::MESSENGER_RESPONSE] = &CInputP2P::DataHandler<&CInputP2P::MessengerResponse>;
+	m_handlers[GG::WARP_CHARACTER]     = &CInputP2P::DataHandler<&CInputP2P::WarpCharacter>;
+	m_handlers[GG::GUILD_WAR_ZONE_MAP_INDEX] = &CInputP2P::DataHandler<&CInputP2P::GuildWarZoneMapIndex>;
+	m_handlers[GG::TRANSFER]           = &CInputP2P::DataHandler<&CInputP2P::Transfer>;
+	m_handlers[GG::XMAS_WARP_SANTA]    = &CInputP2P::DataHandler<&CInputP2P::XmasWarpSanta>;
+	m_handlers[GG::XMAS_WARP_SANTA_REPLY] = &CInputP2P::DataHandler<&CInputP2P::XmasWarpSantaReply>;
+	m_handlers[GG::BLOCK_CHAT]         = &CInputP2P::DataHandler<&CInputP2P::BlockChat>;
+	m_handlers[GG::MARK_UPDATE]        = &CInputP2P::DataHandler<&CInputP2P::GuildMarkUpdate>;
+
+	// Custom adapters (variable-length or special signatures)
+	m_handlers[GG::RELAY]              = &CInputP2P::HandleRelay;
+	m_handlers[GG::NOTICE]             = &CInputP2P::HandleNotice;
+	m_handlers[GG::GUILD]              = &CInputP2P::HandleGuild;
+	m_handlers[GG::SHUTDOWN]           = &CInputP2P::HandleShutdown;
+	m_handlers[GG::SIEGE]              = &CInputP2P::HandleSiege;
+	m_handlers[GG::RELOAD_CRC_LIST]    = &CInputP2P::HandleReloadCRC;
+	m_handlers[GG::CHECK_CLIENT_VERSION] = &CInputP2P::HandleCheckClientVersion;
+}
+
+int CInputP2P::Analyze(LPDESC d, uint16_t wHeader, const char * c_pData)
+{
+	if (test_server)
+		sys_log(0, "CInputP2P::Anlayze[Header %d]", wHeader);
+
+	auto it = m_handlers.find(wHeader);
+	if (it == m_handlers.end())
+	{
+		sys_err("CInputP2P::Analyze: unknown header %d (0x%04X) from %s", wHeader, wHeader, d->GetHostName());
+		return 0;
+	}
+
+	return (this->*(it->second))(d, c_pData);
+}

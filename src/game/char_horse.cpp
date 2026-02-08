@@ -1,8 +1,8 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "config.h"
 #include "char.h"
 #include "char_manager.h"
-#include "packet.h"
+#include "packet_structs.h"
 #include "guild.h"
 #include "vector.h"
 #include "questmanager.h"
@@ -237,7 +237,8 @@ void CHARACTER::HorseSummon(bool bSummon, bool bFromFar, DWORD dwVnum, const cha
 		if ((GetHorseHealth() <= 0))
 		{
 			TPacketGCDead pack;
-			pack.header	= HEADER_GC_DEAD;
+			pack.header	= GC::DEAD;
+			pack.length = sizeof(pack);
 			pack.vid    = m_chHorse->GetVID();
 			PacketAround(&pack, sizeof(pack));
 		}

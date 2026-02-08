@@ -1,4 +1,4 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "desc_p2p.h"
 #include "protocol.h"
 #include "p2p.h"
@@ -34,15 +34,10 @@ bool DESC_P2P::Setup(LPFDWATCH fdw, socket_t fd, const char * host, WORD wPort)
 	m_wPort = wPort;
 	m_sock = fd;
 
-	if (!(m_lpOutputBuffer = buffer_new(1024 * 1024)))
-		return false;
-
-	if (!(m_lpInputBuffer = buffer_new(1024 * 1024)))
-		return false;
+	m_outputBuffer.Reserve(1024 * 1024);
+	m_inputBuffer.Reserve(1024 * 1024);
 
 	fdwatch_add_fd(m_lpFdw, m_sock, this, FDW_READ, false);
-
-	m_iMinInputBufferLen = 1024 * 1024;
 
 	SetPhase(PHASE_P2P);
 
@@ -59,11 +54,8 @@ void DESC_P2P::SetPhase(int iPhase)
 		case PHASE_P2P:
 			sys_log(1, "PHASE_P2P");
 
-			if (m_lpInputBuffer)
-				buffer_reset(m_lpInputBuffer);
-
-			if (m_lpOutputBuffer)
-				buffer_reset(m_lpOutputBuffer);
+			m_inputBuffer.Clear();
+			m_outputBuffer.Clear();
 
 			m_pInputProcessor = &s_inputP2P;
 			break;
@@ -79,4 +71,3 @@ void DESC_P2P::SetPhase(int iPhase)
 
 	m_iPhase = iPhase;
 }
-

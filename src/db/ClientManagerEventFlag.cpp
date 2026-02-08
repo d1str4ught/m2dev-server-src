@@ -1,4 +1,4 @@
-﻿// vim:ts=4 sw=4
+// vim:ts=4 sw=4
 #include "stdafx.h"
 #include "ClientManager.h"
 #include "Main.h"
@@ -23,14 +23,14 @@ void CClientManager::LoadEventFlag()
 			str_to_number(p.lValue, row[1]);
 			sys_log(0, "EventFlag Load %s %d", p.szFlagName, p.lValue);
 			m_map_lEventFlag.insert(std::make_pair(std::string(p.szFlagName), p.lValue));
-			ForwardPacket(HEADER_DG_SET_EVENT_FLAG, &p, sizeof(TPacketSetEventFlag));
+			ForwardPacket(DG::SET_EVENT_FLAG, &p, sizeof(TPacketSetEventFlag));
 		}
 	}
 }
 
 void CClientManager::SetEventFlag(TPacketSetEventFlag* p)
 {
-	ForwardPacket(HEADER_DG_SET_EVENT_FLAG, p, sizeof(TPacketSetEventFlag));
+	ForwardPacket(DG::SET_EVENT_FLAG, p, sizeof(TPacketSetEventFlag));
 
 	bool bChanged = false;
 
@@ -56,10 +56,10 @@ void CClientManager::SetEventFlag(TPacketSetEventFlag* p)
 
 		//CDBManager::instance().ReturnQuery(szQuery, QID_QUEST_SAVE, 0, NULL);
 		CDBManager::instance().AsyncQuery(szQuery);
-		sys_log(0, "HEADER_GD_SET_EVENT_FLAG : Changed CClientmanager::SetEventFlag(%s %d) ", p->szFlagName, p->lValue);
+		sys_log(0, "GD::SET_EVENT_FLAG : Changed CClientmanager::SetEventFlag(%s %d) ", p->szFlagName, p->lValue);
 		return;
 	}
-	sys_log(0, "HEADER_GD_SET_EVENT_FLAG : No Changed CClientmanager::SetEventFlag(%s %d) ", p->szFlagName, p->lValue);
+	sys_log(0, "GD::SET_EVENT_FLAG : No Changed CClientmanager::SetEventFlag(%s %d) ", p->szFlagName, p->lValue);
 }
 
 void CClientManager::SendEventFlagsOnSetup(CPeer* peer)
@@ -69,7 +69,7 @@ void CClientManager::SendEventFlagsOnSetup(CPeer* peer)
 		TPacketSetEventFlag p;
 		strlcpy(p.szFlagName, it->first.c_str(), sizeof(p.szFlagName));
 		p.lValue = it->second;
-		peer->EncodeHeader(HEADER_DG_SET_EVENT_FLAG, 0, sizeof(TPacketSetEventFlag));
+		peer->EncodeHeader(DG::SET_EVENT_FLAG, 0, sizeof(TPacketSetEventFlag));
 		peer->Encode(&p, sizeof(TPacketSetEventFlag));
 	}
 }

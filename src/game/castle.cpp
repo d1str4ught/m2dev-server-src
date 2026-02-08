@@ -15,7 +15,6 @@
 #include "char_manager.h"
 #include "castle.h"
 #include "start_position.h"
-#include "monarch.h"
 #include "questlua.h"
 #include "log.h"
 #include "char.h"
@@ -838,7 +837,6 @@ void castle_frog_die(LPCHARACTER ch, LPCHARACTER killer)
 			GET_FROG(empire, i) = NULL;
 
 			killer->PointChange(POINT_GOLD, 10000000 /*1천만*/, true);
-			//CMonarch::instance().SendtoDBAddMoney(30000000/*3천만*/, killer->GetEmpire(), killer);
 			castle_save();
 			return;
 		}
@@ -1040,9 +1038,6 @@ bool castle_frog_to_empire_money(LPCHARACTER ch)
 			continue;
 
 		LPCHARACTER	npc = GET_FROG(empire, i);
-
-		if (false == CMonarch::instance().SendtoDBAddMoney(CASTLE_FROG_PRICE, empire, ch))
-			return false;
 
 		GET_FROG(empire, i) = NULL; // 등록해제
 		npc->Dead(/*killer*/NULL, /*immediate_dead*/true);

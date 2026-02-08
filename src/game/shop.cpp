@@ -1,4 +1,4 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "libgame/grid.h"
 #include "constants.h"
 #include "utils.h"
@@ -11,11 +11,10 @@
 #include "item.h"
 #include "item_manager.h"
 #include "buffer_manager.h"
-#include "packet.h"
+#include "packet_structs.h"
 #include "log.h"
 #include "db.h"
 #include "questmanager.h"
-#include "monarch.h"
 #include "mob_manager.h"
 #include "locale_service.h"
 
@@ -30,9 +29,9 @@ CShop::~CShop()
 {
 	TPacketGCShop pack;
 
-	pack.header		= HEADER_GC_SHOP;
-	pack.subheader	= SHOP_SUBHEADER_GC_END;
-	pack.size		= sizeof(TPacketGCShop);
+	pack.header		= GC::SHOP;
+	pack.subheader	= ShopSub::GC::END;
+	pack.length		= sizeof(TPacketGCShop);
 
 	Broadcast(&pack, sizeof(pack));
 
@@ -192,7 +191,7 @@ int CShop::Buy(LPCHARACTER ch, BYTE pos)
 	if (pos >= m_itemVector.size())
 	{
 		sys_log(0, "Shop::Buy : invalid position %d : %s", pos, ch->GetName());
-		return SHOP_SUBHEADER_GC_INVALID_POS;
+		return ShopSub::GC::INVALID_POS;
 	}
 
 	sys_log(0, "Shop::Buy : name %s pos %d", ch->GetName(), pos);
@@ -200,7 +199,7 @@ int CShop::Buy(LPCHARACTER ch, BYTE pos)
 	GuestMapType::iterator it = m_map_guest.find(ch);
 
 	if (it == m_map_guest.end())
-		return SHOP_SUBHEADER_GC_END;
+		return ShopSub::GC::END;
 
 	SHOP_ITEM& r_item = m_itemVector[pos];
 
@@ -208,7 +207,7 @@ int CShop::Buy(LPCHARACTER ch, BYTE pos)
 	if (r_item.price < 0) // Fix
 	{
 		LogManager::instance().HackLog("SHOP_BUY_GOLD_OVERFLOW", ch);
-		return SHOP_SUBHEADER_GC_NOT_ENOUGH_MONEY;
+		return ShopSub::GC::NOT_ENOUGH_MONEY;
 	}
 
 	LPITEM pkSelectedItem = ITEM_MANAGER::instance().Find(r_item.itemid);
@@ -242,7 +241,7 @@ int CShop::Buy(LPCHARACTER ch, BYTE pos)
 	if (ch->GetGold() < (int) dwPrice)
 	{
 		sys_log(1, "Shop::Buy : Not enough money : %s has %d, price %d", ch->GetName(), ch->GetGold(), dwPrice);
-		return SHOP_SUBHEADER_GC_NOT_ENOUGH_MONEY;
+		return ShopSub::GC::NOT_ENOUGH_MONEY;
 	}
 
 	LPITEM item;
@@ -253,7 +252,7 @@ int CShop::Buy(LPCHARACTER ch, BYTE pos)
 		item = ITEM_MANAGER::instance().CreateItem(r_item.vnum, r_item.count);
 
 	if (!item)
-		return SHOP_SUBHEADER_GC_SOLD_OUT;
+		return ShopSub::GC::SOLD_OUT;
 
 	if (!m_pkPC)
 	{
@@ -262,7 +261,7 @@ int CShop::Buy(LPCHARACTER ch, BYTE pos)
 			//축복의 구슬 && 만년한철 이벤트 
 			if (item->GetVnum() == 70024 || item->GetVnum() == 70035)
 			{
-				return SHOP_SUBHEADER_GC_END;
+				return ShopSub::GC::END;
 			}
 		}
 	}
@@ -282,13 +281,13 @@ int CShop::Buy(LPCHARACTER ch, BYTE pos)
 		if (m_pkPC)
 		{
 			sys_log(1, "Shop::Buy at PC Shop : Inventory full : %s size %d", ch->GetName(), item->GetSize());
-			return SHOP_SUBHEADER_GC_INVENTORY_FULL;
+			return ShopSub::GC::INVENTORY_FULL;
 		}
 		else
 		{
 			sys_log(1, "Shop::Buy : Inventory full : %s size %d", ch->GetName(), item->GetSize());
 			M2_DESTROY_ITEM(item);
-			return SHOP_SUBHEADER_GC_INVENTORY_FULL;
+			return ShopSub::GC::INVENTORY_FULL;
 		}
 	}
 
@@ -334,13 +333,6 @@ int CShop::Buy(LPCHARACTER ch, BYTE pos)
 		}
 	}
 
-	// 상점에서 살떄 세금 5%
-	if (!m_pkPC) 
-	{
-		CMonarch::instance().SendtoDBAddMoney(dwTax, ch->GetEmpire(), ch);
-	}
-
-	// 군주 시스템 : 세금 징수
 	if (m_pkPC)
 	{
 		m_pkPC->SyncQuickslot(QUICKSLOT_TYPE_ITEM, item->GetCell(), 255);
@@ -376,7 +368,6 @@ int CShop::Buy(LPCHARACTER ch, BYTE pos)
 		if (iVal > 0)
 			m_pkPC->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("판매금액의 %d %% 가 세금으로 나가게됩니다"), iVal);
 
-		CMonarch::instance().SendtoDBAddMoney(dwTax, m_pkPC->GetEmpire(), m_pkPC);
 	}
 	else
 	{
@@ -400,7 +391,7 @@ int CShop::Buy(LPCHARACTER ch, BYTE pos)
 
     ch->Save();
 
-    return (SHOP_SUBHEADER_GC_OK);
+    return (ShopSub::GC::OK);
 }
 
 bool CShop::AddGuest(LPCHARACTER ch, DWORD owner_vid, bool bOtherEmpire)
@@ -420,8 +411,9 @@ bool CShop::AddGuest(LPCHARACTER ch, DWORD owner_vid, bool bOtherEmpire)
 
 	TPacketGCShop pack;
 
-	pack.header		= HEADER_GC_SHOP;
-	pack.subheader	= SHOP_SUBHEADER_GC_START;
+	pack.header		= GC::SHOP;
+	pack.length = sizeof(pack);
+	pack.subheader	= ShopSub::GC::START;
 
 	TPacketGCShopStart pack2;
 
@@ -461,7 +453,7 @@ bool CShop::AddGuest(LPCHARACTER ch, DWORD owner_vid, bool bOtherEmpire)
 		}
 	}
 
-	pack.size = sizeof(pack) + sizeof(pack2);
+	pack.length = sizeof(pack) + sizeof(pack2);
 
 	ch->GetDesc()->BufferedPacket(&pack, sizeof(TPacketGCShop));
 	ch->GetDesc()->Packet(&pack2, sizeof(TPacketGCShopStart));
@@ -478,9 +470,9 @@ void CShop::RemoveGuest(LPCHARACTER ch)
 
 	TPacketGCShop pack;
 
-	pack.header		= HEADER_GC_SHOP;
-	pack.subheader	= SHOP_SUBHEADER_GC_END;
-	pack.size		= sizeof(TPacketGCShop);
+	pack.header		= GC::SHOP;
+	pack.subheader	= ShopSub::GC::END;
+	pack.length		= sizeof(TPacketGCShop);
 
 	ch->GetDesc()->Packet(&pack, sizeof(pack));
 }
@@ -511,9 +503,9 @@ void CShop::BroadcastUpdateItem(BYTE pos)
 
 	TEMP_BUFFER	buf;
 
-	pack.header		= HEADER_GC_SHOP;
-	pack.subheader	= SHOP_SUBHEADER_GC_UPDATE_ITEM;
-	pack.size		= sizeof(pack) + sizeof(pack2);
+	pack.header		= GC::SHOP;
+	pack.subheader	= ShopSub::GC::UPDATE_ITEM;
+	pack.length		= sizeof(pack) + sizeof(pack2);
 
 	pack2.pos		= pos;
 

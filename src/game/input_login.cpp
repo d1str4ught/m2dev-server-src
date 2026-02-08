@@ -1,4 +1,4 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "constants.h"
 #include "config.h"
 #include "utils.h"
@@ -91,7 +91,8 @@ void CInputLogin::LoginByKey(LPDESC d, const char * data)
 	{
 		TPacketGCLoginFailure failurePacket;
 
-		failurePacket.header = HEADER_GC_LOGIN_FAILURE;
+		failurePacket.header = GC::LOGIN_FAILURE;
+		failurePacket.length = sizeof(failurePacket);
 		strlcpy(failurePacket.szStatus, "SHUTDOWN", sizeof(failurePacket.szStatus));
 		d->Packet(&failurePacket, sizeof(TPacketGCLoginFailure));
 		return;
@@ -109,7 +110,8 @@ void CInputLogin::LoginByKey(LPDESC d, const char * data)
 		{
 			TPacketGCLoginFailure failurePacket;
 
-			failurePacket.header = HEADER_GC_LOGIN_FAILURE;
+			failurePacket.header = GC::LOGIN_FAILURE;
+			failurePacket.length = sizeof(failurePacket);
 			strlcpy(failurePacket.szStatus, "FULL", sizeof(failurePacket.szStatus));
 
 			d->Packet(&failurePacket, sizeof(TPacketGCLoginFailure));
@@ -127,7 +129,7 @@ void CInputLogin::LoginByKey(LPDESC d, const char * data)
 	ptod.dwLoginKey = pinfo->dwLoginKey;
 	strlcpy(ptod.szIP, d->GetHostName(), sizeof(ptod.szIP));
 
-	db_clientdesc->DBPacket(HEADER_GD_LOGIN_BY_KEY, d->GetHandle(), &ptod, sizeof(TPacketGDLoginByKey));
+	db_clientdesc->DBPacket(GD::LOGIN_BY_KEY, d->GetHandle(), &ptod, sizeof(TPacketGDLoginByKey));
 }
 
 void CInputLogin::ChangeName(LPDESC d, const char * data)
@@ -153,7 +155,8 @@ void CInputLogin::ChangeName(LPDESC d, const char * data)
 	if (!check_name(p->name))
 	{
 		TPacketGCCreateFailure pack;
-		pack.header = HEADER_GC_CHARACTER_CREATE_FAILURE;
+		pack.header = GC::PLAYER_CREATE_FAILURE;
+		pack.length = sizeof(pack);
 		pack.bType = 0;
 		d->Packet(&pack, sizeof(pack));
 		return;
@@ -163,7 +166,7 @@ void CInputLogin::ChangeName(LPDESC d, const char * data)
 
 	pdb.pid = c_r.players[p->index].dwID;
 	strlcpy(pdb.name, p->name, sizeof(pdb.name));
-	db_clientdesc->DBPacket(HEADER_GD_CHANGE_NAME, d->GetHandle(), &pdb, sizeof(TPacketGDChangeName));
+	db_clientdesc->DBPacket(GD::CHANGE_NAME, d->GetHandle(), &pdb, sizeof(TPacketGDChangeName));
 }
 
 void CInputLogin::CharacterSelect(LPDESC d, const char * data)
@@ -205,7 +208,7 @@ void CInputLogin::CharacterSelect(LPDESC d, const char * data)
 	player_load_packet.player_id	= c_r.players[pinfo->index].dwID;
 	player_load_packet.account_index	= pinfo->index;
 
-	db_clientdesc->DBPacket(HEADER_GD_PLAYER_LOAD, d->GetHandle(), &player_load_packet, sizeof(TPlayerLoadPacket));
+	db_clientdesc->DBPacket(GD::PLAYER_LOAD, d->GetHandle(), &player_load_packet, sizeof(TPlayerLoadPacket));
 }
 
 bool NewPlayerTable(TPlayerTable * table,
@@ -380,7 +383,8 @@ void CInputLogin::CharacterCreate(LPDESC d, const char * data)
 
 	TPacketGCLoginFailure packFailure;
 	memset(&packFailure, 0, sizeof(packFailure));
-	packFailure.header = HEADER_GC_CHARACTER_CREATE_FAILURE;
+	packFailure.header = GC::PLAYER_CREATE_FAILURE;
+	packFailure.length = sizeof(packFailure);
 
 	if (true == g_BlockCharCreation)
 	{
@@ -401,7 +405,8 @@ void CInputLogin::CharacterCreate(LPDESC d, const char * data)
 		if (LC_IsCanada() == true)
 		{
 			TPacketGCCreateFailure pack;
-			pack.header = HEADER_GC_CHARACTER_CREATE_FAILURE;
+			pack.header = GC::PLAYER_CREATE_FAILURE;
+			pack.length = sizeof(pack);
 			pack.bType = 1;
 
 			d->Packet(&pack, sizeof(pack));
@@ -419,7 +424,8 @@ void CInputLogin::CharacterCreate(LPDESC d, const char * data)
 		if (0 == strcmp(c_rAccountTable.login, pinfo->name))
 		{
 			TPacketGCCreateFailure pack;
-			pack.header = HEADER_GC_CHARACTER_CREATE_FAILURE;
+			pack.header = GC::PLAYER_CREATE_FAILURE;
+			pack.length = sizeof(pack);
 			pack.bType = 1;
 
 			d->Packet(&pack, sizeof(pack));
@@ -450,7 +456,7 @@ void CInputLogin::CharacterCreate(LPDESC d, const char * data)
 			sizeof(TPlayerCreatePacket),
 			player_create_packet.player_table.gold);
 
-	db_clientdesc->DBPacket(HEADER_GD_PLAYER_CREATE, d->GetHandle(), &player_create_packet, sizeof(TPlayerCreatePacket));
+	db_clientdesc->DBPacket(GD::PLAYER_CREATE, d->GetHandle(), &player_create_packet, sizeof(TPlayerCreatePacket));
 }
 
 void CInputLogin::CharacterDelete(LPDESC d, const char * data)
@@ -475,7 +481,10 @@ void CInputLogin::CharacterDelete(LPDESC d, const char * data)
 	if (!c_rAccountTable.players[pinfo->index].dwID)
 	{
 		sys_err("PlayerDelete: Wrong Social ID index %d, login: %s", pinfo->index, c_rAccountTable.login);
-		d->Packet(encode_byte(HEADER_GC_CHARACTER_DELETE_WRONG_SOCIAL_ID), 1);
+		TPacketGCBlank pack_wrong;
+		pack_wrong.header = GC::PLAYER_DELETE_WRONG_SOCIAL_ID;
+		pack_wrong.length = sizeof(pack_wrong);
+		d->Packet(&pack_wrong, sizeof(pack_wrong));
 		return;
 	}
 
@@ -486,17 +495,8 @@ void CInputLogin::CharacterDelete(LPDESC d, const char * data)
 	player_delete_packet.account_index	= pinfo->index;
 	strlcpy(player_delete_packet.private_code, pinfo->private_code, sizeof(player_delete_packet.private_code));
 
-	db_clientdesc->DBPacket(HEADER_GD_PLAYER_DELETE, d->GetHandle(), &player_delete_packet, sizeof(TPlayerDeletePacket));
+	db_clientdesc->DBPacket(GD::PLAYER_DELETE, d->GetHandle(), &player_delete_packet, sizeof(TPlayerDeletePacket));
 }
-
-#pragma pack(1)
-typedef struct SPacketGTLogin
-{
-	BYTE header;
-	WORD empty;
-	DWORD id;
-} TPacketGTLogin;
-#pragma pack()
 
 void CInputLogin::Entergame(LPDESC d, const char * data)
 {
@@ -566,12 +566,14 @@ void CInputLogin::Entergame(LPDESC d, const char * data)
 	marriage::CManager::instance().Login(ch);
 
 	TPacketGCTime p;
-	p.bHeader = HEADER_GC_TIME;
+	p.header = GC::TIME;
+	p.length = sizeof(p);
 	p.time = get_global_time();
 	d->Packet(&p, sizeof(p));
 
 	TPacketGCChannel p2;
-	p2.header = HEADER_GC_CHANNEL;
+	p2.header = GC::CHANNEL;
+	p2.length = sizeof(p2);
 	p2.channel = g_bChannel;
 	d->Packet(&p2, sizeof(p2));
 
@@ -588,53 +590,41 @@ void CInputLogin::Entergame(LPDESC d, const char * data)
 		sys_log(0, "PREMIUM: %s type %d %dmin", ch->GetName(), i, remain);
 	}
 
-	if (LC_IsEurope())
+	if (g_bCheckClientVersion)
 	{
-		if (g_bCheckClientVersion)
+		int version = atoi(g_stClientVersion.c_str());
+		int date = atoi(d->GetClientVersion());
+
+		sys_log(0, "VERSION CHECK %d %d %s %s", version, date, g_stClientVersion.c_str(), d->GetClientVersion());
+
+		if (!d->GetClientVersion())
 		{
-			int version = atoi(g_stClientVersion.c_str());
-			int date = atoi(d->GetClientVersion());
-
-			sys_log(0, "VERSION CHECK %d %d %s %s", version, date, g_stClientVersion.c_str(), d->GetClientVersion());
-
-			if (!d->GetClientVersion())
-			{
-				d->DelayedDisconnect(10);
-			}
-			else
-			{
-				//if (0 != g_stClientVersion.compare(d->GetClientVersion()))
-				// if (version > date)
-				if (version != date) // Fix
-				{
-					ch->ChatPacket(CHAT_TYPE_NOTICE, LC_TEXT("클라이언트 버전이 틀려 로그아웃 됩니다. 정상적으로 패치 후 접속하세요."));
-					d->DelayedDisconnect(10);
-					LogManager::instance().HackLog("VERSION_CONFLICT", ch);
-
-					sys_log(0, "VERSION : WRONG VERSION USER : account:%s name:%s hostName:%s server_version:%s client_version:%s",
-							d->GetAccountTable().login,
-							ch->GetName(),
-							d->GetHostName(),
-							g_stClientVersion.c_str(),
-							d->GetClientVersion());
-				}
-			}
+			d->DelayedDisconnect(10);
 		}
 		else
 		{
-			sys_log(0, "VERSION : NO CHECK");
+			if (version != date)
+			{
+				ch->ChatPacket(CHAT_TYPE_NOTICE, LC_TEXT("클라이언트 버전이 틀려 로그아웃 됩니다. 정상적으로 패치 후 접속하세요."));
+				d->DelayedDisconnect(10);
+				LogManager::instance().HackLog("VERSION_CONFLICT", ch);
+
+				sys_log(0, "VERSION : WRONG VERSION USER : account:%s name:%s hostName:%s server_version:%s client_version:%s",
+						d->GetAccountTable().login,
+						ch->GetName(),
+						d->GetHostName(),
+						g_stClientVersion.c_str(),
+						d->GetClientVersion());
+			}
 		}
 	}
 	else
 	{
-		sys_log(0, "VERSION : NO LOGIN");
+		sys_log(0, "VERSION : NO CHECK");
 	}
 
-	if (LC_IsEurope() == true)
-	{
-		if (ch->IsGM() == true)
-			ch->ChatPacket(CHAT_TYPE_COMMAND, "ConsoleEnable");
-	}
+	if (ch->IsGM())
+		ch->ChatPacket(CHAT_TYPE_COMMAND, "ConsoleEnable");
 
 	if (ch->GetMapIndex() >= 10000)
 	{
@@ -688,8 +678,8 @@ void CInputLogin::Entergame(LPDESC d, const char * data)
 		else if (memberFlag == MEMBER_DUELIST)
 		{
 			TPacketGCDuelStart duelStart;
-			duelStart.header = HEADER_GC_DUEL_START;
-			duelStart.wSize = sizeof(TPacketGCDuelStart);
+			duelStart.header = GC::DUEL_START;
+			duelStart.length = sizeof(TPacketGCDuelStart);
 
 			ch->GetDesc()->Packet(&duelStart, sizeof(TPacketGCDuelStart));
 
@@ -747,7 +737,7 @@ void CInputLogin::Entergame(LPDESC d, const char * data)
 		DWORD pid = ch->GetPlayerID();
 
 		if (pid != 0 && CHorseNameManager::instance().GetHorseName(pid) == NULL)
-			db_clientdesc->DBPacket(HEADER_GD_REQ_HORSE_NAME, 0, &pid, sizeof(DWORD));
+			db_clientdesc->DBPacket(GD::REQ_HORSE_NAME, 0, &pid, sizeof(DWORD));
 	}
 
 	// 중립맵에 들어갔을때 안내하기
@@ -791,7 +781,7 @@ void CInputLogin::Empire(LPDESC d, const char * c_pData)
 	pd.dwAccountID = r.id;
 	pd.bEmpire = p->bEmpire;
 
-	db_clientdesc->DBPacket(HEADER_GD_EMPIRE_SELECT, d->GetHandle(), &pd, sizeof(pd));
+	db_clientdesc->DBPacket(GD::EMPIRE_SELECT, d->GetHandle(), &pd, sizeof(pd));
 }
 
 int CInputLogin::GuildSymbolUpload(LPDESC d, const char* c_pData, size_t uiBytes)
@@ -803,10 +793,10 @@ int CInputLogin::GuildSymbolUpload(LPDESC d, const char* c_pData, size_t uiBytes
 
 	TPacketCGGuildSymbolUpload* p = (TPacketCGGuildSymbolUpload*) c_pData;
 
-	if (uiBytes < p->size)
+	if (uiBytes < p->length)
 		return -1;
 
-	int iSymbolSize = p->size - sizeof(TPacketCGGuildSymbolUpload);
+	int iSymbolSize = p->length - sizeof(TPacketCGGuildSymbolUpload);
 
 	if (iSymbolSize <= 0 || iSymbolSize > 64 * 1024)
 	{
@@ -835,7 +825,7 @@ void CInputLogin::GuildSymbolCRC(LPDESC d, const char* c_pData)
 {
 	const TPacketCGSymbolCRC & CGPacket = *((TPacketCGSymbolCRC *) c_pData);
 
-	sys_log(0, "GuildSymbolCRC %u %u %u", CGPacket.guild_id, CGPacket.crc, CGPacket.size);
+	sys_log(0, "GuildSymbolCRC %u %u %u", CGPacket.guild_id, CGPacket.crc, CGPacket.length);
 
 	const CGuildMarkManager::TGuildSymbol * pkGS = CGuildMarkManager::instance().GetGuildSymbol(CGPacket.guild_id);
 
@@ -844,12 +834,12 @@ void CInputLogin::GuildSymbolCRC(LPDESC d, const char* c_pData)
 
 	sys_log(0, "  Server %u %u", pkGS->crc, pkGS->raw.size());
 
-	if (pkGS->raw.size() != CGPacket.size || pkGS->crc != CGPacket.crc)
+	if (pkGS->raw.size() != CGPacket.length || pkGS->crc != CGPacket.crc)
 	{
 		TPacketGCGuildSymbolData GCPacket;
 
-		GCPacket.header = HEADER_GC_SYMBOL_DATA;
-		GCPacket.size = sizeof(GCPacket) + pkGS->raw.size();
+		GCPacket.header = GC::SYMBOL_DATA;
+		GCPacket.length = sizeof(GCPacket) + pkGS->raw.size();
 		GCPacket.guild_id = CGPacket.guild_id;
 
 		d->BufferedPacket(&GCPacket, sizeof(GCPacket));
@@ -902,7 +892,8 @@ void CInputLogin::GuildMarkUpload(LPDESC d, const char* c_pData)
 
 		// Send P2P packet to all other game cores
 		TPacketGGMarkUpdate p2pPacket;
-		p2pPacket.bHeader = HEADER_GG_MARK_UPDATE;
+		p2pPacket.header = GG::MARK_UPDATE;
+		p2pPacket.length = sizeof(p2pPacket);
 		p2pPacket.dwGuildID = p->gid;
 		p2pPacket.wImgIdx = imgIdx;
 		P2P_MANAGER::instance().Send(&p2pPacket, sizeof(p2pPacket));
@@ -928,7 +919,8 @@ void CInputLogin::GuildMarkIDXList(LPDESC d, const char* c_pData)
 	}
 
 	TPacketGCMarkIDXList p;
-	p.header = HEADER_GC_MARK_IDXLIST;
+	p.header = GC::MARK_IDXLIST;
+	p.length = sizeof(p);
 	p.bufSize = sizeof(p) + bufSize;
 	p.count = rkMarkMgr.GetMarkCount();
 
@@ -968,7 +960,8 @@ void CInputLogin::GuildMarkCRCList(LPDESC d, const char* c_pData)
 
 	TPacketGCMarkBlock pGC;
 
-	pGC.header = HEADER_GC_MARK_BLOCK;
+	pGC.header = GC::MARK_BLOCK;
+	pGC.length = sizeof(pGC);
 	pGC.imgIdx = pCG->imgIdx;
 	pGC.bufSize = buf.size() + sizeof(TPacketGCMarkBlock);
 	pGC.count = blockCount;
@@ -984,99 +977,71 @@ void CInputLogin::GuildMarkCRCList(LPDESC d, const char* c_pData)
 		d->Packet(&pGC, sizeof(TPacketGCMarkBlock));
 }
 
-int CInputLogin::Analyze(LPDESC d, BYTE bHeader, const char * c_pData)
+
+CInputLogin::CInputLogin()
 {
-	int iExtraLen = 0;
-
-	switch (bHeader)
-	{
-		case HEADER_CG_PONG:
-			Pong(d);
-			break;
-
-		case HEADER_CG_TIME_SYNC:
-			Handshake(d, c_pData);
-			break;
-
-		case HEADER_CG_LOGIN2:
-			LoginByKey(d, c_pData);
-			break;
-
-		case HEADER_CG_CHARACTER_SELECT:
-			CharacterSelect(d, c_pData);
-			break;
-
-		case HEADER_CG_CHARACTER_CREATE:
-			CharacterCreate(d, c_pData);
-			break;
-
-		case HEADER_CG_CHARACTER_DELETE:
-			CharacterDelete(d, c_pData);
-			break;
-
-		case HEADER_CG_ENTERGAME:
-			Entergame(d, c_pData);
-			break;
-
-		case HEADER_CG_EMPIRE:
-			Empire(d, c_pData);
-			break;
-
-		case HEADER_CG_MOVE:
-			break;
-
-			///////////////////////////////////////
-			// Guild Mark
-			/////////////////////////////////////
-		case HEADER_CG_MARK_CRCLIST:
-			GuildMarkCRCList(d, c_pData);
-			break;
-
-		case HEADER_CG_MARK_IDXLIST:
-			GuildMarkIDXList(d, c_pData);
-			break;
-
-		case HEADER_CG_MARK_UPLOAD:
-			GuildMarkUpload(d, c_pData);
-			break;
-
-			//////////////////////////////////////
-			// Guild Symbol
-			/////////////////////////////////////
-		case HEADER_CG_GUILD_SYMBOL_UPLOAD:
-			if ((iExtraLen = GuildSymbolUpload(d, c_pData, m_iBufferLeft)) < 0)
-				return -1;
-			break;
-
-		case HEADER_CG_SYMBOL_CRC:
-			GuildSymbolCRC(d, c_pData);
-			break;
-			/////////////////////////////////////
-
-		case HEADER_CG_MARK_LOGIN:
-			break;
-
-		case HEADER_CG_HACK:
-			break;
-
-		case HEADER_CG_CHANGE_NAME:
-			ChangeName(d, c_pData);
-			break;
-
-		case HEADER_CG_CLIENT_VERSION:
-			Version(d->GetCharacter(), c_pData);
-			break;
-
-		case HEADER_CG_CLIENT_VERSION2:
-			Version(d->GetCharacter(), c_pData);
-			break;
-
-		default:
-			sys_err("login phase does not handle this packet! header %d", bHeader);
-			//d->SetPhase(PHASE_CLOSE);
-			return (0);
-	}
-
-	return (iExtraLen);
+	RegisterHandlers();
 }
 
+int CInputLogin::HandlePong(LPDESC d, const char*)
+{
+	Pong(d);
+	return 0;
+}
+
+int CInputLogin::HandleMarkLogin(LPDESC d, const char*)
+{
+	extern bool guild_mark_server;
+	if (!guild_mark_server)
+	{
+		sys_err("Guild Mark login requested but i'm not a mark server!");
+		d->SetPhase(PHASE_CLOSE);
+		return 0;
+	}
+
+	sys_log(0, "MARK_SERVER: Login (from LOGIN phase)");
+	// Already in LOGIN phase — no phase change needed
+	return 0;
+}
+
+int CInputLogin::HandleGuildSymbolUpload(LPDESC d, const char* c_pData)
+{
+	return GuildSymbolUpload(d, c_pData, m_iBufferLeft);
+}
+
+int CInputLogin::HandleVersion(LPDESC d, const char* c_pData)
+{
+	Version(d->GetCharacter(), c_pData);
+	return 0;
+}
+
+void CInputLogin::RegisterHandlers()
+{
+	m_handlers[CG::PONG]               = &CInputLogin::HandlePong;
+	m_handlers[CG::MARK_LOGIN]         = &CInputLogin::HandleMarkLogin;
+	m_handlers[CG::LOGIN2]             = &CInputLogin::SimpleHandler<&CInputLogin::LoginByKey>;
+	m_handlers[CG::CHARACTER_SELECT]   = &CInputLogin::SimpleHandler<&CInputLogin::CharacterSelect>;
+	m_handlers[CG::CHARACTER_CREATE]   = &CInputLogin::SimpleHandler<&CInputLogin::CharacterCreate>;
+	m_handlers[CG::CHARACTER_DELETE]   = &CInputLogin::SimpleHandler<&CInputLogin::CharacterDelete>;
+	m_handlers[CG::ENTERGAME]          = &CInputLogin::SimpleHandler<&CInputLogin::Entergame>;
+	m_handlers[CG::EMPIRE]             = &CInputLogin::SimpleHandler<&CInputLogin::Empire>;
+	m_handlers[CG::MARK_CRCLIST]       = &CInputLogin::SimpleHandler<&CInputLogin::GuildMarkCRCList>;
+	m_handlers[CG::MARK_IDXLIST]       = &CInputLogin::SimpleHandler<&CInputLogin::GuildMarkIDXList>;
+	m_handlers[CG::MARK_UPLOAD]        = &CInputLogin::SimpleHandler<&CInputLogin::GuildMarkUpload>;
+	m_handlers[CG::GUILD_SYMBOL_UPLOAD]= &CInputLogin::HandleGuildSymbolUpload;
+	m_handlers[CG::SYMBOL_CRC]         = &CInputLogin::SimpleHandler<&CInputLogin::GuildSymbolCRC>;
+	m_handlers[CG::CHANGE_NAME]        = &CInputLogin::SimpleHandler<&CInputLogin::ChangeName>;
+	m_handlers[CG::CLIENT_VERSION]     = &CInputLogin::HandleVersion;
+}
+
+int CInputLogin::Analyze(LPDESC d, uint16_t wHeader, const char * c_pData)
+{
+	auto it = m_handlers.find(wHeader);
+	if (it == m_handlers.end())
+	{
+		sys_err("CInputLogin::Analyze: unknown header %d (0x%04X) from %s", wHeader, wHeader, d->GetHostName());
+		return 0;
+	}
+
+	return (this->*(it->second))(d, c_pData);
+}

@@ -1,4 +1,4 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "utils.h"
 #include "config.h"
 #include "questmanager.h"
@@ -6,7 +6,7 @@
 #include "char.h"
 #include "char_manager.h"
 #include "desc.h"
-#include "packet.h"
+#include "packet_structs.h"
 #include "target.h"
 
 /////////////////////////////////////////////////////////////////////
@@ -19,7 +19,8 @@ return;
 
 TPacketGCTargetCreate pck;
 
-pck.bHeader = HEADER_GC_TARGET_CREATE;
+pck.header = GC::TARGET_CREATE_NEW;
+pck.length = sizeof(pck);
 pck.lID = info->iID;
 pck.bType = info->iType;
 pck.dwVID = info->iArg1;
@@ -30,7 +31,8 @@ d->Packet(&pck, sizeof(TPacketGCTargetCreate));
 void SendTargetUpdatePacket(LPDESC d, int iID, int x, int y)
 {
 TPacketGCTargetUpdate pck;
-pck.bHeader = HEADER_GC_TARGET_UPDATE;
+pck.header = GC::TARGET_UPDATE;
+pck.length = sizeof(pck);
 pck.lID = iID;
 pck.lX = x;
 pck.lY = y;
@@ -41,7 +43,8 @@ sys_log(0, "SendTargetUpdatePacket %d %dx%d", iID, x, y);
 void SendTargetDeletePacket(LPDESC d, int iID)
 {
 TPacketGCTargetDelete pck;
-pck.bHeader = HEADER_GC_TARGET_DELETE;
+pck.header = GC::TARGET_DELETE;
+pck.length = sizeof(pck);
 pck.lID = iID;
 d->Packet(&pck, sizeof(TPacketGCTargetDelete));
 }

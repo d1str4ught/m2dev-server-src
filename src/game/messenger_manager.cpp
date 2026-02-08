@@ -1,4 +1,4 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "constants.h"
 #include "gm.h"
 #include "messenger_manager.h"
@@ -139,7 +139,8 @@ void MessengerManager::RegisterRequestToAdd(const char* name, const char* target
 	{
 		// Send P2P response back to requester's core
         TPacketGGMessengerResponse p2pResp{};
-        p2pResp.bHeader = HEADER_GG_MESSENGER_RESPONSE;
+        p2pResp.header = GG::MESSENGER_RESPONSE;
+        p2pResp.length = sizeof(p2pResp);
         strlcpy(p2pResp.szRequester, name, sizeof(p2pResp.szRequester));
         strlcpy(p2pResp.szTarget, targetName, sizeof(p2pResp.szTarget));
         p2pResp.bResponseType = 0; // already_sent
@@ -185,7 +186,8 @@ void MessengerManager::P2PRequestToAdd_Stage1(LPCHARACTER ch, const char* target
 		}
 
 		TPacketGGMessengerRequest p2pp{};
-		p2pp.header = HEADER_GG_MESSENGER_REQUEST_ADD;
+		p2pp.header = GG::MESSENGER_REQUEST_ADD;
+		p2pp.length = sizeof(p2pp);
 		strlcpy(p2pp.account, ch->GetName(), CHARACTER_NAME_MAX_LEN + 1);
 		strlcpy(p2pp.target, targetName, CHARACTER_NAME_MAX_LEN + 1);
 		P2P_MANAGER::Instance().Send(&p2pp, sizeof(TPacketGGMessengerRequest));
@@ -206,7 +208,8 @@ void MessengerManager::P2PRequestToAdd_Stage2(const char* characterName, LPCHARA
 	{
 		// Send response back to requester's core
         TPacketGGMessengerResponse p2pResp{};
-        p2pResp.bHeader = HEADER_GG_MESSENGER_RESPONSE;
+        p2pResp.header = GG::MESSENGER_RESPONSE;
+        p2pResp.length = sizeof(p2pResp);
         strlcpy(p2pResp.szRequester, characterName, sizeof(p2pResp.szRequester));
         strlcpy(p2pResp.szTarget, target->GetName(), sizeof(p2pResp.szTarget));
         p2pResp.bResponseType = 2; // quest_running
@@ -218,7 +221,8 @@ void MessengerManager::P2PRequestToAdd_Stage2(const char* characterName, LPCHARA
 	{
 		// Send response back to requester's core
         TPacketGGMessengerResponse p2pResp{};
-        p2pResp.bHeader = HEADER_GG_MESSENGER_RESPONSE;
+        p2pResp.header = GG::MESSENGER_RESPONSE;
+        p2pResp.length = sizeof(p2pResp);
         strlcpy(p2pResp.szRequester, characterName, sizeof(p2pResp.szRequester));
         strlcpy(p2pResp.szTarget, target->GetName(), sizeof(p2pResp.szTarget));
         p2pResp.bResponseType = 3; // blocking_requests
@@ -504,7 +508,8 @@ void MessengerManager::AddToList(MessengerManager::keyA account, MessengerManage
 
 	TPacketGGMessenger p2ppck;
 
-	p2ppck.bHeader = HEADER_GG_MESSENGER_ADD;
+	p2ppck.header = GG::MESSENGER_ADD;
+	p2ppck.length = sizeof(p2ppck);
 	strlcpy(p2ppck.szAccount, account.c_str(), sizeof(p2ppck.szAccount));
 	strlcpy(p2ppck.szCompanion, companion.c_str(), sizeof(p2ppck.szCompanion));
 	P2P_MANAGER::instance().Send(&p2ppck, sizeof(TPacketGGMessenger));
@@ -524,9 +529,9 @@ void MessengerManager::__RemoveFromList(MessengerManager::keyA account, Messenge
 	{
 		TPacketGCMessenger p;
 
-		p.header		= HEADER_GC_MESSENGER;
-		p.subheader		= MESSENGER_SUBHEADER_GC_REMOVE_FRIEND;
-		p.size			= sizeof(TPacketGCMessenger) + sizeof(BYTE) + account.size();
+		p.header		= GC::MESSENGER;
+		p.subheader		= MessengerSub::GC::REMOVE_FRIEND;
+		p.length			= sizeof(TPacketGCMessenger) + sizeof(BYTE) + account.size();
 
 		BYTE bLen		= account.size();
 		tch->GetDesc()->BufferedPacket(&p, sizeof(p));
@@ -578,8 +583,9 @@ void MessengerManager::RemoveFromList(MessengerManager::keyA account, MessengerM
 	__RemoveFromList(account, companion);
 
 	TPacketGGMessenger p2ppck;
-	
-	p2ppck.bHeader = HEADER_GG_MESSENGER_REMOVE;
+
+	p2ppck.header = GG::MESSENGER_REMOVE;
+	p2ppck.length = sizeof(p2ppck);
 	strlcpy(p2ppck.szAccount, account.c_str(), sizeof(p2ppck.szAccount));
 	strlcpy(p2ppck.szCompanion, companion.c_str(), sizeof(p2ppck.szCompanion));
 	P2P_MANAGER::instance().Send(&p2ppck, sizeof(TPacketGGMessenger));
@@ -640,9 +646,9 @@ void MessengerManager::SendList(MessengerManager::keyA account)
 
 	TPacketGCMessenger pack;
 
-	pack.header		= HEADER_GC_MESSENGER;
-	pack.subheader	= MESSENGER_SUBHEADER_GC_LIST;
-	pack.size		= sizeof(TPacketGCMessenger);
+	pack.header		= GC::MESSENGER;
+	pack.subheader	= MessengerSub::GC::LIST;
+	pack.length		= sizeof(TPacketGCMessenger);
 
 	TPacketGCMessengerListOffline pack_offline;
 	TPacketGCMessengerListOnline pack_online;
@@ -677,7 +683,7 @@ void MessengerManager::SendList(MessengerManager::keyA account)
 		++it;
 	}
 
-	pack.size += buf.size();
+	pack.length += buf.size();
 
 	d->BufferedPacket(&pack, sizeof(TPacketGCMessenger));
 	d->Packet(buf.read_peek(), buf.size());
@@ -701,9 +707,9 @@ void MessengerManager::SendLogin(MessengerManager::keyA account, MessengerManage
 
 	TPacketGCMessenger pack;
 
-	pack.header			= HEADER_GC_MESSENGER;
-	pack.subheader		= MESSENGER_SUBHEADER_GC_LOGIN;
-	pack.size			= sizeof(TPacketGCMessenger) + sizeof(BYTE) + bLen;
+	pack.header			= GC::MESSENGER;
+	pack.subheader		= MessengerSub::GC::LOGIN;
+	pack.length			= sizeof(TPacketGCMessenger) + sizeof(BYTE) + bLen;
 
 	d->BufferedPacket(&pack, sizeof(TPacketGCMessenger));
 	d->BufferedPacket(&bLen, sizeof(BYTE));
@@ -725,9 +731,9 @@ void MessengerManager::SendLogout(MessengerManager::keyA account, MessengerManag
 
 	TPacketGCMessenger pack;
 
-	pack.header		= HEADER_GC_MESSENGER;
-	pack.subheader	= MESSENGER_SUBHEADER_GC_LOGOUT;
-	pack.size		= sizeof(TPacketGCMessenger) + sizeof(BYTE) + bLen;
+	pack.header		= GC::MESSENGER;
+	pack.subheader	= MessengerSub::GC::LOGOUT;
+	pack.length		= sizeof(TPacketGCMessenger) + sizeof(BYTE) + bLen;
 
 	d->BufferedPacket(&pack, sizeof(TPacketGCMessenger));
 	d->BufferedPacket(&bLen, sizeof(BYTE));

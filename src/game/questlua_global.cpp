@@ -1,4 +1,4 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include <sstream>
 #include "constants.h"
 #include "char.h"
@@ -357,7 +357,7 @@ namespace quest
 
 		sys_log(0, "QUEST: quest: %s player: %s : %s", pc->GetCurrentQuestName().c_str(), ch->GetName(), lua_tostring(L, 2));
 
-		if (true == test_server)
+		if (test_server)
 		{
 			ch->ChatPacket(CHAT_TYPE_INFO, "QUEST_SYSLOG %s", lua_tostring(L, 2));
 		}
@@ -872,14 +872,15 @@ namespace quest
 		combine_lua_string(L, s);
 
 		TPacketGGNotice p;
-		p.bHeader = HEADER_GG_NOTICE;
+		p.header = GG::NOTICE;
 		p.lSize = strlen(s.str().c_str()) + 1;
+		p.length = sizeof(TPacketGGNotice) + p.lSize;
 
 		TEMP_BUFFER buf;
 		buf.write(&p, sizeof(p));
 		buf.write(s.str().c_str(), p.lSize);
 
-		P2P_MANAGER::instance().Send(buf.read_peek(), buf.size()); // HEADER_GG_NOTICE
+		P2P_MANAGER::instance().Send(buf.read_peek(), buf.size()); // GG::NOTICE
 
 		SendNotice(s.str().c_str());
 		return 1;	
@@ -978,10 +979,10 @@ namespace quest
 		
 		struct ::packet_script packet_script;
 
-		packet_script.header = HEADER_GC_SCRIPT;
+		packet_script.header = GC::SCRIPT;
 		packet_script.skin = CQuestManager::QUEST_SKIN_NORMAL;
 		packet_script.src_size = Script.size();
-		packet_script.size = packet_script.src_size + sizeof(struct packet_script);
+		packet_script.length = packet_script.src_size + sizeof(struct packet_script);
 
 		FSendPacket f;
 		f.buf.write(&packet_script, sizeof(struct packet_script));
@@ -1086,7 +1087,7 @@ namespace quest
 
 		if (pChar != NULL)
 		{
-			if (lua_isstring(L, 1) != true && lua_isstring(L, 2) != true)
+			if (!lua_isstring(L, 1) && !lua_isstring(L, 2))
 			{
 				lua_pushboolean(L, false);
 				return 1;

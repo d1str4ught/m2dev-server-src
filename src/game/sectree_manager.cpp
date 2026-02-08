@@ -1,4 +1,4 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include <sstream>
 #include "libgame/targa.h"
 #include "libgame/attribute.h"
@@ -14,7 +14,7 @@
 #include "item.h"
 #include "item_manager.h"
 #include "buffer_manager.h"
-#include "packet.h"
+#include "packet_structs.h"
 #include "start_position.h"
 
 WORD SECTREE_MANAGER::current_sectree_version = MAKEWORD(0, 3);
@@ -732,7 +732,7 @@ int SECTREE_MANAGER::GetMapIndex(long x, long y)
 
 int SECTREE_MANAGER::Build(const char * c_pszListFileName, const char* c_pszMapBasePath)
 {
-	if (true == test_server)
+	if (test_server)
 	{
 		sys_log ( 0, "[BUILD] Build %s %s ", c_pszListFileName, c_pszMapBasePath );
 	}
@@ -777,7 +777,7 @@ int SECTREE_MANAGER::Build(const char * c_pszListFileName, const char* c_pszMapB
 			return 0;
 		}
 
-		if (true == test_server)
+		if (test_server)
 			sys_log ( 0,"[BUILD] Build %s %s %d ",c_pszMapBasePath, szMapName, iIndex );
 
 		// 먼저 이 서버에서 이 맵의 몬스터를 스폰해야 하는가 확인 한다.
@@ -1136,7 +1136,8 @@ void SECTREE_MANAGER::SendNPCPosition(LPCHARACTER ch)
 
 	TEMP_BUFFER buf;
 	TPacketGCNPCPosition p;
-	p.header = HEADER_GC_NPC_POSITION;
+	p.header = GC::NPC_POSITION;
+	p.length = sizeof(p);
 	p.count = m_mapNPCPosition[lMapIndex].size();
 
 	TNPCPosition np;
@@ -1152,7 +1153,7 @@ void SECTREE_MANAGER::SendNPCPosition(LPCHARACTER ch)
 		buf.write(&np, sizeof(np));
 	}
 
-	p.size = sizeof(p) + buf.size();
+	p.length = sizeof(p) + buf.size();
 
 	if (buf.size())
 	{

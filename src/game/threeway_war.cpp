@@ -1,4 +1,4 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 
 #include "threeway_war.h"
 
@@ -6,7 +6,7 @@
 #include "common/tables.h"
 #include "p2p.h"
 #include "locale_service.h"
-#include "packet.h"
+#include "packet_structs.h"
 #include "char.h"
 #include "questmanager.h"
 #include "questlua.h"
@@ -515,14 +515,14 @@ void CThreeWayWar::onDead(LPCHARACTER pChar, LPCHARACTER pkKiller)
 
 			struct packet_script pack_script;
 
-			pack_script.header = HEADER_GC_SCRIPT;
+			pack_script.header = GC::SCRIPT;
 			pack_script.skin = 1;
 			pack_script.src_size = Script.size();
 
 			quest::FSendPacketToEmpire fSend;
 			fSend.bEmpire = nVictoryEmpireIndex;
 
-			pack_script.size = pack_script.src_size + sizeof(struct packet_script);
+			pack_script.length = pack_script.src_size + sizeof(struct packet_script);
 			fSend.buf.write(&pack_script, sizeof(struct packet_script));
 			fSend.buf.write(&Script[0], Script.size());
 

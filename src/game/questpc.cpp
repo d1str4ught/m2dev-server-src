@@ -1,7 +1,7 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "constants.h"
 #include "questmanager.h"
-#include "packet.h"
+#include "packet_structs.h"
 #include "buffer_manager.h"
 #include "char.h"
 #include "desc_client.h"
@@ -236,8 +236,8 @@ namespace quest
 
 		packet_quest_info qi;
 
-		qi.header = HEADER_GC_QUEST_INFO;
-		qi.size = sizeof(struct packet_quest_info);
+		qi.header = GC::QUEST_INFO;
+		qi.length = sizeof(struct packet_quest_info);
 		qi.index = m_RunningQuestState->iIndex;
 		qi.flag = m_iSendToClient;
 
@@ -248,7 +248,7 @@ namespace quest
 		{
 			BYTE temp = m_RunningQuestState->bStart?1:0;
 			buf.write(&temp,1);		
-			qi.size+=1;
+			qi.length+=1;
 
 			sys_log(1, "QUEST BeginFlag %d", (int)temp);
 		}
@@ -256,7 +256,7 @@ namespace quest
 		{
 			m_RunningQuestState->_title.reserve(30+1);
 			buf.write(m_RunningQuestState->_title.c_str(), 30+1);
-			qi.size+=30+1;
+			qi.length+=30+1;
 
 			sys_log(1, "QUEST Title %s", m_RunningQuestState->_title.c_str());
 		}
@@ -264,14 +264,14 @@ namespace quest
 		{
 			m_RunningQuestState->_clock_name.reserve(16+1);
 			buf.write(m_RunningQuestState->_clock_name.c_str(), 16+1);
-			qi.size+=16+1;
+			qi.length+=16+1;
 
 			sys_log(1, "QUEST Clock Name %s", m_RunningQuestState->_clock_name.c_str());
 		}
 		if (m_iSendToClient & QUEST_SEND_CLOCK_VALUE)
 		{
 			buf.write(&m_RunningQuestState->_clock_value, sizeof(int));
-			qi.size+=4;
+			qi.length+=4;
 
 			sys_log(1, "QUEST Clock Value %d", m_RunningQuestState->_clock_value);
 		}
@@ -279,14 +279,14 @@ namespace quest
 		{
 			m_RunningQuestState->_counter_name.reserve(16+1);
 			buf.write(m_RunningQuestState->_counter_name.c_str(), 16+1);
-			qi.size+=16+1;
+			qi.length+=16+1;
 
 			sys_log(1, "QUEST Counter Name %s", m_RunningQuestState->_counter_name.c_str());
 		}
 		if (m_iSendToClient & QUEST_SEND_COUNTER_VALUE)
 		{
 			buf.write(&m_RunningQuestState->_counter_value, sizeof(int));
-			qi.size+=4;
+			qi.length+=4;
 
 			sys_log(1, "QUEST Counter Value %d", m_RunningQuestState->_counter_value);
 		}
@@ -294,7 +294,7 @@ namespace quest
 		{
 			m_RunningQuestState->_icon_file.reserve(24+1);
 			buf.write(m_RunningQuestState->_icon_file.c_str(), 24+1);
-			qi.size+=24+1;
+			qi.length+=24+1;
 
 			sys_log(1, "QUEST Icon File %s", m_RunningQuestState->_icon_file.c_str());
 		}
@@ -579,7 +579,7 @@ namespace quest
 		if (i > 0)
 		{
 			sys_log(1, "QuestPC::Save %d", i);
-			db_clientdesc->DBPacketHeader(HEADER_GD_QUEST_SAVE, 0, sizeof(TQuestTable) * i);
+			db_clientdesc->DBPacketHeader(GD::QUEST_SAVE, 0, sizeof(TQuestTable) * i);
 			db_clientdesc->Packet(&s_table[0], sizeof(TQuestTable) * i);
 		}
 

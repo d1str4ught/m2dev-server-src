@@ -1,13 +1,15 @@
-﻿#include "stdafx.h" 
+#include "stdafx.h" 
 #include "constants.h"
 #include "config.h"
 #include "utils.h"
+#include "desc.h"
+#include "desc_client.h"
 #include "desc_manager.h"
 #include "char.h"
 #include "char_manager.h"
 #include "item.h"
 #include "item_manager.h"
-#include "packet.h"
+#include "packet_structs.h"
 #include "protocol.h"
 #include "mob_manager.h"
 #include "shop_manager.h"
@@ -24,12 +26,10 @@
 #include "priv_manager.h"
 #include "db.h"
 #include "building.h"
-#include "login_sim.h"
 #include "wedding.h"
 #include "login_data.h"
 #include "unique_item.h"
 
-#include "monarch.h"
 #include "affect.h"
 #include "castle.h"
 #include "motion.h"
@@ -106,22 +106,11 @@ bool GetServerLocation(TAccountTable & rTab, BYTE bEmpire)
 	return bFound;
 }
 
-extern std::map<DWORD, CLoginSim *> g_sim;
-extern std::map<DWORD, CLoginSim *> g_simByPID;
-
 void CInputDB::LoginSuccess(DWORD dwHandle, const char *data)
 {
 	sys_log(0, "LoginSuccess");
 
 	TAccountTable * pTab = (TAccountTable *) data;
-
-	itertype(g_sim) it = g_sim.find(pTab->id);
-	if (g_sim.end() != it)
-	{
-		sys_log(0, "CInputDB::LoginSuccess - already exist sim [%s]", pTab->login);
-		it->second->SendLoad();
-		return;
-	}
 
 	LPDESC d = DESC_MANAGER::instance().FindByHandle(dwHandle);
 
@@ -132,7 +121,7 @@ void CInputDB::LoginSuccess(DWORD dwHandle, const char *data)
 		TLogoutPacket pack;
 
 		strlcpy(pack.login, pTab->login, sizeof(pack.login));
-		db_clientdesc->DBPacket(HEADER_GD_LOGOUT, dwHandle, &pack, sizeof(pack));
+		db_clientdesc->DBPacket(GD::LOGOUT, dwHandle, &pack, sizeof(pack));
 		return;
 	}
 
@@ -143,7 +132,7 @@ void CInputDB::LoginSuccess(DWORD dwHandle, const char *data)
 		TLogoutPacket pack;
 
 		strlcpy(pack.login, pTab->login, sizeof(pack.login));
-		db_clientdesc->DBPacket(HEADER_GD_LOGOUT, dwHandle, &pack, sizeof(pack));
+		db_clientdesc->DBPacket(GD::LOGOUT, dwHandle, &pack, sizeof(pack));
 
 		LoginFailure(d, pTab->status);
 		return;
@@ -162,14 +151,16 @@ void CInputDB::LoginSuccess(DWORD dwHandle, const char *data)
 	if (!bFound) // 캐릭터가 없으면 랜덤한 제국으로 보낸다.. -_-
 	{
 		TPacketGCEmpire pe;
-		pe.bHeader = HEADER_GC_EMPIRE;
+		pe.header = GC::EMPIRE;
+		pe.length = sizeof(pe);
 		pe.bEmpire = number(1, 3);
 		d->Packet(&pe, sizeof(pe));
 	}
 	else
 	{
 		TPacketGCEmpire pe;
-		pe.bHeader = HEADER_GC_EMPIRE;
+		pe.header = GC::EMPIRE;
+		pe.length = sizeof(pe);
 		pe.bEmpire = d->GetEmpire();
 		d->Packet(&pe, sizeof(pe));
 	}
@@ -187,7 +178,8 @@ void CInputDB::PlayerCreateFailure(LPDESC d, BYTE bType)
 
 	TPacketGCCreateFailure pack;
 
-	pack.header	= HEADER_GC_CHARACTER_CREATE_FAILURE;
+	pack.header	= GC::PLAYER_CREATE_FAILURE;
+	pack.length = sizeof(pack);
 	pack.bType	= bType;
 
 	d->Packet(&pack, sizeof(pack));
@@ -202,7 +194,11 @@ void CInputDB::PlayerCreateSuccess(LPDESC d, const char * data)
 
 	if (pPacketDB->bAccountCharacterIndex >= PLAYER_PER_ACCOUNT)
 	{
-		d->Packet(encode_byte(HEADER_GC_CHARACTER_CREATE_FAILURE), 1);
+		TPacketGCCreateFailure pack;
+		pack.header = GC::PLAYER_CREATE_FAILURE;
+		pack.length = sizeof(pack);
+		pack.bType = 0;
+		d->Packet(&pack, sizeof(pack));
 		return;
 	}
 
@@ -225,7 +221,8 @@ void CInputDB::PlayerCreateSuccess(LPDESC d, const char * data)
 
 	TPacketGCPlayerCreateSuccess pack;
 
-	pack.header = HEADER_GC_CHARACTER_CREATE_SUCCESS;
+	pack.header = GC::PLAYER_CREATE_SUCCESS;
+	pack.length = sizeof(pack);
 	pack.bAccountCharacterIndex = pPacketDB->bAccountCharacterIndex;
 	pack.player = pPacketDB->player;
 
@@ -277,7 +274,7 @@ void CInputDB::PlayerCreateSuccess(LPDESC d, const char * data)
 			t.pos	= initialItems[job][i].pos;
 			t.vnum	= initialItems[job][i].dwVnum;
 
-			db_clientdesc->DBPacketHeader(HEADER_GD_ITEM_SAVE, 0, sizeof(TPlayerItem));
+			db_clientdesc->DBPacketHeader(GD::ITEM_SAVE, 0, sizeof(TPlayerItem));
 			db_clientdesc->Packet(&t, sizeof(TPlayerItem));
 		}
 	}
@@ -292,8 +289,12 @@ void CInputDB::PlayerDeleteSuccess(LPDESC d, const char * data)
 
 	BYTE account_index;
 	account_index = decode_byte(data);
-	d->BufferedPacket(encode_byte(HEADER_GC_CHARACTER_DELETE_SUCCESS),	1);
-	d->Packet(encode_byte(account_index),			1);
+
+	TPacketGCDestroyCharacterSuccess pack;
+	pack.header = GC::PLAYER_DELETE_SUCCESS;
+	pack.length = sizeof(pack);
+	pack.account_index = account_index;
+	d->Packet(&pack, sizeof(pack));
 
 	d->GetAccountTable().players[account_index].dwID = 0;
 }
@@ -303,10 +304,10 @@ void CInputDB::PlayerDeleteFail(LPDESC d)
 	if (!d)
 		return;
 
-	d->Packet(encode_byte(HEADER_GC_CHARACTER_DELETE_WRONG_SOCIAL_ID),	1);
-	//d->Packet(encode_byte(account_index),			1);
-
-	//d->GetAccountTable().players[account_index].dwID = 0;
+	TPacketGCBlank pack;
+	pack.header = GC::PLAYER_DELETE_WRONG_SOCIAL_ID;
+	pack.length = sizeof(pack);
+	d->Packet(&pack, sizeof(pack));
 }
 
 void CInputDB::ChangeName(LPDESC d, const char * data)
@@ -329,7 +330,8 @@ void CInputDB::ChangeName(LPDESC d, const char * data)
 
 			TPacketGCChangeName pgc;
 
-			pgc.header = HEADER_GC_CHANGE_NAME;
+			pgc.header = GC::CHANGE_NAME;
+			pgc.length = sizeof(pgc);
 			pgc.pid = p->pid;
 			strlcpy(pgc.name, p->name, sizeof(pgc.name));
 
@@ -409,7 +411,7 @@ void CInputDB::PlayerLoad(LPDESC d, const char * data)
 		// P2P Login
 		TPacketGGLogin p;
 
-		p.bHeader = HEADER_GG_LOGIN;
+		p.header = GG::LOGIN; p.length = sizeof(p);
 		strlcpy(p.szName, ch->GetName(), sizeof(p.szName));
 		p.dwPID = ch->GetPlayerID();
 		p.bEmpire = ch->GetEmpire();
@@ -822,35 +824,6 @@ void CInputDB::Boot(const char* data)
 	
 	//END_ADMIN_MANAGER
 		
-	//MONARCH
-	data += 2;
-	data += 2;
-
-	TMonarchInfo& p = *(TMonarchInfo *) data;
-	data += sizeof(TMonarchInfo);
-
-	CMonarch::instance().SetMonarchInfo(&p);
-
-	for (int n = 1; n < 4; ++n)
-	{
-		if (p.name[n] && *p.name[n])
-			sys_log(0, "[MONARCH] Empire %d Pid %d Money %d %s", n, p.pid[n], p.money[n], p.name[n]);
-	}
-	
-	int CandidacySize = decode_2bytes(data);
-	data += 2;
-
-	int CandidacyCount = decode_2bytes(data);
-	data += 2;
-
-	if (test_server)
-		sys_log (0, "[MONARCH] Size %d Count %d", CandidacySize, CandidacyCount);
-
-	data += CandidacySize * CandidacyCount;
-
-	
-	//END_MONARCH
-
 	WORD endCheck=decode_2bytes(data);
 	if (endCheck != 0xffff)
 	{
@@ -1186,7 +1159,8 @@ void CInputDB::SafeboxWrongPassword(LPDESC d)
 		return;
 
 	TPacketCGSafeboxWrongPassword p;
-	p.bHeader = HEADER_GC_SAFEBOX_WRONG_PASSWORD;
+	p.header = GC::SAFEBOX_WRONG_PASSWORD;
+	p.length = sizeof(p);
 	d->Packet(&p, sizeof(p));
 
 	d->GetCharacter()->CancelSafeboxLoad();
@@ -1247,7 +1221,7 @@ void CInputDB::LoginAlready(LPDESC d, const char * c_pData)
 		{
 			TPacketGGDisconnect pgg;
 
-			pgg.bHeader = HEADER_GG_DISCONNECT;
+			pgg.header = GG::DISCONNECT; pgg.length = sizeof(pgg);
 			strlcpy(pgg.szLogin, p->szLogin, sizeof(pgg.szLogin));
 
 			P2P_MANAGER::instance().Send(&pgg, sizeof(TPacketGGDisconnect));
@@ -1269,7 +1243,8 @@ void CInputDB::EmpireSelect(LPDESC d, const char * c_pData)
 	rTable.bEmpire = *(BYTE *) c_pData;
 
 	TPacketGCEmpire pe;
-	pe.bHeader = HEADER_GC_EMPIRE;
+	pe.header = GC::EMPIRE;
+	pe.length = sizeof(pe);
 	pe.bEmpire = rTable.bEmpire;
 	d->Packet(&pe, sizeof(pe));
 
@@ -1710,7 +1685,8 @@ void CInputDB::AuthLogin(LPDESC d, const char * c_pData)
 
 	TPacketGCAuthSuccess ptoc;
 
-	ptoc.bHeader = HEADER_GC_AUTH_SUCCESS;
+	ptoc.header = GC::AUTH_SUCCESS;
+	ptoc.length = sizeof(ptoc);
 
 	if (bResult)
 	{
@@ -1761,7 +1737,7 @@ void CInputDB::MoneyLog(const char* c_pData)
 	if (p->type == 4) // QUEST_MONEY_LOG_SKIP
 		return;
 
-	if (g_bAuthServer ==true )
+	if (g_bAuthServer)
 		return;
 
 	LogManager::instance().MoneyLog(p->type, p->vnum, p->gold);
@@ -1935,463 +1911,243 @@ void CInputDB::ReloadAdmin(const char * c_pData )
 }
 //END_RELOAD_ADMIN
 
+CInputDB::CInputDB()
+{
+	RegisterHandlers();
+}
+
+LPDESC CInputDB::FindByHandle() const
+{
+	return DESC_MANAGER::instance().FindByHandle(m_dwHandle);
+}
+
+int CInputDB::HandleLoginSuccess(LPDESC, const char* c_pData)
+{
+	LoginSuccess(m_dwHandle, c_pData);
+	return 0;
+}
+
+int CInputDB::HandleLoginNotExist(LPDESC, const char*)
+{
+	LoginFailure(FindByHandle(), "NOID");
+	return 0;
+}
+
+int CInputDB::HandleLoginWrongPasswd(LPDESC, const char*)
+{
+	LoginFailure(FindByHandle(), "WRONGPWD");
+	return 0;
+}
+
+int CInputDB::HandlePlayerCreateFailed(LPDESC, const char*)
+{
+	PlayerCreateFailure(FindByHandle(), 0);
+	return 0;
+}
+
+int CInputDB::HandlePlayerCreateAlready(LPDESC, const char*)
+{
+	PlayerCreateFailure(FindByHandle(), 1);
+	return 0;
+}
+
+int CInputDB::HandlePlayerDeleteFail(LPDESC, const char*)
+{
+	PlayerDeleteFail(FindByHandle());
+	return 0;
+}
+
+int CInputDB::HandlePlayerLoadFailed(LPDESC, const char*)
+{
+	return 0;
+}
+
+int CInputDB::HandleSafeboxWrongPassword(LPDESC, const char*)
+{
+	SafeboxWrongPassword(FindByHandle());
+	return 0;
+}
+
+int CInputDB::HandleGuildSkillRecharge(LPDESC, const char*)
+{
+	GuildSkillRecharge();
+	return 0;
+}
+
+int CInputDB::HandleGuildWarReserveDelete(LPDESC, const char* c_pData)
+{
+	GuildWarReserveDelete(*(DWORD *) c_pData);
+	return 0;
+}
+
+int CInputDB::HandleSpareItemIDRange(LPDESC, const char* c_pData)
+{
+	ITEM_MANAGER::instance().SetMaxSpareItemID(*((TItemIDRangeTable*)c_pData));
+	return 0;
+}
+
+int CInputDB::HandleHorseName(LPDESC, const char* c_pData)
+{
+	CHorseNameManager::instance().UpdateHorseName(
+			((TPacketUpdateHorseName*)c_pData)->dwPlayerID,
+			((TPacketUpdateHorseName*)c_pData)->szHorseName);
+	return 0;
+}
+
+int CInputDB::HandleMyshopPricelistRes(LPDESC, const char* c_pData)
+{
+	MyshopPricelistRes(FindByHandle(), (TPacketMyshopPricelistHeader*) c_pData);
+	return 0;
+}
+
+int CInputDB::HandleRespondChannelStatus(LPDESC, const char* c_pData)
+{
+	RespondChannelStatus(FindByHandle(), c_pData);
+	return 0;
+}
+
+void CInputDB::RegisterHandlers()
+{
+	// Data-only: void handler(const char*)
+	m_handlers[DG::BOOT]                       = &CInputDB::DataHandler<&CInputDB::Boot>;
+	m_handlers[DG::MAP_LOCATIONS]              = &CInputDB::DataHandler<&CInputDB::MapLocations>;
+	m_handlers[DG::P2P]                        = &CInputDB::DataHandler<&CInputDB::P2P>;
+	m_handlers[DG::GUILD_SKILL_UPDATE]         = &CInputDB::DataHandler<&CInputDB::GuildSkillUpdate>;
+	m_handlers[DG::GUILD_LOAD]                 = &CInputDB::DataHandler<&CInputDB::GuildLoad>;
+	m_handlers[DG::GUILD_EXP_UPDATE]           = &CInputDB::DataHandler<&CInputDB::GuildExpUpdate>;
+	m_handlers[DG::GUILD_ADD_MEMBER]           = &CInputDB::DataHandler<&CInputDB::GuildAddMember>;
+	m_handlers[DG::GUILD_REMOVE_MEMBER]        = &CInputDB::DataHandler<&CInputDB::GuildRemoveMember>;
+	m_handlers[DG::GUILD_CHANGE_GRADE]         = &CInputDB::DataHandler<&CInputDB::GuildChangeGrade>;
+	m_handlers[DG::GUILD_CHANGE_MEMBER_DATA]   = &CInputDB::DataHandler<&CInputDB::GuildChangeMemberData>;
+	m_handlers[DG::GUILD_DISBAND]              = &CInputDB::DataHandler<&CInputDB::GuildDisband>;
+	m_handlers[DG::GUILD_WAR]                  = &CInputDB::DataHandler<&CInputDB::GuildWar>;
+	m_handlers[DG::GUILD_WAR_SCORE]            = &CInputDB::DataHandler<&CInputDB::GuildWarScore>;
+	m_handlers[DG::GUILD_LADDER]               = &CInputDB::DataHandler<&CInputDB::GuildLadder>;
+	m_handlers[DG::GUILD_SKILL_USABLE_CHANGE]  = &CInputDB::DataHandler<&CInputDB::GuildSkillUsableChange>;
+	m_handlers[DG::GUILD_MONEY_CHANGE]         = &CInputDB::DataHandler<&CInputDB::GuildMoneyChange>;
+	m_handlers[DG::GUILD_WITHDRAW_MONEY_GIVE]  = &CInputDB::DataHandler<&CInputDB::GuildWithdrawMoney>;
+	m_handlers[DG::PARTY_CREATE]               = &CInputDB::DataHandler<&CInputDB::PartyCreate>;
+	m_handlers[DG::PARTY_DELETE]               = &CInputDB::DataHandler<&CInputDB::PartyDelete>;
+	m_handlers[DG::PARTY_ADD]                  = &CInputDB::DataHandler<&CInputDB::PartyAdd>;
+	m_handlers[DG::PARTY_REMOVE]               = &CInputDB::DataHandler<&CInputDB::PartyRemove>;
+	m_handlers[DG::PARTY_STATE_CHANGE]         = &CInputDB::DataHandler<&CInputDB::PartyStateChange>;
+	m_handlers[DG::PARTY_SET_MEMBER_LEVEL]     = &CInputDB::DataHandler<&CInputDB::PartySetMemberLevel>;
+	m_handlers[DG::TIME]                       = &CInputDB::DataHandler<&CInputDB::Time>;
+	m_handlers[DG::RELOAD_PROTO]               = &CInputDB::DataHandler<&CInputDB::ReloadProto>;
+	m_handlers[DG::CHANGE_EMPIRE_PRIV]         = &CInputDB::DataHandler<&CInputDB::ChangeEmpirePriv>;
+	m_handlers[DG::CHANGE_GUILD_PRIV]          = &CInputDB::DataHandler<&CInputDB::ChangeGuildPriv>;
+	m_handlers[DG::CHANGE_CHARACTER_PRIV]      = &CInputDB::DataHandler<&CInputDB::ChangeCharacterPriv>;
+	m_handlers[DG::MONEY_LOG]                  = &CInputDB::DataHandler<&CInputDB::MoneyLog>;
+	m_handlers[DG::SET_EVENT_FLAG]             = &CInputDB::DataHandler<&CInputDB::SetEventFlag>;
+	m_handlers[DG::CREATE_OBJECT]              = &CInputDB::DataHandler<&CInputDB::CreateObject>;
+	m_handlers[DG::DELETE_OBJECT]              = &CInputDB::DataHandler<&CInputDB::DeleteObject>;
+	m_handlers[DG::UPDATE_LAND]                = &CInputDB::DataHandler<&CInputDB::UpdateLand>;
+	m_handlers[DG::NOTICE]                     = &CInputDB::DataHandler<&CInputDB::Notice>;
+	m_handlers[DG::RELOAD_ADMIN]               = &CInputDB::DataHandler<&CInputDB::ReloadAdmin>;
+
+	// Desc handlers: void handler(LPDESC, const char*) where LPDESC = FindByHandle()
+	m_handlers[DG::LOGIN_ALREADY]              = &CInputDB::DescHandler<&CInputDB::LoginAlready>;
+	m_handlers[DG::PLAYER_LOAD_SUCCESS]        = &CInputDB::DescHandler<&CInputDB::PlayerLoad>;
+	m_handlers[DG::PLAYER_CREATE_SUCCESS]      = &CInputDB::DescHandler<&CInputDB::PlayerCreateSuccess>;
+	m_handlers[DG::PLAYER_DELETE_SUCCESS]      = &CInputDB::DescHandler<&CInputDB::PlayerDeleteSuccess>;
+	m_handlers[DG::ITEM_LOAD]                  = &CInputDB::DescHandler<&CInputDB::ItemLoad>;
+	m_handlers[DG::QUEST_LOAD]                 = &CInputDB::DescHandler<&CInputDB::QuestLoad>;
+	m_handlers[DG::AFFECT_LOAD]                = &CInputDB::DescHandler<&CInputDB::AffectLoad>;
+	m_handlers[DG::SAFEBOX_LOAD]               = &CInputDB::DescHandler<&CInputDB::SafeboxLoad>;
+	m_handlers[DG::SAFEBOX_CHANGE_SIZE]        = &CInputDB::DescHandler<&CInputDB::SafeboxChangeSize>;
+	m_handlers[DG::SAFEBOX_CHANGE_PASSWORD_ANSWER] = &CInputDB::DescHandler<&CInputDB::SafeboxChangePasswordAnswer>;
+	m_handlers[DG::MALL_LOAD]                  = &CInputDB::DescHandler<&CInputDB::MallLoad>;
+	m_handlers[DG::EMPIRE_SELECT]              = &CInputDB::DescHandler<&CInputDB::EmpireSelect>;
+	m_handlers[DG::CHANGE_NAME]                = &CInputDB::DescHandler<&CInputDB::ChangeName>;
+	m_handlers[DG::AUTH_LOGIN]                 = &CInputDB::DescHandler<&CInputDB::AuthLogin>;
+
+	// Typed handlers: void handler(T*) -- cast c_pData to typed pointer
+	m_handlers[DG::GUILD_WAR_RESERVE_ADD]      = &CInputDB::TypedHandler<TGuildWarReserve, &CInputDB::GuildWarReserveAdd>;
+	m_handlers[DG::GUILD_WAR_BET]              = &CInputDB::TypedHandler<TPacketGDGuildWarBet, &CInputDB::GuildWarBet>;
+	m_handlers[DG::MARRIAGE_ADD]               = &CInputDB::TypedHandler<TPacketMarriageAdd, &CInputDB::MarriageAdd>;
+	m_handlers[DG::MARRIAGE_UPDATE]            = &CInputDB::TypedHandler<TPacketMarriageUpdate, &CInputDB::MarriageUpdate>;
+	m_handlers[DG::MARRIAGE_REMOVE]            = &CInputDB::TypedHandler<TPacketMarriageRemove, &CInputDB::MarriageRemove>;
+	m_handlers[DG::WEDDING_REQUEST]            = &CInputDB::TypedHandler<TPacketWeddingRequest, &CInputDB::WeddingRequest>;
+	m_handlers[DG::WEDDING_READY]              = &CInputDB::TypedHandler<TPacketWeddingReady, &CInputDB::WeddingReady>;
+	m_handlers[DG::WEDDING_START]              = &CInputDB::TypedHandler<TPacketWeddingStart, &CInputDB::WeddingStart>;
+	m_handlers[DG::WEDDING_END]                = &CInputDB::TypedHandler<TPacketWeddingEnd, &CInputDB::WeddingEnd>;
+	m_handlers[DG::ACK_CHANGE_GUILD_MASTER]    = &CInputDB::TypedHandler<TPacketChangeGuildMaster, &CInputDB::GuildChangeMaster>;
+	m_handlers[DG::NEED_LOGIN_LOG]             = &CInputDB::TypedHandler<const TPacketNeedLoginLogInfo, &CInputDB::DetailLog>;
+	m_handlers[DG::ITEMAWARD_INFORMER]         = &CInputDB::TypedHandler<TPacketItemAwardInfromer, &CInputDB::ItemAwardInformer>;
+
+	// Custom adapters for special signatures
+	m_handlers[DG::LOGIN_SUCCESS]              = &CInputDB::HandleLoginSuccess;
+	m_handlers[DG::LOGIN_NOT_EXIST]            = &CInputDB::HandleLoginNotExist;
+	m_handlers[DG::LOGIN_WRONG_PASSWD]         = &CInputDB::HandleLoginWrongPasswd;
+	m_handlers[DG::PLAYER_CREATE_FAILED]       = &CInputDB::HandlePlayerCreateFailed;
+	m_handlers[DG::PLAYER_CREATE_ALREADY]      = &CInputDB::HandlePlayerCreateAlready;
+	m_handlers[DG::PLAYER_DELETE_FAILED]       = &CInputDB::HandlePlayerDeleteFail;
+	m_handlers[DG::PLAYER_LOAD_FAILED]         = &CInputDB::HandlePlayerLoadFailed;
+	m_handlers[DG::SAFEBOX_WRONG_PASSWORD]     = &CInputDB::HandleSafeboxWrongPassword;
+	m_handlers[DG::GUILD_SKILL_RECHARGE]       = &CInputDB::HandleGuildSkillRecharge;
+	m_handlers[DG::GUILD_WAR_RESERVE_DEL]      = &CInputDB::HandleGuildWarReserveDelete;
+	m_handlers[DG::ACK_SPARE_ITEM_ID_RANGE]    = &CInputDB::HandleSpareItemIDRange;
+	m_handlers[DG::UPDATE_HORSE_NAME]          = &CInputDB::HandleHorseName;
+	m_handlers[DG::ACK_HORSE_NAME]             = &CInputDB::HandleHorseName;
+	m_handlers[DG::MYSHOP_PRICELIST_RES]       = &CInputDB::HandleMyshopPricelistRes;
+	m_handlers[DG::RESPOND_CHANNELSTATUS]      = &CInputDB::HandleRespondChannelStatus;
+}
+
 ////////////////////////////////////////////////////////////////////
 // Analyze
-// @version	05/06/10 Bang2ni - 아이템 가격정보 리스트 패킷(HEADER_DG_MYSHOP_PRICELIST_RES) 처리루틴 추가.
 ////////////////////////////////////////////////////////////////////
-int CInputDB::Analyze(LPDESC d, BYTE bHeader, const char * c_pData)
+int CInputDB::Analyze(LPDESC d, uint16_t wHeader, const char * c_pData)
 {
-	switch (bHeader)
-	{
-	case HEADER_DG_BOOT:
-		Boot(c_pData);
-		break;
-
-	case HEADER_DG_LOGIN_SUCCESS:
-		LoginSuccess(m_dwHandle, c_pData);
-		break;
-
-	case HEADER_DG_LOGIN_NOT_EXIST:
-		LoginFailure(DESC_MANAGER::instance().FindByHandle(m_dwHandle), "NOID");
-		break;
-
-	case HEADER_DG_LOGIN_WRONG_PASSWD:
-		LoginFailure(DESC_MANAGER::instance().FindByHandle(m_dwHandle), "WRONGPWD");
-		break;
-
-	case HEADER_DG_LOGIN_ALREADY:
-		LoginAlready(DESC_MANAGER::instance().FindByHandle(m_dwHandle), c_pData);
-		break;
-
-	case HEADER_DG_PLAYER_LOAD_SUCCESS:
-		PlayerLoad(DESC_MANAGER::instance().FindByHandle(m_dwHandle), c_pData);
-		break;
-
-	case HEADER_DG_PLAYER_CREATE_SUCCESS:
-		PlayerCreateSuccess(DESC_MANAGER::instance().FindByHandle(m_dwHandle), c_pData);
-		break;
-
-	case HEADER_DG_PLAYER_CREATE_FAILED:
-		PlayerCreateFailure(DESC_MANAGER::instance().FindByHandle(m_dwHandle), 0);
-		break;
-
-	case HEADER_DG_PLAYER_CREATE_ALREADY:
-		PlayerCreateFailure(DESC_MANAGER::instance().FindByHandle(m_dwHandle), 1);
-		break;
-
-	case HEADER_DG_PLAYER_DELETE_SUCCESS:
-		PlayerDeleteSuccess(DESC_MANAGER::instance().FindByHandle(m_dwHandle), c_pData);
-		break;
-
-	case HEADER_DG_PLAYER_LOAD_FAILED:
-		//sys_log(0, "PLAYER_LOAD_FAILED");
-		break;
-
-	case HEADER_DG_PLAYER_DELETE_FAILED:
-		//sys_log(0, "PLAYER_DELETE_FAILED");
-		PlayerDeleteFail(DESC_MANAGER::instance().FindByHandle(m_dwHandle));
-		break;
-
-	case HEADER_DG_ITEM_LOAD:
-		ItemLoad(DESC_MANAGER::instance().FindByHandle(m_dwHandle), c_pData);
-		break;
-
-	case HEADER_DG_QUEST_LOAD:
-		QuestLoad(DESC_MANAGER::instance().FindByHandle(m_dwHandle), c_pData);
-		break;
-
-	case HEADER_DG_AFFECT_LOAD:
-		AffectLoad(DESC_MANAGER::instance().FindByHandle(m_dwHandle), c_pData);
-		break;
-
-	case HEADER_DG_SAFEBOX_LOAD:
-		SafeboxLoad(DESC_MANAGER::instance().FindByHandle(m_dwHandle), c_pData);
-		break;
-
-	case HEADER_DG_SAFEBOX_CHANGE_SIZE:
-		SafeboxChangeSize(DESC_MANAGER::instance().FindByHandle(m_dwHandle), c_pData);
-		break;
-
-	case HEADER_DG_SAFEBOX_WRONG_PASSWORD:
-		SafeboxWrongPassword(DESC_MANAGER::instance().FindByHandle(m_dwHandle));
-		break;
-
-	case HEADER_DG_SAFEBOX_CHANGE_PASSWORD_ANSWER:
-		SafeboxChangePasswordAnswer(DESC_MANAGER::instance().FindByHandle(m_dwHandle), c_pData);
-		break;
-
-	case HEADER_DG_MALL_LOAD:
-		MallLoad(DESC_MANAGER::instance().FindByHandle(m_dwHandle), c_pData);
-		break;
-
-	case HEADER_DG_EMPIRE_SELECT:
-		EmpireSelect(DESC_MANAGER::instance().FindByHandle(m_dwHandle), c_pData);
-		break;
-
-	case HEADER_DG_MAP_LOCATIONS:
-		MapLocations(c_pData);
-		break;
-
-	case HEADER_DG_P2P:
-		P2P(c_pData);
-		break;
-
-	case HEADER_DG_GUILD_SKILL_UPDATE:
-		GuildSkillUpdate(c_pData);
-		break;
-
-	case HEADER_DG_GUILD_LOAD:
-		GuildLoad(c_pData);
-		break;
-
-	case HEADER_DG_GUILD_SKILL_RECHARGE:
-		GuildSkillRecharge();
-		break;
-
-	case HEADER_DG_GUILD_EXP_UPDATE:
-		GuildExpUpdate(c_pData);
-		break;
-
-	case HEADER_DG_PARTY_CREATE:
-		PartyCreate(c_pData);
-		break;
-
-	case HEADER_DG_PARTY_DELETE:
-		PartyDelete(c_pData);
-		break;
-
-	case HEADER_DG_PARTY_ADD:
-		PartyAdd(c_pData);
-		break;
-
-	case HEADER_DG_PARTY_REMOVE:
-		PartyRemove(c_pData);
-		break;
-
-	case HEADER_DG_PARTY_STATE_CHANGE:
-		PartyStateChange(c_pData);
-		break;
-
-	case HEADER_DG_PARTY_SET_MEMBER_LEVEL:
-		PartySetMemberLevel(c_pData);    
-		break;
-
-	case HEADER_DG_TIME:
-		Time(c_pData);
-		break;
-
-	case HEADER_DG_GUILD_ADD_MEMBER:
-		GuildAddMember(c_pData);
-		break;
-
-	case HEADER_DG_GUILD_REMOVE_MEMBER:
-		GuildRemoveMember(c_pData);
-		break;
-
-	case HEADER_DG_GUILD_CHANGE_GRADE:
-		GuildChangeGrade(c_pData);
-		break;
-
-	case HEADER_DG_GUILD_CHANGE_MEMBER_DATA:
-		GuildChangeMemberData(c_pData);
-		break;
-
-	case HEADER_DG_GUILD_DISBAND:
-		GuildDisband(c_pData);
-		break;
-
-	case HEADER_DG_RELOAD_PROTO:
-		ReloadProto(c_pData);
-		break;
-
-	case HEADER_DG_GUILD_WAR:
-		GuildWar(c_pData);
-		break;
-
-	case HEADER_DG_GUILD_WAR_SCORE:
-		GuildWarScore(c_pData);
-		break;
-
-	case HEADER_DG_GUILD_LADDER:
-		GuildLadder(c_pData);
-		break;
-
-	case HEADER_DG_GUILD_SKILL_USABLE_CHANGE:
-		GuildSkillUsableChange(c_pData);
-		break;
-
-	case HEADER_DG_CHANGE_NAME:
-		ChangeName(DESC_MANAGER::instance().FindByHandle(m_dwHandle), c_pData);
-		break;
-
-	case HEADER_DG_AUTH_LOGIN:
-		AuthLogin(DESC_MANAGER::instance().FindByHandle(m_dwHandle), c_pData);
-		break;
-
-	case HEADER_DG_CHANGE_EMPIRE_PRIV:
-		ChangeEmpirePriv(c_pData);
-		break;
-
-	case HEADER_DG_CHANGE_GUILD_PRIV:
-		ChangeGuildPriv(c_pData);
-		break;
-
-	case HEADER_DG_CHANGE_CHARACTER_PRIV:
-		ChangeCharacterPriv(c_pData);
-		break;
-
-	case HEADER_DG_MONEY_LOG:
-		MoneyLog(c_pData);
-		break;
-
-	case HEADER_DG_GUILD_WITHDRAW_MONEY_GIVE:
-		GuildWithdrawMoney(c_pData);
-		break;
-
-	case HEADER_DG_GUILD_MONEY_CHANGE:
-		GuildMoneyChange(c_pData);
-		break;
-
-	case HEADER_DG_SET_EVENT_FLAG:
-		SetEventFlag(c_pData);
-		break;
-
-	case HEADER_DG_CREATE_OBJECT:
-		CreateObject(c_pData);
-		break;
-
-	case HEADER_DG_DELETE_OBJECT:
-		DeleteObject(c_pData);
-		break;
-
-	case HEADER_DG_UPDATE_LAND:
-		UpdateLand(c_pData);
-		break;
-
-	case HEADER_DG_NOTICE:
-		Notice(c_pData);
-		break;
-
-	case HEADER_DG_GUILD_WAR_RESERVE_ADD:
-		GuildWarReserveAdd((TGuildWarReserve *) c_pData);
-		break;
-
-	case HEADER_DG_GUILD_WAR_RESERVE_DEL:
-		GuildWarReserveDelete(*(DWORD *) c_pData);
-		break;
-
-	case HEADER_DG_GUILD_WAR_BET:
-		GuildWarBet((TPacketGDGuildWarBet *) c_pData);
-		break;
-
-	case HEADER_DG_MARRIAGE_ADD:
-		MarriageAdd((TPacketMarriageAdd*) c_pData);
-		break;
-
-	case HEADER_DG_MARRIAGE_UPDATE:
-		MarriageUpdate((TPacketMarriageUpdate*) c_pData);
-		break;
-
-	case HEADER_DG_MARRIAGE_REMOVE:
-		MarriageRemove((TPacketMarriageRemove*) c_pData);
-		break;
-
-	case HEADER_DG_WEDDING_REQUEST:
-		WeddingRequest((TPacketWeddingRequest*) c_pData);
-		break;
-
-	case HEADER_DG_WEDDING_READY:
-		WeddingReady((TPacketWeddingReady*) c_pData);
-		break;
-
-	case HEADER_DG_WEDDING_START:
-		WeddingStart((TPacketWeddingStart*) c_pData);
-		break;
-
-	case HEADER_DG_WEDDING_END:
-		WeddingEnd((TPacketWeddingEnd*) c_pData);
-		break;
-
-		// MYSHOP_PRICE_LIST
-	case HEADER_DG_MYSHOP_PRICELIST_RES:
-		MyshopPricelistRes(DESC_MANAGER::instance().FindByHandle(m_dwHandle), (TPacketMyshopPricelistHeader*) c_pData );
-		break;
-		// END_OF_MYSHOP_PRICE_LIST
-		//
-	// RELOAD_ADMIN
-	case HEADER_DG_RELOAD_ADMIN:
-		ReloadAdmin(c_pData );		
-		break;
-	//END_RELOAD_ADMIN
-
-	case HEADER_DG_ADD_MONARCH_MONEY:
-		AddMonarchMoney(DESC_MANAGER::instance().FindByHandle(m_dwHandle), c_pData ); 
-		break;
-
-	case HEADER_DG_DEC_MONARCH_MONEY:
-		DecMonarchMoney(DESC_MANAGER::instance().FindByHandle(m_dwHandle), c_pData );
-		break;
-
-	case HEADER_DG_TAKE_MONARCH_MONEY:
-		TakeMonarchMoney(DESC_MANAGER::instance().FindByHandle(m_dwHandle), c_pData );
-		break;
-
-	case HEADER_DG_CHANGE_MONARCH_LORD_ACK :
-		ChangeMonarchLord((TPacketChangeMonarchLordACK*)c_pData);
-		break;
-
-	case HEADER_DG_UPDATE_MONARCH_INFO :
-		UpdateMonarchInfo((TMonarchInfo*)c_pData);
-		break;
-
-	case HEADER_DG_ACK_CHANGE_GUILD_MASTER :
-		this->GuildChangeMaster((TPacketChangeGuildMaster*) c_pData);
-		break;	
-	case HEADER_DG_ACK_SPARE_ITEM_ID_RANGE :
-		ITEM_MANAGER::instance().SetMaxSpareItemID(*((TItemIDRangeTable*)c_pData) );
-		break;
-
-	case HEADER_DG_UPDATE_HORSE_NAME :
-	case HEADER_DG_ACK_HORSE_NAME :
-		CHorseNameManager::instance().UpdateHorseName(
-				((TPacketUpdateHorseName*)c_pData)->dwPlayerID, 
-				((TPacketUpdateHorseName*)c_pData)->szHorseName);
-		break;
-
-	case HEADER_DG_NEED_LOGIN_LOG:
-		DetailLog( (TPacketNeedLoginLogInfo*) c_pData );
-		break;
-	// 독일 선물 기능 테스트
-	case HEADER_DG_ITEMAWARD_INFORMER:
-		ItemAwardInformer((TPacketItemAwardInfromer*) c_pData);
-		break;
-	case HEADER_DG_RESPOND_CHANNELSTATUS:
-		RespondChannelStatus(DESC_MANAGER::instance().FindByHandle(m_dwHandle), c_pData);
-		break;
-	
-	default:
+	auto it = m_handlers.find(wHeader);
+	if (it == m_handlers.end())
 		return (-1);
-	}
 
-	return 0;
+	return (this->*(it->second))(d, c_pData);
 }
 
 bool CInputDB::Process(LPDESC d, const void * orig, int bytes, int & r_iBytesProceed)
 {
 	const char *	c_pData = (const char *) orig;
-	BYTE		bHeader, bLastHeader = 0;
+	uint16_t	wHeader, wLastHeader = 0;
 	int			iSize;
 	int			iLastPacketLen = 0;
 
+	static constexpr int FRAME_SIZE = 10; // header(2) + handle(4) + size(4)
+
 	for (m_iBufferLeft = bytes; m_iBufferLeft > 0;)
 	{
-		if (m_iBufferLeft < 9)
+		if (m_iBufferLeft < FRAME_SIZE)
 			return true;
 
-		bHeader		= *((BYTE *) (c_pData));	// 1
-		m_dwHandle	= *((DWORD *) (c_pData + 1));	// 4
-		iSize		= *((DWORD *) (c_pData + 5));	// 4
+		wHeader		= *((uint16_t *) (c_pData));		// 2
+		m_dwHandle	= *((DWORD *) (c_pData + 2));		// 4
+		iSize		= *((DWORD *) (c_pData + 6));		// 4
 
-		sys_log(1, "DBCLIENT: header %d handle %d size %d bytes %d", bHeader, m_dwHandle, iSize, bytes); 
+		sys_log(1, "DBCLIENT: header %u handle %u size %d bytes %d", wHeader, m_dwHandle, iSize, bytes);
 
-		if (m_iBufferLeft - 9 < iSize)
+		if (m_iBufferLeft - FRAME_SIZE < iSize)
 			return true;
 
-		const char * pRealData = (c_pData + 9);
+		const char * pRealData = (c_pData + FRAME_SIZE);
 
-		if (Analyze(d, bHeader, pRealData) < 0)
+		if (Analyze(d, wHeader, pRealData) < 0)
 		{
-			sys_err("in InputDB: UNKNOWN HEADER: %d, LAST HEADER: %d(%d), REMAIN BYTES: %d, DESC: %d",
-					bHeader, bLastHeader, iLastPacketLen, m_iBufferLeft, d->GetSocket());
+			sys_err("in InputDB: UNKNOWN HEADER: %u, LAST HEADER: %u(%d), REMAIN BYTES: %d, DESC: %d",
+					wHeader, wLastHeader, iLastPacketLen, m_iBufferLeft, d->GetSocket());
 
 			//printdata((BYTE*) orig, bytes);
 			//d->SetPhase(PHASE_CLOSE);
 		}
 
-		c_pData		+= 9 + iSize;
-		m_iBufferLeft	-= 9 + iSize;
-		r_iBytesProceed	+= 9 + iSize;
+		c_pData		+= FRAME_SIZE + iSize;
+		m_iBufferLeft	-= FRAME_SIZE + iSize;
+		r_iBytesProceed	+= FRAME_SIZE + iSize;
 
-		iLastPacketLen	= 9 + iSize;
-		bLastHeader	= bHeader;
+		iLastPacketLen	= FRAME_SIZE + iSize;
+		wLastHeader	= wHeader;
 	}
 
 	return true;
-}
-
-void CInputDB::AddMonarchMoney(LPDESC d, const char * data )
-{
-	int Empire = *(int *) data;
-	data += sizeof(int);
-
-	int Money = *(int *) data;
-	data += sizeof(int);
-	
-	CMonarch::instance().AddMoney(Money, Empire);
-
-	DWORD pid = CMonarch::instance().GetMonarchPID(Empire);	
-
-	LPCHARACTER ch = CHARACTER_MANAGER::instance().FindByPID(pid);
-
-	if (ch)
-	{
-		if (number(1, 100) > 95) 
-			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("현재 %s 국고에는 %u 의 돈이 있습니다"), EMPIRE_NAME(Empire), CMonarch::instance().GetMoney(Empire));
-	}
-}
-	
-void CInputDB::DecMonarchMoney(LPDESC d, const char * data)
-{
-	int Empire = *(int *) data;
-	data += sizeof(int);
-	
-	int Money = *(int *) data;
-	data += sizeof(int);
-
-	CMonarch::instance().DecMoney(Money, Empire);
-	
-	DWORD pid = CMonarch::instance().GetMonarchPID(Empire);	
-
-	LPCHARACTER ch = CHARACTER_MANAGER::instance().FindByPID(pid);
-
-	if (ch)
-	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("현재 %s 국고에는 %d 의 돈이 있습니다"), EMPIRE_NAME(Empire), CMonarch::instance().GetMoney(Empire));
-	}
-}
-
-void CInputDB::TakeMonarchMoney(LPDESC d, const char * data)
-{
-	int Empire = *(int *) data;
-	data += sizeof(int);
-	
-	int Money = *(int *) data;
-	data += sizeof(int);
-
-	if (!CMonarch::instance().DecMoney(Money, Empire))
-	{
-		if (!d)
-			return;
-
-		if (!d->GetCharacter())
-			return;
-
-		LPCHARACTER ch = d->GetCharacter();
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("국고에 돈이 부족하거나 돈을 가져올수 없는 상황입니다"));
-	}
-}
-
-void CInputDB::ChangeMonarchLord(TPacketChangeMonarchLordACK* info)
-{
-	char notice[256];
-	snprintf(notice, sizeof(notice), LC_TEXT("%s의 군주가 %s 님으로 교체되었습니다."), EMPIRE_NAME(info->bEmpire), info->szName);
-	SendNotice(notice);
-}
-
-void CInputDB::UpdateMonarchInfo(TMonarchInfo* info)
-{
-	CMonarch::instance().SetMonarchInfo(info);
-	sys_log(0, "MONARCH INFO UPDATED");
 }
 
 void CInputDB::GuildChangeMaster(TPacketChangeGuildMaster* p)
@@ -2442,8 +2198,10 @@ void CInputDB::RespondChannelStatus(LPDESC desc, const char* pcData)
 	const int nSize = decode_4bytes(pcData);
 	pcData += sizeof(nSize);
 
-	BYTE bHeader = HEADER_GC_RESPOND_CHANNELSTATUS;
-	desc->BufferedPacket(&bHeader, sizeof(BYTE));
+	TPacketGCBlank packHeader;
+	packHeader.header = GC::RESPOND_CHANNELSTATUS;
+	packHeader.length = sizeof(packHeader) + sizeof(nSize) + sizeof(TChannelStatus) * nSize + sizeof(BYTE);
+	desc->BufferedPacket(&packHeader, sizeof(packHeader));
 	desc->BufferedPacket(&nSize, sizeof(nSize));
 	if (0 < nSize) {
 		desc->BufferedPacket(pcData, sizeof(TChannelStatus)*nSize);

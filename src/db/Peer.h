@@ -14,8 +14,8 @@ class CPeer : public CPeerBase
     public:
 #pragma pack(1)
 	typedef struct _header
-	{   
-	    BYTE    bHeader;
+	{
+	    uint16_t wHeader;
 	    DWORD   dwHandle;
 	    DWORD   dwSize;
 	} HEADER;
@@ -29,9 +29,9 @@ class CPeer : public CPeerBase
 	CPeer();
 	virtual ~CPeer();
 
-	void	EncodeHeader(BYTE header, DWORD dwHandle, DWORD dwSize);
-	bool 	PeekPacket(int & iBytesProceed, BYTE & header, DWORD & dwHandle, DWORD & dwLength, const char ** data);
-	void	EncodeReturn(BYTE header, DWORD dwHandle);
+	void	EncodeHeader(uint16_t wHeader, DWORD dwHandle, DWORD dwSize);
+	bool 	PeekPacket(int & iBytesProceed, uint16_t & wHeader, DWORD & dwHandle, DWORD & dwLength, const char ** data);
+	void	EncodeReturn(uint16_t wHeader, DWORD dwHandle);
 
 	void	ProcessInput();
 	int	Send();

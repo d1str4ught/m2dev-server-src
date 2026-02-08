@@ -1,4 +1,4 @@
-﻿//#define __FISHING_MAIN__
+//#define __FISHING_MAIN__
 #include "stdafx.h"
 #include "constants.h"
 #include "fishing.h"
@@ -8,7 +8,7 @@
 #include "item_manager.h"
 
 #include "config.h"
-#include "packet.h"
+#include "packet_structs.h"
 
 #include "sectree_manager.h"
 #include "char.h"
@@ -416,8 +416,9 @@ int DetermineFish(LPCHARACTER ch)
 void FishingReact(LPCHARACTER ch)
 {
 	TPacketGCFishing p;
-	p.header = HEADER_GC_FISHING;
-	p.subheader = FISHING_SUBHEADER_GC_REACT;
+	p.header = GC::FISHING;
+	p.length = sizeof(p);
+	p.subheader = FishingSub::GC::REACT;
 	p.info = ch->GetVID();
 	ch->PacketAround(&p, sizeof(p));
 }
@@ -425,8 +426,9 @@ void FishingReact(LPCHARACTER ch)
 void FishingSuccess(LPCHARACTER ch)
 {
 	TPacketGCFishing p;
-	p.header = HEADER_GC_FISHING;
-	p.subheader = FISHING_SUBHEADER_GC_SUCCESS;
+	p.header = GC::FISHING;
+	p.length = sizeof(p);
+	p.subheader = FishingSub::GC::SUCCESS;
 	p.info = ch->GetVID();
 	ch->PacketAround(&p, sizeof(p));
 }
@@ -434,8 +436,9 @@ void FishingSuccess(LPCHARACTER ch)
 void FishingFail(LPCHARACTER ch)
 {
 	TPacketGCFishing p;
-	p.header = HEADER_GC_FISHING;
-	p.subheader = FISHING_SUBHEADER_GC_FAIL;
+	p.header = GC::FISHING;
+	p.length = sizeof(p);
+	p.subheader = FishingSub::GC::FAIL;
 	p.info = ch->GetVID();
 	ch->PacketAround(&p, sizeof(p));
 }
@@ -510,8 +513,9 @@ EVENTFUNC(fishing_event)
 			if (PredictFish(ch))
 			{
 				TPacketGCFishing p;
-				p.header	= HEADER_GC_FISHING;
-				p.subheader	= FISHING_SUBHEADER_GC_FISH;
+				p.header	= GC::FISHING;
+				p.length = sizeof(p);
+				p.subheader	= FishingSub::GC::FISH;
 				p.info	= fish_info[info->fish_id].vnum;
 				ch->GetDesc()->Packet(&p, sizeof(TPacketGCFishing));
 			}
@@ -540,8 +544,9 @@ LPEVENT CreateFishingEvent(LPCHARACTER ch)
 	int time = number(10, 40);
 
 	TPacketGCFishing p;
-	p.header	= HEADER_GC_FISHING;
-	p.subheader	= FISHING_SUBHEADER_GC_START;
+	p.header	= GC::FISHING;
+	p.length = sizeof(p);
+	p.subheader	= FishingSub::GC::START;
 	p.info		= ch->GetVID();
 	p.dir		= (BYTE)(ch->GetRotation()/5);
 	ch->PacketAround(&p, sizeof(TPacketGCFishing));
@@ -644,8 +649,9 @@ void Take(fishing_event_info* info, LPCHARACTER ch)
 					FishingSuccess(ch);
 
 					TPacketGCFishing p;
-					p.header = HEADER_GC_FISHING;
-					p.subheader = FISHING_SUBHEADER_GC_FISH;
+					p.header = GC::FISHING;
+					p.length = sizeof(p);
+					p.subheader = FishingSub::GC::FISH;
 					p.info = item_vnum;
 					ch->GetDesc()->Packet(&p, sizeof(TPacketGCFishing));
 
@@ -675,7 +681,7 @@ void Take(fishing_event_info* info, LPCHARACTER ch)
 								strlcpy(p.szBoard, LC_TEXT("낚시이벤트잉어"), sizeof(p.szBoard));
 							}
 
-							db_clientdesc->DBPacket(HEADER_GD_HIGHSCORE_REGISTER, 0, &p, sizeof(TPacketGDHighscore));
+							db_clientdesc->DBPacket(GD::HIGHSCORE_REGISTER, 0, &p, sizeof(TPacketGDHighscore));
 						}
 					}
 
@@ -725,8 +731,9 @@ void Take(fishing_event_info* info, LPCHARACTER ch)
 	else
 	{
 		TPacketGCFishing p;
-		p.header = HEADER_GC_FISHING;
-		p.subheader = FISHING_SUBHEADER_GC_STOP;
+		p.header = GC::FISHING;
+		p.length = sizeof(p);
+		p.subheader = FishingSub::GC::STOP;
 		p.info = ch->GetVID();
 		ch->PacketAround(&p, sizeof(p));
 	}

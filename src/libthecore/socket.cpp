@@ -10,16 +10,6 @@ void socket_timeout(socket_t s, long sec, long usec);
 void socket_reuse(socket_t s);
 void socket_keepalive(socket_t s);
 
-int socket_udp_read(socket_t desc, char * read_point, size_t space_left, struct sockaddr * from, socklen_t * fromlen)
-{
-    /*
-       ssize_t recvfrom(int s, void * buf, size_t len, int flags, struct sockaddr * from, socklen_t * fromlen);
-     */
-    ssize_t ret;
-    ret = recvfrom(desc, read_point, space_left, 0, from, fromlen);
-    return (ret);
-}
-
 int socket_read(socket_t desc, char* read_point, size_t space_left)
 {
     int	ret;
@@ -198,11 +188,6 @@ int socket_tcp_bind(const char * ip, int port)
     return socket_bind(ip, port, SOCK_STREAM);
 }
 
-int socket_udp_bind(const char * ip, int port)
-{
-    return socket_bind(ip, port, SOCK_DGRAM);
-}
-
 void socket_close(socket_t s)
 {
 #ifdef OS_WINDOWS
@@ -235,6 +220,7 @@ socket_t socket_accept(socket_t s, struct sockaddr_in *peer)
     socket_nonblock(desc);
     socket_lingeroff(desc);
     socket_nodelay(desc);
+    socket_keepalive(desc);
     return (desc);
 }
 
