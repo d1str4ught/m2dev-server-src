@@ -1,4 +1,4 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "utils.h"
 #include "config.h"
 #include "desc.h"
@@ -9,7 +9,7 @@
 #include "item_manager.h"
 #include "mob_manager.h"
 #include "vector.h"
-#include "packet.h"
+#include "packet_structs.h"
 #include "pvp.h"
 #include "profiler.h"
 #include "guild.h"
@@ -382,6 +382,16 @@ int CalcMeleeDamage(LPCHARACTER pkAttacker, LPCHARACTER pkVictim, bool bIgnoreDe
 	LPITEM pWeapon = pkAttacker->GetWear(WEAR_WEAPON);
 	bool bPolymorphed = pkAttacker->IsPolymorphed();
 
+	// DEBUG: Log weapon and attack info
+	if (pkAttacker->IsPC())
+	{
+		sys_log(0, "CalcMeleeDamage: attacker=%s weapon=%s vnum=%u ignoredef=%d",
+			pkAttacker->GetName(),
+			pWeapon ? pWeapon->GetName() : "NONE",
+			pWeapon ? pWeapon->GetVnum() : 0,
+			bIgnoreDefense);
+	}
+
 	if (pWeapon && !(bPolymorphed && !pkAttacker->IsPolyMaintainStat()))
 	{
 		if (pWeapon->GetType() != ITEM_WEAPON)
@@ -484,6 +494,13 @@ int CalcMeleeDamage(LPCHARACTER pkAttacker, LPCHARACTER pkVictim, bool bIgnoreDe
 		iAtk = (int) (iAtk * pkAttacker->GetMobDamageMultiply());
 
 	iDam = MAX(0, iAtk - iDef);
+
+	// DEBUG: Log damage calculation for players
+	if (pkAttacker->IsPC())
+	{
+		sys_log(0, "CalcMeleeDamage RESULT: atk=%d def=%d dam=%d (weaponDam=%d, fAR=%.2f)",
+			iAtk, iDef, iDam, DEBUG_iDamCur, fAR);
+	}
 
 	if (test_server)
 	{

@@ -1,7 +1,7 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "constants.h"
 #include "config.h"
-#include "packet.h"
+#include "packet_structs.h"
 #include "desc.h"
 #include "buffer_manager.h"
 #include "start_position.h"
@@ -294,8 +294,8 @@ EVENTFUNC(ready_to_start_event)
 				pArena->SendChatPacketToObserver(CHAT_TYPE_INFO, LC_TEXT("대련이 시작되었습니다."));
 
 				TPacketGCDuelStart duelStart;
-				duelStart.header = HEADER_GC_DUEL_START;
-				duelStart.wSize = sizeof(TPacketGCDuelStart) + 4;
+				duelStart.header = GC::DUEL_START;
+				duelStart.length = sizeof(TPacketGCDuelStart) + 4;
 
 				DWORD dwOppList[8]; // 최대 파티원 8명 이므로..
 
@@ -348,8 +348,8 @@ EVENTFUNC(ready_to_start_event)
 				TEMP_BUFFER buf2;
 				DWORD dwOppList[8]; // 최대 파티원 8명 이므로..
 				TPacketGCDuelStart duelStart;
-				duelStart.header = HEADER_GC_DUEL_START;
-				duelStart.wSize = sizeof(TPacketGCDuelStart) + 4;
+				duelStart.header = GC::DUEL_START;
+				duelStart.length = sizeof(TPacketGCDuelStart) + 4;
 
 				dwOppList[0] = (DWORD)chB->GetVID();
 				buf.write(&duelStart, sizeof(TPacketGCDuelStart));
@@ -444,8 +444,8 @@ EVENTFUNC(duel_time_out)
 				chB->ChatPacket(CHAT_TYPE_NOTICE, LC_TEXT("10초뒤 마을로 이동합니다."));
 
 				TPacketGCDuelStart duelStart;
-				duelStart.header = HEADER_GC_DUEL_START;
-				duelStart.wSize = sizeof(TPacketGCDuelStart);
+				duelStart.header = GC::DUEL_START;
+				duelStart.length = sizeof(TPacketGCDuelStart);
 
 				chA->GetDesc()->Packet(&duelStart, sizeof(TPacketGCDuelStart));
 				chA->GetDesc()->Packet(&duelStart, sizeof(TPacketGCDuelStart));

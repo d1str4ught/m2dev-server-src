@@ -1,4 +1,5 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
+#include <iterator>
 #include "constants.h"
 #include "utils.h"
 #include "desc.h"
@@ -336,7 +337,7 @@ LPCHARACTER CHARACTER_MANAGER::SpawnMobRandomPosition(DWORD dwVnum, long lMapInd
 	char buf[512+1];
 	long local_x = x - pkSectreeMap->m_setting.iBaseX;
 	long local_y = y - pkSectreeMap->m_setting.iBaseY;
-	snprintf(buf, sizeof(buf), "spawn %s[%d] random position at %ld %ld %ld %ld (time: %ld)", ch->GetName(), dwVnum, x, y, local_x, local_y, get_global_time());
+	snprintf(buf, sizeof(buf), "spawn %s[%d] random position at %ld %ld %ld %ld (time: %lld)", ch->GetName(), dwVnum, x, y, local_x, local_y, static_cast<long long>(get_global_time()));
 	
 	if (test_server)
 		SendNotice(buf);
@@ -1110,12 +1111,12 @@ void CHARACTER_MANAGER::SendScriptToMap(long lMapIndex, const std::string & s)
 
 	struct packet_script p;
 
-	p.header = HEADER_GC_SCRIPT;
+	p.header = GC::SCRIPT;
 	p.skin = 1;
 	p.src_size = s.size();
 
 	quest::FSendPacket f;
-	p.size = p.src_size + sizeof(struct packet_script);
+	p.length = p.src_size + sizeof(struct packet_script);
 	f.buf.write(&p, sizeof(struct packet_script));
 	f.buf.write(&s[0], s.size());
 

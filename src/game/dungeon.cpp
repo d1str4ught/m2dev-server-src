@@ -1,10 +1,10 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "dungeon.h"
 #include "char.h"
 #include "char_manager.h"
 #include "party.h"
 #include "affect.h"
-#include "packet.h"
+#include "packet_structs.h"
 #include "desc.h"
 #include "config.h"
 #include "regen.h"
@@ -88,11 +88,11 @@ struct FSendDestPosition
 {
 	FSendDestPosition(long x, long y)
 	{
-		p1.bHeader = HEADER_GC_DUNGEON;
-		p1.subheader = DUNGEON_SUBHEADER_GC_DESTINATION_POSITION;
+		p1.header = GC::DUNGEON;
+		p1.subheader = DungeonSub::GC::DESTINATION_POSITION;
 		p2.x = x;
 		p2.y = y;
-		p1.size = sizeof(p1)+sizeof(p2);
+		p1.length = sizeof(p1)+sizeof(p2);
 	}
 
 	void operator()(LPCHARACTER ch)

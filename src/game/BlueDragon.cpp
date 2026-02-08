@@ -1,4 +1,4 @@
-﻿
+
 #include "stdafx.h"
 
 #include "BlueDragon.h"
@@ -15,7 +15,7 @@ extern int passes_per_sec;
 #include "affect.h"
 #include "BlueDragon_Binder.h"
 #include "BlueDragon_Skill.h"
-#include "packet.h"
+#include "packet_structs.h"
 #include "motion.h"
 
 time_t UseBlueDragonSkill(LPCHARACTER pChar, unsigned int idx)

@@ -1,4 +1,4 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "desc_client.h"
 #include "desc_manager.h"
 #include "char_manager.h"
@@ -379,7 +379,7 @@ namespace marriage
 			p.dwPID2 = dwPID2;
 			p.dwMapIndex = dwMapIndex;
 
-			db_clientdesc->DBPacket(HEADER_GD_WEDDING_READY, 0, &p, sizeof(p));
+			db_clientdesc->DBPacket(GD::WEDDING_READY, 0, &p, sizeof(p));
 		}
 	}
 

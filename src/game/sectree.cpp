@@ -1,4 +1,4 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "libgame/attribute.h"
 #include "sectree_manager.h"
 #include "char.h"
@@ -6,7 +6,7 @@
 #include "item.h"
 #include "item_manager.h"
 #include "desc_manager.h"
-#include "packet.h"
+#include "packet_structs.h"
 
 SECTREE::SECTREE()
 {

@@ -1,10 +1,10 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "utils.h"
 #include "config.h"
 #include "char.h"
 #include "desc.h"
 #include "sectree_manager.h"
-#include "packet.h"
+#include "packet_structs.h"
 #include "protocol.h"
 #include "log.h"
 #include "skill.h"
@@ -126,7 +126,8 @@ void CItem::EncodeInsertPacket(LPENTITY ent)
 
 	struct packet_item_ground_add pack;
 
-	pack.bHeader	= HEADER_GC_ITEM_GROUND_ADD;
+	pack.header	= GC::ITEM_GROUND_ADD;
+	pack.length = sizeof(pack);
 	pack.x		= c_pos.x;
 	pack.y		= c_pos.y;
 	pack.z		= c_pos.z;
@@ -148,7 +149,8 @@ void CItem::EncodeInsertPacket(LPENTITY ent)
 
 		TPacketGCItemOwnership p;
 
-		p.bHeader = HEADER_GC_ITEM_OWNERSHIP;
+		p.header = GC::ITEM_OWNERSHIP;
+		p.length = sizeof(p);
 		p.dwVID = m_dwVID;
 		strlcpy(p.szName, info->szOwnerName, sizeof(p.szName));
 
@@ -165,7 +167,8 @@ void CItem::EncodeRemovePacket(LPENTITY ent)
 
 	struct packet_item_ground_del pack;
 
-	pack.bHeader	= HEADER_GC_ITEM_GROUND_DEL;
+	pack.header	= GC::ITEM_GROUND_DEL;
+	pack.length = sizeof(pack);
 	pack.dwVID		= m_dwVID;
 
 	d->Packet(&pack, sizeof(pack));
@@ -184,7 +187,7 @@ void CItem::UsePacketEncode(LPCHARACTER ch, LPCHARACTER victim, struct packet_it
 	if (!GetVnum())
 		return;
 
-	packet->header 	= HEADER_GC_ITEM_USE;
+	packet->header 	= GC::ITEM_USE;
 	packet->ch_vid 	= ch->GetVID();
 	packet->victim_vid 	= victim->GetVID();
 	packet->Cell = TItemPos(GetWindow(), m_wCell);
@@ -208,7 +211,8 @@ void CItem::UpdatePacket()
 
 	TPacketGCItemUpdate pack;
 
-	pack.header = HEADER_GC_ITEM_UPDATE;
+	pack.header = GC::ITEM_UPDATE;
+	pack.length = sizeof(pack);
 	pack.Cell = TItemPos(GetWindow(), m_wCell);
 	pack.count	= m_dwCount;
 
@@ -1117,7 +1121,8 @@ EVENTFUNC(ownership_event)
 
 	TPacketGCItemOwnership p;
 
-	p.bHeader	= HEADER_GC_ITEM_OWNERSHIP;
+	p.header	= GC::ITEM_OWNERSHIP;
+	p.length = sizeof(p);
 	p.dwVID	= pkItem->GetVID();
 	p.szName[0]	= '\0';
 
@@ -1141,7 +1146,8 @@ void CItem::SetOwnership(LPCHARACTER ch, int iSec)
 
 			TPacketGCItemOwnership p;
 
-			p.bHeader	= HEADER_GC_ITEM_OWNERSHIP;
+			p.header	= GC::ITEM_OWNERSHIP;
+			p.length = sizeof(p);
 			p.dwVID	= m_dwVID;
 			p.szName[0]	= '\0';
 
@@ -1169,7 +1175,8 @@ void CItem::SetOwnership(LPCHARACTER ch, int iSec)
 
 	TPacketGCItemOwnership p;
 
-	p.bHeader = HEADER_GC_ITEM_OWNERSHIP;
+	p.header = GC::ITEM_OWNERSHIP;
+	p.length = sizeof(p);
 	p.dwVID = m_dwVID;
 	strlcpy(p.szName, ch->GetName(), sizeof(p.szName));
 

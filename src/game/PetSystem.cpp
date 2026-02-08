@@ -1,4 +1,4 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "utils.h"
 #include "vector.h"
 #include "char.h"
@@ -7,7 +7,7 @@
 #include "mob_manager.h"
 #include "PetSystem.h"
 #include "common/VnumHelper.h"
-#include "packet.h"
+#include "packet_structs.h"
 #include "item_manager.h"
 #include "item.h"
 

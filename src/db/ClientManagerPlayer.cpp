@@ -1,4 +1,4 @@
-﻿
+
 #include "stdafx.h"
 
 #include "ClientManager.h"
@@ -237,7 +237,7 @@ void CClientManager::QUERY_PLAYER_LOAD(CPeer * peer, DWORD dwHandle, TPlayerLoad
 		if (!pkLD || pkLD->IsPlay())
 		{
 			sys_log(0, "PLAYER_LOAD_ERROR: LoginData %p IsPlay %d", pkLD, pkLD ? pkLD->IsPlay() : 0);
-			peer->EncodeHeader(HEADER_DG_PLAYER_LOAD_FAILED, dwHandle, 0); 
+			peer->EncodeHeader(DG::PLAYER_LOAD_FAILED, dwHandle, 0); 
 			return;
 		}
 
@@ -246,7 +246,7 @@ void CClientManager::QUERY_PLAYER_LOAD(CPeer * peer, DWORD dwHandle, TPlayerLoad
 		pkLD->SetPlay(true);
 		thecore_memcpy(pTab->aiPremiumTimes, pkLD->GetPremiumPtr(), sizeof(pTab->aiPremiumTimes));
 
-		peer->EncodeHeader(HEADER_DG_PLAYER_LOAD_SUCCESS, dwHandle, sizeof(TPlayerTable));
+		peer->EncodeHeader(DG::PLAYER_LOAD_SUCCESS, dwHandle, sizeof(TPlayerTable));
 		peer->Encode(pTab, sizeof(TPlayerTable));
 
 		if (packet->player_id != pkLD->GetLastPlayerID())
@@ -256,7 +256,7 @@ void CClientManager::QUERY_PLAYER_LOAD(CPeer * peer, DWORD dwHandle, TPlayerLoad
 
 			pkLD->SetLastPlayerID( packet->player_id );
 
-			peer->EncodeHeader( HEADER_DG_NEED_LOGIN_LOG, dwHandle, sizeof(TPacketNeedLoginLogInfo) );
+			peer->EncodeHeader( DG::NEED_LOGIN_LOG, dwHandle, sizeof(TPacketNeedLoginLogInfo) );
 			peer->Encode( &logInfo, sizeof(TPacketNeedLoginLogInfo) );
 		}
 
@@ -295,7 +295,7 @@ void CClientManager::QUERY_PLAYER_LOAD(CPeer * peer, DWORD dwHandle, TPlayerLoad
 			if (g_test_server)
 				sys_log(0, "ITEM_CACHE: HIT! %s count: %u", pTab->name, dwCount);
 
-			peer->EncodeHeader(HEADER_DG_ITEM_LOAD, dwHandle, sizeof(DWORD) + sizeof(TPlayerItem) * dwCount);
+			peer->EncodeHeader(DG::ITEM_LOAD, dwHandle, sizeof(DWORD) + sizeof(TPlayerItem) * dwCount);
 			peer->EncodeDWORD(dwCount);
 
 			if (dwCount)
@@ -425,7 +425,7 @@ void CClientManager::ItemAward(CPeer * peer,char* login)
 			strcpy(giftData.login, pItemAward->szLogin);	//로그인 아이디 복사
 			strcpy(giftData.command, command);					//명령어 복사
 			giftData.vnum = pItemAward->dwVnum;				//아이템 vnum도 복사
-			ForwardPacket(HEADER_DG_ITEMAWARD_INFORMER, &giftData, sizeof(TPacketItemAwardInfromer));
+			ForwardPacket(DG::ITEMAWARD_INFORMER, &giftData, sizeof(TPacketItemAwardInfromer));
 		}
 	}
 }
@@ -512,12 +512,7 @@ bool CreatePlayerTableFromRes(MYSQL_RES * res, TPlayerTable * pkTab)
 	str_to_number(pkTab->skill_group, row[col++]);
 	str_to_number(pkTab->lAlignment, row[col++]);
 
-	if (row[col])
-	{
-		strlcpy(pkTab->szMobile, row[col], sizeof(pkTab->szMobile));
-	}
-
-	col++;
+	col++; // skip mobile (removed feature)
 
 	str_to_number(pkTab->horse.bLevel, row[col++]);
 	str_to_number(pkTab->horse.bRiding, row[col++]);
@@ -608,7 +603,7 @@ void CClientManager::RESULT_COMPOSITE_PLAYER(CPeer * peer, SQLMsg * pMsg, DWORD 
 				TPacketAffectElement pAffElem{};
 				DWORD dwCount = 0;
 
-				peer->EncodeHeader(HEADER_DG_AFFECT_LOAD, info->dwHandle, sizeof(DWORD) + sizeof(DWORD) + sizeof(TPacketAffectElement) * dwCount);
+				peer->EncodeHeader(DG::AFFECT_LOAD, info->dwHandle, sizeof(DWORD) + sizeof(DWORD) + sizeof(TPacketAffectElement) * dwCount);
 				peer->Encode(&info->player_id, sizeof(DWORD));
 				peer->Encode(&dwCount, sizeof(DWORD));
 				peer->Encode(&pAffElem, sizeof(TPacketAffectElement) * dwCount);
@@ -661,7 +656,7 @@ void CClientManager::RESULT_PLAYER_LOAD(CPeer * peer, MYSQL_RES * pRes, ClientHa
 
 	if (!CreatePlayerTableFromRes(pRes, &tab))
 	{
-		peer->EncodeHeader(HEADER_DG_PLAYER_LOAD_FAILED, pkInfo->dwHandle, 0); 
+		peer->EncodeHeader(DG::PLAYER_LOAD_FAILED, pkInfo->dwHandle, 0); 
 		return;
 	}
 
@@ -670,14 +665,14 @@ void CClientManager::RESULT_PLAYER_LOAD(CPeer * peer, MYSQL_RES * pRes, ClientHa
 	if (!pkLD || pkLD->IsPlay())
 	{
 		sys_log(0, "PLAYER_LOAD_ERROR: LoginData %p IsPlay %d", pkLD, pkLD ? pkLD->IsPlay() : 0);
-		peer->EncodeHeader(HEADER_DG_PLAYER_LOAD_FAILED, pkInfo->dwHandle, 0); 
+		peer->EncodeHeader(DG::PLAYER_LOAD_FAILED, pkInfo->dwHandle, 0); 
 		return;
 	}
 
 	pkLD->SetPlay(true);
 	thecore_memcpy(tab.aiPremiumTimes, pkLD->GetPremiumPtr(), sizeof(tab.aiPremiumTimes));
 
-	peer->EncodeHeader(HEADER_DG_PLAYER_LOAD_SUCCESS, pkInfo->dwHandle, sizeof(TPlayerTable));
+	peer->EncodeHeader(DG::PLAYER_LOAD_SUCCESS, pkInfo->dwHandle, sizeof(TPlayerTable));
 	peer->Encode(&tab, sizeof(TPlayerTable));
 
 	if (tab.id != pkLD->GetLastPlayerID())
@@ -687,7 +682,7 @@ void CClientManager::RESULT_PLAYER_LOAD(CPeer * peer, MYSQL_RES * pRes, ClientHa
 
 		pkLD->SetLastPlayerID( tab.id );
 
-		peer->EncodeHeader( HEADER_DG_NEED_LOGIN_LOG, pkInfo->dwHandle, sizeof(TPacketNeedLoginLogInfo) );
+		peer->EncodeHeader( DG::NEED_LOGIN_LOG, pkInfo->dwHandle, sizeof(TPacketNeedLoginLogInfo) );
 		peer->Encode( &logInfo, sizeof(TPacketNeedLoginLogInfo) );
 	}
 }
@@ -699,7 +694,7 @@ void CClientManager::RESULT_ITEM_LOAD(CPeer * peer, MYSQL_RES * pRes, DWORD dwHa
 	CreateItemTableFromRes(pRes, &s_items, dwPID);
 	DWORD dwCount = s_items.size();
 
-	peer->EncodeHeader(HEADER_DG_ITEM_LOAD, dwHandle, sizeof(DWORD) + sizeof(TPlayerItem) * dwCount);
+	peer->EncodeHeader(DG::ITEM_LOAD, dwHandle, sizeof(DWORD) + sizeof(TPlayerItem) * dwCount);
 	peer->EncodeDWORD(dwCount);
 
 	//CacheSet을 만든다  
@@ -752,7 +747,7 @@ void CClientManager::RESULT_AFFECT_LOAD(CPeer * peer, MYSQL_RES * pRes, DWORD dw
 
 	DWORD dwCount = s_elements.size();
 
-	peer->EncodeHeader(HEADER_DG_AFFECT_LOAD, dwHandle, sizeof(DWORD) + sizeof(DWORD) + sizeof(TPacketAffectElement) * dwCount);
+	peer->EncodeHeader(DG::AFFECT_LOAD, dwHandle, sizeof(DWORD) + sizeof(DWORD) + sizeof(TPacketAffectElement) * dwCount);
 	peer->Encode(&dwPID, sizeof(DWORD));
 	peer->Encode(&dwCount, sizeof(DWORD));
 	peer->Encode(&s_elements[0], sizeof(TPacketAffectElement) * dwCount);
@@ -765,7 +760,7 @@ void CClientManager::RESULT_QUEST_LOAD(CPeer * peer, MYSQL_RES * pRes, DWORD dwH
 	if ((iNumRows = mysql_num_rows(pRes)) == 0)
 	{
 		DWORD dwCount = 0; 
-		peer->EncodeHeader(HEADER_DG_QUEST_LOAD, dwHandle, sizeof(DWORD));
+		peer->EncodeHeader(DG::QUEST_LOAD, dwHandle, sizeof(DWORD));
 		peer->Encode(&dwCount, sizeof(DWORD));
 		return;
 	}
@@ -791,7 +786,7 @@ void CClientManager::RESULT_QUEST_LOAD(CPeer * peer, MYSQL_RES * pRes, DWORD dwH
 
 	DWORD dwCount = s_table.size();
 
-	peer->EncodeHeader(HEADER_DG_QUEST_LOAD, dwHandle, sizeof(DWORD) + sizeof(TQuestTable) * dwCount);
+	peer->EncodeHeader(DG::QUEST_LOAD, dwHandle, sizeof(DWORD) + sizeof(TQuestTable) * dwCount);
 	peer->Encode(&dwCount, sizeof(DWORD));
 	peer->Encode(&s_table[0], sizeof(TQuestTable) * dwCount);
 }
@@ -828,7 +823,7 @@ void CClientManager::__QUERY_PLAYER_CREATE(CPeer *peer, DWORD dwHandle, TPlayerC
 
 		if (curtime - it->second < 30)
 		{
-			peer->EncodeHeader(HEADER_DG_PLAYER_CREATE_FAILED, dwHandle, 0);
+			peer->EncodeHeader(DG::PLAYER_CREATE_FAILED, dwHandle, 0);
 			return;
 		}
 	}
@@ -842,7 +837,7 @@ void CClientManager::__QUERY_PLAYER_CREATE(CPeer *peer, DWORD dwHandle, TPlayerC
 	{
 		if (!pMsg0->Get()->pSQLResult)
 		{
-			peer->EncodeHeader(HEADER_DG_PLAYER_CREATE_FAILED, dwHandle, 0);
+			peer->EncodeHeader(DG::PLAYER_CREATE_FAILED, dwHandle, 0);
 			return;
 		}
 
@@ -851,14 +846,14 @@ void CClientManager::__QUERY_PLAYER_CREATE(CPeer *peer, DWORD dwHandle, TPlayerC
 		DWORD dwPID = 0; str_to_number(dwPID, row[0]);
 		if (row[0] && dwPID > 0)
 		{
-			peer->EncodeHeader(HEADER_DG_PLAYER_CREATE_ALREADY, dwHandle, 0);
+			peer->EncodeHeader(DG::PLAYER_CREATE_ALREADY, dwHandle, 0);
 			sys_log(0, "ALREADY EXIST AccountChrIdx %d ID %d", packet->account_index, dwPID);
 			return;
 		}
 	}
 	else
 	{
-		peer->EncodeHeader(HEADER_DG_PLAYER_CREATE_FAILED, dwHandle, 0);
+		peer->EncodeHeader(DG::PLAYER_CREATE_FAILED, dwHandle, 0);
 		return;
 	}
 
@@ -876,7 +871,7 @@ void CClientManager::__QUERY_PLAYER_CREATE(CPeer *peer, DWORD dwHandle, TPlayerC
 	{
 		if (!pMsg1->Get()->pSQLResult)
 		{
-			peer->EncodeHeader(HEADER_DG_PLAYER_CREATE_FAILED, dwHandle, 0);
+			peer->EncodeHeader(DG::PLAYER_CREATE_FAILED, dwHandle, 0);
 			return;
 		}
 
@@ -885,13 +880,13 @@ void CClientManager::__QUERY_PLAYER_CREATE(CPeer *peer, DWORD dwHandle, TPlayerC
 		if (*row[0] != '0')
 		{
 			sys_log(0, "ALREADY EXIST name %s, row[0] %s query %s", packet->player_table.name, row[0], queryStr);
-			peer->EncodeHeader(HEADER_DG_PLAYER_CREATE_ALREADY, dwHandle, 0);
+			peer->EncodeHeader(DG::PLAYER_CREATE_ALREADY, dwHandle, 0);
 			return;
 		}
 	}
 	else
 	{
-		peer->EncodeHeader(HEADER_DG_PLAYER_CREATE_FAILED, dwHandle, 0);
+		peer->EncodeHeader(DG::PLAYER_CREATE_FAILED, dwHandle, 0);
 		return;
 	}
 
@@ -934,7 +929,7 @@ void CClientManager::__QUERY_PLAYER_CREATE(CPeer *peer, DWORD dwHandle, TPlayerC
 
 	if (pMsg2->Get()->uiAffectedRows <= 0)
 	{
-		peer->EncodeHeader(HEADER_DG_PLAYER_CREATE_ALREADY, dwHandle, 0);
+		peer->EncodeHeader(DG::PLAYER_CREATE_ALREADY, dwHandle, 0);
 		sys_log(0, "ALREADY EXIST3 query: %s AffectedRows %lu", queryStr, pMsg2->Get()->uiAffectedRows);
 		return;
 	}
@@ -952,7 +947,7 @@ void CClientManager::__QUERY_PLAYER_CREATE(CPeer *peer, DWORD dwHandle, TPlayerC
 		snprintf(queryStr, sizeof(queryStr), "DELETE FROM player%s WHERE id=%d", GetTablePostfix(), player_id);
 		CDBManager::instance().DirectQuery(queryStr);
 
-		peer->EncodeHeader(HEADER_DG_PLAYER_CREATE_FAILED, dwHandle, 0);
+		peer->EncodeHeader(DG::PLAYER_CREATE_FAILED, dwHandle, 0);
 		return;
 	}
 
@@ -974,7 +969,7 @@ void CClientManager::__QUERY_PLAYER_CREATE(CPeer *peer, DWORD dwHandle, TPlayerC
 	pack.player.x			= packet->player_table.x;
 	pack.player.y			= packet->player_table.y;
 
-	peer->EncodeHeader(HEADER_DG_PLAYER_CREATE_SUCCESS, dwHandle, sizeof(TPacketDGCreateSuccess));
+	peer->EncodeHeader(DG::PLAYER_CREATE_SUCCESS, dwHandle, sizeof(TPacketDGCreateSuccess));
 	peer->Encode(&pack, sizeof(TPacketDGCreateSuccess));
 
 	sys_log(0, "7 name %s job %d", pack.player.szName, pack.player.byJob);
@@ -994,7 +989,7 @@ void CClientManager::__QUERY_PLAYER_DELETE(CPeer* peer, DWORD dwHandle, TPlayerD
 
 	if (!ld)
 	{
-		peer->EncodeHeader(HEADER_DG_PLAYER_DELETE_FAILED, dwHandle, 1);
+		peer->EncodeHeader(DG::PLAYER_DELETE_FAILED, dwHandle, 1);
 		peer->EncodeBYTE(packet->account_index);
 		return;
 	}
@@ -1009,7 +1004,7 @@ void CClientManager::__QUERY_PLAYER_DELETE(CPeer* peer, DWORD dwHandle, TPlayerD
 			if (strlen(r.social_id) < 7 || strncmp(packet->private_code, r.social_id + strlen(r.social_id) - 7, 7))
 			{
 				sys_log(0, "PLAYER_DELETE FAILED len(%d)", strlen(r.social_id));
-				peer->EncodeHeader(HEADER_DG_PLAYER_DELETE_FAILED, dwHandle, 1);
+				peer->EncodeHeader(DG::PLAYER_DELETE_FAILED, dwHandle, 1);
 				peer->EncodeBYTE(packet->account_index);
 				return;
 			}
@@ -1022,7 +1017,7 @@ void CClientManager::__QUERY_PLAYER_DELETE(CPeer* peer, DWORD dwHandle, TPlayerD
 				if (pTab->level >= m_iPlayerDeleteLevelLimit)
 				{
 					sys_log(0, "PLAYER_DELETE FAILED LEVEL %u >= DELETE LIMIT %d", pTab->level, m_iPlayerDeleteLevelLimit);
-					peer->EncodeHeader(HEADER_DG_PLAYER_DELETE_FAILED, dwHandle, 1);
+					peer->EncodeHeader(DG::PLAYER_DELETE_FAILED, dwHandle, 1);
 					peer->EncodeBYTE(packet->account_index);
 					return;
 				}
@@ -1030,7 +1025,7 @@ void CClientManager::__QUERY_PLAYER_DELETE(CPeer* peer, DWORD dwHandle, TPlayerD
 				if (pTab->level < m_iPlayerDeleteLevelLimitLower)
 				{
 					sys_log(0, "PLAYER_DELETE FAILED LEVEL %u < DELETE LIMIT %d", pTab->level, m_iPlayerDeleteLevelLimitLower);
-					peer->EncodeHeader(HEADER_DG_PLAYER_DELETE_FAILED, dwHandle, 1);
+					peer->EncodeHeader(DG::PLAYER_DELETE_FAILED, dwHandle, 1);
 					peer->EncodeBYTE(packet->account_index);
 					return;
 				}
@@ -1073,7 +1068,7 @@ void CClientManager::__RESULT_PLAYER_DELETE(CPeer *peer, SQLMsg* msg)
 		if (deletedLevelLimit >= m_iPlayerDeleteLevelLimit && !IsChinaEventServer())
 		{
 			sys_log(0, "PLAYER_DELETE FAILED LEVEL %u >= DELETE LIMIT %d", deletedLevelLimit, m_iPlayerDeleteLevelLimit);
-			peer->EncodeHeader(HEADER_DG_PLAYER_DELETE_FAILED, pi->dwHandle, 1);
+			peer->EncodeHeader(DG::PLAYER_DELETE_FAILED, pi->dwHandle, 1);
 			peer->EncodeBYTE(pi->account_index);
 			return;
 		}
@@ -1081,7 +1076,7 @@ void CClientManager::__RESULT_PLAYER_DELETE(CPeer *peer, SQLMsg* msg)
 		if (deletedLevelLimit < m_iPlayerDeleteLevelLimitLower)
 		{
 			sys_log(0, "PLAYER_DELETE FAILED LEVEL %u < DELETE LIMIT %d", deletedLevelLimit, m_iPlayerDeleteLevelLimitLower);
-			peer->EncodeHeader(HEADER_DG_PLAYER_DELETE_FAILED, pi->dwHandle, 1);
+			peer->EncodeHeader(DG::PLAYER_DELETE_FAILED, pi->dwHandle, 1);
 			peer->EncodeBYTE(pi->account_index);
 			return;
 		}
@@ -1096,7 +1091,7 @@ void CClientManager::__RESULT_PLAYER_DELETE(CPeer *peer, SQLMsg* msg)
 		{
 			sys_log(0, "PLAYER_DELETE FAILED %u CANNOT INSERT TO player%s_deleted", dwPID, GetTablePostfix());
 
-			peer->EncodeHeader(HEADER_DG_PLAYER_DELETE_FAILED, pi->dwHandle, 1);
+			peer->EncodeHeader(DG::PLAYER_DELETE_FAILED, pi->dwHandle, 1);
 			peer->EncodeBYTE(pi->account_index);
 			return;
 		}
@@ -1147,7 +1142,7 @@ void CClientManager::__RESULT_PLAYER_DELETE(CPeer *peer, SQLMsg* msg)
 		if (pMsg->Get()->uiAffectedRows == 0 || pMsg->Get()->uiAffectedRows == (uint32_t)-1)
 		{
 			sys_log(0, "PLAYER_DELETE FAIL WHEN UPDATE account table");
-			peer->EncodeHeader(HEADER_DG_PLAYER_DELETE_FAILED, pi->dwHandle, 1);
+			peer->EncodeHeader(DG::PLAYER_DELETE_FAILED, pi->dwHandle, 1);
 			peer->EncodeBYTE(pi->account_index);
 			return;
 		}
@@ -1175,14 +1170,14 @@ void CClientManager::__RESULT_PLAYER_DELETE(CPeer *peer, SQLMsg* msg)
 		snprintf(queryStr, sizeof(queryStr), "DELETE FROM messenger_list%s WHERE account='%s' OR companion='%s'", GetTablePostfix(), szName, szName);
 		CDBManager::instance().AsyncQuery(queryStr);
 
-		peer->EncodeHeader(HEADER_DG_PLAYER_DELETE_SUCCESS, pi->dwHandle, 1);
+		peer->EncodeHeader(DG::PLAYER_DELETE_SUCCESS, pi->dwHandle, 1);
 		peer->EncodeBYTE(pi->account_index);
 	}
 	else
 	{
 		// 삭제 실패
 		sys_log(0, "PLAYER_DELETE FAIL NO ROW");
-		peer->EncodeHeader(HEADER_DG_PLAYER_DELETE_FAILED, pi->dwHandle, 1);
+		peer->EncodeHeader(DG::PLAYER_DELETE_FAILED, pi->dwHandle, 1);
 		peer->EncodeBYTE(pi->account_index);
 	}
 }
@@ -1240,7 +1235,7 @@ void CClientManager::QUERY_HIGHSCORE_REGISTER(CPeer* peer, TPacketGDHighscore * 
 	char szQuery[128];
 	snprintf(szQuery, sizeof(szQuery), "SELECT value FROM highscore%s WHERE board='%s' AND pid = %u", GetTablePostfix(), data->szBoard, data->dwPID);
 
-	sys_log(0, "HEADER_GD_HIGHSCORE_REGISTER: PID %u", data->dwPID);
+	sys_log(0, "GD::HIGHSCORE_REGISTER: PID %u", data->dwPID);
 
 	ClientHandleInfo * pi = new ClientHandleInfo(0);
 	strlcpy(pi->login, data->szBoard, sizeof(pi->login));

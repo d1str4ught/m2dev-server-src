@@ -1,38 +1,41 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "buffer_manager.h"
 
 TEMP_BUFFER::TEMP_BUFFER(int Size, bool bForceDelete)
 {
-	forceDelete = bForceDelete;
+	if (bForceDelete)
+		Size = std::max(Size, 1024 * 128);
 
-	if (forceDelete)
-		Size = MAX(Size, 1024 * 128);
-
-	buf = buffer_new(Size);
-}
-
-TEMP_BUFFER::~TEMP_BUFFER()
-{
-	buffer_delete(buf);
+	m_buf.Reserve(static_cast<size_t>(Size));
 }
 
 const void * TEMP_BUFFER::read_peek()
 {
-	return (buffer_read_peek(buf));
+	return m_buf.ReadPtr();
 }
 
 void TEMP_BUFFER::write(const void * data, int size)
 {
-	buffer_write(buf, data, size);
+	m_buf.Write(data, static_cast<size_t>(size));
 }
 
 int TEMP_BUFFER::size()
 {
-	return buffer_size(buf);
+	return static_cast<int>(m_buf.ReadableBytes());
 }
 
 void TEMP_BUFFER::reset()
 {
-	buffer_reset(buf);
+	m_buf.Clear();
 }
 
+void* TEMP_BUFFER::write_peek(int size)
+{
+	m_buf.EnsureWritable(static_cast<size_t>(size));
+	return m_buf.WritePtr();
+}
+
+void TEMP_BUFFER::write_proceed(int size)
+{
+	m_buf.CommitWrite(static_cast<size_t>(size));
+}

@@ -1,4 +1,4 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "libgame/grid.h"
 #include "constants.h"
 #include "utils.h"
@@ -11,11 +11,10 @@
 #include "item.h"
 #include "item_manager.h"
 #include "buffer_manager.h"
-#include "packet.h"
+#include "packet_structs.h"
 #include "log.h"
 #include "db.h"
 #include "questmanager.h"
-#include "monarch.h"
 #include "mob_manager.h"
 #include "locale_service.h"
 #include "desc_client.h"
@@ -60,8 +59,9 @@ bool CShopEx::AddGuest(LPCHARACTER ch,DWORD owner_vid, bool bOtherEmpire)
 
 	TPacketGCShop pack;
 
-	pack.header		= HEADER_GC_SHOP;
-	pack.subheader	= SHOP_SUBHEADER_GC_START_EX;
+	pack.header		= GC::SHOP;
+	pack.length = sizeof(pack);
+	pack.subheader	= ShopSub::GC::START_EX;
 
 	TPacketGCShopStartEx pack2;
 
@@ -104,7 +104,7 @@ bool CShopEx::AddGuest(LPCHARACTER ch,DWORD owner_vid, bool bOtherEmpire)
 		size += sizeof(pack_tab);
 	}
 
-	pack.size = sizeof(pack) + sizeof(pack2) + size;
+	pack.length = sizeof(pack) + sizeof(pack2) + size;
 
 	ch->GetDesc()->BufferedPacket(&pack, sizeof(TPacketGCShop));
 	ch->GetDesc()->BufferedPacket(&pack2, sizeof(TPacketGCShopStartEx));
@@ -120,7 +120,7 @@ int CShopEx::Buy(LPCHARACTER ch, BYTE pos)
 	if (tabIdx >= GetTabCount())
 	{
 		sys_log(0, "ShopEx::Buy : invalid position %d : %s", pos, ch->GetName());
-		return SHOP_SUBHEADER_GC_INVALID_POS;
+		return ShopSub::GC::INVALID_POS;
 	}
 
 	sys_log(0, "ShopEx::Buy : name %s pos %d", ch->GetName(), pos);
@@ -128,7 +128,7 @@ int CShopEx::Buy(LPCHARACTER ch, BYTE pos)
 	GuestMapType::iterator it = m_map_guest.find(ch);
 
 	if (it == m_map_guest.end())
-		return SHOP_SUBHEADER_GC_END;
+		return ShopSub::GC::END;
 
 	TShopTableEx& shopTab = m_vec_shopTabs[tabIdx];
 	TShopItemTable& r_item = shopTab.items[slotPos];
@@ -136,7 +136,7 @@ int CShopEx::Buy(LPCHARACTER ch, BYTE pos)
 	if (r_item.price <= 0)
 	{
 		LogManager::instance().HackLog("SHOP_BUY_GOLD_OVERFLOW", ch);
-		return SHOP_SUBHEADER_GC_NOT_ENOUGH_MONEY;
+		return ShopSub::GC::NOT_ENOUGH_MONEY;
 	}
 
 	DWORD dwPrice = r_item.price;
@@ -150,7 +150,7 @@ int CShopEx::Buy(LPCHARACTER ch, BYTE pos)
 		if (ch->GetGold() < (int) dwPrice)
 		{
 			sys_log(1, "ShopEx::Buy : Not enough money : %s has %d, price %d", ch->GetName(), ch->GetGold(), dwPrice);
-			return SHOP_SUBHEADER_GC_NOT_ENOUGH_MONEY;
+			return ShopSub::GC::NOT_ENOUGH_MONEY;
 		}
 		break;
 	case SHOP_COIN_TYPE_SECONDARY_COIN:
@@ -159,7 +159,7 @@ int CShopEx::Buy(LPCHARACTER ch, BYTE pos)
 			if (count < dwPrice)
 			{
 				sys_log(1, "ShopEx::Buy : Not enough myeongdojun : %s has %d, price %d", ch->GetName(), count, dwPrice);
-				return SHOP_SUBHEADER_GC_NOT_ENOUGH_MONEY_EX;
+				return ShopSub::GC::NOT_ENOUGH_MONEY_EX;
 			}
 		}
 		break;
@@ -170,7 +170,7 @@ int CShopEx::Buy(LPCHARACTER ch, BYTE pos)
 	item = ITEM_MANAGER::instance().CreateItem(r_item.vnum, r_item.count);
 
 	if (!item)
-		return SHOP_SUBHEADER_GC_SOLD_OUT;
+		return ShopSub::GC::SOLD_OUT;
 
 	int iEmptyPos;
 	if (item->IsDragonSoul())
@@ -186,7 +186,7 @@ int CShopEx::Buy(LPCHARACTER ch, BYTE pos)
 	{
 		sys_log(1, "ShopEx::Buy : Inventory full : %s size %d", ch->GetName(), item->GetSize());
 		M2_DESTROY_ITEM(item);
-		return SHOP_SUBHEADER_GC_INVENTORY_FULL;
+		return ShopSub::GC::INVENTORY_FULL;
 	}
 
 	switch (shopTab.coinType)
@@ -221,7 +221,7 @@ int CShopEx::Buy(LPCHARACTER ch, BYTE pos)
 	if (LC_IsBrazil())
 	{
 		ch->SaveReal();
-		db_clientdesc->DBPacketHeader(HEADER_GD_FLUSH_CACHE, 0, sizeof(DWORD));
+		db_clientdesc->DBPacketHeader(GD::FLUSH_CACHE, 0, sizeof(DWORD));
 		DWORD pid = ch->GetPlayerID();
 		db_clientdesc->Packet(&pid, sizeof(DWORD));
 	}
@@ -230,6 +230,6 @@ int CShopEx::Buy(LPCHARACTER ch, BYTE pos)
 		ch->Save();
 	}
 
-    return (SHOP_SUBHEADER_GC_OK);
+    return (ShopSub::GC::OK);
 }
 

@@ -1,15 +1,15 @@
-﻿#ifndef __INC_METIN_II_GAME_PACKET_HEADER_INFO_H__
+#ifndef __INC_METIN_II_GAME_PACKET_HEADER_INFO_H__
 #define __INC_METIN_II_GAME_PACKET_HEADER_INFO_H__
 
-#include "packet.h"
+#include "packet_structs.h"
+#include <memory>
 
 typedef struct SPacketElement
 {
-	int		iSize;
+	int		iSize;			// Expected/minimum packet size (for validation; CG actual size comes from wire length)
 	std::string	stName;
 	int		iCalled;
 	DWORD	dwLoad;
-	bool	bSequencePacket;
 } TPacketElement;
 
 class CPacketInfo
@@ -18,7 +18,7 @@ class CPacketInfo
 		CPacketInfo();
 		virtual ~CPacketInfo();
 
-		void Set(int header, int size, const char * c_pszName, bool bSeq=false);
+		void Set(int header, int size, const char * c_pszName);
 		bool Get(int header, int * size, const char ** c_ppszName);
 
 		void Start();
@@ -26,14 +26,11 @@ class CPacketInfo
 
 		void Log(const char * c_pszFileName);
 
-		bool IsSequence(int header);
-		void SetSequence(int header, bool bSeq);
-
 	private:
 		TPacketElement * GetElement(int header);
 
 	protected:
-		std::map<int, TPacketElement *> m_pPacketMap;
+		std::map<int, std::unique_ptr<TPacketElement>> m_pPacketMap;
 		TPacketElement * m_pCurrentPacket;
 		DWORD m_dwStartTime;
 };
@@ -51,14 +48,6 @@ class CPacketInfoGG : public CPacketInfo
 	public:
 		CPacketInfoGG();
 		virtual ~CPacketInfoGG();
-};
-
-/// Implemented in input_udp.cpp
-class CPacketInfoUDP : public CPacketInfo
-{
-	public:
-		CPacketInfoUDP();
-		virtual ~CPacketInfoUDP();
 };
 
 #endif

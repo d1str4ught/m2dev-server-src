@@ -1,4 +1,4 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "char.h"
 #include "char_manager.h"
 #include "sectree_manager.h"
@@ -44,7 +44,8 @@ namespace marriage
 	{
 		TPacketGCLoverInfo p;
 
-		p.header = HEADER_GC_LOVER_INFO;
+		p.header = GC::LOVER_INFO;
+		p.length = sizeof(p);
 		strlcpy(p.name, lover_name.c_str(), sizeof(p.name));
 		p.love_point = love_point;
 		ch->GetDesc()->Packet(&p, sizeof(p));
@@ -348,7 +349,8 @@ namespace marriage
 		{
 			byLastLovePoint = GetMarriagePoint();
 			TPacketGCLovePointUpdate p;
-			p.header = HEADER_GC_LOVE_POINT_UPDATE;
+			p.header = GC::LOVE_POINT_UPDATE;
+			p.length = sizeof(p);
 			p.love_point = byLastLovePoint;
 
 			ch1->GetDesc()->Packet(&p, sizeof(p));
@@ -554,7 +556,7 @@ namespace marriage
 		p.dwPID2 = dwPID2;
 		strlcpy(p.szName1, szName1, sizeof(p.szName1));
 		strlcpy(p.szName2, szName2, sizeof(p.szName2));
-		db_clientdesc->DBPacket(HEADER_GD_MARRIAGE_ADD, 0, &p, sizeof(p));
+		db_clientdesc->DBPacket(GD::MARRIAGE_ADD, 0, &p, sizeof(p));
 	}
 
 	void CManager::Add(DWORD dwPID1, DWORD dwPID2, time_t tMarryTime, const char* szName1, const char* szName2)
@@ -585,7 +587,7 @@ namespace marriage
 				TPacketWeddingRequest p;
 				p.dwPID1 = dwPID1;
 				p.dwPID2 = dwPID2;
-				db_clientdesc->DBPacket(HEADER_GD_WEDDING_REQUEST, 0, &p, sizeof(p));
+				db_clientdesc->DBPacket(GD::WEDDING_REQUEST, 0, &p, sizeof(p));
 			}
 		}
 	}
@@ -599,7 +601,7 @@ namespace marriage
 		p.dwPID2 = dwPID2;
 		p.iLovePoint = iUpdatePoint;
 		p.byMarried = byMarried;
-		db_clientdesc->DBPacket(HEADER_GD_MARRIAGE_UPDATE, 0, &p, sizeof(p));
+		db_clientdesc->DBPacket(GD::MARRIAGE_UPDATE, 0, &p, sizeof(p));
 	}
 
 	void CManager::Update(DWORD dwPID1, DWORD dwPID2, long lTotalPoint, BYTE byMarried)
@@ -623,7 +625,7 @@ namespace marriage
 		TPacketMarriageRemove p;
 		p.dwPID1 = dwPID1;
 		p.dwPID2 = dwPID2;
-		db_clientdesc->DBPacket(HEADER_GD_MARRIAGE_REMOVE, 0, &p, sizeof(p));
+		db_clientdesc->DBPacket(GD::MARRIAGE_REMOVE, 0, &p, sizeof(p));
 	}
 
 	void CManager::Remove(DWORD dwPID1, DWORD dwPID2)
@@ -746,6 +748,6 @@ namespace marriage
 		p.dwPID1 = dwPID1;
 		p.dwPID2 = dwPID2;
 
-		db_clientdesc->DBPacket(HEADER_GD_WEDDING_END, 0, &p, sizeof(p));
+		db_clientdesc->DBPacket(GD::WEDDING_END, 0, &p, sizeof(p));
 	}
 }

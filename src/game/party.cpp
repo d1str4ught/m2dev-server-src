@@ -1,4 +1,4 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "utils.h"
 #include "char.h"
 #include "party.h"
@@ -138,14 +138,14 @@ LPPARTY CPartyManager::CreateParty(LPCHARACTER pLeader)
 	if (pLeader->IsPC())
 	{
 		//TPacketGGParty p;
-		//p.header	= HEADER_GG_PARTY;
-		//p.subheader	= PARTY_SUBHEADER_GG_CREATE;
+		//p.header	= GG::PARTY;
+		//p.subheader	= PartySub::GG::CREATE;
 		//p.pid		= pLeader->GetPlayerID();
 		//P2P_MANAGER::instance().Send(&p, sizeof(p));
 		TPacketPartyCreate p;
 		p.dwLeaderPID = pLeader->GetPlayerID();
 
-		db_clientdesc->DBPacket(HEADER_GD_PARTY_CREATE, 0, &p, sizeof(TPacketPartyCreate));
+		db_clientdesc->DBPacket(GD::PARTY_CREATE, 0, &p, sizeof(TPacketPartyCreate));
 
 		sys_log(0, "PARTY: Create %s pid %u", pLeader->GetName(), pLeader->GetPlayerID());
 		pParty->SetPCParty(true);
@@ -166,14 +166,14 @@ LPPARTY CPartyManager::CreateParty(LPCHARACTER pLeader)
 void CPartyManager::DeleteParty(LPPARTY pParty)
 {
 	//TPacketGGParty p;
-	//p.header = HEADER_GG_PARTY;
-	//p.subheader = PARTY_SUBHEADER_GG_DESTROY;
+	//p.header = GG::PARTY;
+	//p.subheader = PartySub::GG::DESTROY;
 	//p.pid = pParty->GetLeaderPID();
 	//P2P_MANAGER::instance().Send(&p, sizeof(p));
 	TPacketPartyDelete p;
 	p.dwLeaderPID = pParty->GetLeaderPID();
 
-	db_clientdesc->DBPacket(HEADER_GD_PARTY_DELETE, 0, &p, sizeof(TPacketPartyDelete));
+	db_clientdesc->DBPacket(GD::PARTY_DELETE, 0, &p, sizeof(TPacketPartyDelete));
 
 	m_set_pkPCParty.erase(pParty);
 	M2_DELETE(pParty);
@@ -320,7 +320,8 @@ void CParty::Destroy()
 			if (rMember.pCharacter->GetDesc())
 			{
 				TPacketGCPartyRemove p;
-				p.header = HEADER_GC_PARTY_REMOVE;
+				p.header = GC::PARTY_REMOVE;
+				p.length = sizeof(p);
 				p.pid = rMember.pCharacter->GetPlayerID();
 				rMember.pCharacter->GetDesc()->Packet(&p, sizeof(p));
 				rMember.pCharacter->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<파티> 파티가 해산 되었습니다."));
@@ -459,7 +460,7 @@ void CParty::Join(DWORD dwPID)
 		p.dwLeaderPID = GetLeaderPID();
 		p.dwPID = dwPID;
 		p.bState = PARTY_ROLE_NORMAL; // #0000790: [M2EU] CZ 크래쉬 증가: 초기화 중요! 
-		db_clientdesc->DBPacket(HEADER_GD_PARTY_ADD, 0, &p, sizeof(p));
+		db_clientdesc->DBPacket(GD::PARTY_ADD, 0, &p, sizeof(p));
 	}
 }
 
@@ -519,15 +520,15 @@ void CParty::Quit(DWORD dwPID)
 	if (m_bPCParty && dwPID != GetLeaderPID())
 	{
 		//TPacketGGParty p;
-		//p.header = HEADER_GG_PARTY;
-		//p.subheader = PARTY_SUBHEADER_GG_QUIT;
+		//p.header = GG::PARTY;
+		//p.subheader = PartySub::GG::QUIT;
 		//p.pid = dwPID;
 		//p.leaderpid = GetLeaderPID();
 		//P2P_MANAGER::instance().Send(&p, sizeof(p));
 		TPacketPartyRemove p;
 		p.dwPID = dwPID;
 		p.dwLeaderPID = GetLeaderPID();
-		db_clientdesc->DBPacket(HEADER_GD_PARTY_REMOVE, 0, &p, sizeof(p));
+		db_clientdesc->DBPacket(GD::PARTY_REMOVE, 0, &p, sizeof(p));
 	}
 }
 
@@ -596,7 +597,7 @@ void CParty::RequestSetMemberLevel(DWORD pid, BYTE level)
 	p.dwLeaderPID = GetLeaderPID();
 	p.dwPID = pid;
 	p.bLevel = level;
-	db_clientdesc->DBPacket(HEADER_GD_PARTY_SET_MEMBER_LEVEL, 0, &p, sizeof(TPacketPartySetMemberLevel));
+	db_clientdesc->DBPacket(GD::PARTY_SET_MEMBER_LEVEL, 0, &p, sizeof(TPacketPartySetMemberLevel));
 }
 
 void CParty::P2PSetMemberLevel(DWORD pid, BYTE level)
@@ -671,7 +672,8 @@ void CParty::SendPartyRemoveOneToAll(DWORD pid)
 	TMemberMap::iterator it;
 
 	TPacketGCPartyRemove p;
-	p.header = HEADER_GC_PARTY_REMOVE;
+	p.header = GC::PARTY_REMOVE;
+	p.length = sizeof(p);
 	p.pid = pid;
 
 	for (it = m_memberMap.begin(); it != m_memberMap.end(); ++it)
@@ -687,7 +689,8 @@ void CParty::SendPartyJoinOneToAll(DWORD pid)
 
 	TPacketGCPartyAdd p;
 
-	p.header = HEADER_GC_PARTY_ADD;
+	p.header = GC::PARTY_ADD;
+	p.length = sizeof(p);
 	p.pid = pid;
 	strlcpy(p.name, r.strName.c_str(), sizeof(p.name));
 
@@ -705,7 +708,8 @@ void CParty::SendPartyJoinAllToOne(LPCHARACTER ch)
 
 	TPacketGCPartyAdd p;
 
-	p.header = HEADER_GC_PARTY_ADD;
+	p.header = GC::PARTY_ADD;
+	p.length = sizeof(p);
 	p.name[CHARACTER_NAME_MAX_LEN] = '\0';
 
 	for (TMemberMap::iterator it = m_memberMap.begin();it!= m_memberMap.end(); ++it)
@@ -724,7 +728,8 @@ void CParty::SendPartyUnlinkOneToAll(LPCHARACTER ch)
 	TMemberMap::iterator it;
 
 	TPacketGCPartyLink p;
-	p.header = HEADER_GC_PARTY_UNLINK;
+	p.header = GC::PARTY_UNLINK;
+	p.length = sizeof(p);
 	p.pid = ch->GetPlayerID();
 	p.vid = (DWORD)ch->GetVID();
 
@@ -745,7 +750,8 @@ void CParty::SendPartyLinkOneToAll(LPCHARACTER ch)
 	TMemberMap::iterator it;
 
 	TPacketGCPartyLink p;
-	p.header = HEADER_GC_PARTY_LINK;
+	p.header = GC::PARTY_LINK;
+	p.length = sizeof(p);
 	p.vid = ch->GetVID();
 	p.pid = ch->GetPlayerID();
 
@@ -766,7 +772,8 @@ void CParty::SendPartyLinkAllToOne(LPCHARACTER ch)
 	TMemberMap::iterator it;
 
 	TPacketGCPartyLink p;
-	p.header = HEADER_GC_PARTY_LINK;
+	p.header = GC::PARTY_LINK;
+	p.length = sizeof(p);
 
 	for (it = m_memberMap.begin();it!= m_memberMap.end(); ++it)
 	{
@@ -795,7 +802,8 @@ void CParty::SendPartyInfoOneToAll(DWORD pid)
 	// Data Building
 	TPacketGCPartyUpdate p;
 	memset(&p, 0, sizeof(p));
-	p.header = HEADER_GC_PARTY_UPDATE;
+	p.header = GC::PARTY_UPDATE;
+	p.length = sizeof(p);
 	p.pid = pid;
 	p.percent_hp = 255;
 	p.role = it->second.bRole;
@@ -843,7 +851,8 @@ void CParty::SendPartyInfoAllToOne(LPCHARACTER ch)
 		{
 			DWORD pid = it->first;
 			memset(&p, 0, sizeof(p));
-			p.header = HEADER_GC_PARTY_UPDATE;
+			p.header = GC::PARTY_UPDATE;
+			p.length = sizeof(p);
 			p.pid = pid;
 			p.percent_hp = 255;
 			p.role = it->second.bRole;
@@ -1438,7 +1447,8 @@ void CParty::UpdateOnlineState(DWORD dwPID, const char* name)
 
 	TPacketGCPartyAdd p;
 
-	p.header = HEADER_GC_PARTY_ADD;
+	p.header = GC::PARTY_ADD;
+	p.length = sizeof(p);
 	p.pid = dwPID;
 	r.strName = name;
 	strlcpy(p.name, name, sizeof(p.name));
@@ -1454,7 +1464,8 @@ void CParty::UpdateOfflineState(DWORD dwPID)
 	//const TMember& r = m_memberMap[dwPID];
 
 	TPacketGCPartyAdd p;
-	p.header = HEADER_GC_PARTY_ADD;
+	p.header = GC::PARTY_ADD;
+	p.length = sizeof(p);
 	p.pid = dwPID;
 	memset(p.name, 0, CHARACTER_NAME_MAX_LEN+1);
 
@@ -1575,7 +1586,8 @@ void CParty::SendParameter(LPCHARACTER ch)
 {
 	TPacketGCPartyParameter p;
 
-	p.bHeader = HEADER_GC_PARTY_PARAMETER;
+	p.header = GC::PARTY_PARAMETER;
+	p.length = sizeof(p);
 	p.bDistributeMode = m_iExpDistributionMode;
 
 	LPDESC d = ch->GetDesc();

@@ -1,4 +1,4 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include <sstream>
 
 #include "utils.h"
@@ -9,7 +9,7 @@
 #include "battle.h"
 #include "desc.h"
 #include "desc_manager.h"
-#include "packet.h"
+#include "packet_structs.h"
 #include "affect.h"
 #include "item.h"
 #include "sectree_manager.h"
@@ -144,7 +144,8 @@ void CHARACTER::SetSkillGroup(BYTE bSkillGroup)
 	m_points.skill_group = bSkillGroup; 
 
 	TPacketGCChangeSkillGroup p;
-	p.header = HEADER_GC_SKILL_GROUP;
+	p.header = GC::CHANGE_SKILL_GROUP;
+	p.length = sizeof(p);
 	p.skill_group = m_points.skill_group;
 
 	GetDesc()->Packet(&p, sizeof(TPacketGCChangeSkillGroup));
@@ -164,7 +165,8 @@ void CHARACTER::SkillLevelPacket()
 
 	TPacketGCSkillLevel pack;
 
-	pack.bHeader = HEADER_GC_SKILL_LEVEL;
+	pack.header = GC::SKILL_LEVEL_NEW;  // Use NEW header for TPlayerSkill array format
+	pack.length = sizeof(pack);
 	thecore_memcpy(&pack.skills, m_pSkillLevels, sizeof(TPlayerSkill) * SKILL_MAX_NUM);
 	GetDesc()->Packet(&pack, sizeof(TPacketGCSkillLevel));
 }
@@ -1188,7 +1190,7 @@ struct FuncSplashDamage
 		m_pkSk->SetPointVar("chain", m_pkChr->GetChainLightningIndex());
 		m_pkChr->IncChainLightningIndex();
 
-		bool bUnderEunhyung = m_pkChr->GetAffectedEunhyung() > 0; // 이건 왜 여기서 하지??
+		bool bUnderEunhyung = m_pkChr->GetAffectedEunhyung(); // 이건 왜 여기서 하지??
 
 		m_pkSk->SetPointVar("ek", m_pkChr->GetAffectedEunhyung()*1./100);
 		//m_pkChr->ClearAffectedEunhyung();

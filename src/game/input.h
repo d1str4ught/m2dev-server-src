@@ -1,6 +1,7 @@
-﻿#ifndef __INC_METIN_II_GAME_INPUT_PROCESSOR__
+#ifndef __INC_METIN_II_GAME_INPUT_PROCESSOR__
 #define __INC_METIN_II_GAME_INPUT_PROCESSOR__
 
+#include <unordered_map>
 #include "packet_info.h"
 
 enum
@@ -11,7 +12,6 @@ enum
 	INPROC_MAIN,
 	INPROC_DEAD,
 	INPROC_DB,
-	INPROC_UDP,
 	INPROC_P2P,
 	INPROC_AUTH,
 };
@@ -33,11 +33,10 @@ class CInputProcessor
 
 		void BindPacketInfo(CPacketInfo * pPacketInfo);
 		void Pong(LPDESC d);
-		void Handshake(LPDESC d, const char * c_pData);
 		void Version(LPCHARACTER ch, const char* c_pData);
 
 	protected:
-		virtual int	Analyze(LPDESC d, BYTE bHeader, const char * c_pData) = 0;
+		virtual int	Analyze(LPDESC d, uint16_t wHeader, const char * c_pData) = 0;
 
 		CPacketInfo * m_pPacketInfo;
 		int	m_iBufferLeft;
@@ -48,22 +47,32 @@ class CInputProcessor
 class CInputClose : public CInputProcessor
 {
 	public:
-		virtual BYTE	GetType() { return INPROC_CLOSE; }
+		BYTE	GetType() override { return INPROC_CLOSE; }
 
 	protected:
-		virtual int	Analyze(LPDESC d, BYTE bHeader, const char * c_pData) { return m_iBufferLeft; }
+		int	Analyze(LPDESC d, uint16_t wHeader, const char * c_pData) override { return m_iBufferLeft; }
 };
 
 class CInputHandshake : public CInputProcessor
 {
 	public:
 		CInputHandshake();
-		virtual ~CInputHandshake();
+		~CInputHandshake() override;
 
-		virtual BYTE	GetType() { return INPROC_HANDSHAKE; }
+		BYTE	GetType() override { return INPROC_HANDSHAKE; }
 
 	protected:
-		virtual int	Analyze(LPDESC d, BYTE bHeader, const char * c_pData);
+		int	Analyze(LPDESC d, uint16_t wHeader, const char * c_pData) override;
+
+		using HSHandler = int (CInputHandshake::*)(LPDESC, const char*);
+		std::unordered_map<uint16_t, HSHandler> m_handlers;
+		void RegisterHandlers();
+
+		int HandleText(LPDESC d, const char* c_pData);
+		int HandleMarkLogin(LPDESC d, const char* c_pData);
+		int HandleStateChecker(LPDESC d, const char* c_pData);
+		int HandlePong(LPDESC d, const char* c_pData);
+		int HandleKeyResponse(LPDESC d, const char* c_pData);
 
 	protected:
 		void		GuildMarkLogin(LPDESC d, const char* c_pData);
@@ -74,10 +83,23 @@ class CInputHandshake : public CInputProcessor
 class CInputLogin : public CInputProcessor
 {
 	public:
-		virtual BYTE	GetType() { return INPROC_LOGIN; }
+		CInputLogin();
+		BYTE	GetType() override { return INPROC_LOGIN; }
 
 	protected:
-		virtual int	Analyze(LPDESC d, BYTE bHeader, const char * c_pData);
+		int	Analyze(LPDESC d, uint16_t wHeader, const char * c_pData) override;
+
+		using LoginHandler = int (CInputLogin::*)(LPDESC, const char*);
+		std::unordered_map<uint16_t, LoginHandler> m_handlers;
+		void RegisterHandlers();
+
+		template<void (CInputLogin::*fn)(LPDESC, const char*)>
+		int SimpleHandler(LPDESC d, const char* p) { (this->*fn)(d, p); return 0; }
+
+		int HandlePong(LPDESC d, const char*);
+		int HandleMarkLogin(LPDESC d, const char*);
+		int HandleGuildSymbolUpload(LPDESC d, const char*);
+		int HandleVersion(LPDESC d, const char*);
 
 	protected:
 		void		LoginByKey(LPDESC d, const char * data);
@@ -100,13 +122,50 @@ class CInputLogin : public CInputProcessor
 class CInputMain : public CInputProcessor
 {
 	public:
-		virtual BYTE	GetType() { return INPROC_MAIN; }
+		CInputMain();
+		BYTE	GetType() override { return INPROC_MAIN; }
 
 	protected:
-		virtual int	Analyze(LPDESC d, BYTE bHeader, const char * c_pData);
+		int	Analyze(LPDESC d, uint16_t wHeader, const char * c_pData) override;
+
+		// Handler dispatch
+		using MainHandler = int (CInputMain::*)(LPDESC, const char*);
+		struct HandlerEntry {
+			MainHandler handler;
+			bool blockInObserverMode;
+		};
+		std::unordered_map<uint16_t, HandlerEntry> m_handlers;
+		virtual void RegisterHandlers();
+
+		// Template adapters for common handler patterns (defined in input_main.cpp)
+		template<void (CInputMain::*fn)(LPCHARACTER, const char*)>
+		int SimpleHandler(LPDESC d, const char* p);
+
+		template<void (CInputMain::*fn)(LPCHARACTER, const void*)>
+		int SimpleHandlerV(LPDESC d, const char* p);
+
+		// Custom adapters for non-standard handler signatures
+		int HandlePong(LPDESC d, const char* p);
+		int HandleChat(LPDESC d, const char* p);
+		int HandleWhisper(LPDESC d, const char* p);
+		int HandleMove(LPDESC d, const char* p);
+		int HandleAttack(LPDESC d, const char* p);
+		int HandleShoot(LPDESC d, const char* p);
+		int HandleShop(LPDESC d, const char* p);
+		int HandleMessenger(LPDESC d, const char* p);
+		int HandleSyncPosition(LPDESC d, const char* p);
+		int HandleFlyTargeting(LPDESC d, const char* p);
+		int HandleAddFlyTargeting(LPDESC d, const char* p);
+		int HandleQuestCancel(LPDESC d, const char* p);
+		int HandleSafeboxCheckout(LPDESC d, const char* p);
+		int HandleMallCheckout(LPDESC d, const char* p);
+		int HandleGuild(LPDESC d, const char* p);
+		int HandleMyShop(LPDESC d, const char* p);
+		int HandleClientVersion(LPDESC d, const char* p);
+		int HandleDragonSoulRefine(LPDESC d, const char* p);
 
 	protected:
-		void		Attack(LPCHARACTER ch, const BYTE header, const char* data);
+		void		Attack(LPCHARACTER ch, const uint16_t header, const char* data);
 
 		int			Whisper(LPCHARACTER ch, const char * data, size_t uiBytes);
 		int			Chat(LPCHARACTER ch, const char * data, size_t uiBytes);
@@ -125,9 +184,9 @@ class CInputMain : public CInputProcessor
 		void		Position(LPCHARACTER ch, const char * data);
 		void		Move(LPCHARACTER ch, const char * data);
 		int			SyncPosition(LPCHARACTER ch, const char * data, size_t uiBytes);
-		void		FlyTarget(LPCHARACTER ch, const char * pcData, BYTE bHeader);
+		void		FlyTarget(LPCHARACTER ch, const char * pcData, uint16_t wHeader);
 		void		UseSkill(LPCHARACTER ch, const char * pcData);
-		
+
 		void		ScriptAnswer(LPCHARACTER ch, const void * pvData);
 		void		ScriptButton(LPCHARACTER ch, const void * pvData);
 		void		ScriptSelectItem(LPCHARACTER ch, const void * pvData);
@@ -152,33 +211,84 @@ class CInputMain : public CInputProcessor
 		int			Guild(LPCHARACTER ch, const char * data, size_t uiBytes);
 		void		AnswerMakeGuild(LPCHARACTER ch, const char* c_pData);
 
+		// Guild sub-handlers (dispatched from Guild())
+		int			GuildSub_DepositMoney(LPCHARACTER ch, const char* data, size_t uiBytes);
+		int			GuildSub_WithdrawMoney(LPCHARACTER ch, const char* data, size_t uiBytes);
+		int			GuildSub_AddMember(LPCHARACTER ch, const char* data, size_t uiBytes);
+		int			GuildSub_RemoveMember(LPCHARACTER ch, const char* data, size_t uiBytes);
+		int			GuildSub_ChangeGradeName(LPCHARACTER ch, const char* data, size_t uiBytes);
+		int			GuildSub_ChangeGradeAuthority(LPCHARACTER ch, const char* data, size_t uiBytes);
+		int			GuildSub_Offer(LPCHARACTER ch, const char* data, size_t uiBytes);
+		int			GuildSub_ChargeGSP(LPCHARACTER ch, const char* data, size_t uiBytes);
+		int			GuildSub_PostComment(LPCHARACTER ch, const char* data, size_t uiBytes);
+		int			GuildSub_DeleteComment(LPCHARACTER ch, const char* data, size_t uiBytes);
+		int			GuildSub_RefreshComment(LPCHARACTER ch, const char* data, size_t uiBytes);
+		int			GuildSub_ChangeMemberGrade(LPCHARACTER ch, const char* data, size_t uiBytes);
+		int			GuildSub_UseSkill(LPCHARACTER ch, const char* data, size_t uiBytes);
+		int			GuildSub_ChangeMemberGeneral(LPCHARACTER ch, const char* data, size_t uiBytes);
+		int			GuildSub_InviteAnswer(LPCHARACTER ch, const char* data, size_t uiBytes);
+
 		void		Fishing(LPCHARACTER ch, const char* c_pData);
 		void		ItemGive(LPCHARACTER ch, const char* c_pData);
 		void		Hack(LPCHARACTER ch, const char * c_pData);
 		int			MyShop(LPCHARACTER ch, const char * c_pData, size_t uiBytes);
 
 		void		Refine(LPCHARACTER ch, const char* c_pData);
-
-		void		Roulette(LPCHARACTER ch, const char* c_pData);
 };
 
 class CInputDead : public CInputMain
 {
 	public:
-		virtual BYTE	GetType() { return INPROC_DEAD; }
+		CInputDead();
+		BYTE	GetType() override { return INPROC_DEAD; }
 
 	protected:
-		virtual int	Analyze(LPDESC d, BYTE bHeader, const char * c_pData);
+		int	Analyze(LPDESC d, uint16_t wHeader, const char * c_pData) override;
+		void RegisterHandlers() override;
 };
 
 class CInputDB : public CInputProcessor
 {
 public:
-	virtual bool Process(LPDESC d, const void * c_pvOrig, int iBytes, int & r_iBytesProceed);
-	virtual BYTE GetType() { return INPROC_DB; }
+	CInputDB();
+	bool Process(LPDESC d, const void * c_pvOrig, int iBytes, int & r_iBytesProceed) override;
+	BYTE GetType() override { return INPROC_DB; }
 
 protected:
-	virtual int	Analyze(LPDESC d, BYTE bHeader, const char * c_pData);
+	int	Analyze(LPDESC d, uint16_t wHeader, const char * c_pData) override;
+
+	using DBHandler = int (CInputDB::*)(LPDESC, const char*);
+	std::unordered_map<uint16_t, DBHandler> m_handlers;
+	void RegisterHandlers();
+	LPDESC FindByHandle() const;
+
+	// Template: void handler(const char*) — data-only
+	template<void (CInputDB::*fn)(const char*)>
+	int DataHandler(LPDESC, const char* p) { (this->*fn)(p); return 0; }
+
+	// Template: void handler(LPDESC, const char*) — desc from FindByHandle
+	template<void (CInputDB::*fn)(LPDESC, const char*)>
+	int DescHandler(LPDESC, const char* p) { (this->*fn)(FindByHandle(), p); return 0; }
+
+	// Template: void handler(T*) — cast c_pData to typed pointer
+	template<class T, void (CInputDB::*fn)(T*)>
+	int TypedHandler(LPDESC, const char* p) { (this->*fn)((T*)p); return 0; }
+
+	// Custom adapters for special signatures
+	int HandleLoginSuccess(LPDESC, const char*);
+	int HandleLoginNotExist(LPDESC, const char*);
+	int HandleLoginWrongPasswd(LPDESC, const char*);
+	int HandlePlayerCreateFailed(LPDESC, const char*);
+	int HandlePlayerCreateAlready(LPDESC, const char*);
+	int HandlePlayerDeleteFail(LPDESC, const char*);
+	int HandlePlayerLoadFailed(LPDESC, const char*);
+	int HandleSafeboxWrongPassword(LPDESC, const char*);
+	int HandleGuildSkillRecharge(LPDESC, const char*);
+	int HandleGuildWarReserveDelete(LPDESC, const char*);
+	int HandleSpareItemIDRange(LPDESC, const char*);
+	int HandleHorseName(LPDESC, const char*);
+	int HandleMyshopPricelistRes(LPDESC, const char*);
+	int HandleRespondChannelStatus(LPDESC, const char*);
 
 protected:
 	void		MapLocations(const char * c_pData);
@@ -261,29 +371,15 @@ protected:
 	void		WeddingStart(TPacketWeddingStart* p);
 	void		WeddingEnd(TPacketWeddingEnd* p);
 
-	void		TakeMonarchMoney(LPDESC d, const char * data );
-	void		AddMonarchMoney(LPDESC d, const char * data );
-	void		DecMonarchMoney(LPDESC d, const char * data );
-	void		SetMonarch( LPDESC d, const char * data );
-
-	void		ChangeMonarchLord(TPacketChangeMonarchLordACK* data);
-	void		UpdateMonarchInfo(TMonarchInfo* data);
-
 	// MYSHOP_PRICE_LIST
-	/// 아이템 가격정보 리스트 요청에 대한 응답 패킷(HEADER_DG_MYSHOP_PRICELIST_RES) 처리함수
-	/**
-	* @param	d 아이템 가격정보 리스트를 요청한 플레이어의 descriptor
-	* @param	p 패킷데이터의 포인터
-	*/
 	void		MyshopPricelistRes( LPDESC d, const TPacketMyshopPricelistHeader* p );
 	// END_OF_MYSHOP_PRICE_LIST
-	//
+
 	//RELOAD_ADMIN
 	void ReloadAdmin( const char * c_pData );
 	//END_RELOAD_ADMIN
 
 	void		DetailLog(const TPacketNeedLoginLogInfo* info);
-	// 독일 선물 기능 테스트
 	void		ItemAwardInformer(TPacketItemAwardInfromer* data);
 
 	void		RespondChannelStatus(LPDESC desc, const char* pcData);
@@ -292,35 +388,32 @@ protected:
 		DWORD		m_dwHandle;
 };
 
-class CInputUDP : public CInputProcessor
-{
-	public:
-		CInputUDP();
-		virtual bool Process(LPDESC d, const void * c_pvOrig, int iBytes, int & r_iBytesProceed);
-
-		virtual BYTE GetType() { return INPROC_UDP; }
-		void		SetSockAddr(struct sockaddr_in & rSockAddr) { m_SockAddr = rSockAddr; };
-
-	protected:
-		virtual int	Analyze(LPDESC d, BYTE bHeader, const char * c_pData);
-
-	protected:
-		void		Handshake(LPDESC lpDesc, const char * c_pData);
-		void		StateChecker(const char * c_pData);
-
-	protected:
-		struct sockaddr_in	m_SockAddr;
-		CPacketInfoUDP 		m_packetInfoUDP;
-};
-
 class CInputP2P : public CInputProcessor
 {
 	public:
 		CInputP2P();
-		virtual BYTE	GetType() { return INPROC_P2P; }
+		BYTE	GetType() override { return INPROC_P2P; }
 
 	protected:
-		virtual int	Analyze(LPDESC d, BYTE bHeader, const char * c_pData);
+		int	Analyze(LPDESC d, uint16_t wHeader, const char * c_pData) override;
+
+		using P2PHandler = int (CInputP2P::*)(LPDESC, const char*);
+		std::unordered_map<uint16_t, P2PHandler> m_handlers;
+		void RegisterHandlers();
+
+		template<void (CInputP2P::*fn)(LPDESC, const char*)>
+		int DescHandler(LPDESC d, const char* p) { (this->*fn)(d, p); return 0; }
+
+		template<void (CInputP2P::*fn)(const char*)>
+		int DataHandler(LPDESC, const char* p) { (this->*fn)(p); return 0; }
+
+		int HandleRelay(LPDESC d, const char*);
+		int HandleNotice(LPDESC d, const char*);
+		int HandleGuild(LPDESC d, const char*);
+		int HandleShutdown(LPDESC d, const char*);
+		int HandleSiege(LPDESC d, const char*);
+		int HandleReloadCRC(LPDESC d, const char*);
+		int HandleCheckClientVersion(LPDESC d, const char*);
 
 	public:
 		void		Setup(LPDESC d, const char * c_pData);
@@ -328,14 +421,11 @@ class CInputP2P : public CInputProcessor
 		void		Logout(LPDESC d, const char * c_pData);
 		int			Relay(LPDESC d, const char * c_pData, size_t uiBytes);
 		int			Notice(LPDESC d, const char * c_pData, size_t uiBytes);
-		int			MonarchNotice(LPDESC d, const char * c_pData, size_t uiBytes);
-		int			MonarchTransfer(LPDESC d, const char * c_pData);
 		int			Guild(LPDESC d, const char* c_pData, size_t uiBytes);
 		void		Shout(const char * c_pData);
 		void		Disconnect(const char * c_pData);
 		void		MessengerAdd(const char * c_pData);
 		void		MessengerRemove(const char * c_pData);
-		void		MessengerMobile(const char * c_pData);
 		void		FindPosition(LPDESC d, const char* c_pData);
 		void		WarpCharacter(const char* c_pData);
 		void		GuildWarZoneMapIndex(const char* c_pData);
@@ -357,10 +447,17 @@ class CInputAuth : public CInputProcessor
 {
 	public:
 		CInputAuth();
-		virtual BYTE GetType() { return INPROC_AUTH; }
+		BYTE GetType() override { return INPROC_AUTH; }
 
 	protected:
-		virtual int	Analyze(LPDESC d, BYTE bHeader, const char * c_pData);
+		int	Analyze(LPDESC d, uint16_t wHeader, const char * c_pData) override;
+
+		using AuthHandler = int (CInputAuth::*)(LPDESC, const char*);
+		std::unordered_map<uint16_t, AuthHandler> m_handlers;
+		void RegisterHandlers();
+
+		int HandlePong(LPDESC d, const char*);
+		int HandleLogin3(LPDESC d, const char*);
 
 	public:
 		void		Login(LPDESC d, const char * c_pData);
@@ -368,4 +465,3 @@ class CInputAuth : public CInputProcessor
 };
 
 #endif /* __INC_METIN_II_GAME_INPUT_PROCESSOR__ */
-

@@ -1,4 +1,4 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "libgame/grid.h"
 #include "constants.h"
 #include "utils.h"
@@ -11,11 +11,10 @@
 #include "item.h"
 #include "item_manager.h"
 #include "buffer_manager.h"
-#include "packet.h"
+#include "packet_structs.h"
 #include "log.h"
 #include "db.h"
 #include "questmanager.h"
-#include "monarch.h"
 #include "mob_manager.h"
 #include "locale_service.h"
 #include "desc_client.h"
@@ -242,13 +241,13 @@ void CShopManager::Buy(LPCHARACTER ch, BYTE pos)
 
 	int ret = pkShop->Buy(ch, pos);
 
-	if (SHOP_SUBHEADER_GC_OK != ret) // 문제가 있었으면 보낸다.
+	if (ShopSub::GC::OK != ret) // 문제가 있었으면 보낸다.
 	{
 		TPacketGCShop pack;
 
-		pack.header	= HEADER_GC_SHOP;
+		pack.header	= GC::SHOP;
 		pack.subheader	= ret;
-		pack.size	= sizeof(TPacketGCShop);
+		pack.length	= sizeof(TPacketGCShop);
 
 		ch->GetDesc()->Packet(&pack, sizeof(pack));
 	}
@@ -358,9 +357,6 @@ void CShopManager::Sell(LPCHARACTER ch, BYTE bCell, BYTE bCount)
 	}
 	else
 		item->SetCount(item->GetCount() - bCount);
-
-	//군주 시스템 : 세금 징수
-	CMonarch::instance().SendtoDBAddMoney(dwTax, ch->GetEmpire(), ch);
 
 	ch->PointChange(POINT_GOLD, dwPrice, false);
 }

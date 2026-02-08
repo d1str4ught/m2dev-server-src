@@ -1,4 +1,4 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "MoneyLog.h"
 #include "ClientManager.h"
 #include "Peer.h"
@@ -25,7 +25,7 @@ void CMoneyLog::Save()
 			p.type = bType;
 			p.vnum = it->first;
 			p.gold = it->second;
-			peer->EncodeHeader(HEADER_DG_MONEY_LOG, 0, sizeof(p));
+			peer->EncodeHeader(DG::MONEY_LOG, 0, sizeof(p));
 			peer->Encode(&p, sizeof(p));
 		}
 		m_MoneyLogContainer[bType].clear();

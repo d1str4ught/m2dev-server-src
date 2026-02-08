@@ -1,14 +1,13 @@
-﻿// vim: ts=8 sw=4
-#ifndef __INC_PEERBASE_H__
-#define __INC_PEERBASE_H__
+#pragma once
 
 #include "NetBase.h"
+#include "libthecore/ring_buffer.h"
 
 class CPeerBase : public CNetBase
 {
     public:
 	enum
-	{ 
+	{
 	    MAX_HOST_LENGTH		= 30,
 	    MAX_INPUT_LEN		= 1024 * 1024 * 2,
 	    DEFAULT_PACKET_BUFFER_SIZE	= 1024 * 1024 * 2
@@ -54,8 +53,6 @@ class CPeerBase : public CNetBase
 
     private:
 	int		m_BytesRemain;
-	LPBUFFER	m_outBuffer;
-	LPBUFFER	m_inBuffer;
+	RingBuffer	m_outBuffer;
+	RingBuffer	m_inBuffer;
 };
-
-#endif

@@ -1,4 +1,4 @@
-﻿// vim:ts=4 sw=4
+// vim:ts=4 sw=4
 #include "stdafx.h"
 #include "ClientManager.h"
 
@@ -10,7 +10,7 @@ void CClientManager::UpdateHorseName(TPacketUpdateHorseName* data, CPeer* peer)
 
 	auto pmsg_insert = CDBManager::instance().DirectQuery(szQuery);
 
-	ForwardPacket(HEADER_DG_UPDATE_HORSE_NAME, data, sizeof(TPacketUpdateHorseName), 0, peer);
+	ForwardPacket(DG::UPDATE_HORSE_NAME, data, sizeof(TPacketUpdateHorseName), 0, peer);
 }
 
 void CClientManager::AckHorseName(DWORD dwPID, CPeer* peer)
@@ -34,7 +34,7 @@ void CClientManager::AckHorseName(DWORD dwPID, CPeer* peer)
 		strlcpy(packet.szHorseName, row[0], sizeof(packet.szHorseName));
 	}
 
-	peer->EncodeHeader(HEADER_DG_ACK_HORSE_NAME, 0, sizeof(TPacketUpdateHorseName));
+	peer->EncodeHeader(DG::ACK_HORSE_NAME, 0, sizeof(TPacketUpdateHorseName));
 	peer->Encode(&packet, sizeof(TPacketUpdateHorseName));
 }
 

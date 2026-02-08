@@ -1,9 +1,9 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "utils.h"
 #include "char.h"
 #include "char_manager.h"
 #include "motion.h"
-#include "packet.h"
+#include "packet_structs.h"
 #include "buffer_manager.h"
 #include "unique_item.h"
 #include "wedding.h"
@@ -249,8 +249,8 @@ ACMD(do_emotion)
 	++len;  // \0 문자 포함
 
 	TPacketGCChat pack_chat;
-	pack_chat.header = HEADER_GC_CHAT;
-	pack_chat.size = sizeof(TPacketGCChat) + len;
+	pack_chat.header = GC::CHAT;
+	pack_chat.length = sizeof(TPacketGCChat) + len;
 	pack_chat.type = CHAT_TYPE_COMMAND;
 	pack_chat.id = 0;
 	TEMP_BUFFER buf;

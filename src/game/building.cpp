@@ -1,10 +1,10 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "constants.h"
 #include "sectree_manager.h"
 #include "item_manager.h"
 #include "buffer_manager.h"
 #include "config.h"
-#include "packet.h"
+#include "packet_structs.h"
 #include "char.h"
 #include "char_manager.h"
 #include "guild.h"
@@ -103,7 +103,8 @@ void CObject::EncodeInsertPacket(LPENTITY entity)
 
 	memset(&pack, 0, sizeof(TPacketGCCharacterAdd));
 
-	pack.header         = HEADER_GC_CHARACTER_ADD;
+	pack.header         = GC::CHARACTER_ADD;
+	pack.length = sizeof(pack);
 	pack.dwVID          = m_dwVID;
 	pack.bType          = CHAR_TYPE_BUILDING;
 	pack.angle          = m_data.zRot;
@@ -136,7 +137,8 @@ void CObject::EncodeRemovePacket(LPENTITY entity)
 
 	TPacketGCCharacterDelete pack;
 
-	pack.header = HEADER_GC_CHARACTER_DEL;
+	pack.header = GC::CHARACTER_DEL;
+	pack.length = sizeof(pack);
 	pack.id     = m_dwVID;
 
 	d->Packet(&pack, sizeof(TPacketGCCharacterDelete));
@@ -573,7 +575,7 @@ bool CLand::RequestCreateObject(DWORD dwVnum, long lMapIndex, long x, long y, fl
 	p.yRot = yRot;
 	p.zRot = zRot;
 
-	db_clientdesc->DBPacket(HEADER_GD_CREATE_OBJECT, 0, &p, sizeof(TPacketGDCreateObject));
+	db_clientdesc->DBPacket(GD::CREATE_OBJECT, 0, &p, sizeof(TPacketGDCreateObject));
 	return true;
 }
 
@@ -585,7 +587,7 @@ void CLand::RequestDeleteObject(DWORD dwID)
 		return;
 	}
 
-	db_clientdesc->DBPacket(HEADER_GD_DELETE_OBJECT, 0, &dwID, sizeof(DWORD));
+	db_clientdesc->DBPacket(GD::DELETE_OBJECT, 0, &dwID, sizeof(DWORD));
 	sys_log(0, "RequestDeleteObject id %u", dwID);
 }
 
@@ -600,7 +602,7 @@ void CLand::RequestDeleteObjectByVID(DWORD dwVID)
 	}
 
 	DWORD dwID = pkObj->GetID();
-	db_clientdesc->DBPacket(HEADER_GD_DELETE_OBJECT, 0, &dwID, sizeof(DWORD));
+	db_clientdesc->DBPacket(GD::DELETE_OBJECT, 0, &dwID, sizeof(DWORD));
 	sys_log(0, "RequestDeleteObject vid %u id %u", dwVID, dwID);
 }
 
@@ -620,7 +622,7 @@ void CLand::RequestUpdate(DWORD dwGuild)
 	a[0] = GetID();
 	a[1] = dwGuild;
 
-	db_clientdesc->DBPacket(HEADER_GD_UPDATE_LAND, 0, &a[0], sizeof(DWORD) * 2);
+	db_clientdesc->DBPacket(GD::UPDATE_LAND, 0, &a[0], sizeof(DWORD) * 2);
 	sys_log(0, "RequestUpdate id %u guild %u", a[0], a[1]);
 }
 
@@ -724,8 +726,8 @@ void CManager::UpdateLand(TLand * pTable)
 
 	TPacketGCLandList p;
 
-	p.header = HEADER_GC_LAND_LIST;
-	p.size = sizeof(TPacketGCLandList) + sizeof(TLandPacketElement);
+	p.header = GC::LAND_LIST;
+	p.length = sizeof(TPacketGCLandList) + sizeof(TLandPacketElement);
 
 	TLandPacketElement e;
 
@@ -984,8 +986,8 @@ void CManager::SendLandList(LPDESC d, long lMapIndex)
 	{
 		TPacketGCLandList p;
 
-		p.header = HEADER_GC_LAND_LIST;
-		p.size = sizeof(TPacketGCLandList) + buf.size();
+		p.header = GC::LAND_LIST;
+		p.length = sizeof(TPacketGCLandList) + buf.size();
 
 		d->BufferedPacket(&p, sizeof(TPacketGCLandList));
 		d->Packet(buf.read_peek(), buf.size());

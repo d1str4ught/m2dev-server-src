@@ -1,4 +1,4 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include <sodium.h>
 
 #include "utils.h"
@@ -8,7 +8,7 @@
 #include "char.h"
 #include "char_manager.h"
 #include "motion.h"
-#include "packet.h"
+#include "packet_structs.h"
 #include "affect.h"
 #include "pvp.h"
 #include "start_position.h"
@@ -20,7 +20,6 @@
 #include "war_map.h"
 #include "questmanager.h"
 #include "item_manager.h"
-#include "monarch.h"
 #include "mob_manager.h"
 #include "item.h"
 #include "arena.h"
@@ -244,7 +243,8 @@ ACMD(do_shutdown)
 		sys_err("Accept shutdown command from %s.", ch->GetName());
 	}
 	TPacketGGShutdown p;
-	p.bHeader = HEADER_GG_SHUTDOWN;
+	p.header = GG::SHUTDOWN;
+	p.length = sizeof(TPacketGGShutdown);
 	P2P_MANAGER::instance().Send(&p, sizeof(TPacketGGShutdown));
 
 	Shutdown(10);
@@ -281,7 +281,7 @@ EVENTFUNC(timed_event)
 						TPacketNeedLoginLogInfo acc_info;
 						acc_info.dwPlayerID = ch->GetDesc()->GetAccountTable().id;
 
-						db_clientdesc->DBPacket( HEADER_GD_VALID_LOGOUT, 0, &acc_info, sizeof(acc_info) );
+						db_clientdesc->DBPacket( GD::VALID_LOGOUT, 0, &acc_info, sizeof(acc_info) );
 
 						LogManager::instance().DetailLoginLog( false, ch );
 					}
@@ -923,7 +923,7 @@ ACMD(do_safebox_change_password)
 	strlcpy(p.szOldPassword, arg1, sizeof(p.szOldPassword));
 	strlcpy(p.szNewPassword, arg2, sizeof(p.szNewPassword));
 
-	db_clientdesc->DBPacket(HEADER_GD_SAFEBOX_CHANGE_PASSWORD, ch->GetDesc()->GetHandle(), &p, sizeof(p));
+	db_clientdesc->DBPacket(GD::SAFEBOX_CHANGE_PASSWORD, ch->GetDesc()->GetHandle(), &p, sizeof(p));
 }
 
 ACMD(do_mall_password)
@@ -958,7 +958,7 @@ ACMD(do_mall_password)
 	strlcpy(p.szLogin, ch->GetDesc()->GetAccountTable().login, sizeof(p.szLogin));
 	strlcpy(p.szPassword, arg1, sizeof(p.szPassword));
 
-	db_clientdesc->DBPacket(HEADER_GD_MALL_LOAD, ch->GetDesc()->GetHandle(), &p, sizeof(p));
+	db_clientdesc->DBPacket(GD::MALL_LOAD, ch->GetDesc()->GetHandle(), &p, sizeof(p));
 }
 
 ACMD(do_mall_close)
@@ -1459,277 +1459,6 @@ ACMD(do_party_request_deny)
 		ch->DenyToParty(tch);
 }
 
-ACMD(do_monarch_warpto)
-{
-	if (true == LC_IsYMIR() || true == LC_IsKorea())
-		return;
-
-	if (!CMonarch::instance().IsMonarch(ch->GetPlayerID(), ch->GetEmpire()))
-	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("군주만이 사용 가능한 기능입니다"));
-		return;
-	}
-	
-	//군주 쿨타임 검사
-	if (!ch->IsMCOK(CHARACTER::MI_WARP))
-	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%d 초간 쿨타임이 적용중입니다."), ch->GetMCLTime(CHARACTER::MI_WARP));
-		return;
-	}
-
-	//군주 몹 소환 비용 
-	const int WarpPrice = 10000;
-	
-	//군주 국고 검사 
-	if (!CMonarch::instance().IsMoneyOk(WarpPrice, ch->GetEmpire()))
-	{
-		int NationMoney = CMonarch::instance().GetMoney(ch->GetEmpire());
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("국고에 돈이 부족합니다. 현재 : %u 필요금액 : %u"), NationMoney, WarpPrice);
-		return;	
-	}
-
-	int x = 0, y = 0;
-	char arg1[256];
-
-	one_argument(argument, arg1, sizeof(arg1));
-
-	if (!*arg1)
-	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("사용법: warpto <character name>"));
-		return;
-	}
-
-	LPCHARACTER tch = CHARACTER_MANAGER::instance().FindPC(arg1);
-
-	if (!tch)
-	{
-		CCI * pkCCI = P2P_MANAGER::instance().Find(arg1);
-
-		if (pkCCI)
-		{
-			if (pkCCI->bEmpire != ch->GetEmpire())
-			{
-				ch->ChatPacket (CHAT_TYPE_INFO, LC_TEXT("타제국 유저에게는 이동할수 없습니다"));
-				return;
-			}
-
-			if (pkCCI->bChannel != g_bChannel)
-			{
-				ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("해당 유저는 %d 채널에 있습니다. (현재 채널 %d)"), pkCCI->bChannel, g_bChannel);
-				return;
-			}
-			if (!IsMonarchWarpZone(pkCCI->lMapIndex))
-			{
-				ch->ChatPacket (CHAT_TYPE_INFO, LC_TEXT("해당 지역으로 이동할 수 없습니다."));
-				return;
-			}
-
-			PIXEL_POSITION pos;
-	
-			if (!SECTREE_MANAGER::instance().GetCenterPositionOfMap(pkCCI->lMapIndex, pos))
-				ch->ChatPacket(CHAT_TYPE_INFO, "Cannot find map (index %d)", pkCCI->lMapIndex);
-			else
-			{
-				//ch->ChatPacket(CHAT_TYPE_INFO, "You warp to (%d, %d)", pos.x, pos.y);
-				ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%s 에게로 이동합니다"), arg1);
-				ch->WarpSet(pos.x, pos.y);
-				
-				//군주 돈 삭감	
-				CMonarch::instance().SendtoDBDecMoney(WarpPrice, ch->GetEmpire(), ch);
-
-				//쿨타임 초기화 
-				ch->SetMC(CHARACTER::MI_WARP);
-			}
-		}
-		else if (NULL == CHARACTER_MANAGER::instance().FindPC(arg1))
-		{
-			ch->ChatPacket(CHAT_TYPE_INFO, "There is no one by that name");
-		}
-
-		return;
-	}
-	else
-	{
-		if (tch->GetEmpire() != ch->GetEmpire())
-		{
-			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("타제국 유저에게는 이동할수 없습니다"));
-			return;
-		}
-		if (!IsMonarchWarpZone(tch->GetMapIndex()))
-		{
-			ch->ChatPacket (CHAT_TYPE_INFO, LC_TEXT("해당 지역으로 이동할 수 없습니다."));
-			return;
-		}
-		x = tch->GetX();
-		y = tch->GetY();
-	}
-
-	ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%s 에게로 이동합니다"), arg1);
-	ch->WarpSet(x, y);
-	ch->Stop();
-
-	//군주 돈 삭감	
-	CMonarch::instance().SendtoDBDecMoney(WarpPrice, ch->GetEmpire(), ch);
-
-	//쿨타임 초기화 
-	ch->SetMC(CHARACTER::MI_WARP);
-}
-
-ACMD(do_monarch_transfer)
-{
-	if (true == LC_IsYMIR() || true == LC_IsKorea())
-		return;
-
-	char arg1[256];
-	one_argument(argument, arg1, sizeof(arg1));
-
-	if (!*arg1)
-	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("사용법: transfer <name>"));
-		return;
-	}
-	
-	if (!CMonarch::instance().IsMonarch(ch->GetPlayerID(), ch->GetEmpire()))
-	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("군주만이 사용 가능한 기능입니다"));
-		return;
-	}
-	
-	//군주 쿨타임 검사
-	if (!ch->IsMCOK(CHARACTER::MI_TRANSFER))
-	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%d 초간 쿨타임이 적용중입니다."), ch->GetMCLTime(CHARACTER::MI_TRANSFER));	
-		return;
-	}
-
-	//군주 워프 비용 
-	const int WarpPrice = 10000;
-
-	//군주 국고 검사 
-	if (!CMonarch::instance().IsMoneyOk(WarpPrice, ch->GetEmpire()))
-	{
-		int NationMoney = CMonarch::instance().GetMoney(ch->GetEmpire());
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("국고에 돈이 부족합니다. 현재 : %u 필요금액 : %u"), NationMoney, WarpPrice);
-		return;	
-	}
-
-
-	LPCHARACTER tch = CHARACTER_MANAGER::instance().FindPC(arg1);
-
-	if (!tch)
-	{
-		CCI * pkCCI = P2P_MANAGER::instance().Find(arg1);
-
-		if (pkCCI)
-		{
-			if (pkCCI->bEmpire != ch->GetEmpire())
-			{
-				ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("다른 제국 유저는 소환할 수 없습니다."));
-				return;
-			}
-			if (pkCCI->bChannel != g_bChannel)
-			{
-				ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%s 님은 %d 채널에 접속 중 입니다. (현재 채널: %d)"), arg1, pkCCI->bChannel, g_bChannel);
-				return;
-			}
-			if (!IsMonarchWarpZone(pkCCI->lMapIndex))
-			{
-				ch->ChatPacket (CHAT_TYPE_INFO, LC_TEXT("해당 지역으로 이동할 수 없습니다."));
-				return;
-			}
-			if (!IsMonarchWarpZone(ch->GetMapIndex()))
-			{
-				ch->ChatPacket (CHAT_TYPE_INFO, LC_TEXT("해당 지역으로 소환할 수 없습니다."));
-				return;
-			}
-
-			TPacketGGTransfer pgg;
-
-			pgg.bHeader = HEADER_GG_TRANSFER;
-			strlcpy(pgg.szName, arg1, sizeof(pgg.szName));
-			pgg.lX = ch->GetX();
-			pgg.lY = ch->GetY();
-
-			P2P_MANAGER::instance().Send(&pgg, sizeof(TPacketGGTransfer));
-			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%s 님을 소환하였습니다."), arg1);
-			
-			//군주 돈 삭감	
-			CMonarch::instance().SendtoDBDecMoney(WarpPrice, ch->GetEmpire(), ch);
-			//쿨타임 초기화 
-			ch->SetMC(CHARACTER::MI_TRANSFER);
-		}
-		else
-		{
-			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("입력하신 이름을 가진 사용자가 없습니다."));
-		}
-
-		return;
-	}
-
-
-	if (ch == tch)
-	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("자신을 소환할 수 없습니다."));
-		return;
-	}
-
-	if (tch->GetEmpire() != ch->GetEmpire())
-	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("다른 제국 유저는 소환할 수 없습니다."));
-		return;
-	}
-	if (!IsMonarchWarpZone(tch->GetMapIndex()))
-	{
-		ch->ChatPacket (CHAT_TYPE_INFO, LC_TEXT("해당 지역으로 이동할 수 없습니다."));
-		return;
-	}
-	if (!IsMonarchWarpZone(ch->GetMapIndex()))
-	{
-		ch->ChatPacket (CHAT_TYPE_INFO, LC_TEXT("해당 지역으로 소환할 수 없습니다."));
-		return;
-	}
-
-	//tch->Show(ch->GetMapIndex(), ch->GetX(), ch->GetY(), ch->GetZ());
-	tch->WarpSet(ch->GetX(), ch->GetY(), ch->GetMapIndex());
-	
-	//군주 돈 삭감	
-	CMonarch::instance().SendtoDBDecMoney(WarpPrice, ch->GetEmpire(), ch);
-	//쿨타임 초기화 
-	ch->SetMC(CHARACTER::MI_TRANSFER);
-}
-
-ACMD(do_monarch_info)
-{
-	if (CMonarch::instance().IsMonarch(ch->GetPlayerID(), ch->GetEmpire()))	
-	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("나의 군주 정보"));
-		TMonarchInfo * p = CMonarch::instance().GetMonarch();
-		for (int n = 1; n < 4; ++n)
-		{
-			if (n == ch->GetEmpire())
-				ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("[%s군주] : %s  보유금액 %lld "), EMPIRE_NAME(n), p->name[n], p->money[n]);
-			else
-				ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("[%s군주] : %s  "), EMPIRE_NAME(n), p->name[n]);
-				
-		}
-	}
-	else
-	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("군주 정보"));
-		TMonarchInfo * p = CMonarch::instance().GetMonarch();
-		for (int n = 1; n < 4; ++n)
-		{
-			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("[%s군주] : %s  "), EMPIRE_NAME(n), p->name[n]);
-				
-		}
-	}
-	
-}	
-
-ACMD(do_elect)
-{
-	db_clientdesc->DBPacketHeader(HEADER_GD_COME_TO_VOTE, ch->GetDesc()->GetHandle(), 0);
-}
 
 // LUA_ADD_GOTO_INFO
 struct GotoInfo
@@ -1772,174 +1501,6 @@ struct GotoInfo
 };
 
 extern void BroadcastNotice(const char * c_pszBuf);
-
-ACMD(do_monarch_tax)
-{
-	char arg1[256];
-	one_argument(argument, arg1, sizeof(arg1));
-
-	if (!*arg1)
-	{
-		ch->ChatPacket(CHAT_TYPE_INFO, "Usage: monarch_tax <1-50>");
-		return;
-	}
-
-	// 군주 검사	
-	if (!ch->IsMonarch())
-	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("군주만이 사용할수 있는 기능입니다"));
-		return;
-	}
-
-	// 세금설정 
-	int tax = 0;
-	str_to_number(tax,  arg1);
-
-	if (tax < 1 || tax > 50)
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("1-50 사이의 수치를 선택해주세요"));
-
-	quest::CQuestManager::instance().SetEventFlag("trade_tax", tax); 
-
-	// 군주에게 메세지 하나
-	ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("세금이 %d %로 설정되었습니다"));
-
-	// 공지 
-	char szMsg[1024];	
-
-	snprintf(szMsg, sizeof(szMsg), "군주의 명으로 세금이 %d %% 로 변경되었습니다", tax);
-	BroadcastNotice(szMsg);
-
-	snprintf(szMsg, sizeof(szMsg), "앞으로는 거래 금액의 %d %% 가 국고로 들어가게됩니다.", tax);
-	BroadcastNotice(szMsg);
-
-	// 쿨타임 초기화 
-	ch->SetMC(CHARACTER::MI_TAX); 
-}
-
-static const DWORD cs_dwMonarchMobVnums[] =
-{
-	191, //	산견신
-	192, //	저신
-	193, //	웅신
-	194, //	호신
-	391, //	미정
-	392, //	은정
-	393, //	세랑
-	394, //	진희
-	491, //	맹환
-	492, //	보우
-	493, //	구패
-	494, //	추흔
-	591, //	비류단대장
-	691, //	웅귀 족장
-	791, //	밀교교주
-	1304, // 누렁범귀
-	1901, // 구미호
-	2091, // 여왕거미
-	2191, // 거대사막거북
-	2206, // 화염왕i
-	0,
-};
-
-ACMD(do_monarch_mob)
-{
-	char arg1[256];
-	LPCHARACTER	tch;
-
-	one_argument(argument, arg1, sizeof(arg1));
-
-	if (!ch->IsMonarch())
-	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("군주만이 사용할수 있는 기능입니다"));
-		return;
-	}
-	
-	if (!*arg1)
-	{
-		ch->ChatPacket(CHAT_TYPE_INFO, "Usage: mmob <mob name>");
-		return;
-	}
-
-	BYTE pcEmpire = ch->GetEmpire();
-	BYTE mapEmpire = SECTREE_MANAGER::instance().GetEmpireFromMapIndex(ch->GetMapIndex());
-
-	if (LC_IsYMIR() == true || LC_IsKorea() == true)
-	{
-		if (mapEmpire != pcEmpire && mapEmpire != 0)
-		{
-			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("자국 영토에서만 사용할 수 있는 기능입니다"));
-			return;
-		}
-	}
-
-	// 군주 몹 소환 비용 
-	const int SummonPrice = 5000000;
-
-	// 군주 쿨타임 검사
-	if (!ch->IsMCOK(CHARACTER::MI_SUMMON))
-	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%d 초간 쿨타임이 적용중입니다."), ch->GetMCLTime(CHARACTER::MI_SUMMON));	
-		return;
-	}
-	
-	// 군주 국고 검사 
-	if (!CMonarch::instance().IsMoneyOk(SummonPrice, ch->GetEmpire()))
-	{
-		int NationMoney = CMonarch::instance().GetMoney(ch->GetEmpire());
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("국고에 돈이 부족합니다. 현재 : %u 필요금액 : %u"), NationMoney, SummonPrice);
-		return;	
-	}
-
-	const CMob * pkMob;
-	DWORD vnum = 0;
-
-	if (isdigit(*arg1))
-	{
-		str_to_number(vnum, arg1);
-
-		if ((pkMob = CMobManager::instance().Get(vnum)) == NULL)
-			vnum = 0;
-	}
-	else
-	{
-		pkMob = CMobManager::Instance().Get(arg1, true);
-
-		if (pkMob)
-			vnum = pkMob->m_table.dwVnum;
-	}
-
-	DWORD count;
-
-	// 소환 가능 몹 검사
-	for (count = 0; cs_dwMonarchMobVnums[count] != 0; ++count)
-		if (cs_dwMonarchMobVnums[count] == vnum)
-			break;
-
-	if (0 == cs_dwMonarchMobVnums[count])
-	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("소환할수 없는 몬스터 입니다. 소환가능한 몬스터는 홈페이지를 참조하세요"));
-		return;
-	}
-
-	tch = CHARACTER_MANAGER::instance().SpawnMobRange(vnum, 
-			ch->GetMapIndex(),
-			ch->GetX() - number(200, 750), 
-			ch->GetY() - number(200, 750), 
-			ch->GetX() + number(200, 750), 
-			ch->GetY() + number(200, 750), 
-			true,
-			pkMob->m_table.bType == CHAR_TYPE_STONE,
-			true);
-
-	if (tch)
-	{
-		// 군주 돈 삭감	
-		CMonarch::instance().SendtoDBDecMoney(SummonPrice, ch->GetEmpire(), ch);
-
-		// 쿨타임 초기화 
-		ch->SetMC(CHARACTER::MI_SUMMON); 
-	}
-}
 
 static const char* FN_point_string(int apply_number)
 {
@@ -2356,7 +1917,7 @@ ACMD(do_in_game_mall)
 			case LC_USA:		country_code[0] = 'u'; country_code[1] = 's'; country_code[2] = '\0'; break;
 			case LC_CANADA:	country_code[0] = 'c'; country_code[1] = 'a'; country_code[2] = '\0'; break;
 			default:
-				if (test_server == true)
+				if (test_server)
 				{
 					country_code[0] = 'd'; country_code[1] = 'e'; country_code[2] = '\0';
 				}

@@ -1,9 +1,9 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "constants.h"
 #include "char.h"
 #include "desc.h"
 #include "desc_manager.h"
-#include "packet.h"
+#include "packet_structs.h"
 #include "item.h"
 
 /////////////////////////////////////////////////////////////////////////////
@@ -87,7 +87,8 @@ bool CHARACTER::SetQuickslot(BYTE pos, TQuickslot & rSlot)
 
 	if (GetDesc())
 	{
-		pack_quickslot_add.header	= HEADER_GC_QUICKSLOT_ADD;
+		pack_quickslot_add.header	= GC::QUICKSLOT_ADD;
+		pack_quickslot_add.length = sizeof(pack_quickslot_add);
 		pack_quickslot_add.pos		= pos;
 		pack_quickslot_add.slot		= m_quickslot[pos];
 
@@ -106,7 +107,8 @@ bool CHARACTER::DelQuickslot(BYTE pos)
 
 	memset(&m_quickslot[pos], 0, sizeof(TQuickslot));
 
-	pack_quickslot_del.header	= HEADER_GC_QUICKSLOT_DEL;
+	pack_quickslot_del.header	= GC::QUICKSLOT_DEL;
+	pack_quickslot_del.length = sizeof(pack_quickslot_del);
 	pack_quickslot_del.pos	= pos;
 
 	GetDesc()->Packet(&pack_quickslot_del, sizeof(pack_quickslot_del));
@@ -127,7 +129,8 @@ bool CHARACTER::SwapQuickslot(BYTE a, BYTE b)
 	m_quickslot[a] = m_quickslot[b];
 	m_quickslot[b] = quickslot;
 
-	pack_quickslot_swap.header	= HEADER_GC_QUICKSLOT_SWAP;
+	pack_quickslot_swap.header	= GC::QUICKSLOT_SWAP;
+	pack_quickslot_swap.length = sizeof(pack_quickslot_swap);
 	pack_quickslot_swap.pos	= a;
 	pack_quickslot_swap.pos_to	= b;
 

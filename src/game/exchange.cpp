@@ -1,4 +1,4 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "libgame/grid.h"
 #include "utils.h"
 #include "desc.h"
@@ -6,7 +6,7 @@
 #include "char.h"
 #include "item.h"
 #include "item_manager.h"
-#include "packet.h"
+#include "packet_structs.h"
 #include "log.h"
 #include "db.h"
 #include "locale_service.h"
@@ -24,14 +24,15 @@ void exchange_packet(LPCHARACTER ch, BYTE sub_header, bool is_me, DWORD arg1, TI
 
 	struct packet_exchange pack_exchg;
 
-	pack_exchg.header 		= HEADER_GC_EXCHANGE;
+	pack_exchg.header 		= GC::EXCHANGE;
+	pack_exchg.length = sizeof(pack_exchg);
 	pack_exchg.sub_header 	= sub_header;
 	pack_exchg.is_me		= is_me;
 	pack_exchg.arg1		= arg1;
 	pack_exchg.arg2		= arg2;
 	pack_exchg.arg3		= arg3;
 
-	if (sub_header == EXCHANGE_SUBHEADER_GC_ITEM_ADD && pvData)
+	if (sub_header == ExchangeSub::GC::ITEM_ADD && pvData)
 	{
 		thecore_memcpy(&pack_exchg.alSockets, ((LPITEM) pvData)->GetSockets(), sizeof(pack_exchg.alSockets));
 		thecore_memcpy(&pack_exchg.aAttr, ((LPITEM) pvData)->GetAttributes(), sizeof(pack_exchg.aAttr));
@@ -84,7 +85,7 @@ bool CHARACTER::ExchangeStart(LPCHARACTER victim)
 
 	if (victim->GetExchange())
 	{
-		exchange_packet(this, EXCHANGE_SUBHEADER_GC_ALREADY, 0, 0, NPOS, 0);
+		exchange_packet(this, ExchangeSub::GC::ALREADY, 0, 0, NPOS, 0);
 		return false;
 	}
 
@@ -104,8 +105,8 @@ bool CHARACTER::ExchangeStart(LPCHARACTER victim)
 	SetExchangeTime();
 	victim->SetExchangeTime();
 
-	exchange_packet(victim, EXCHANGE_SUBHEADER_GC_START, 0, GetVID(), NPOS, 0);
-	exchange_packet(this, EXCHANGE_SUBHEADER_GC_START, 0, victim->GetVID(), NPOS, 0);
+	exchange_packet(victim, ExchangeSub::GC::START, 0, GetVID(), NPOS, 0);
+	exchange_packet(this, ExchangeSub::GC::START, 0, victim->GetVID(), NPOS, 0);
 
 	return true;
 }
@@ -192,7 +193,7 @@ bool CExchange::AddItem(TItemPos item_pos, BYTE display_pos)
 		item->SetExchanging(true);
 
 		exchange_packet(m_pOwner, 
-				EXCHANGE_SUBHEADER_GC_ITEM_ADD,
+				ExchangeSub::GC::ITEM_ADD,
 				true,
 				item->GetVnum(),
 				TItemPos(RESERVED_WINDOW, display_pos),
@@ -200,7 +201,7 @@ bool CExchange::AddItem(TItemPos item_pos, BYTE display_pos)
 				item);
 
 		exchange_packet(GetCompany()->GetOwner(),
-				EXCHANGE_SUBHEADER_GC_ITEM_ADD, 
+				ExchangeSub::GC::ITEM_ADD, 
 				false, 
 				item->GetVnum(),
 				TItemPos(RESERVED_WINDOW, display_pos),
@@ -229,8 +230,8 @@ bool CExchange::RemoveItem(BYTE pos)
 
 	m_pGrid->Get(m_abItemDisplayPos[pos], 1, m_apItems[pos]->GetSize());
 
-	exchange_packet(GetOwner(),	EXCHANGE_SUBHEADER_GC_ITEM_DEL, true, pos, NPOS, 0);
-	exchange_packet(GetCompany()->GetOwner(), EXCHANGE_SUBHEADER_GC_ITEM_DEL, false, pos, PosOfInventory, 0);
+	exchange_packet(GetOwner(),	ExchangeSub::GC::ITEM_DEL, true, pos, NPOS, 0);
+	exchange_packet(GetCompany()->GetOwner(), ExchangeSub::GC::ITEM_DEL, false, pos, PosOfInventory, 0);
 
 	Accept(false);
 	GetCompany()->Accept(false);
@@ -249,7 +250,7 @@ bool CExchange::AddGold(long gold)
 	if (GetOwner()->GetGold() < gold)
 	{
 		// 가지고 있는 돈이 부족.
-		exchange_packet(GetOwner(), EXCHANGE_SUBHEADER_GC_LESS_GOLD, 0, 0, NPOS, 0);
+		exchange_packet(GetOwner(), ExchangeSub::GC::LESS_GOLD, 0, 0, NPOS, 0);
 		return false;
 	}
 
@@ -266,8 +267,8 @@ bool CExchange::AddGold(long gold)
 
 	m_lGold = gold;
 
-	exchange_packet(GetOwner(), EXCHANGE_SUBHEADER_GC_GOLD_ADD, true, m_lGold, NPOS, 0);
-	exchange_packet(GetCompany()->GetOwner(), EXCHANGE_SUBHEADER_GC_GOLD_ADD, false, m_lGold, NPOS, 0);
+	exchange_packet(GetOwner(), ExchangeSub::GC::GOLD_ADD, true, m_lGold, NPOS, 0);
+	exchange_packet(GetCompany()->GetOwner(), ExchangeSub::GC::GOLD_ADD, false, m_lGold, NPOS, 0);
 	return true;
 }
 
@@ -573,8 +574,8 @@ EXCHANGE_END:
 	else
 	{
 		// 아니면 accept에 대한 패킷을 보내자.
-		exchange_packet(GetOwner(), EXCHANGE_SUBHEADER_GC_ACCEPT, true, m_bAccept, NPOS, 0);
-		exchange_packet(GetCompany()->GetOwner(), EXCHANGE_SUBHEADER_GC_ACCEPT, false, m_bAccept, NPOS, 0);
+		exchange_packet(GetOwner(), ExchangeSub::GC::ACCEPT, true, m_bAccept, NPOS, 0);
+		exchange_packet(GetCompany()->GetOwner(), ExchangeSub::GC::ACCEPT, false, m_bAccept, NPOS, 0);
 		return true;
 	}
 }
@@ -582,7 +583,7 @@ EXCHANGE_END:
 // 교환 취소
 void CExchange::Cancel()
 {
-	exchange_packet(GetOwner(), EXCHANGE_SUBHEADER_GC_END, 0, 0, NPOS, 0);
+	exchange_packet(GetOwner(), ExchangeSub::GC::END, 0, 0, NPOS, 0);
 	GetOwner()->SetExchange(NULL);
 
 	for (int i = 0; i < EXCHANGE_ITEM_MAX_NUM; ++i)

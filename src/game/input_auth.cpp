@@ -1,4 +1,4 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "constants.h"
 #include "config.h"
 #include "input.h"
@@ -150,6 +150,25 @@ bool Login_IsInChannelService(const char* c_login)
 
 CInputAuth::CInputAuth()
 {
+	RegisterHandlers();
+}
+
+int CInputAuth::HandlePong(LPDESC d, const char*)
+{
+	Pong(d);
+	return 0;
+}
+
+int CInputAuth::HandleLogin3(LPDESC d, const char* c_pData)
+{
+	Login(d, c_pData);
+	return 0;
+}
+
+void CInputAuth::RegisterHandlers()
+{
+	m_handlers[CG::PONG]   = &CInputAuth::HandlePong;
+	m_handlers[CG::LOGIN3] = &CInputAuth::HandleLogin3;
 }
 
 void CInputAuth::Login(LPDESC d, const char * c_pData)
@@ -196,7 +215,8 @@ void CInputAuth::Login(LPDESC d, const char * c_pData)
 	{
 		TPacketGCLoginFailure failurePacket;
 
-		failurePacket.header = HEADER_GC_LOGIN_FAILURE;
+		failurePacket.header = GC::LOGIN_FAILURE;
+		failurePacket.length = sizeof(failurePacket);
 		strlcpy(failurePacket.szStatus, "SHUTDOWN", sizeof(failurePacket.szStatus));
 
 		d->Packet(&failurePacket, sizeof(failurePacket));
@@ -259,39 +279,22 @@ void CInputAuth::Login(LPDESC d, const char * c_pData)
 	}
 }
 
-int CInputAuth::Analyze(LPDESC d, BYTE bHeader, const char * c_pData)
+int CInputAuth::Analyze(LPDESC d, uint16_t wHeader, const char * c_pData)
 {
-
 	if (!g_bAuthServer)
 	{
-		sys_err ("CInputAuth class is not for game server. IP %s might be a hacker.", 
+		sys_err ("CInputAuth class is not for game server. IP %s might be a hacker.",
 			inet_ntoa(d->GetAddr().sin_addr));
 		d->DelayedDisconnect(5);
 		return 0;
 	}
 
-	int iExtraLen = 0;
-
-	if (test_server)
-		sys_log(0, " InputAuth Analyze Header[%d] ", bHeader);
-
-	switch (bHeader)
+	auto it = m_handlers.find(wHeader);
+	if (it == m_handlers.end())
 	{
-		case HEADER_CG_PONG:
-			Pong(d);
-			break;
-
-		case HEADER_CG_LOGIN3:
-			Login(d, c_pData);
-			break;
-
-		case HEADER_CG_HANDSHAKE:
-			break;
-
-		default:
-			sys_err("This phase does not handle this header %d (0x%x)(phase: AUTH)", bHeader, bHeader);
-			break;
+		sys_err("This phase does not handle this header %d (0x%x)(phase: AUTH)", wHeader, wHeader);
+		return 0;
 	}
 
-	return iExtraLen;
+	return (this->*(it->second))(d, c_pData);
 }

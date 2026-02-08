@@ -1,4 +1,4 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "Peer.h"
 #include "ItemIDRangeManager.h"
 
@@ -67,15 +67,18 @@ void CPeer::SetUserCount(DWORD dwCount)
 	m_dwUserCount = dwCount;
 }
 
-bool CPeer::PeekPacket(int & iBytesProceed, BYTE & header, DWORD & dwHandle, DWORD & dwLength, const char ** data)
+bool CPeer::PeekPacket(int & iBytesProceed, uint16_t & wHeader, DWORD & dwHandle, DWORD & dwLength, const char ** data)
 {
-	if (GetRecvLength() < iBytesProceed + 9)
+	static constexpr int FRAME_SIZE = sizeof(HEADER); // 10: header(2) + handle(4) + size(4)
+
+	if (GetRecvLength() < iBytesProceed + FRAME_SIZE)
 		return false;
 
 	const char * buf = (const char *) GetRecvBuffer();
 	buf += iBytesProceed;
 
-	header	= *(buf++);
+	wHeader		= *((uint16_t *) buf);
+	buf		+= sizeof(uint16_t);
 
 	dwHandle	= *((DWORD *) buf);
 	buf		+= sizeof(DWORD);
@@ -83,35 +86,35 @@ bool CPeer::PeekPacket(int & iBytesProceed, BYTE & header, DWORD & dwHandle, DWO
 	dwLength	= *((DWORD *) buf);
 	buf		+= sizeof(DWORD);
 
-	//sys_log(0, "%d header %d handle %u length %u", GetRecvLength(), header, dwHandle, dwLength);
-	if (iBytesProceed + dwLength + 9 > (DWORD) GetRecvLength())
+	//sys_log(0, "%d header %d handle %u length %u", GetRecvLength(), wHeader, dwHandle, dwLength);
+	if (iBytesProceed + dwLength + FRAME_SIZE > (DWORD) GetRecvLength())
 	{
-		sys_log(0, "PeekPacket: not enough buffer size: len %u, recv %d", 
-				9+dwLength, GetRecvLength()-iBytesProceed);
+		sys_log(0, "PeekPacket: not enough buffer size: len %u, recv %d",
+				FRAME_SIZE+dwLength, GetRecvLength()-iBytesProceed);
 		return false;
 	}
 
 	*data = buf;
-	iBytesProceed += dwLength + 9;
+	iBytesProceed += dwLength + FRAME_SIZE;
 	return true;
 }
 
-void CPeer::EncodeHeader(BYTE header, DWORD dwHandle, DWORD dwSize)
+void CPeer::EncodeHeader(uint16_t wHeader, DWORD dwHandle, DWORD dwSize)
 {
 	HEADER h;
 
-	sys_log(1, "EncodeHeader %u handle %u size %u", header, dwHandle, dwSize);
+	sys_log(1, "EncodeHeader %u handle %u size %u", wHeader, dwHandle, dwSize);
 
-	h.bHeader = header;
+	h.wHeader = wHeader;
 	h.dwHandle = dwHandle;
 	h.dwSize = dwSize;
 
 	Encode(&h, sizeof(HEADER));
 }
 
-void CPeer::EncodeReturn(BYTE header, DWORD dwHandle)
+void CPeer::EncodeReturn(uint16_t wHeader, DWORD dwHandle)
 {
-	EncodeHeader(header, dwHandle, 0);
+	EncodeHeader(wHeader, dwHandle, 0);
 }
 
 int CPeer::Send()
@@ -136,7 +139,7 @@ void CPeer::SendSpareItemIDRange()
 {
 	if (m_itemSpareRange.dwMin == 0 || m_itemSpareRange.dwMax == 0 || m_itemSpareRange.dwUsableItemIDMin == 0)
 	{
-		EncodeHeader(HEADER_DG_ACK_SPARE_ITEM_ID_RANGE, 0, sizeof(TItemIDRangeTable));
+		EncodeHeader(DG::ACK_SPARE_ITEM_ID_RANGE, 0, sizeof(TItemIDRangeTable));
 		Encode(&m_itemSpareRange, sizeof(TItemIDRangeTable));
 	}
 	else
@@ -149,7 +152,7 @@ void CPeer::SendSpareItemIDRange()
 			m_itemSpareRange.dwMin = m_itemSpareRange.dwMax = m_itemSpareRange.dwUsableItemIDMin = 0;
 		}
 
-		EncodeHeader(HEADER_DG_ACK_SPARE_ITEM_ID_RANGE, 0, sizeof(TItemIDRangeTable));
+		EncodeHeader(DG::ACK_SPARE_ITEM_ID_RANGE, 0, sizeof(TItemIDRangeTable));
 		Encode(&m_itemSpareRange, sizeof(TItemIDRangeTable));
 	}
 }

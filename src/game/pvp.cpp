@@ -1,8 +1,8 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "constants.h"
 #include "pvp.h"
 #include "crc32.h"
-#include "packet.h"
+#include "packet_structs.h"
 #include "desc.h"
 #include "desc_manager.h"
 #include "char.h"
@@ -65,7 +65,8 @@ void CPVP::Packet(bool bDelete)
 
 	TPacketGCPVP pack;
 
-	pack.bHeader = HEADER_GC_PVP;
+	pack.header = GC::PVP;
+	pack.length = sizeof(pack);
 
 	if (bDelete)
 	{
@@ -215,8 +216,8 @@ void CPVPManager::Insert(LPCHARACTER pkChr, LPCHARACTER pkVictim)
 
 		int len = MIN(CHAT_MAX_LEN, strlen(msg) + 1);
 
-		pack.bHeader = HEADER_GC_WHISPER;
-		pack.wSize = sizeof(TPacketGCWhisper) + len;
+		pack.header = GC::WHISPER;
+		pack.length = sizeof(TPacketGCWhisper) + len;
 		pack.bType = WHISPER_TYPE_SYSTEM;
 		strlcpy(pack.szNameFrom, pkChr->GetName(), sizeof(pack.szNameFrom));
 
@@ -559,7 +560,8 @@ void CPVPManager::SendList(LPDESC d)
 
 	TPacketGCPVP pack;
 
-	pack.bHeader = HEADER_GC_PVP;
+	pack.header = GC::PVP;
+	pack.length = sizeof(pack);
 
 	while (it != m_map_pkPVP.end())
 	{

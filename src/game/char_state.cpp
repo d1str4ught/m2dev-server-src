@@ -1,11 +1,11 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "config.h"
 #include "utils.h"
 #include "vector.h"
 #include "char.h"
 #include "battle.h"
 #include "char_manager.h"
-#include "packet.h"
+#include "packet_structs.h"
 #include "motion.h"
 #include "party.h"
 #include "affect.h"
@@ -567,7 +567,8 @@ void CHARACTER::__StateIdle_NPC()
 				{
 					// 다른 서버 입니다.
 					TPacketGGXmasWarpSanta p;
-					p.bHeader   = HEADER_GG_XMAS_WARP_SANTA;
+					p.header    = GG::XMAS_WARP_SANTA;
+					p.length    = sizeof(TPacketGGXmasWarpSanta);
 					p.bChannel  = g_bChannel;
 					p.lMapIndex = lNextMapIndex;
 					P2P_MANAGER::instance().Send(&p, sizeof(TPacketGGXmasWarpSanta));

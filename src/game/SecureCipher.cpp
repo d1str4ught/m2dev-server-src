@@ -57,6 +57,7 @@ bool SecureCipher::Initialize()
 void SecureCipher::CleanUp()
 {
     // Securely erase all sensitive key material
+    sodium_memzero(m_pk, sizeof(m_pk));
     sodium_memzero(m_sk, sizeof(m_sk));
     sodium_memzero(m_tx_key, sizeof(m_tx_key));
     sodium_memzero(m_rx_key, sizeof(m_rx_key));
@@ -118,6 +119,10 @@ bool SecureCipher::ComputeServerKeys(const uint8_t* client_pk)
     sodium_memzero(m_rx_stream_nonce, NONCE_SIZE);
     m_rx_stream_nonce[0] = 0x02;
 
+    sys_log(0, "[CIPHER] Server keys computed (tx_key: %02x%02x%02x%02x, rx_key: %02x%02x%02x%02x)",
+        m_tx_key[0], m_tx_key[1], m_tx_key[2], m_tx_key[3],
+        m_rx_key[0], m_rx_key[1], m_rx_key[2], m_rx_key[3]);
+
     return true;
 }
 
@@ -170,64 +175,6 @@ void SecureCipher::ApplyStreamCipher(void* buffer, size_t len,
                                        stream_nonce, byte_counter / 64, key);
         byte_counter += len;
     }
-}
-
-size_t SecureCipher::Encrypt(const void* plaintext, size_t plaintext_len, void* ciphertext)
-{
-    if (!m_activated)
-    {
-        return 0;
-    }
-
-    // AEAD encryption uses a random nonce (not the stream nonce)
-    uint8_t nonce[NONCE_SIZE];
-    randombytes_buf(nonce, NONCE_SIZE);
-
-    unsigned long long ciphertext_len = 0;
-
-    if (crypto_aead_xchacha20poly1305_ietf_encrypt(
-            (uint8_t*)ciphertext, &ciphertext_len,
-            (const uint8_t*)plaintext, plaintext_len,
-            nullptr, 0,
-            nullptr,
-            nonce,
-            m_tx_key) != 0)
-    {
-        return 0;
-    }
-
-    return (size_t)ciphertext_len;
-}
-
-size_t SecureCipher::Decrypt(const void* ciphertext, size_t ciphertext_len, void* plaintext)
-{
-    if (!m_activated)
-    {
-        return 0;
-    }
-
-    if (ciphertext_len < TAG_SIZE)
-    {
-        return 0;
-    }
-
-    uint8_t nonce[NONCE_SIZE];
-    randombytes_buf(nonce, NONCE_SIZE);
-
-    unsigned long long plaintext_len = 0;
-
-    if (crypto_aead_xchacha20poly1305_ietf_decrypt(
-            (uint8_t*)plaintext, &plaintext_len,
-            nullptr,
-            (const uint8_t*)ciphertext, ciphertext_len,
-            nullptr, 0,
-            nonce,
-            m_rx_key) != 0)
-    {
-        return 0;
-    }
-
-    return (size_t)plaintext_len;
 }
 
 void SecureCipher::EncryptInPlace(void* buffer, size_t len)

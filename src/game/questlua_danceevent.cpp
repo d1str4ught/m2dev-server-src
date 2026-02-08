@@ -14,7 +14,7 @@ namespace quest
 			{
 				LPCHARACTER ch = (LPCHARACTER) ent;
 
-				if ( ch->IsPC() == true && ch->IsGM() != true )
+				if (ch->IsPC() && !ch->IsGM())
 				{
 					if ( ((ch->GetX() >= 764503 && ch->GetX() <= 772362) && (ch->GetY() >= 22807 && ch->GetY() <= 26499)) == false )
 					{

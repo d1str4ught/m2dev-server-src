@@ -1,4 +1,4 @@
-﻿// vim:ts=4 sw=4
+// vim:ts=4 sw=4
 #include "stdafx.h"
 #include "ClientManager.h"
 #include "Config.h"
@@ -12,7 +12,7 @@ void CClientManager::QUERY_PARTY_CREATE(CPeer* peer, TPacketPartyCreate* p)
 	if (pm.find(p->dwLeaderPID) == pm.end())
 	{
 		pm.insert(make_pair(p->dwLeaderPID, TPartyMember()));
-		ForwardPacket(HEADER_DG_PARTY_CREATE, p, sizeof(TPacketPartyCreate), 0, peer);
+		ForwardPacket(DG::PARTY_CREATE, p, sizeof(TPacketPartyCreate), 0, peer);
 		sys_log(0, "PARTY Create [%lu]", p->dwLeaderPID);
 	}
 	else
@@ -33,7 +33,7 @@ void CClientManager::QUERY_PARTY_DELETE(CPeer* peer, TPacketPartyDelete* p)
 	}
 
 	pm.erase(it);
-	ForwardPacket(HEADER_DG_PARTY_DELETE, p, sizeof(TPacketPartyDelete), 0, peer);
+	ForwardPacket(DG::PARTY_DELETE, p, sizeof(TPacketPartyDelete), 0, peer);
 	sys_log(0, "PARTY Delete [%lu]", p->dwLeaderPID);
 }
 
@@ -51,7 +51,7 @@ void CClientManager::QUERY_PARTY_ADD(CPeer* peer, TPacketPartyAdd* p)
 	if (it->second.find(p->dwPID) == it->second.end())
 	{
 		it->second.insert(std::make_pair(p->dwPID, TPartyInfo()));
-		ForwardPacket(HEADER_DG_PARTY_ADD, p, sizeof(TPacketPartyAdd), 0, peer);
+		ForwardPacket(DG::PARTY_ADD, p, sizeof(TPacketPartyAdd), 0, peer);
 		sys_log(0, "PARTY Add [%lu] to [%lu]", p->dwPID, p->dwLeaderPID);
 	}
 	else
@@ -74,7 +74,7 @@ void CClientManager::QUERY_PARTY_REMOVE(CPeer* peer, TPacketPartyRemove* p)
 	if (pit != it->second.end())
 	{
 		it->second.erase(pit);
-		ForwardPacket(HEADER_DG_PARTY_REMOVE, p, sizeof(TPacketPartyRemove), 0, peer);
+		ForwardPacket(DG::PARTY_REMOVE, p, sizeof(TPacketPartyRemove), 0, peer);
 		sys_log(0, "PARTY Remove [%lu] to [%lu]", p->dwPID, p->dwLeaderPID);
 	}
 	else
@@ -105,7 +105,7 @@ void CClientManager::QUERY_PARTY_STATE_CHANGE(CPeer* peer, TPacketPartyStateChan
 	else 
 		pit->second.bRole = 0;
 
-	ForwardPacket(HEADER_DG_PARTY_STATE_CHANGE, p, sizeof(TPacketPartyStateChange), 0, peer);
+	ForwardPacket(DG::PARTY_STATE_CHANGE, p, sizeof(TPacketPartyStateChange), 0, peer);
 	sys_log(0, "PARTY StateChange [%lu] at [%lu] from %d %d",p->dwPID, p->dwLeaderPID, p->bRole, p->bFlag);
 }
 
@@ -130,6 +130,6 @@ void CClientManager::QUERY_PARTY_SET_MEMBER_LEVEL(CPeer* peer, TPacketPartySetMe
 
 	pit->second.bLevel = p->bLevel;
 
-	ForwardPacket(HEADER_DG_PARTY_SET_MEMBER_LEVEL, p, sizeof(TPacketPartySetMemberLevel));
+	ForwardPacket(DG::PARTY_SET_MEMBER_LEVEL, p, sizeof(TPacketPartySetMemberLevel));
 	sys_log(0, "PARTY SetMemberLevel pid [%lu] level %d",p->dwPID, p->bLevel);
 }

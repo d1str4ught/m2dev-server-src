@@ -1,9 +1,11 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "constants.h"
 #include "config.h"
 #include "event.h"
 #include "minilzo.h"
-#include "packet.h"
+#include "packet_structs.h"
+#include "desc.h"
+#include "desc_client.h"
 #include "desc_manager.h"
 #include "item_manager.h"
 #include "char.h"
@@ -32,17 +34,14 @@
 #include "priv_manager.h"
 #include "war_map.h"
 #include "building.h"
-#include "login_sim.h"
 #include "target.h"
 #include "marriage.h"
 #include "wedding.h"
 #include "fishing.h"
 #include "item_addon.h"
-#include "TrafficProfiler.h"
 #include "locale_service.h"
 #include "arena.h"
 #include "OXEvent.h"
-#include "monarch.h"
 #include "polymorph.h"
 #include "blend_item.h"
 #include "castle.h"
@@ -55,6 +54,7 @@
 #include "DragonLair.h"
 #include "skill_power.h"
 #include "DragonSoul.h"
+#include "firewall_manager.h"
 
 // #ifndef OS_WINDOWS
 // #include <gtest/gtest.h>
@@ -79,10 +79,6 @@ void WriteMallocMessage(const char* p1, const char* p2, const char* p3, const ch
 }
 #endif
 
-// TRAFFIC_PROFILER
-static const DWORD	TRAFFIC_PROFILE_FLUSH_CYCLE = 3600;	///< TrafficProfiler 의 Flush cycle. 1시간 간격
-// END_OF_TRAFFIC_PROFILER
-
 // 게임과 연결되는 소켓
 volatile int	num_events_called = 0;
 int             max_bytes_written = 0;
@@ -91,8 +87,12 @@ int             total_bytes_written = 0;
 BYTE		g_bLogLevel = 0;
 
 socket_t	tcp_socket = 0;
-socket_t	udp_socket = 0;
 socket_t	p2p_socket = 0;
+
+// UDP sink sockets — bound but never read, prevents kernel ICMP port-unreachable generation
+// during UDP floods (kernel silently drops once the tiny receive buffer fills)
+static socket_t	udp_sink_game = INVALID_SOCKET;
+static socket_t	udp_sink_p2p  = INVALID_SOCKET;
 
 LPFDWATCH	main_fdw = NULL;
 
@@ -200,8 +200,6 @@ namespace
 	};
 }
 
-extern std::map<DWORD, CLoginSim *> g_sim; // first: AID
-extern std::map<DWORD, CLoginSim *> g_simByPID;
 extern std::vector<TPlayerTable> g_vec_save;
 unsigned int save_idx = 0;
 
@@ -222,42 +220,21 @@ void heartbeat(LPHEART ht, int pulse)
 		{
 			TPlayerCountPacket pack;
 			pack.dwCount = DESC_MANAGER::instance().GetLocalUserCount();
-			db_clientdesc->DBPacket(HEADER_GD_PLAYER_COUNT, 0, &pack, sizeof(TPlayerCountPacket));
+			db_clientdesc->DBPacket(GD::PLAYER_COUNT, 0, &pack, sizeof(TPlayerCountPacket));
 		}
 		else
 		{
 			DESC_MANAGER::instance().ProcessExpiredLoginKey();
 		}
 
+		if (save_idx < g_vec_save.size())
 		{
-			int count = 0;
-			itertype(g_sim) it = g_sim.begin();
+			int count = MIN(100, g_vec_save.size() - save_idx);
 
-			while (it != g_sim.end())
-			{
-				if (!it->second->IsCheck())
-				{
-					it->second->SendLogin();
+			for (int i = 0; i < count; ++i, ++save_idx)
+				db_clientdesc->DBPacket(GD::PLAYER_SAVE, 0, &g_vec_save[save_idx], sizeof(TPlayerTable));
 
-					if (++count > 50)
-					{
-						sys_log(0, "FLUSH_SENT");
-						break;
-					}
-				}
-
-				it++;
-			}
-
-			if (save_idx < g_vec_save.size())
-			{
-				count = MIN(100, g_vec_save.size() - save_idx);
-
-				for (int i = 0; i < count; ++i, ++save_idx)
-					db_clientdesc->DBPacket(HEADER_GD_PLAYER_SAVE, 0, &g_vec_save[save_idx], sizeof(TPlayerTable));
-
-				sys_log(0, "SAVE_FLUSH %d", count);
-			}
+			sys_log(0, "SAVE_FLUSH %d", count);
 		}
 	}
 
@@ -358,12 +335,10 @@ int main(int argc, char **argv)
 	CItemAddonManager	item_addon_manager;
 	CArenaManager arena_manager;
 	COXEventManager OXEvent_manager;
-	CMonarch		Monarch;
 	CHorseNameManager horsename_manager;
 
 	DESC_MANAGER	desc_manager;
 
-	TrafficProfiler	trafficProfiler;
 	CTableBySkill SkillPowerByLevel;
 	CPolymorphUtils polymorph_utils;
 	CProfiler		profiler;
@@ -372,6 +347,7 @@ int main(int argc, char **argv)
 	CThreeWayWar	threeway_war;
 	CDragonLairManager	dl_manager;
 	DSManager dsManager;
+	FirewallManager firewall_manager;
 
 	if (!start(argc, argv)) {
 		CleanUpForEarlyExit();
@@ -393,9 +369,6 @@ int main(int argc, char **argv)
 	Cube_init();
 	Blend_Item_init();
 	ani_init();
-
-	if ( g_bTrafficProfileOn )
-		TrafficProfiler::instance().Initialize( TRAFFIC_PROFILE_FLUSH_CYCLE, "ProfileLog" );
 
 	while (idle());
 
@@ -448,15 +421,14 @@ int main(int argc, char **argv)
 	char_manager.Destroy();
 	sys_log(0, "<shutdown> Destroying ITEM_MANAGER...");
 	item_manager.Destroy();
+	sys_log(0, "<shutdown> Destroying FirewallManager...");
+	firewall_manager.Destroy();
 	sys_log(0, "<shutdown> Destroying DESC_MANAGER...");
 	desc_manager.Destroy();
 	sys_log(0, "<shutdown> Destroying quest::CQuestManager...");
 	quest_manager.Destroy();
 	sys_log(0, "<shutdown> Destroying building::CManager...");
 	building_manager.Destroy();
-
-	sys_log(0, "<shutdown> Flushing TrafficProfiler...");
-	trafficProfiler.Flush();
 
 	destroy();
 
@@ -466,6 +438,49 @@ int main(int argc, char **argv)
 
 	log_destroy();
 	return 1;
+}
+
+// Create a UDP sink socket: bind to ip:port with minimal receive buffer, never read.
+// Prevents ICMP port-unreachable replies during UDP floods — the kernel silently drops
+// packets once the tiny buffer fills. Returns INVALID_SOCKET on failure (non-fatal).
+static socket_t create_udp_sink(const char* ip, WORD port)
+{
+#ifdef OS_WINDOWS
+	(void)ip; (void)port;
+	return INVALID_SOCKET;
+#else
+	socket_t s = socket(AF_INET, SOCK_DGRAM, 0);
+	if (s < 0)
+	{
+		sys_err("create_udp_sink: socket() failed for port %d: %s", port, strerror(errno));
+		return INVALID_SOCKET;
+	}
+
+	// Allow rebind if previous instance didn't clean up
+	int reuse = 1;
+	setsockopt(s, SOL_SOCKET, SO_REUSEADDR, &reuse, sizeof(reuse));
+
+	// Minimal receive buffer — kernel rounds up to its minimum (typically 256 bytes on Linux).
+	// Once full, incoming UDP is silently dropped with zero CPU overhead.
+	int rcvbuf = 1;
+	setsockopt(s, SOL_SOCKET, SO_RCVBUF, &rcvbuf, sizeof(rcvbuf));
+
+	struct sockaddr_in addr;
+	memset(&addr, 0, sizeof(addr));
+	addr.sin_family = AF_INET;
+	addr.sin_port = htons(port);
+	addr.sin_addr.s_addr = inet_addr(ip);
+
+	if (bind(s, (struct sockaddr*)&addr, sizeof(addr)) < 0)
+	{
+		sys_err("create_udp_sink: bind() failed for port %d: %s", port, strerror(errno));
+		close(s);
+		return INVALID_SOCKET;
+	}
+
+	sys_log(0, "UDP sink bound on %s:%d (fd %d) — ICMP suppression active", ip, port, s);
+	return s;
+#endif
 }
 
 void usage()
@@ -546,12 +561,6 @@ int start(int argc, char **argv)
 			case 'r':
 				g_bNoRegen = true;
 				break;
-
-				// TRAFFIC_PROFILER
-			case 't':
-				g_bTrafficProfileOn = true;
-				break;
-				// END_OF_TRAFFIC_PROFILER
 		}
 	}
 
@@ -593,15 +602,6 @@ int start(int argc, char **argv)
 		return 0;
 	}
 
-	
-#ifndef __UDP_BLOCK__
-	if ((udp_socket = socket_udp_bind(g_szPublicIP, mother_port)) == INVALID_SOCKET)
-	{
-		perror("socket_udp_bind: udp_socket");
-		return 0;
-	}
-#endif	
-
 	// if internal ip exists, p2p socket uses internal ip, if not use public ip
 	//if ((p2p_socket = socket_tcp_bind(*g_szInternalIP ? g_szInternalIP : g_szPublicIP, p2p_port)) == INVALID_SOCKET)
 	if ((p2p_socket = socket_tcp_bind(g_szPublicIP, p2p_port)) == INVALID_SOCKET)
@@ -611,10 +611,14 @@ int start(int argc, char **argv)
 	}
 
 	fdwatch_add_fd(main_fdw, tcp_socket, NULL, FDW_READ, false);
-#ifndef __UDP_BLOCK__
-	fdwatch_add_fd(main_fdw, udp_socket, NULL, FDW_READ, false);
-#endif
 	fdwatch_add_fd(main_fdw, p2p_socket, NULL, FDW_READ, false);
+
+	// UDP sink sockets — suppress ICMP port-unreachable during UDP floods
+	udp_sink_game = create_udp_sink(g_szPublicIP, mother_port);
+	udp_sink_p2p  = create_udp_sink(g_szPublicIP, p2p_port);
+
+	// Kernel-level firewall — DROP unsolicited UDP + rate-limit TCP SYN at netfilter layer
+	FirewallManager::instance().Initialize(mother_port, p2p_port);
 
 	db_clientdesc = DESC_MANAGER::instance().CreateConnectionDesc(main_fdw, db_addr, db_port, PHASE_DBCLIENT, true);
 	if (!g_bAuthServer) {
@@ -663,10 +667,10 @@ void destroy()
 
 	sys_log(0, "<shutdown> Closing sockets...");
 	socket_close(tcp_socket);
-#ifndef __UDP_BLOCK__
-	socket_close(udp_socket);
-#endif
 	socket_close(p2p_socket);
+
+	if (udp_sink_game != INVALID_SOCKET) { socket_close(udp_sink_game); udp_sink_game = INVALID_SOCKET; }
+	if (udp_sink_p2p  != INVALID_SOCKET) { socket_close(udp_sink_p2p);  udp_sink_p2p  = INVALID_SOCKET; }
 
 	sys_log(0, "<shutdown> fdwatch_delete()...");
 	fdwatch_delete(main_fdw);
@@ -773,28 +777,6 @@ int io_loop(LPFDWATCH fdw)
 				DESC_MANAGER::instance().AcceptP2PDesc(fdw, p2p_socket);
 				fdwatch_clear_event(fdw, p2p_socket, event_idx);
 			}
-			/*
-			else if (FDW_READ == fdwatch_check_event(fdw, udp_socket, event_idx))
-			{
-				char			buf[256];
-				struct sockaddr_in	cliaddr;
-				socklen_t		socklen = sizeof(cliaddr);
-
-				int iBytesRead;
-
-				if ((iBytesRead = socket_udp_read(udp_socket, buf, 256, (struct sockaddr *) &cliaddr, &socklen)) > 0)
-				{
-					static CInputUDP s_inputUDP;
-
-					s_inputUDP.SetSockAddr(cliaddr);
-
-					int iBytesProceed;
-					s_inputUDP.Process(NULL, buf, iBytesRead, iBytesProceed);
-				}
-
-				fdwatch_clear_event(fdw, udp_socket, event_idx);
-			}
-			*/
 			continue; 
 		}
 
@@ -824,7 +806,7 @@ int io_loop(LPFDWATCH fdw)
 			case FDW_WRITE:
 				if (db_clientdesc == d)
 				{
-					int buf_size = buffer_size(d->GetOutputBuffer());
+					int buf_size = static_cast<int>(d->GetOutputBufferSize());
 					int sock_buf_size = fdwatch_get_buffer_size(fdw, d->GetSocket());
 
 					int ret = d->ProcessOutput();

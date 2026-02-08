@@ -1,8 +1,8 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "libgame/grid.h"
 #include "constants.h"
 #include "safebox.h"
-#include "packet.h"
+#include "packet_structs.h"
 #include "char.h"
 #include "desc_client.h"
 #include "item.h"
@@ -70,7 +70,8 @@ bool CSafebox::Add(DWORD dwPos, LPITEM pkItem)
 
 	TPacketGCItemSet pack;
 
-	pack.header	= m_bWindowMode == SAFEBOX ? HEADER_GC_SAFEBOX_SET : HEADER_GC_MALL_SET;
+	pack.header	= m_bWindowMode == SAFEBOX ? GC::SAFEBOX_SET : GC::MALL_SET;
+	pack.length	= sizeof(pack);
 	pack.pos	= TItemPos(m_bWindowMode, dwPos);
 	pack.vnum	= pkItem->GetVnum();
 	pack.count	= pkItem->GetCount();
@@ -110,7 +111,8 @@ LPITEM CSafebox::Remove(DWORD dwPos)
 
 	TPacketGCItemDel pack;
 
-	pack.header	= m_bWindowMode == SAFEBOX ? HEADER_GC_SAFEBOX_DEL : HEADER_GC_MALL_DEL;
+	pack.header	= m_bWindowMode == SAFEBOX ? GC::SAFEBOX_DEL : GC::MALL_DEL;
+	pack.length	= sizeof(pack);
 	pack.pos	= TItemPos(m_bWindowMode, dwPos);
 
 	m_pkChrOwner->GetDesc()->Packet(&pack, sizeof(pack));
@@ -127,7 +129,7 @@ void CSafebox::Save()
 	t.dwID = m_pkChrOwner->GetDesc()->GetAccountTable().id;
 	t.dwGold = m_lGold;
 
-	db_clientdesc->DBPacket(HEADER_GD_SAFEBOX_SAVE, 0, &t, sizeof(TSafeboxTable));
+	db_clientdesc->DBPacket(GD::SAFEBOX_SAVE, 0, &t, sizeof(TSafeboxTable));
 	sys_log(1, "SAFEBOX: SAVE %s", m_pkChrOwner->GetName());
 }
 

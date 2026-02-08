@@ -1,4 +1,4 @@
-﻿
+
 #include "stdafx.h"
 
 #include "config.h"
@@ -1980,7 +1980,7 @@ teleport_area:
 
 	int pc_give_polymorph_book(lua_State* L)
 	{
-		if ( lua_isnumber(L, 1) != true && lua_isnumber(L, 2) != true && lua_isnumber(L, 3) != true && lua_isnumber(L, 4) != true )
+		if (!lua_isnumber(L, 1) && !lua_isnumber(L, 2) && !lua_isnumber(L, 3) && !lua_isnumber(L, 4))
 		{
 			sys_err("Wrong Quest Function Arguments: pc_give_polymorph_book");
 			return 0;
@@ -2100,7 +2100,7 @@ teleport_area:
 			return 1;
 		}
 
-		if ( lua_isstring(L, 1) != true )
+		if (!lua_isstring(L, 1))
 		{
 			lua_pushnumber(L, 1);
 			return 1;
@@ -2134,7 +2134,7 @@ teleport_area:
 		}
 
 		DWORD pid = ch->GetPlayerID();
-		// db_clientdesc->DBPacketHeader(HEADER_GD_FLUSH_CACHE, 0, sizeof(DWORD));
+		// db_clientdesc->DBPacketHeader(GD::FLUSH_CACHE, 0, sizeof(DWORD));
 		// db_clientdesc->Packet(&pid, sizeof(DWORD));
 		ch->Save(); // Fix
 
@@ -2169,7 +2169,7 @@ teleport_area:
 
 	int pc_reset_status( lua_State* L )
 	{
-		if ( lua_isnumber(L, 1) == true )
+		if (lua_isnumber(L, 1))
 		{
 			int idx = (int)lua_tonumber(L, 1);
 
@@ -2344,7 +2344,7 @@ teleport_area:
 
 	int pc_is_near_vid( lua_State* L )
 	{
-		if ( lua_isnumber(L, 1) != true || lua_isnumber(L, 2) != true )
+		if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2))
 		{
 			lua_pushboolean(L, false);
 		}
@@ -2699,7 +2699,7 @@ teleport_area:
 		if ("mileage" == strChargeType)
 			packet.eChargeType = ERequestCharge_Mileage;
 
-		db_clientdesc->DBPacketHeader(HEADER_GD_REQUEST_CHARGE_CASH, 0, sizeof(TRequestChargeCash));
+		db_clientdesc->DBPacketHeader(GD::REQUEST_CHARGE_CASH, 0, sizeof(TRequestChargeCash));
 		db_clientdesc->Packet(&packet, sizeof(packet));
 
 		lua_pushboolean(L, 1);

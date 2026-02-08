@@ -1,4 +1,4 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "questlua.h"
 #include "questmanager.h"
 #include "desc_client.h"
@@ -6,7 +6,7 @@
 #include "item_manager.h"
 #include "item.h"
 #include "cmd.h"
-#include "packet.h"
+#include "packet_structs.h"
 
 #undef sys_err
 #define sys_err(fmt, ...) quest::CQuestManager::instance().QuestError(std::source_location::current(), fmt __VA_OPT__(, __VA_ARGS__))
@@ -43,8 +43,10 @@ namespace quest
 		LPDESC d = q.GetCurrentCharacterPtr()->GetDesc();
 		if (d)
 		{
-			BYTE header = HEADER_GC_REQUEST_MAKE_GUILD;
-			d->Packet(&header, 1);
+			TPacketGCBlank pack;
+			pack.header = GC::REQUEST_MAKE_GUILD;
+			pack.length = sizeof(pack);
+			d->Packet(&pack, sizeof(pack));
 		}
 		return 0;
 	}
@@ -64,7 +66,7 @@ namespace quest
 		TSafeboxChangeSizePacket p;
 		p.dwID = q.GetCurrentCharacterPtr()->GetDesc()->GetAccountTable().id;
 		p.bSize = (int)lua_tonumber(L,-1);
-		db_clientdesc->DBPacket(HEADER_GD_SAFEBOX_CHANGE_SIZE,  q.GetCurrentCharacterPtr()->GetDesc()->GetHandle(), &p, sizeof(p));
+		db_clientdesc->DBPacket(GD::SAFEBOX_CHANGE_SIZE,  q.GetCurrentCharacterPtr()->GetDesc()->GetHandle(), &p, sizeof(p));
 
 		q.GetCurrentCharacterPtr()->SetSafeboxSize(SAFEBOX_PAGE_SIZE * (int)lua_tonumber(L,-1));
 		return 0;

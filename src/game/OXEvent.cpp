@@ -1,9 +1,9 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "constants.h"
 #include "config.h"
 #include "questmanager.h"
 #include "start_position.h"
-#include "packet.h"
+#include "packet_structs.h"
 #include "buffer_manager.h"
 #include "log.h"
 #include "char.h"
@@ -325,8 +325,8 @@ bool COXEventManager::CheckAnswer(bool answer)
 				++len;
 
 				TPacketGCChat pack_chat;
-				pack_chat.header = HEADER_GC_CHAT;
-				pack_chat.size = sizeof(TPacketGCChat) + len;
+				pack_chat.header = GC::CHAT;
+				pack_chat.length = sizeof(TPacketGCChat) + len;
 				pack_chat.type = CHAT_TYPE_COMMAND;
 				pack_chat.id = 0;
 

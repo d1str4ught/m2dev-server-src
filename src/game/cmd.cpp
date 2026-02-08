@@ -111,8 +111,6 @@ ACMD(do_cancel_guild_war);
 ACMD(do_guild_state);
 
 ACMD(do_pkmode);
-ACMD(do_mobile);
-ACMD(do_mobile_auth);
 ACMD(do_messenger_auth);
 
 ACMD(do_getqf);
@@ -184,21 +182,6 @@ ACMD(do_oxevent_get_attender);
 ACMD(do_effect);
 ACMD(do_threeway_war_info );
 ACMD(do_threeway_war_myinfo );
-//
-//군주 전용기능
-ACMD(do_monarch_warpto);
-ACMD(do_monarch_transfer);
-ACMD(do_monarch_info);
-ACMD(do_elect);
-ACMD(do_monarch_tax);
-ACMD(do_monarch_mob);
-ACMD(do_monarch_notice);
-
-//군주 관리 기능
-ACMD(do_rmcandidacy);
-ACMD(do_setmonarch);
-ACMD(do_rmmonarch);
-
 ACMD(do_hair);
 //gift notify quest command
 ACMD(do_gift);
@@ -209,8 +192,6 @@ ACMD(do_cube);
 ACMD(do_siege);
 ACMD(do_temp);
 ACMD(do_frog);
-
-ACMD(do_check_monarch_money);
 
 ACMD(do_reset_subskill );
 ACMD(do_flush);
@@ -479,28 +460,16 @@ struct command_info cmd_info[] =
 
 	{ "threeway_info",		do_threeway_war_info,	0,	POS_DEAD,	GM_LOW_WIZARD},
 	{ "threeway_myinfo",	do_threeway_war_myinfo, 0,	POS_DEAD,	GM_LOW_WIZARD},
-	{ "mto",				do_monarch_warpto,		0, 	POS_DEAD,	GM_PLAYER},
-	{ "mtr",				do_monarch_transfer,	0,	POS_DEAD,	GM_PLAYER},
-	{ "minfo",		do_monarch_info,		0,  POS_DEAD,   GM_PLAYER},	
-	{ "mtax",			do_monarch_tax,			0,	POS_DEAD,	GM_PLAYER},
-	{ "mmob",			do_monarch_mob,			0, 	POS_DEAD,	GM_PLAYER},
-	{ "elect",				do_elect,				0,	POS_DEAD,	GM_HIGH_WIZARD},
-	{ "rmcandidacy",		do_rmcandidacy,			0, 	POS_DEAD,	GM_LOW_WIZARD},
-	{ "setmonarch",			do_setmonarch,			0, 	POS_DEAD,	GM_LOW_WIZARD},
-	{ "rmmonarch",			do_rmmonarch,			0, 	POS_DEAD, 	GM_LOW_WIZARD},
 	{ "hair",				do_hair,				0,	POS_DEAD,	GM_PLAYER	},
 	{ "inventory",			do_inventory,			0,	POS_DEAD,	GM_LOW_WIZARD	},
 	{ "cube",				do_cube,				0,	POS_DEAD,	GM_PLAYER	},
 	{ "siege",				do_siege,				0,	POS_DEAD,	GM_LOW_WIZARD	},
 	{ "temp",				do_temp,				0,	POS_DEAD,	GM_IMPLEMENTOR	},
 	{ "frog",				do_frog,				0,	POS_DEAD,	GM_HIGH_WIZARD	},
-	{ "check_mmoney",		do_check_monarch_money,	0,	POS_DEAD,	GM_IMPLEMENTOR	},
 	{ "reset_subskill",		do_reset_subskill,		0,	POS_DEAD,	GM_HIGH_WIZARD },
 	{ "flush",				do_flush,				0,	POS_DEAD,	GM_IMPLEMENTOR },
 	{ "gift",				do_gift,				0,  POS_DEAD,   GM_PLAYER	},	//gift
 
-	{ "mnotice",			do_monarch_notice,		0,	POS_DEAD,	GM_PLAYER	},
-	
 	{ "eclipse",			do_eclipse,				0,	POS_DEAD,	GM_HIGH_WIZARD	},
 
 	{ "weeklyevent",		do_weeklyevent,			0,	POS_DEAD,	GM_LOW_WIZARD	},

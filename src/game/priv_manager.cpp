@@ -1,4 +1,4 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "constants.h"
 #include "priv_manager.h"
 #include "char.h"
@@ -41,7 +41,7 @@ void CPrivManager::RequestGiveGuildPriv(DWORD guild_id, BYTE type, int value, ti
 	p.guild_id = guild_id;
 	p.duration_sec = duration_sec;
 
-	db_clientdesc->DBPacket(HEADER_GD_REQUEST_GUILD_PRIV, 0, &p, sizeof(p));
+	db_clientdesc->DBPacket(GD::REQUEST_GUILD_PRIV, 0, &p, sizeof(p));
 }
 
 void CPrivManager::RequestGiveEmpirePriv(BYTE empire, BYTE type, int value, time_t duration_sec)
@@ -61,7 +61,7 @@ void CPrivManager::RequestGiveEmpirePriv(BYTE empire, BYTE type, int value, time
 	p.empire = empire;
 	p.duration_sec = duration_sec;
 
-	db_clientdesc->DBPacket(HEADER_GD_REQUEST_EMPIRE_PRIV, 0, &p, sizeof(p));
+	db_clientdesc->DBPacket(GD::REQUEST_EMPIRE_PRIV, 0, &p, sizeof(p));
 }
 
 void CPrivManager::RequestGiveCharacterPriv(DWORD pid, BYTE type, int value)
@@ -79,7 +79,7 @@ void CPrivManager::RequestGiveCharacterPriv(DWORD pid, BYTE type, int value)
 	p.value = value;
 	p.pid = pid;
 
-	db_clientdesc->DBPacket(HEADER_GD_REQUEST_CHARACTER_PRIV, 0, &p, sizeof(p));
+	db_clientdesc->DBPacket(GD::REQUEST_CHARACTER_PRIV, 0, &p, sizeof(p));
 }
 
 void CPrivManager::GiveGuildPriv(DWORD guild_id, BYTE type, int value, BYTE bLog, time_t end_time_sec)

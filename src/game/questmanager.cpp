@@ -1,8 +1,8 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include <fstream>
 #include "constants.h"
 #include "buffer_manager.h"
-#include "packet.h"
+#include "packet_structs.h"
 #include "desc_client.h"
 #include "desc_manager.h"
 #include "char.h"
@@ -986,10 +986,10 @@ namespace quest
 		//send -_-!
 		struct ::packet_script packet_script;
 
-		packet_script.header = HEADER_GC_SCRIPT;
+		packet_script.header = GC::SCRIPT;
 		packet_script.skin = m_iCurrentSkin;
 		packet_script.src_size = m_strScript.size();
-		packet_script.size = packet_script.src_size + sizeof(struct packet_script);
+		packet_script.length = packet_script.src_size + sizeof(struct packet_script);
 
 		TEMP_BUFFER buf;
 		buf.write(&packet_script, sizeof(struct packet_script));
@@ -1179,7 +1179,7 @@ namespace quest
 		TPacketSetEventFlag p;
 		strlcpy(p.szFlagName, name.c_str(), sizeof(p.szFlagName));
 		p.lValue = value;
-		db_clientdesc->DBPacket(HEADER_GD_SET_EVENT_FLAG, 0, &p, sizeof(TPacketSetEventFlag));
+		db_clientdesc->DBPacket(GD::SET_EVENT_FLAG, 0, &p, sizeof(TPacketSetEventFlag));
 	}
 
 	void CQuestManager::SetEventFlag(const string& name, int value)

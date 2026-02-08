@@ -1,4 +1,4 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "char.h"
 #include "item.h"
 #include "desc.h"
@@ -119,8 +119,9 @@ bool CHARACTER::DragonSoul_RefineWindow_Open(LPENTITY pEntity)
 	}
 
 	TPacketGCDragonSoulRefine PDS;
-	PDS.header = HEADER_GC_DRAGON_SOUL_REFINE;
-	PDS.bSubType = DS_SUB_HEADER_OPEN;
+	PDS.header = GC::DRAGON_SOUL_REFINE;
+	PDS.length = sizeof(PDS);
+	PDS.bSubType = DragonSoulSub::OPEN;
 	LPDESC d = GetDesc();
 
 	if (NULL == d)

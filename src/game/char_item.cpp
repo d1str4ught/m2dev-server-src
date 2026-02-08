@@ -1,4 +1,4 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 
 #include <stack>
 
@@ -10,7 +10,7 @@
 #include "desc.h"
 #include "desc_client.h"
 #include "desc_manager.h"
-#include "packet.h"
+#include "packet_structs.h"
 #include "affect.h"
 #include "skill.h"
 #include "start_position.h"
@@ -28,7 +28,6 @@
 #include "war_map.h"
 #include "xmas_event.h"
 #include "marriage.h"
-#include "monarch.h"
 #include "polymorph.h"
 #include "blend_item.h"
 #include "castle.h"
@@ -265,7 +264,7 @@ void CHARACTER::SetItem(TItemPos Cell, LPITEM pItem)
 {
 	WORD wCell = Cell.cell;
 	BYTE window_type = Cell.window_type;
-	if ((unsigned long)((CItem*)pItem) == 0xff || (unsigned long)((CItem*)pItem) == 0xffffffff)
+	if (reinterpret_cast<uintptr_t>(pItem) == 0xff || reinterpret_cast<uintptr_t>(pItem) == 0xffffffff)
 	{
 		sys_err("!!! FATAL ERROR !!! item == 0xff (char: %s cell: %u)", GetName(), wCell);
 		core_dump();
@@ -401,7 +400,8 @@ void CHARACTER::SetItem(TItemPos Cell, LPITEM pItem)
 		if (pItem)
 		{
 			TPacketGCItemSet pack;
-			pack.header = HEADER_GC_ITEM_SET;
+			pack.header = GC::ITEM_SET;
+			pack.length = sizeof(pack);
 			pack.pos = Cell;
 
 			pack.count = pItem->GetCount();
@@ -418,7 +418,8 @@ void CHARACTER::SetItem(TItemPos Cell, LPITEM pItem)
 		else
 		{
 			TPacketGCItemDel pack;
-			pack.header = HEADER_GC_ITEM_DEL;
+			pack.header = GC::ITEM_DEL;
+			pack.length = sizeof(pack);
 			pack.pos = Cell;
 			GetDesc()->Packet(&pack, sizeof(TPacketGCItemDel));
 		}
@@ -1284,7 +1285,8 @@ bool CHARACTER::RefineInformation(BYTE bCell, BYTE bType, int iAdditionalCell)
 
 	TPacketGCRefineInformation p;
 
-	p.header = HEADER_GC_REFINE_INFORMATION;
+	p.header = GC::REFINE_INFORMATION;
+	p.length = sizeof(p);
 	p.pos = bCell;
 	p.src_vnum = item->GetVnum();
 	p.result_vnum = item->GetRefinedVnum();
@@ -1612,7 +1614,7 @@ void CHARACTER::UseSilkBotary(void)
 {
 	if (m_bNoOpenedShop) {
 		DWORD dwPlayerID = GetPlayerID();
-		db_clientdesc->DBPacket(HEADER_GD_MYSHOP_PRICELIST_REQ, GetDesc()->GetHandle(), &dwPlayerID, sizeof(DWORD));
+		db_clientdesc->DBPacket(GD::MYSHOP_PRICELIST_REQ, GetDesc()->GetHandle(), &dwPlayerID, sizeof(DWORD));
 		m_bNoOpenedShop = false;
 	} else {
 		__OpenPrivateShop();
@@ -2809,8 +2811,8 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 										++len;  // \0 문자까지 보내기
 
 										TPacketGCChat pack_chat;
-										pack_chat.header	= HEADER_GC_CHAT;
-										pack_chat.size		= sizeof(TPacketGCChat) + len;
+										pack_chat.header	= GC::CHAT;
+										pack_chat.length		= sizeof(TPacketGCChat) + len;
 										pack_chat.type		= CHAT_TYPE_COMMAND;
 										pack_chat.id		= 0;
 										pack_chat.bEmpire	= GetDesc()->GetEmpire();
@@ -2855,8 +2857,8 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 										++len;  // \0 문자까지 보내기
 
 										TPacketGCChat pack_chat;
-										pack_chat.header	= HEADER_GC_CHAT;
-										pack_chat.size		= sizeof(TPacketGCChat) + len;
+										pack_chat.header	= GC::CHAT;
+										pack_chat.length		= sizeof(TPacketGCChat) + len;
 										pack_chat.type		= CHAT_TYPE_COMMAND;
 										pack_chat.id		= 0;
 										pack_chat.bEmpire	= GetDesc()->GetEmpire();
@@ -3761,22 +3763,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 								}
 								break;
 
-								//군주의 증표 
 							case 70021:
-								{
-									int HealPrice = quest::CQuestManager::instance().GetEventFlag("MonarchHealGold");
-									if (HealPrice == 0)
-										HealPrice = 2000000;
-
-									if (CMonarch::instance().HealMyEmpire(this, HealPrice))
-									{
-										char szNotice[256];
-										snprintf(szNotice, sizeof(szNotice), LC_TEXT("군주의 축복으로 이지역 %s 유저는 HP,SP가 모두 채워집니다."), EMPIRE_NAME(GetEmpire()));
-										SendNoticeMap(szNotice, GetMapIndex(), false);
-										
-										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("군주의 축복을 사용하였습니다."));
-									}
-								}
 								break;
 
 							case 27995:
@@ -7384,7 +7371,7 @@ void CHARACTER::AutoRecoveryItemProcess(const EAffectTypes type)
 	{
 		LPITEM pItem = FindItemByID(pAffect->dwFlag);
 
-		if (NULL != pItem && true == pItem->GetSocket(0))
+		if (NULL != pItem && pItem->GetSocket(0) != 0)
 		{
 			if (false == CArenaManager::instance().IsArenaMap(GetMapIndex()))
 			{

@@ -1,4 +1,4 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "constants.h"
 #include "utils.h"
 #include "config.h"
@@ -9,7 +9,7 @@
 #include "desc_client.h"
 #include "buffer_manager.h"
 #include "char_manager.h"
-#include "packet.h"
+#include "packet_structs.h"
 #include "war_map.h"
 #include "questmanager.h"
 #include "locale_service.h"
@@ -23,9 +23,9 @@ namespace
 	{
 		FGuildNameSender(DWORD id, const char* guild_name) : id(id), name(guild_name)
 		{
-			p.header = HEADER_GC_GUILD;
-			p.subheader = GUILD_SUBHEADER_GC_GUILD_NAME;
-			p.size = sizeof(p) + GUILD_NAME_MAX_LEN + sizeof(DWORD);
+			p.header = GC::GUILD;
+			p.subheader = GuildSub::GC::GUILD_NAME;
+			p.length = sizeof(p) + GUILD_NAME_MAX_LEN + sizeof(DWORD);
 		}
 
 		void operator()(LPCHARACTER ch)
@@ -475,7 +475,7 @@ void CGuildManager::RequestCancelWar(DWORD guild_id1, DWORD guild_id2)
 	p.bWar = GUILD_WAR_CANCEL;
 	p.dwGuildFrom = guild_id1;
 	p.dwGuildTo = guild_id2;
-	db_clientdesc->DBPacket(HEADER_GD_GUILD_WAR, 0, &p, sizeof(p));
+	db_clientdesc->DBPacket(GD::GUILD_WAR, 0, &p, sizeof(p));
 }
 
 void CGuildManager::RequestEndWar(DWORD guild_id1, DWORD guild_id2)
@@ -486,7 +486,7 @@ void CGuildManager::RequestEndWar(DWORD guild_id1, DWORD guild_id2)
 	p.bWar = GUILD_WAR_END;
 	p.dwGuildFrom = guild_id1;
 	p.dwGuildTo = guild_id2;
-	db_clientdesc->DBPacket(HEADER_GD_GUILD_WAR, 0, &p, sizeof(p));
+	db_clientdesc->DBPacket(GD::GUILD_WAR, 0, &p, sizeof(p));
 }
 
 void CGuildManager::RequestWarOver(DWORD dwGuild1, DWORD dwGuild2, DWORD dwGuildWinner, long lReward)
@@ -520,7 +520,7 @@ void CGuildManager::RequestWarOver(DWORD dwGuild1, DWORD dwGuild2, DWORD dwGuild
 		p.dwGuildTo = dwGuildWinner == dwGuild1 ? dwGuild2 : dwGuild1;
 	}
 
-	db_clientdesc->DBPacket(HEADER_GD_GUILD_WAR, 0, &p, sizeof(p));
+	db_clientdesc->DBPacket(GD::GUILD_WAR, 0, &p, sizeof(p));
 	sys_log(0, "RequestWarOver : winner %u loser %u draw %u betprice %d", p.dwGuildFrom, p.dwGuildTo, p.bType, p.lWarPrice);
 }
 
@@ -591,8 +591,8 @@ struct FSendWarList
 		gid1 = guild_id1;
 		gid2 = guild_id2;
 
-		p.header	= HEADER_GC_GUILD;
-		p.size		= sizeof(p) + sizeof(uint32_t) * 2;
+		p.header	= GC::GUILD;
+		p.length		= sizeof(p) + sizeof(uint32_t) * 2;
 		p.subheader	= subheader;
 	}
 
@@ -633,7 +633,7 @@ void CGuildManager::StartWar(DWORD guild_id1, DWORD guild_id2)
 	if (guild_id1 > guild_id2)
 		std::swap(guild_id1, guild_id2);
 
-	CHARACTER_MANAGER::instance().for_each_pc(FSendWarList(GUILD_SUBHEADER_GC_GUILD_WAR_LIST, guild_id1, guild_id2));
+	CHARACTER_MANAGER::instance().for_each_pc(FSendWarList(GuildSub::GC::GUILD_WAR_LIST, guild_id1, guild_id2));
 	m_GuildWar.insert(std::make_pair(guild_id1, guild_id2));
 }
 
@@ -700,7 +700,7 @@ bool CGuildManager::EndWar(DWORD guild_id1, DWORD guild_id2)
 		g2->EndWar(guild_id1);
 
 	m_GuildWarEndTime[k] = get_global_time();
-	CHARACTER_MANAGER::instance().for_each_pc(FSendWarList(GUILD_SUBHEADER_GC_GUILD_WAR_END_LIST, guild_id1, guild_id2));
+	CHARACTER_MANAGER::instance().for_each_pc(FSendWarList(GuildSub::GC::GUILD_WAR_END_LIST, guild_id1, guild_id2));
 	m_GuildWar.erase(it);
 
 	return true;
@@ -796,9 +796,9 @@ void CGuildManager::SendGuildWar(LPCHARACTER ch)
 
 	TEMP_BUFFER buf;
 	TPacketGCGuild p;
-	p.header= HEADER_GC_GUILD;
-	p.subheader = GUILD_SUBHEADER_GC_GUILD_WAR_LIST;
-	p.size = sizeof(p) + (sizeof(uint32_t) * 2) * m_GuildWar.size();
+	p.header= GC::GUILD;
+	p.subheader = GuildSub::GC::GUILD_WAR_LIST;
+	p.length = sizeof(p) + (sizeof(uint32_t) * 2) * m_GuildWar.size();
 	buf.write(&p, sizeof(p));
 
 	for (auto it = m_GuildWar.begin(); it != m_GuildWar.end(); ++it)
@@ -820,7 +820,7 @@ void SendGuildWarScore(DWORD dwGuild, DWORD dwGuildOpp, int iDelta, int iBetScor
 	p.lScore = iDelta;
 	p.lBetScore = iBetScoreDelta;
 
-	db_clientdesc->DBPacket(HEADER_GD_GUILD_WAR_SCORE, 0, &p, sizeof(TPacketGuildWarScore));
+	db_clientdesc->DBPacket(GD::GUILD_WAR_SCORE, 0, &p, sizeof(TPacketGuildWarScore));
 	sys_log(0, "SendGuildWarScore %u %u %d", dwGuild, dwGuildOpp, iDelta);
 }
 
