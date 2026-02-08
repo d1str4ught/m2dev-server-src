@@ -1512,16 +1512,6 @@ bool CHARACTER::Show(long lMapIndex, long x, long y, long z, bool bShowSpawnMoti
 	
 	SetValidComboInterval(0);
 
-	// MR-8: Resync affects when moving within same map (fixes dungeon relog affect icon bug)
-	if (IsPC() && GetDesc() != NULL) {
-		// Re-send all affect packets to client to ensure icons are synchronized
-		itertype(m_list_pkAffect) it = m_list_pkAffect.begin();
-
-		while (it != m_list_pkAffect.end())
-			SendAffectAddPacket(GetDesc(), *it++);
-	}
-	// MR-8: -- END OF -- Resync affects when moving within same map
-
 	return true;
 }
 

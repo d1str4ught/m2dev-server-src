@@ -680,10 +680,11 @@ bool ITEM_MANAGER::ReadMonsterDropItemGroup(const char * c_pszFileName)
 					}
 
 					float fPercent = atof(pTok->at(2).c_str());
+					// MR-10: Drop Item Group Fix for handling drop percent
+					DWORD dwPct = (DWORD)(10000.0f * fPercent * 100.0f);
+					// MR-10: -- END OF -- Drop Item Group Fix for handling drop percent
 
-					DWORD dwPct = (DWORD)(10000.0f * fPercent);
-
-					sys_log(0,"        name %s pct %d count %d", name.c_str(), dwPct, iCount);
+					sys_log(0, "        name %s pct %d count %d", name.c_str(), dwPct, iCount);
 					pkGroup->AddItem(dwVnum, dwPct, iCount);
 
 					continue;
@@ -691,6 +692,7 @@ bool ITEM_MANAGER::ReadMonsterDropItemGroup(const char * c_pszFileName)
 
 				break;
 			}
+
 			if (bNew)
 				m_map_pkDropItemGroup.insert(std::map<DWORD, CDropItemGroup*>::value_type(iMobVnum, pkGroup));
 
@@ -699,19 +701,20 @@ bool ITEM_MANAGER::ReadMonsterDropItemGroup(const char * c_pszFileName)
 		{
 			CLevelItemGroup* pkLevelItemGroup = M2_NEW CLevelItemGroup(iLevelLimit);
 
-			for ( int k=1; k < 256; k++ )
+			for (int k = 1; k < 256; k++)
 			{
 				char buf[4];
 				snprintf(buf, sizeof(buf), "%d", k);
 
-				if ( loader.GetTokenVector(buf, &pTok) )
+				if (loader.GetTokenVector(buf, &pTok))
 				{
 					std::string& name = pTok->at(0);
 					DWORD dwItemVnum = 0;
 
-					if (false == GetVnumByOriginalName(name.c_str(), dwItemVnum))
+					if (!GetVnumByOriginalName(name.c_str(), dwItemVnum))
 					{
 						str_to_number(dwItemVnum, name.c_str());
+
 						if ( !ITEM_MANAGER::instance().GetTable(dwItemVnum) )
 						{
 							M2_DELETE(pkLevelItemGroup);
@@ -729,7 +732,9 @@ bool ITEM_MANAGER::ReadMonsterDropItemGroup(const char * c_pszFileName)
 					}
 
 					float fPct = atof(pTok->at(2).c_str());
-					DWORD dwPct = (DWORD)(10000.0f * fPct);
+					// MR-10: Drop Item Group Fix for handling drop percent
+					DWORD dwPct = (DWORD)(10000.0f * fPct * 100.0f);
+					// MR-10: -- END OF -- Drop Item Group Fix for handling drop percent
 
 					pkLevelItemGroup->AddItem(dwItemVnum, dwPct, iCount);
 
@@ -758,6 +763,7 @@ bool ITEM_MANAGER::ReadMonsterDropItemGroup(const char * c_pszFileName)
 					if (!GetVnumByOriginalName(name.c_str(), dwVnum))
 					{
 						str_to_number(dwVnum, name.c_str());
+
 						if (!ITEM_MANAGER::instance().GetTable(dwVnum))
 						{
 							sys_err("ReadDropItemGroup : there is no item %s : node %s", name.c_str(), stName.c_str());
@@ -779,10 +785,11 @@ bool ITEM_MANAGER::ReadMonsterDropItemGroup(const char * c_pszFileName)
 					}
 
 					float fPercent = atof(pTok->at(2).c_str());
+					// MR-10: Drop Item Group Fix for handling drop percent
+					DWORD dwPct = (DWORD)(10000.0f * fPercent * 100.0f);
+					// MR-10: -- END OF -- Drop Item Group Fix for handling drop percent
 
-					DWORD dwPct = (DWORD)(10000.0f * fPercent);
-
-					sys_log(0,"        name %s pct %d count %d", name.c_str(), dwPct, iCount);
+					sys_log(0, "        name %s pct %d count %d", name.c_str(), dwPct, iCount);
 					pkGroup->AddItem(dwVnum, dwPct, iCount);
 
 					continue;
@@ -828,6 +835,7 @@ bool ITEM_MANAGER::ReadDropItemGroup(const char * c_pszFileName)
 		{
 			sys_err("ReadDropItemGroup : Syntax error %s : no vnum, node %s", c_pszFileName, stName.c_str());
 			loader.SetParentNode();
+
 			return false;
 		}
 
@@ -835,6 +843,7 @@ bool ITEM_MANAGER::ReadDropItemGroup(const char * c_pszFileName)
 		{
 			sys_err("ReadDropItemGroup : Syntax error %s : no mob vnum, node %s", c_pszFileName, stName.c_str());
 			loader.SetParentNode();
+
 			return false;
 		}
 
@@ -864,6 +873,7 @@ bool ITEM_MANAGER::ReadDropItemGroup(const char * c_pszFileName)
 				if (!GetVnumByOriginalName(name.c_str(), dwVnum))
 				{
 					str_to_number(dwVnum, name.c_str());
+
 					if (!ITEM_MANAGER::instance().GetTable(dwVnum))
 					{
 						sys_err("ReadDropItemGroup : there is no item %s : node %s", name.c_str(), stName.c_str());
@@ -880,6 +890,7 @@ bool ITEM_MANAGER::ReadDropItemGroup(const char * c_pszFileName)
 				DWORD dwPct = (DWORD)(10000.0f * fPercent);
 
 				int iCount = 1;
+
 				if (pTok->size() > 2)
 					str_to_number(iCount, pTok->at(2).c_str());
 
@@ -893,8 +904,9 @@ bool ITEM_MANAGER::ReadDropItemGroup(const char * c_pszFileName)
 					return false;
 				}
 
-				sys_log(0,"        %s %d %d", name.c_str(), dwPct, iCount);
+				sys_log(0, "        %s %d %d", name.c_str(), dwPct, iCount);
 				pkGroup->AddItem(dwVnum, dwPct, iCount);
+
 				continue;
 			}
 
