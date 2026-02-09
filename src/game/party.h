@@ -152,6 +152,9 @@ class CParty
 		inline int	ComputePartyBonusAttackGrade();
 		inline int	ComputePartyBonusDefenseGrade();
 
+		TMemberMap::iterator MemberBegin() { return m_memberMap.begin(); }
+		TMemberMap::iterator MemberEnd() { return m_memberMap.end(); }
+
 		template <class Func> void ForEachMember(Func & f);
 		template <class Func> void ForEachMemberPtr(Func & f);
 		template <class Func> void ForEachOnlineMember(Func & f);

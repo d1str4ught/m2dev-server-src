@@ -6382,70 +6382,54 @@ LPITEM CHARACTER::FindItemByID(DWORD id) const
 int CHARACTER::CountSpecifyItem(DWORD vnum) const
 {
 	int	count = 0;
-	LPITEM item;
 
-	for (int i = 0; i < INVENTORY_MAX_NUM; ++i)
-	{
-		item = GetInventoryItem(i);
-		if (NULL != item && item->GetVnum() == vnum)
-		{
-			// 개인 상점에 등록된 물건이면 넘어간다.
-			if (m_pkMyShop && m_pkMyShop->IsSellingItem(item->GetID()))
-			{
-				continue;
-			}
-			else
-			{
-				count += item->GetCount();
-			}
-		}
+	for (int i = 0; i < INVENTORY_MAX_NUM; ++i) {
+		LPITEM item = GetInventoryItem(i);
+		if (!item) continue;
+
+		if (item->GetVnum() != vnum)
+			continue;
+
+		if (m_pkMyShop && m_pkMyShop->IsSellingItem(item->GetID()))
+			continue;
+
+		count += item->GetCount();
 	}
 
 	return count;
 }
 
-void CHARACTER::RemoveSpecifyItem(DWORD vnum, DWORD count)
+bool CHARACTER::RemoveSpecifyItem(DWORD vnum, DWORD count)
 {
 	if (0 == count)
-		return;
+		return false;
 
-	for (UINT i = 0; i < INVENTORY_MAX_NUM; ++i)
-	{
-		if (NULL == GetInventoryItem(i))
-			continue;
+	for (UINT i = 0; i < INVENTORY_MAX_NUM; ++i) {
+		LPITEM item = GetInventoryItem(i);
+		if (!item) continue;
 
-		if (GetInventoryItem(i)->GetVnum() != vnum)
+		if (item->GetVnum() != vnum)
 			continue;
 
 		//개인 상점에 등록된 물건이면 넘어간다. (개인 상점에서 판매될때 이 부분으로 들어올 경우 문제!)
-		if(m_pkMyShop)
-		{
-			bool isItemSelling = m_pkMyShop->IsSellingItem(GetInventoryItem(i)->GetID());
-			if (isItemSelling)
-				continue;
-		}
+		if (m_pkMyShop && m_pkMyShop->IsSellingItem(item->GetID()))
+			continue;
 
 		if (vnum >= 80003 && vnum <= 80007)
-			LogManager::instance().GoldBarLog(GetPlayerID(), GetInventoryItem(i)->GetID(), QUEST, "RemoveSpecifyItem");
+			LogManager::instance().GoldBarLog(GetPlayerID(), item->GetID(), QUEST, "RemoveSpecifyItem");
 
-		if (count >= GetInventoryItem(i)->GetCount())
-		{
-			count -= GetInventoryItem(i)->GetCount();
-			GetInventoryItem(i)->SetCount(0);
+		DWORD item_count = std::min(count, item->GetCount());
+		item->SetCount(item->GetCount() - item_count);
+		count -= item_count;
 
-			if (0 == count)
-				return;
-		}
-		else
-		{
-			GetInventoryItem(i)->SetCount(GetInventoryItem(i)->GetCount() - count);
-			return;
-		}
+		if (0 == count) return true;
 	}
 
+	if (0 == count) return true;
+
 	// 예외처리가 약하다.
-	if (count)
-		sys_log(0, "CHARACTER::RemoveSpecifyItem cannot remove enough item vnum %u, still remain %d", vnum, count);
+	sys_log(0, "CHARACTER::RemoveSpecifyItem cannot remove enough item vnum %u, still remain %d", vnum, count);
+	return false;
 }
 
 int CHARACTER::CountSpecifyTypeItem(BYTE type) const

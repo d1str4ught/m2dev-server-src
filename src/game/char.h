@@ -1129,7 +1129,7 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 		int				CountEmptyInventory() const;
 
 		int				CountSpecifyItem(DWORD vnum) const;
-		void			RemoveSpecifyItem(DWORD vnum, DWORD count = 1);
+		bool			RemoveSpecifyItem(DWORD vnum, DWORD count = 1);
 		LPITEM			FindSpecifyItem(DWORD vnum) const;
 		LPITEM			FindItemByID(DWORD id) const;
 

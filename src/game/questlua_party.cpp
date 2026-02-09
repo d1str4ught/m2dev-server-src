@@ -388,6 +388,70 @@ namespace quest
 		return f.vecPIDs.size();
 	}
 
+	int party_check_item(lua_State* L)
+	{
+		if (!lua_isnumber(L, 1) || lua_isnumber(L, 2)) {
+			lua_pushboolean(L, false);
+			return 1;
+		}
+
+		uint32_t vnum = lua_tonumber(L, 1);
+		uint32_t count = lua_tonumber(L, 2);
+
+		LPCHARACTER ch = CQuestManager::instance().GetCurrentCharacterPtr();
+		if(!ch) {
+			lua_pushboolean(L, false);
+			return 1;
+		}
+
+		LPPARTY party = ch->GetParty();
+		if (!party) {
+			lua_pushboolean(L, ch->CountSpecifyItem(vnum) >= count);
+			return 1;
+		}
+
+		bool success = std::all_of(party->MemberBegin(), party->MemberEnd(), [vnum, count](const auto& pair) {
+			LPCHARACTER ch = pair.second.pCharacter;
+			if (!ch) return true;
+			return ch->CountSpecifyItem(vnum) >= count;
+		});
+
+		lua_pushboolean(L, success);
+		return 1;
+	}
+
+	int party_remove_item(lua_State* L)
+	{
+		if (!lua_isnumber(L, 1) || lua_isnumber(L, 2)) {
+			lua_pushboolean(L, false);
+			return 1;
+		}
+
+		uint32_t vnum = lua_tonumber(L, 1);
+		uint32_t count = lua_tonumber(L, 2);
+
+		LPCHARACTER ch = CQuestManager::instance().GetCurrentCharacterPtr();
+		if (!ch) {
+			lua_pushboolean(L, false);
+			return 1;
+		}
+
+		LPPARTY party = ch->GetParty();
+		if (!party) {
+			lua_pushboolean(L, ch->RemoveSpecifyItem(vnum, count));
+			return 1;
+		}
+
+		bool success = std::all_of(party->MemberBegin(), party->MemberEnd(), [vnum, count](const auto& pair) {
+			LPCHARACTER ch = pair.second.pCharacter;
+			if (!ch) return true;
+			return ch->RemoveSpecifyItem(vnum, count);
+		});
+
+		lua_pushboolean(L, success);
+		return 1;
+	}
+
 	void RegisterPartyFunctionTable()
 	{
 		luaL_reg party_functions[] = 
@@ -409,6 +473,8 @@ namespace quest
 			{ "give_buff",		party_give_buff		},
 			{ "is_map_member_flag_lt",	party_is_map_member_flag_lt	},
 			{ "get_member_pids",		party_get_member_pids	}, // 파티원들의 pid를 return
+			{ "check_item",		party_check_item	},
+			{ "remove_item",	party_remove_item	},
 			{ NULL,				NULL				}
 		};
 
