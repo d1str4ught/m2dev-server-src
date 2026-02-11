@@ -433,17 +433,6 @@ DWORD DESC_MANAGER::CreateLoginKey(LPDESC d)
 	return dwKey;
 }
 
-void DESC_MANAGER::ConsumeLoginKey(DWORD dwKey)
-{
-	std::map<DWORD, CLoginKey *>::iterator it = m_map_pkLoginKey.find(dwKey);
-
-	if (it != m_map_pkLoginKey.end())
-	{
-		M2_DELETE(it->second);
-		m_map_pkLoginKey.erase(it);
-	}
-}
-
 void DESC_MANAGER::ProcessExpiredLoginKey()
 {
 	DWORD dwCurrentTime = get_dword_time();

@@ -412,7 +412,6 @@ void DBManager::AnalyzeReturnQuery(SQLMsg * pMsg)
 						strlcpy(r.passwd, pinfo->passwd, sizeof(r.passwd));
 						strlcpy(r.social_id, szSocialID, sizeof(r.social_id));
 						DESC_MANAGER::instance().ConnectAccount(r.login, d);
-						DESC_MANAGER::instance().ConsumeLoginKey(d->GetLoginKey());
 						ClearLoginFailure(d->GetHostName());
 
 						LoginPrepare(d, aiPremiumTimes);

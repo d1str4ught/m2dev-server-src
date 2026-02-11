@@ -52,7 +52,6 @@ class DESC_MANAGER : public singleton<DESC_MANAGER>
 
 		DWORD			CreateLoginKey(LPDESC d);
 		LPDESC			FindByLoginKey(DWORD dwKey);
-		void			ConsumeLoginKey(DWORD dwKey);
 		void			ProcessExpiredLoginKey();
 
 		bool			IsDisconnectInvalidCRC() { return m_bDisconnectInvalidCRC; }
