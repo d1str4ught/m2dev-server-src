@@ -119,10 +119,6 @@ bool SecureCipher::ComputeServerKeys(const uint8_t* client_pk)
     sodium_memzero(m_rx_stream_nonce, NONCE_SIZE);
     m_rx_stream_nonce[0] = 0x02;
 
-    sys_log(0, "[CIPHER] Server keys computed (tx_key: %02x%02x%02x%02x, rx_key: %02x%02x%02x%02x)",
-        m_tx_key[0], m_tx_key[1], m_tx_key[2], m_tx_key[3],
-        m_rx_key[0], m_rx_key[1], m_rx_key[2], m_rx_key[3]);
-
     return true;
 }
 

@@ -131,12 +131,6 @@ bool CInputProcessor::Process(LPDESC lpDesc, const void * c_pvOrig, int iBytes, 
 
 		if (wHeader)
 		{
-			if (lpDesc->CheckPacketFlood())
-			{
-				lpDesc->SetPhase(PHASE_CLOSE);
-				return true;
-			}
-
 			m_pPacketInfo->Start();
 
 			int iExtraPacketSize = Analyze(lpDesc, wHeader, c_pData);

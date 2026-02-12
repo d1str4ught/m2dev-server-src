@@ -104,7 +104,6 @@ class DESC
 
 		DWORD			GetClientTime();
 
-		// Secure key exchange (libsodium/XChaCha20-Poly1305)
 		void SendKeyChallenge();
 		bool HandleKeyResponse(const uint8_t* client_pk, const uint8_t* challenge_response);
 		void SendKeyComplete();
@@ -142,14 +141,8 @@ class DESC
 		bool			isChannelStatusRequested() const { return m_bChannelStatusRequested; }
 		void			SetChannelStatusRequested(bool bChannelStatusRequested) { m_bChannelStatusRequested = bChannelStatusRequested; }
 
-		// Handshake timeout check
 		bool			IsExpiredHandshake() const;
 		void			SetHandshakeTime(uint32_t handshake_time) { m_handshake_time = handshake_time; }
-
-		// Flood protection
-		bool			CheckPacketFlood();
-		void			SetIPCountTracked(bool b) { m_bIPCountTracked = b; }
-		bool			IsIPCountTracked() const { return m_bIPCountTracked; }
 
 	protected:
 		void			Initialize();
@@ -215,15 +208,7 @@ class DESC
 		bool			m_bDestroyed;
 		bool			m_bChannelStatusRequested;
 
-		// Handshake timeout protection
 		uint32_t		m_handshake_time;
-
-		// Flood protection
-		int				m_iFloodCheckPulse;
-		uint32_t		m_dwFloodPacketCount;
-		bool			m_bIPCountTracked;
-
-		// Secure cipher (libsodium/XChaCha20-Poly1305)
 		SecureCipher	m_secureCipher;
 		uint8_t			m_challenge[SecureCipher::CHALLENGE_SIZE];
 
@@ -242,7 +227,6 @@ class DESC
 		void RawPacket(const void * c_pvData, int iSize);
 		void ChatPacket(BYTE type, const char * format, ...);
 
-	// --- Packet sequence tracking (debug aid) ---
 	public:
 		struct PacketLogEntry
 		{

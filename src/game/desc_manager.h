@@ -67,8 +67,6 @@ class DESC_MANAGER : public singleton<DESC_MANAGER>
 		CLIENT_DESC_SET		m_set_pkClientDesc;
 		DESC_SET			m_set_pkDesc;
 
-		std::unordered_map<std::string, int>	m_map_ipConnCount;
-
 		DESC_HANDLE_MAP			m_map_handle;
 		//DESC_ACCOUNTID_MAP		m_AccountIDMap;
 		DESC_LOGINNAME_MAP		m_map_loginName;

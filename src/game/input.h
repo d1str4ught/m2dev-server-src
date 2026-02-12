@@ -128,7 +128,6 @@ class CInputMain : public CInputProcessor
 	protected:
 		int	Analyze(LPDESC d, uint16_t wHeader, const char * c_pData) override;
 
-		// Handler dispatch
 		using MainHandler = int (CInputMain::*)(LPDESC, const char*);
 		struct HandlerEntry {
 			MainHandler handler;
@@ -137,14 +136,12 @@ class CInputMain : public CInputProcessor
 		std::unordered_map<uint16_t, HandlerEntry> m_handlers;
 		virtual void RegisterHandlers();
 
-		// Template adapters for common handler patterns (defined in input_main.cpp)
 		template<void (CInputMain::*fn)(LPCHARACTER, const char*)>
 		int SimpleHandler(LPDESC d, const char* p);
 
 		template<void (CInputMain::*fn)(LPCHARACTER, const void*)>
 		int SimpleHandlerV(LPDESC d, const char* p);
 
-		// Custom adapters for non-standard handler signatures
 		int HandlePong(LPDESC d, const char* p);
 		int HandleChat(LPDESC d, const char* p);
 		int HandleWhisper(LPDESC d, const char* p);
@@ -262,19 +259,14 @@ protected:
 	void RegisterHandlers();
 	LPDESC FindByHandle() const;
 
-	// Template: void handler(const char*) — data-only
 	template<void (CInputDB::*fn)(const char*)>
 	int DataHandler(LPDESC, const char* p) { (this->*fn)(p); return 0; }
 
-	// Template: void handler(LPDESC, const char*) — desc from FindByHandle
 	template<void (CInputDB::*fn)(LPDESC, const char*)>
 	int DescHandler(LPDESC, const char* p) { (this->*fn)(FindByHandle(), p); return 0; }
 
-	// Template: void handler(T*) — cast c_pData to typed pointer
 	template<class T, void (CInputDB::*fn)(T*)>
 	int TypedHandler(LPDESC, const char* p) { (this->*fn)((T*)p); return 0; }
-
-	// Custom adapters for special signatures
 	int HandleLoginSuccess(LPDESC, const char*);
 	int HandleLoginNotExist(LPDESC, const char*);
 	int HandleLoginWrongPasswd(LPDESC, const char*);
