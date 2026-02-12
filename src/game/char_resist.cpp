@@ -46,7 +46,7 @@ EVENTINFO(TPoisonEventInfo)
 
 EVENTFUNC(poison_event)
 {
-	TPoisonEventInfo * info = dynamic_cast<TPoisonEventInfo *>( event->info );
+	TPoisonEventInfo * info = dynamic_cast<TPoisonEventInfo*>(event->info);
 	
 	if ( info == NULL )
 	{
@@ -59,9 +59,11 @@ EVENTFUNC(poison_event)
 	if (ch == NULL) { // <Factor>
 		return 0;
 	}
+	
 	LPCHARACTER pkAttacker = CHARACTER_MANAGER::instance().FindByPID(info->attacker_pid);
 
 	int dam = ch->GetMaxHP() * GetPoisonDamageRate(ch) / 1000;
+
 	if (test_server) ch->ChatPacket(CHAT_TYPE_NOTICE, "Poison Damage %d", dam);
 
 	if (ch->Damage(pkAttacker, dam, DAMAGE_TYPE_POISON))
@@ -99,7 +101,7 @@ EVENTINFO(TFireEventInfo)
 
 EVENTFUNC(fire_event)
 {
-	TFireEventInfo * info = dynamic_cast<TFireEventInfo *>( event->info );
+	TFireEventInfo * info = dynamic_cast<TFireEventInfo*>(event->info);
 
 	if ( info == NULL )
 	{
@@ -108,12 +110,15 @@ EVENTFUNC(fire_event)
 	}
 
 	LPCHARACTER ch = info->ch;
+
 	if (ch == NULL) { // <Factor>
 		return 0;
 	}
+
 	LPCHARACTER pkAttacker = CHARACTER_MANAGER::instance().FindByPID(info->attacker_pid);
 
 	int dam = info->amount;
+	
 	if (test_server) ch->ChatPacket(CHAT_TYPE_NOTICE, "Fire Damage %d", dam);
 
 	if (ch->Damage(pkAttacker, dam, DAMAGE_TYPE_FIRE))
@@ -157,10 +162,12 @@ EVENTFUNC(fire_event)
 
  */
 
-static int poison_level_adjust[9] =
+// MR-11: DPS Debuff Fixes
+const int poison_level_adjust[9] =
 {
 	100, 90, 80, 70, 50, 30, 10, 5, 0
 };
+// MR-11: -- END OF -- DPS Debuff Fixes
 
 void CHARACTER::AttackedByFire(LPCHARACTER pkAttacker, int amount, int count)
 {
@@ -197,8 +204,13 @@ void CHARACTER::AttackedByPoison(LPCHARACTER pkAttacker)
 	if (m_bHasPoisoned && !IsPC()) // 몬스터는 독이 한번만 걸린다.
 		return;
 
+	// MR-11: DPS Debuff Fixes
+	if (IsStone() || IsDoor())
+		return;
+	// MR-11: -- END OF -- DPS Debuff Fixes
+
 	// MR-8: Check damage immunity system - prevent poison application if conditions not met
-	if (m_bDamageImmune && (IsMonster() || IsStone() || IsDoor()))
+	if (m_bDamageImmune && IsMonster())
 	{
 		if (!CheckDamageImmunityConditions(pkAttacker))
 		{
@@ -230,7 +242,7 @@ void CHARACTER::AttackedByPoison(LPCHARACTER pkAttacker)
 
 	info->ch = this;
 	info->count = 10;
-	info->attacker_pid = pkAttacker?pkAttacker->GetPlayerID():0;
+	info->attacker_pid = pkAttacker ? pkAttacker->GetPlayerID() : 0;
 
 	m_pkPoisonEvent = event_create(poison_event, info, 1);
 
