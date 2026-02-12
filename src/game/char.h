@@ -57,6 +57,8 @@ enum
 	SUMMON_MONSTER_COUNT = 3,
 };
 
+extern const int poison_level_adjust[9];
+
 enum
 {
 	FLY_NONE,

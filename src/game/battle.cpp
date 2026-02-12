@@ -632,17 +632,34 @@ int CalcArrowDamage(LPCHARACTER pkAttacker, LPCHARACTER pkVictim, LPITEM pkBow, 
 	//return iDam;
 }
 
-
 void NormalAttackAffect(LPCHARACTER pkAttacker, LPCHARACTER pkVictim)
 {
 	// 독 공격은 특이하므로 특수 처리
 	if (pkAttacker->GetPoint(POINT_POISON_PCT) && !pkVictim->IsAffectFlag(AFF_POISON))
 	{
-		if (number(1, 100) <= pkAttacker->GetPoint(POINT_POISON_PCT))
+		// MR-11: DPS Debuff Fixes
+		int delta = pkAttacker->GetLevel() - pkVictim->GetLevel();
+		int absDelta = abs(delta);
+
+		if (absDelta > 8)
+			absDelta = 8;
+
+		int levelPct = 100;
+		
+		if (delta < 0)
+			levelPct = poison_level_adjust[absDelta];
+		else if (delta > 0)
+			levelPct = 100 + (100 - poison_level_adjust[absDelta]) / 2;
+
+		int additChance = pkAttacker->GetPoint(POINT_POISON_PCT) * (levelPct - 100) / 100;
+
+		if (number(1, 100) <= pkAttacker->GetPoint(POINT_POISON_PCT) + additChance)
 			pkVictim->AttackedByPoison(pkAttacker);
+		// MR-11: -- END OF -- DPS Debuff Fixes
 	}
 
 	int iStunDuration = 2;
+	
 	if (pkAttacker->IsPC() && !pkVictim->IsPC())
 		iStunDuration = 4;
 

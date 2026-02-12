@@ -2173,6 +2173,13 @@ bool CHARACTER::Damage(LPCHARACTER pAttacker, int dam, EDamageType type) // retu
 		dam -= dec_dam;
 	}
 
+	// MR-11: DPS Debuff Fixes
+	if (type == DAMAGE_TYPE_FIRE && IsNPC() && GetRaceNum() == 1192)
+	{
+		dam = dam * 80 / 100;
+	}
+	// MR-11: -- END OF -- DPS Debuff Fixes
+
 	if (pAttacker)
 	{
 		//
@@ -2275,14 +2282,16 @@ bool CHARACTER::Damage(LPCHARACTER pAttacker, int dam, EDamageType type) // retu
 	if (IsDead())
 		return true;
 
-	// 독 공격으로 죽지 않도록 함.
-	if (type == DAMAGE_TYPE_POISON)
+	// MR-11: DPS Debuff Fixes
+	// 독/불 데미지로 죽지 않도록 함.
+	if (type == DAMAGE_TYPE_POISON || type == DAMAGE_TYPE_FIRE)
 	{
 		if (GetHP() - dam <= 0)
 		{
 			dam = GetHP() - 1;
 		}
 	}
+	// MR-11: -- END OF -- DPS Debuff Fixes
 
 	// ------------------------
 	// 독일 프리미엄 모드 
