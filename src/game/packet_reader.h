@@ -128,8 +128,6 @@ public:
 		return v;
 	}
 
-	// --- Read struct (for backward compatibility during migration) ---
-	// Reads a struct directly via memcpy. Use sparingly — prefer typed reads.
 	template<typename T>
 	bool ReadStruct(T& out)
 	{

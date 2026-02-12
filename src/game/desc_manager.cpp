@@ -88,27 +88,6 @@ LPDESC DESC_MANAGER::AcceptDesc(LPFDWATCH fdw, socket_t s)
 
 	strlcpy(host, inet_ntoa(peer.sin_addr), sizeof(host));
 
-	// Global connection limit
-	extern int g_iFloodMaxGlobalConnections;
-	if (m_iSocketsConnected >= g_iFloodMaxGlobalConnections)
-	{
-		sys_log(0, "FLOOD: rejecting connection from %s (global limit %d/%d reached)",
-			host, m_iSocketsConnected, g_iFloodMaxGlobalConnections);
-		socket_close(desc);
-		return NULL;
-	}
-
-	// Per-IP connection limit
-	extern int g_iFloodMaxConnectionsPerIP;
-	auto itIP = m_map_ipConnCount.find(host);
-	if (itIP != m_map_ipConnCount.end() && itIP->second >= g_iFloodMaxConnectionsPerIP)
-	{
-		sys_log(0, "FLOOD: rejecting connection from %s (%d/%d connections)",
-			host, itIP->second, g_iFloodMaxConnectionsPerIP);
-		socket_close(desc);
-		return NULL;
-	}
-
 	newd = M2_NEW DESC;
 
 	if (!newd->Setup(fdw, desc, peer, ++m_iHandleCount))
@@ -122,10 +101,6 @@ LPDESC DESC_MANAGER::AcceptDesc(LPFDWATCH fdw, socket_t s)
 
 	m_set_pkDesc.insert(newd);
 	++m_iSocketsConnected;
-
-	// Track per-IP count
-	++m_map_ipConnCount[host];
-	newd->SetIPCountTracked(true);
 
 	return (newd);
 }
@@ -180,17 +155,6 @@ void DESC_MANAGER::DestroyDesc(LPDESC d, bool bEraseFromSet)
 		m_map_handle.erase(d->GetHandle());
 	else
 		m_set_pkClientDesc.erase((LPCLIENT_DESC) d);
-
-	// Decrement per-IP connection count (before Destroy invalidates state)
-	if (d->IsIPCountTracked())
-	{
-		auto it = m_map_ipConnCount.find(d->GetHostName());
-		if (it != m_map_ipConnCount.end())
-		{
-			if (--it->second <= 0)
-				m_map_ipConnCount.erase(it);
-		}
-	}
 
 	// Explicit call to the virtual function Destroy()
 	d->Destroy();
@@ -419,7 +383,7 @@ DWORD DESC_MANAGER::CreateLoginKey(LPDESC d)
 
 	do
 	{
-		dwKey = randombytes_uniform(INT_MAX) + 1;  // CSPRNG: [1, INT_MAX]
+		dwKey = randombytes_uniform(INT_MAX) + 1;
 
 		if (m_map_pkLoginKey.find(dwKey) != m_map_pkLoginKey.end())
 			continue;
@@ -445,7 +409,6 @@ void DESC_MANAGER::ProcessExpiredLoginKey()
 	{
 		it2 = it++;
 
-		// Clean up orphaned keys (descriptor gone but never expired)
 		if (it2->second->m_dwExpireTime == 0 && it2->second->m_pkDesc == NULL)
 		{
 			M2_DELETE(it2->second);

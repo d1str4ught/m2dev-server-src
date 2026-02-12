@@ -1729,7 +1729,6 @@ void CInputMain::Attack(LPCHARACTER ch, const uint16_t header, const char* data)
 	if (NULL == ch)
 		return;
 
-	// Updated for new packet format: [header:2][length:2][bType:1]
 	struct type_identifier
 	{
 		uint16_t header;
@@ -2673,7 +2672,7 @@ int CInputMain::Guild(LPCHARACTER ch, const char * data, size_t uiBytes)
 }
 
 // ---------------------------------------------------------------------------
-// Guild sub-handlers — extracted from Guild() switch cases
+// Guild sub-handlers
 // ---------------------------------------------------------------------------
 
 int CInputMain::GuildSub_DepositMoney(LPCHARACTER ch, const char* data, size_t uiBytes)
@@ -3214,7 +3213,7 @@ CInputMain::CInputMain()
 	RegisterHandlers();
 }
 
-// Custom adapter methods — bridge varied handler signatures to unified MainHandler
+// Custom adapter methods
 
 int CInputMain::HandlePong(LPDESC d, const char*)
 {
@@ -3391,7 +3390,7 @@ void CInputMain::RegisterHandlers()
 	reg(CG::CLIENT_VERSION,    &CInputMain::HandleClientVersion);
 	reg(CG::DRAGON_SOUL_REFINE,&CInputMain::HandleDragonSoulRefine);
 
-	// Simple void(LPCHARACTER, const char*) — via template adapter
+	// SimpleHandler<fn>(LPCHARACTER, const char*)
 	reg(CG::CHARACTER_POSITION,&CInputMain::SimpleHandler<&CInputMain::Position>);
 	reg(CG::ITEM_USE,          &CInputMain::SimpleHandler<&CInputMain::ItemUse>,        true);
 	reg(CG::ITEM_DROP,         &CInputMain::SimpleHandler<&CInputMain::ItemDrop>,       true);
@@ -3421,7 +3420,7 @@ void CInputMain::RegisterHandlers()
 	reg(CG::HACK,              &CInputMain::SimpleHandler<&CInputMain::Hack>);
 	reg(CG::REFINE,            &CInputMain::SimpleHandler<&CInputMain::Refine>);
 
-	// void(LPCHARACTER, const void*) — via template adapter
+	// SimpleHandlerV<fn>(LPCHARACTER, const void*)
 	reg(CG::SCRIPT_ANSWER,      &CInputMain::SimpleHandlerV<&CInputMain::ScriptAnswer>);
 	reg(CG::SCRIPT_BUTTON,      &CInputMain::SimpleHandlerV<&CInputMain::ScriptButton>);
 	reg(CG::SCRIPT_SELECT_ITEM, &CInputMain::SimpleHandlerV<&CInputMain::ScriptSelectItem>);
@@ -3429,8 +3428,6 @@ void CInputMain::RegisterHandlers()
 	reg(CG::QUEST_CONFIRM,      &CInputMain::SimpleHandlerV<&CInputMain::QuestConfirm>);
 }
 
-// ---------------------------------------------------------------------------
-// Table-driven Analyze — replaces switch statement
 // ---------------------------------------------------------------------------
 
 int CInputMain::Analyze(LPDESC d, uint16_t wHeader, const char * c_pData)
@@ -3458,7 +3455,7 @@ int CInputMain::Analyze(LPDESC d, uint16_t wHeader, const char * c_pData)
 }
 
 // ---------------------------------------------------------------------------
-// CInputDead — only allows PONG, CHAT, WHISPER, HACK
+// CInputDead
 // ---------------------------------------------------------------------------
 
 CInputDead::CInputDead()

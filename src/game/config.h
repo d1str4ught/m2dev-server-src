@@ -105,9 +105,5 @@ extern int gPlayerMaxLevel;
 
 extern bool g_BlockCharCreation;
 
-extern bool g_bFirewallEnable;
-extern int  g_iFirewallTcpSynLimit;
-extern int  g_iFirewallTcpSynBurst;
-
 #endif /* __INC_METIN_II_GAME_CONFIG_H__ */
 

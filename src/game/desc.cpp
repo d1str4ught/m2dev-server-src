@@ -81,10 +81,6 @@ void DESC::Initialize()
 	m_offtime = 0;
 
 	m_pkDisconnectEvent = NULL;
-
-	m_iFloodCheckPulse = 0;
-	m_dwFloodPacketCount = 0;
-	m_bIPCountTracked = false;
 }
 
 void DESC::Destroy()
@@ -216,7 +212,6 @@ bool DESC::Setup(LPFDWATCH _fdw, socket_t _fd, const struct sockaddr_in & c_rSoc
 
 	m_pkPingEvent = event_create(ping_event, info, ping_event_second_cycle);
 
-	// Set Phase to handshake and begin secure key exchange
 	SetPhase(PHASE_HANDSHAKE);
 	m_handshake_time = get_dword_time();
 	SendKeyChallenge();
@@ -242,7 +237,6 @@ int DESC::ProcessInput()
 	else if (bytes_read == 0)
 		return 0;
 
-	// Decrypt only the newly received bytes before committing to the buffer
 	if (m_secureCipher.IsActivated()) {
 		m_secureCipher.DecryptInPlace(m_inputBuffer.WritePtr(), bytes_read);
 	}
@@ -328,7 +322,6 @@ void DESC::Packet(const void * c_pvData, int iSize)
 	if (m_iPhase == PHASE_CLOSE)
 		return;
 
-	// Log the packet for sequence tracking (only for real packet sends, not buffered flushes)
 	if (!m_hasBufferedOutput && iSize >= (int)sizeof(uint16_t) * 2)
 	{
 		const uint16_t wHeader = *static_cast<const uint16_t*>(c_pvData);
@@ -465,43 +458,13 @@ bool DESC::IsExpiredHandshake() const
 	return (m_handshake_time + (5 * 1000)) < get_dword_time();
 }
 
-bool DESC::CheckPacketFlood()
-{
-	extern int g_iFloodMaxPacketsPerSec;
-
-	// Use thecore_pulse() (cached per game-loop iteration) instead of
-	// get_dword_time() (gettimeofday syscall) to avoid per-packet syscall overhead.
-	int pulse = thecore_pulse();
-	int pps = static_cast<int>(thecore_pulse_per_second());
-
-	if (pulse - m_iFloodCheckPulse >= pps)
-	{
-		m_iFloodCheckPulse = pulse;
-		m_dwFloodPacketCount = 1;
-		return false;
-	}
-
-	++m_dwFloodPacketCount;
-
-	if (m_dwFloodPacketCount > (uint32_t)g_iFloodMaxPacketsPerSec)
-	{
-		sys_log(0, "FLOOD: %s exceeded %d packets/sec (count: %u), disconnecting",
-			GetHostName(), g_iFloodMaxPacketsPerSec, m_dwFloodPacketCount);
-		return true;
-	}
-
-	return false;
-}
-
 DWORD DESC::GetClientTime()
 {
 	return m_dwClientTime;
 }
 
-// Secure key exchange methods (libsodium/XChaCha20-Poly1305)
 void DESC::SendKeyChallenge()
 {
-	// Initialize cipher and generate keypair
 	if (!m_secureCipher.Initialize())
 	{
 		sys_err("Failed to initialize SecureCipher");
@@ -509,10 +472,8 @@ void DESC::SendKeyChallenge()
 		return;
 	}
 
-	// Generate challenge
 	m_secureCipher.GenerateChallenge(m_challenge);
 
-	// Build and send challenge packet
 	TPacketGCKeyChallenge packet;
 	packet.header = GC::KEY_CHALLENGE;
 	packet.length = sizeof(packet);
@@ -529,14 +490,12 @@ void DESC::SendKeyChallenge()
 
 bool DESC::HandleKeyResponse(const uint8_t* client_pk, const uint8_t* challenge_response)
 {
-	// Compute session keys from client's public key
 	if (!m_secureCipher.ComputeServerKeys(client_pk))
 	{
 		sys_err("Failed to compute server session keys for %s", GetHostName());
 		return false;
 	}
 
-	// Verify challenge response
 	if (!m_secureCipher.VerifyChallengeResponse(m_challenge, challenge_response))
 	{
 		sys_err("Challenge response verification failed for %s", GetHostName());
@@ -550,17 +509,14 @@ bool DESC::HandleKeyResponse(const uint8_t* client_pk, const uint8_t* challenge_
 
 void DESC::SendKeyComplete()
 {
-	// Generate session token
 	uint8_t session_token[SecureCipher::SESSION_TOKEN_SIZE];
 	randombytes_buf(session_token, sizeof(session_token));
 	m_secureCipher.SetSessionToken(session_token);
 
-	// Build and send complete packet
 	TPacketGCKeyComplete packet;
 	packet.header = GC::KEY_COMPLETE;
 	packet.length = sizeof(packet);
 
-	// Encrypt the session token
 	if (!m_secureCipher.EncryptToken(session_token, sizeof(session_token),
 	                                  packet.encrypted_token, packet.nonce))
 	{
@@ -571,10 +527,7 @@ void DESC::SendKeyComplete()
 
 	Packet(&packet, sizeof(packet));
 
-	// Flush before activating encryption
 	ProcessOutput();
-
-	// Activate encryption
 	m_secureCipher.SetActivated(true);
 
 	sys_log(0, "[HANDSHAKE] Cipher ACTIVATED for %s (tx_nonce: %llu, rx_nonce: %llu)",
@@ -851,8 +804,6 @@ void DESC::ChatPacket(BYTE type, const char * format, ...)
 
 	Packet(buf.read_peek(), buf.size());
 }
-
-// --- Packet sequence tracking ---
 
 void DESC::LogRecvPacket(uint16_t header, uint16_t length)
 {

@@ -101,14 +101,6 @@ bool		g_bCheckMultiHack = true;
 
 int			g_iSpamBlockMaxLevel = 10;
 
-int			g_iFloodMaxPacketsPerSec = 300;
-int			g_iFloodMaxConnectionsPerIP = 10;
-int			g_iFloodMaxGlobalConnections = 8192;
-
-bool		g_bFirewallEnable = false;
-int			g_iFirewallTcpSynLimit = 500;
-int			g_iFirewallTcpSynBurst = 1000;
-
 void		LoadStateUserCount();
 void		LoadValidCRCList();
 bool		LoadClientVersion();
@@ -701,41 +693,6 @@ void config_init(const string& st_localeServiceName)
 		TOKEN("spam_block_max_level")
 		{
 			str_to_number(g_iSpamBlockMaxLevel, value_string);
-		}
-
-		TOKEN("flood_max_packets_per_sec")
-		{
-			str_to_number(g_iFloodMaxPacketsPerSec, value_string);
-			g_iFloodMaxPacketsPerSec = MAX(50, g_iFloodMaxPacketsPerSec);
-		}
-
-		TOKEN("flood_max_connections_per_ip")
-		{
-			str_to_number(g_iFloodMaxConnectionsPerIP, value_string);
-			g_iFloodMaxConnectionsPerIP = MAX(1, g_iFloodMaxConnectionsPerIP);
-		}
-
-		TOKEN("flood_max_global_connections")
-		{
-			str_to_number(g_iFloodMaxGlobalConnections, value_string);
-			g_iFloodMaxGlobalConnections = MAX(64, g_iFloodMaxGlobalConnections);
-		}
-
-		TOKEN("firewall_enable")
-		{
-			str_to_number(g_bFirewallEnable, value_string);
-		}
-
-		TOKEN("firewall_tcp_syn_limit")
-		{
-			str_to_number(g_iFirewallTcpSynLimit, value_string);
-			g_iFirewallTcpSynLimit = MAX(10, g_iFirewallTcpSynLimit);
-		}
-
-		TOKEN("firewall_tcp_syn_burst")
-		{
-			str_to_number(g_iFirewallTcpSynBurst, value_string);
-			g_iFirewallTcpSynBurst = MAX(10, g_iFirewallTcpSynBurst);
 		}
 
 		TOKEN("protect_normal_player")

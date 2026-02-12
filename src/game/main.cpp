@@ -54,7 +54,6 @@
 #include "DragonLair.h"
 #include "skill_power.h"
 #include "DragonSoul.h"
-#include "firewall_manager.h"
 
 // #ifndef OS_WINDOWS
 // #include <gtest/gtest.h>
@@ -88,11 +87,6 @@ BYTE		g_bLogLevel = 0;
 
 socket_t	tcp_socket = 0;
 socket_t	p2p_socket = 0;
-
-// UDP sink sockets — bound but never read, prevents kernel ICMP port-unreachable generation
-// during UDP floods (kernel silently drops once the tiny receive buffer fills)
-static socket_t	udp_sink_game = INVALID_SOCKET;
-static socket_t	udp_sink_p2p  = INVALID_SOCKET;
 
 LPFDWATCH	main_fdw = NULL;
 
@@ -347,7 +341,6 @@ int main(int argc, char **argv)
 	CThreeWayWar	threeway_war;
 	CDragonLairManager	dl_manager;
 	DSManager dsManager;
-	FirewallManager firewall_manager;
 
 	if (!start(argc, argv)) {
 		CleanUpForEarlyExit();
@@ -421,8 +414,6 @@ int main(int argc, char **argv)
 	char_manager.Destroy();
 	sys_log(0, "<shutdown> Destroying ITEM_MANAGER...");
 	item_manager.Destroy();
-	sys_log(0, "<shutdown> Destroying FirewallManager...");
-	firewall_manager.Destroy();
 	sys_log(0, "<shutdown> Destroying DESC_MANAGER...");
 	desc_manager.Destroy();
 	sys_log(0, "<shutdown> Destroying quest::CQuestManager...");
@@ -438,49 +429,6 @@ int main(int argc, char **argv)
 
 	log_destroy();
 	return 1;
-}
-
-// Create a UDP sink socket: bind to ip:port with minimal receive buffer, never read.
-// Prevents ICMP port-unreachable replies during UDP floods — the kernel silently drops
-// packets once the tiny buffer fills. Returns INVALID_SOCKET on failure (non-fatal).
-static socket_t create_udp_sink(const char* ip, WORD port)
-{
-#ifdef OS_WINDOWS
-	(void)ip; (void)port;
-	return INVALID_SOCKET;
-#else
-	socket_t s = socket(AF_INET, SOCK_DGRAM, 0);
-	if (s < 0)
-	{
-		sys_err("create_udp_sink: socket() failed for port %d: %s", port, strerror(errno));
-		return INVALID_SOCKET;
-	}
-
-	// Allow rebind if previous instance didn't clean up
-	int reuse = 1;
-	setsockopt(s, SOL_SOCKET, SO_REUSEADDR, &reuse, sizeof(reuse));
-
-	// Minimal receive buffer — kernel rounds up to its minimum (typically 256 bytes on Linux).
-	// Once full, incoming UDP is silently dropped with zero CPU overhead.
-	int rcvbuf = 1;
-	setsockopt(s, SOL_SOCKET, SO_RCVBUF, &rcvbuf, sizeof(rcvbuf));
-
-	struct sockaddr_in addr;
-	memset(&addr, 0, sizeof(addr));
-	addr.sin_family = AF_INET;
-	addr.sin_port = htons(port);
-	addr.sin_addr.s_addr = inet_addr(ip);
-
-	if (bind(s, (struct sockaddr*)&addr, sizeof(addr)) < 0)
-	{
-		sys_err("create_udp_sink: bind() failed for port %d: %s", port, strerror(errno));
-		close(s);
-		return INVALID_SOCKET;
-	}
-
-	sys_log(0, "UDP sink bound on %s:%d (fd %d) — ICMP suppression active", ip, port, s);
-	return s;
-#endif
 }
 
 void usage()
@@ -613,13 +561,6 @@ int start(int argc, char **argv)
 	fdwatch_add_fd(main_fdw, tcp_socket, NULL, FDW_READ, false);
 	fdwatch_add_fd(main_fdw, p2p_socket, NULL, FDW_READ, false);
 
-	// UDP sink sockets — suppress ICMP port-unreachable during UDP floods
-	udp_sink_game = create_udp_sink(g_szPublicIP, mother_port);
-	udp_sink_p2p  = create_udp_sink(g_szPublicIP, p2p_port);
-
-	// Kernel-level firewall — DROP unsolicited UDP + rate-limit TCP SYN at netfilter layer
-	FirewallManager::instance().Initialize(mother_port, p2p_port);
-
 	db_clientdesc = DESC_MANAGER::instance().CreateConnectionDesc(main_fdw, db_addr, db_port, PHASE_DBCLIENT, true);
 	if (!g_bAuthServer) {
 		db_clientdesc->UpdateChannelStatus(0, true);
@@ -668,9 +609,6 @@ void destroy()
 	sys_log(0, "<shutdown> Closing sockets...");
 	socket_close(tcp_socket);
 	socket_close(p2p_socket);
-
-	if (udp_sink_game != INVALID_SOCKET) { socket_close(udp_sink_game); udp_sink_game = INVALID_SOCKET; }
-	if (udp_sink_p2p  != INVALID_SOCKET) { socket_close(udp_sink_p2p);  udp_sink_p2p  = INVALID_SOCKET; }
 
 	sys_log(0, "<shutdown> fdwatch_delete()...");
 	fdwatch_delete(main_fdw);
