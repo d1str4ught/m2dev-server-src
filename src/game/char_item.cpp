@@ -1484,12 +1484,12 @@ bool CHARACTER::GiveRecallItem(LPITEM item)
 
 	int pos;
 
-	if (item->GetCount() == 1)	// 아이템이 하나라면 그냥 셋팅.
+	if (item->GetCount() == 1)	// If the item is only one, just set it.
 	{
 		item->SetSocket(0, GetX());
 		item->SetSocket(1, GetY());
 	}
-	else if ((pos = GetEmptyInventory(item->GetSize())) != -1) // 그렇지 않다면 다른 인벤토리 슬롯을 찾는다.
+	else if ((pos = GetEmptyInventory(item->GetSize())) != -1) // Otherwise, find another inventory slot.
 	{
 		LPITEM item2 = ITEM_MANAGER::instance().CreateItem(item->GetVnum(), 1);
 
@@ -5558,20 +5558,21 @@ bool CHARACTER::MoveItem(TItemPos Cell, TItemPos DestCell, BYTE count)
 		return false;
 	}
 
-	// 기획자의 요청으로 벨트 인벤토리에는 특정 타입의 아이템만 넣을 수 있다.
+	// Only specific types of items can be placed in the belt inventory.
 	if (DestCell.IsBeltInventoryPosition() && false == CBeltInventoryHelper::CanMoveIntoBeltInventory(item))
 	{
 		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("이 아이템은 벨트 인벤토리로 옮길 수 없습니다."));			
 		return false;
 	}
 
-	// 이미 착용중인 아이템을 다른 곳으로 옮기는 경우, '장책 해제' 가능한 지 확인하고 옮김
+	// When moving an item that is already equipped to another location, check if 'unequipping' is currently allowed before proceeding.
 	if (Cell.IsEquipPosition() && !CanUnequipNow(item))
 		return false;
 
+	// If the destination cell is an equipment position, equip the item.
 	if (DestCell.IsEquipPosition())
 	{
-		if (GetItem(DestCell))	// 장비일 경우 한 곳만 검사해도 된다.
+		if (GetItem(DestCell))	// For equipment, checking only this position is sufficient.
 		{
 			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("이미 장비를 착용하고 있습니다."));
 			
@@ -5599,9 +5600,11 @@ bool CHARACTER::MoveItem(TItemPos Cell, TItemPos DestCell, BYTE count)
 					return false;
 			}
 		}
-		// 용혼석이 아닌 아이템은 용혼석 인벤에 들어갈 수 없다.
 		else if (DRAGON_SOUL_INVENTORY == DestCell.window_type)
+		{
+			// Items that are not Dragon Soul cannot be placed in the Dragon Soul inventory.
 			return false;
+		}
 
 		LPITEM item2;
 
@@ -6038,8 +6041,11 @@ bool CHARACTER::SwapItem(BYTE bCell, BYTE bDestCell)
 		BYTE bEquipCell = item2->GetCell() - INVENTORY_MAX_NUM;
 		BYTE bInvenCell = item1->GetCell();
 
-		// 착용중인 아이템을 벗을 수 있고, 착용 예정 아이템이 착용 가능한 상태여야만 진행
-		if (false == CanUnequipNow(item2) || false == CanEquipNow(item1))
+		// Proceed only if the currently equipped item can be unequipped,
+		// and the item intended to be equipped is eligible for equipping.
+		bool canUnequip = CanUnequipNow(item2, TItemPos(EQUIPMENT, item2->GetCell()), TItemPos(INVENTORY, item1->GetCell()));
+		bool canEquip = CanEquipNow(item1);
+		if (false == canUnequip || false == canEquip)
 			return false;
 
 		if (bEquipCell != item1->FindEquipCell(this)) // 같은 위치일때만 허용
@@ -7575,18 +7581,20 @@ bool CHARACTER::CanEquipNow(const LPITEM item, const TItemPos& srcCell, const TI
 	return true;
 }
 
-/// 현재 캐릭터의 상태를 바탕으로 착용 중인 item을 벗을 수 있는 지 확인하고, 불가능 하다면 캐릭터에게 이유를 알려주는 함수
+/// Checks if the currently equipped item can be unequipped based on the character's state, and if not, informs the character of the reason.
 bool CHARACTER::CanUnequipNow(const LPITEM item, const TItemPos& srcCell, const TItemPos& destCell) /*const*/
 {	
 
 	if (ITEM_BELT == item->GetType())
 		VERIFY_MSG(CBeltInventoryHelper::IsExistItemInBeltInventory(this), "벨트 인벤토리에 아이템이 존재하면 해제할 수 없습니다.");
 
-	// 영원히 해제할 수 없는 아이템
+	// Items that can never be unequipped
 	if (IS_SET(item->GetFlag(), ITEM_FLAG_IRREMOVABLE))
 		return false;
 
-	// 아이템 unequip시 인벤토리로 옮길 때 빈 자리가 있는 지 확인
+	// Check if there is enough space in the inventory when moving an item during unequip
+	// Skip this check if destCell is specified (swapping with another item)
+	if (destCell.IsValidItemPosition() == false)
 	{
 		int pos = -1;
 
