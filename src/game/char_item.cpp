@@ -4869,19 +4869,32 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 					case USE_MONEYBAG:
 						break;
 
+					// MR-12: Overwrite lower value affects
 					case USE_AFFECT :
 						{
-							if (FindAffect(item->GetValue(0), aApplyInfo[item->GetValue(1)].bPointType))
+							const DWORD affectType = item->GetValue(0);
+							const BYTE applyType = aApplyInfo[item->GetValue(1)].bPointType;
+							const long applyValue = item->GetValue(2);
+							const long applyDuration = item->GetValue(3);
+
+							CAffect* existing = FindAffect(affectType, applyType);
+
+							if (existing)
 							{
-								ChatPacket(CHAT_TYPE_INFO, LC_TEXT("이미 효과가 걸려 있습니다."));
+								if (applyValue <= existing->lApplyValue)
+								{
+									ChatPacket(CHAT_TYPE_INFO, LC_TEXT("이미 효과가 걸려 있습니다."));
+									break;
+								}
+
+								RemoveAffect(existing);
 							}
-							else
-							{
-								AddAffect(item->GetValue(0), aApplyInfo[item->GetValue(1)].bPointType, item->GetValue(2), 0, item->GetValue(3), 0, false);
-								item->SetCount(item->GetCount() - 1);
-							}
+
+							AddAffect(affectType, applyType, applyValue, 0, applyDuration, 0, false);
+							item->SetCount(item->GetCount() - 1);
 						}
 						break;
+					// MR-12: -- END OF -- Overwrite lower value affects
 
 					case USE_CREATE_STONE:
 						AutoGiveItem(number(28000, 28013));

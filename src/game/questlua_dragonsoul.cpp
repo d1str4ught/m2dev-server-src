@@ -12,13 +12,20 @@ namespace quest
 	int ds_open_refine_window(lua_State* L)
 	{
 		const LPCHARACTER ch = CQuestManager::instance().GetCurrentCharacterPtr();
+
 		if (NULL == ch)
 		{
-			sys_err ("NULL POINT ERROR");
+			sys_err("DS_QUEST_OPEN_REFINE_WINDOW:: NULL POINT ERROR");
 			return 0;
 		}
+
 		if (ch->DragonSoul_IsQualified())
-			ch->DragonSoul_RefineWindow_Open(CQuestManager::instance().GetCurrentNPCCharacterPtr());
+		{
+			sys_err("DS_QUEST_OPEN_REFINE_WINDOW:: ALREADY QUALIFIED");
+			return 0;
+		}
+
+		ch->DragonSoul_RefineWindow_Open(CQuestManager::instance().GetCurrentNPCCharacterPtr());
 
 		return 0;
 	}
@@ -26,11 +33,27 @@ namespace quest
 	int ds_give_qualification(lua_State* L)
 	{
 		const LPCHARACTER ch = CQuestManager::instance().GetCurrentCharacterPtr();
+
 		if (NULL == ch)
 		{
-			sys_err ("NULL POINT ERROR");
+			sys_err("DS_QUEST_GIVE_QUALIFICATION:: NULL POINT ERROR");
 			return 0;
 		}
+
+		if (ch->DragonSoul_IsQualified())
+		{
+			sys_err("DS_QUEST_GIVE_QUALIFICATION:: ALREADY QUALIFIED");
+			return 0;
+		}
+
+		// MR-12: Check min level for Dragonsoul qualification
+		if (ch->GetLevel() <= 30)
+		{
+			sys_err("DS_QUEST_GIVE_QUALIFICATION:: LEVEL TOO LOW");
+			return 0;
+		}
+		// MR-12: -- END OF -- Check min level for Dragonsoul qualification
+
 		ch->DragonSoul_GiveQualification();
 
 		return 0;
@@ -39,12 +62,22 @@ namespace quest
 	int ds_is_qualified(lua_State* L)
 	{
 		const LPCHARACTER ch = CQuestManager::instance().GetCurrentCharacterPtr();
+
 		if (NULL == ch)
 		{
-			sys_err ("NULL POINT ERROR");
+			sys_err("DS_QUEST_IS_QUALIFIED:: NULL POINT ERROR");
 			lua_pushnumber(L, 0);
 			return 1;
 		}
+
+		// MR-12: Check min level for Dragonsoul qualification
+		if (ch->GetLevel() <= 30)
+		{
+			sys_err("DS_QUEST_IS_QUALIFIED:: LEVEL TOO LOW");
+			lua_pushnumber(L, 0);
+			return 1;
+		}
+		// MR-12: -- END OF -- Check min level for Dragonsoul qualification
 
 		lua_pushnumber(L, ch->DragonSoul_IsQualified());
 		return 1;
