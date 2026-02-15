@@ -78,21 +78,21 @@ enum EMisc
 
 
 /**
-	 **** 현재까지 할당 된 아이템 영역 정리 (DB상 Item Position) ****
+	Summary of allocated item slots (DB Item Positions) ****
 	+------------------------------------------------------+ 0
-	| 캐릭터 기본 인벤토리 (45칸 * 2페이지) 90칸           | 
+	| Character Basic Inventory (45 slots * 2 pages = 90)  | 
 	+------------------------------------------------------+ 90 = INVENTORY_MAX_NUM(90)
-	| 캐릭터 장비 창 (착용중인 아이템) 32칸                |
+	| Character Equipment Window (Equipped Items) - 32     |
 	+------------------------------------------------------+ 122 = INVENTORY_MAX_NUM(90) + WEAR_MAX_NUM(32)
-	| 용혼석 장비 창 (착용중인 용혼석) 12칸                | 
+	| Dragon Soul Equipment Window (Equipped Dragon Souls) 12 | 
 	+------------------------------------------------------+ 134 = 122 + DS_SLOT_MAX(6) * DRAGON_SOUL_DECK_MAX_NUM(2)
-	| 용혼석 장비 창 예약 (아직 미사용) 18칸               | 
+	| Reserved Dragon Soul Equipment Slots (Unused) - 18   | 
 	+------------------------------------------------------+ 152 = 134 + DS_SLOT_MAX(6) * DRAGON_SOUL_DECK_RESERVED_MAX_NUM(3)
-	| 벨트 인벤토리 (벨트 착용시에만 벨트 레벨에 따라 활성)|
+	| Belt Inventory (Activated depending on belt level)   |
 	+------------------------------------------------------+ 168 = 152 + BELT_INVENTORY_SLOT_COUNT(16) = INVENTORY_AND_EQUIP_CELL_MAX
-	| 미사용                                               |
+	| Unused                                               |
 	+------------------------------------------------------+ ??
-*/
+**/
 };
 
 enum EWearPositions
@@ -133,7 +133,7 @@ enum EDragonSoulDeckType
 	DRAGON_SOUL_DECK_1,
 	DRAGON_SOUL_DECK_MAX_NUM = 2,
 
-	DRAGON_SOUL_DECK_RESERVED_MAX_NUM = 3,	// NOTE: 중요! 아직 사용중이진 않지만, 3페이지 분량을 예약 해 둠. DS DECK을 늘릴 경우 반드시 그 수만큼 RESERVED에서 차감해야 함!
+	DRAGON_SOUL_DECK_RESERVED_MAX_NUM = 3,	// NOTE: Important! Not used yet, but 3 pages are reserved. If DS DECK count is increased, make sure to reduce the same amount from RESERVED!
 };
 
 enum ESex
@@ -658,10 +658,10 @@ enum SPECIAL_EFFECT
 
 #include "item_length.h"
 
-// inventory의 position을 나타내는 구조체
-// int와의 암시적 형변환이 있는 이유는,
-// 인벤 관련된 모든 함수가 window_type은 받지 않고, cell 하나만 받았기 때문에,(기존에는 인벤이 하나 뿐이어서 inventory type이란게 필요없었기 때문에,)
-// 인벤 관련 모든 함수 호출부분을 수정하는 것이 난감하기 떄문이다.
+// Structure representing the position in inventory.
+// The reason for implicit conversion with int is because
+// all inventory-related functions used to take only the cell, not the window_type (since originally there was only one inventory, so the concept of inventory type wasn't necessary).
+// Modifying all calls to inventory-related functions would be burdensome for this reason.
 
 enum EDragonSoulRefineWindowSize
 {
@@ -730,18 +730,26 @@ typedef struct SItemPos
 
 	bool IsEquipPosition() const
 	{
-		return ((INVENTORY == window_type || EQUIPMENT == window_type) && cell >= INVENTORY_MAX_NUM && cell < INVENTORY_MAX_NUM + WEAR_MAX_NUM)
-			|| IsDragonSoulEquipPosition();
+		bool isNormalEquip = ((INVENTORY == window_type || EQUIPMENT == window_type) && cell >= INVENTORY_MAX_NUM && cell < INVENTORY_MAX_NUM + WEAR_MAX_NUM);
+		bool isDSEquip = IsDragonSoulEquipPosition();
+		return isNormalEquip || isDSEquip;
 	}
-
+	
 	bool IsDragonSoulEquipPosition() const
 	{
-		return (DRAGON_SOUL_EQUIP_SLOT_START <= cell) && (DRAGON_SOUL_EQUIP_SLOT_END > cell);
+		if (window_type == INVENTORY || window_type == EQUIPMENT)
+		{
+			return (DRAGON_SOUL_EQUIP_SLOT_START <= cell) && (DRAGON_SOUL_EQUIP_SLOT_END > cell);
+		}
+		return false;
 	}
-
 	bool IsBeltInventoryPosition() const
 	{
-		return (BELT_INVENTORY_SLOT_START <= cell) && (BELT_INVENTORY_SLOT_END > cell);
+		if (window_type == INVENTORY || window_type == EQUIPMENT || window_type == BELT_INVENTORY)
+		{
+			return (BELT_INVENTORY_SLOT_START <= cell) && (BELT_INVENTORY_SLOT_END > cell);
+		}
+		return false;
 	}
 
 	bool IsDefaultInventoryPosition() const
