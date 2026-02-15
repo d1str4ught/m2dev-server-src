@@ -49,10 +49,18 @@ bool CHARACTER::DragonSoul_IsQualified() const
 
 void CHARACTER::DragonSoul_GiveQualification()
 {
-	if(NULL == FindAffect(AFFECT_DRAGON_SOUL_QUALIFIED))
+	// MR-12: Check min level for Dragonsoul qualification
+	if (GetLevel() > 30)
+	{
+		return;
+	}
+	// MR-12: -- END OF -- Check min level for Dragonsoul qualification
+
+	if (NULL == FindAffect(AFFECT_DRAGON_SOUL_QUALIFIED))
 	{
 		LogManager::instance().CharLog(this, 0, "DS_QUALIFIED", "");
 	}
+
 	AddAffect(AFFECT_DRAGON_SOUL_QUALIFIED, APPLY_NONE, 0, AFF_NONE, INFINITE_AFFECT_DURATION, 0, false, false);
 	//SetQuestFlag("dragon_soul.is_qualified", 1);
 	//// 자격있다면 POINT_DRAGON_SOUL_IS_QUALIFIED는 무조건 1

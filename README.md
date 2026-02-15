@@ -25,11 +25,9 @@ It builds as it is, without external dependencies.
 
 ## 📋 Changelog
 
-### ⬆️ Feature Improvements
- - **Poison**: Verified consistency with the official methods and increased chances of infliction to lower level entities
- - **Fire**:
-   - Updated so it cannot kill the target, only lower them to 1 HP (consistency with official).
-   - The Powerful Ice Witch (`1192`) takes 20% less damage from the fire affect (consistency with official).
+### 🐛 Bug fixes
+ - **Dragonsoul Qualification**: Minimum level hardcoded in the checks for qualification.
+ - **USE_AFFECT flag**: Now allows overrriding the same affect if its value is about to increase.
 
 <br>
 <br>
