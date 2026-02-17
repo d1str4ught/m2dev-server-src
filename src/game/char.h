@@ -1094,10 +1094,12 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 		void			SpecificEffectPacket(const std::string& stEffectName);
 
 		// ADD_MONSTER_REFINE
-		bool			DoRefine(LPITEM item, bool bMoneyOnly = false);
+		// MR-15: Include refine method type in upgrade result
+		bool			DoRefine(LPITEM item, bool bMoneyOnly, int iType);
 		// END_OF_ADD_MONSTER_REFINE
 
-		bool			DoRefineWithScroll(LPITEM item);
+		bool			DoRefineWithScroll(LPITEM item, int iType);
+		// MR-15: -- END_OF -- Include refine method type in upgrade result
 		bool			RefineInformation(BYTE bCell, BYTE bType, int iAdditionalCell = -1);
 
 		void			SetRefineMode(int iAdditionalCell = -1);

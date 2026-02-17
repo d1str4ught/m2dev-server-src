@@ -25,9 +25,11 @@ It builds as it is, without external dependencies.
 
 ## 📋 Changelog
 
-### 🐛 Bug fixes
- - **Dragonsoul Qualification**: Minimum level hardcoded in the checks for qualification.
- - **USE_AFFECT flag**: Now allows overrriding the same affect if its value is about to increase.
+### 🐛 Bug Fixes
+ - **Refinement**: Fixed refinement by item (scroll/stone)
+
+### ⬆️ Improvements
+ - **Refinement**: Updated translations for the refinement dialogs and added conditional failed messages (from official) 
 
 <br>
 <br>
