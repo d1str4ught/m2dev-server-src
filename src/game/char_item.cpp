@@ -775,21 +775,21 @@ void TransformRefineItem(LPITEM pkOldItem, LPITEM pkNewItem)
 	pkOldItem->CopyAttributeTo(pkNewItem);
 }
 
-void NotifyRefineSuccess(LPCHARACTER ch, LPITEM item, const char* way)
+void NotifyRefineSuccess(LPCHARACTER ch, LPITEM item, const char* way, int iType)
 {
 	if (NULL != ch && item != NULL)
 	{
-		ch->ChatPacket(CHAT_TYPE_COMMAND, "RefineSuceeded");
+		ch->ChatPacket(CHAT_TYPE_COMMAND, "RefineSuceeded %d", iType);
 
 		LogManager::instance().RefineLog(ch->GetPlayerID(), item->GetName(), item->GetID(), item->GetRefineLevel(), 1, way);
 	}
 }
 
-void NotifyRefineFail(LPCHARACTER ch, LPITEM item, const char* way, int success = 0)
+void NotifyRefineFail(LPCHARACTER ch, LPITEM item, const char* way, int iType, int success = 0)
 {
 	if (NULL != ch && NULL != item)
 	{
-		ch->ChatPacket(CHAT_TYPE_COMMAND, "RefineFailed");
+		ch->ChatPacket(CHAT_TYPE_COMMAND, "RefineFailed %d", iType);
 
 		LogManager::instance().RefineLog(ch->GetPlayerID(), item->GetName(), item->GetID(), item->GetRefineLevel(), success, way);
 	}
@@ -807,7 +807,7 @@ void CHARACTER::SetRefineNPC(LPCHARACTER ch)
 	}
 }
 
-bool CHARACTER::DoRefine(LPITEM item, bool bMoneyOnly)
+bool CHARACTER::DoRefine(LPITEM item, bool bMoneyOnly, int iType)
 {
 	if (!CanHandleItem(true))
 	{
@@ -935,7 +935,7 @@ bool CHARACTER::DoRefine(LPITEM item, bool bMoneyOnly)
 			BYTE bCell = item->GetCell();
 
 			// DETAIL_REFINE_LOG
-			NotifyRefineSuccess(this, item, IsRefineThroughGuild() ? "GUILD" : "POWER");
+			NotifyRefineSuccess(this, item, IsRefineThroughGuild() ? "GUILD" : "POWER", iType);
 			DBManager::instance().SendMoneyLog(MONEY_LOG_REFINE, item->GetVnum(), -cost);
 			ITEM_MANAGER::instance().RemoveItem(item, "REMOVE (REFINE SUCCESS)");
 			// END_OF_DETAIL_REFINE_LOG
@@ -955,7 +955,7 @@ bool CHARACTER::DoRefine(LPITEM item, bool bMoneyOnly)
 			// DETAIL_REFINE_LOG
 			// 아이템 생성에 실패 -> 개량 실패로 간주
 			sys_err("cannot create item %u", result_vnum);
-			NotifyRefineFail(this, item, IsRefineThroughGuild() ? "GUILD" : "POWER");
+			NotifyRefineFail(this, item, IsRefineThroughGuild() ? "GUILD" : "POWER", iType);
 			// END_OF_DETAIL_REFINE_LOG
 		}
 	}
@@ -963,7 +963,7 @@ bool CHARACTER::DoRefine(LPITEM item, bool bMoneyOnly)
 	{
 		// 실패! 모든 아이템이 사라짐.
 		DBManager::instance().SendMoneyLog(MONEY_LOG_REFINE, item->GetVnum(), -cost);
-		NotifyRefineFail(this, item, IsRefineThroughGuild() ? "GUILD" : "POWER");
+		NotifyRefineFail(this, item, IsRefineThroughGuild() ? "GUILD" : "POWER", iType);
 		item->AttrLog();
 		ITEM_MANAGER::instance().RemoveItem(item, "REMOVE (REFINE FAIL)");
 
@@ -985,7 +985,7 @@ enum enum_RefineScrolls
 	BDRAGON_SCROLL	= 6,
 };
 
-bool CHARACTER::DoRefineWithScroll(LPITEM item)
+bool CHARACTER::DoRefineWithScroll(LPITEM item, int iType)
 {
 	if (!CanHandleItem(true))
 	{
@@ -1207,7 +1207,10 @@ bool CHARACTER::DoRefineWithScroll(LPITEM item)
 
 			BYTE bCell = item->GetCell();
 
-			NotifyRefineSuccess(this, item, szRefineType);
+			// MR-15: Include refine method type in upgrade result
+			NotifyRefineSuccess(this, item, szRefineType, iType);
+			// MR-15: -- END OF -- Include refine method type in upgrade result
+
 			DBManager::instance().SendMoneyLog(MONEY_LOG_REFINE, item->GetVnum(), -prt->cost);
 			ITEM_MANAGER::instance().RemoveItem(item, "REMOVE (REFINE SUCCESS)");
 
@@ -1221,7 +1224,9 @@ bool CHARACTER::DoRefineWithScroll(LPITEM item)
 		{
 			// 아이템 생성에 실패 -> 개량 실패로 간주
 			sys_err("cannot create item %u", result_vnum);
-			NotifyRefineFail(this, item, szRefineType);
+			// MR-15: Include refine method type in upgrade result
+			NotifyRefineFail(this, item, szRefineType, iType);
+			// MR-15: -- END OF -- Include refine method type in upgrade result
 		}
 	}
 	else if (!bDestroyWhenFail && result_fail_vnum)
@@ -1237,7 +1242,9 @@ bool CHARACTER::DoRefineWithScroll(LPITEM item)
 			BYTE bCell = item->GetCell();
 
 			DBManager::instance().SendMoneyLog(MONEY_LOG_REFINE, item->GetVnum(), -prt->cost);
-			NotifyRefineFail(this, item, szRefineType, -1);
+			// MR-15: Include refine method type in upgrade result
+			NotifyRefineFail(this, item, szRefineType, iType, -1);
+			// MR-15: -- END OF -- Include refine method type in upgrade result
 			ITEM_MANAGER::instance().RemoveItem(item, "REMOVE (REFINE FAIL)");
 
 			pkNewItem->AddToCharacter(this, TItemPos(INVENTORY, bCell)); 
@@ -1252,13 +1259,17 @@ bool CHARACTER::DoRefineWithScroll(LPITEM item)
 		{
 			// 아이템 생성에 실패 -> 개량 실패로 간주
 			sys_err("cannot create item %u", result_fail_vnum);
-			NotifyRefineFail(this, item, szRefineType);
+			// MR-15: Include refine method type in upgrade result
+			NotifyRefineFail(this, item, szRefineType, iType);
+			// MR-15: -- END OF -- Include refine method type in upgrade result
 		}
 	}
 	else
 	{
-		NotifyRefineFail(this, item, szRefineType); // 개량시 아이템 사라지지 않음
-		
+		// MR-15: Include refine method type in upgrade result
+		NotifyRefineFail(this, item, szRefineType, iType); // 개량시 아이템 사라지지 않음
+		// MR-15: -- END OF -- Include refine method type in upgrade result
+
 		PayRefineFee(prt->cost);
 	}
 
@@ -1285,7 +1296,9 @@ bool CHARACTER::RefineInformation(BYTE bCell, BYTE bType, int iAdditionalCell)
 
 	TPacketGCRefineInformation p;
 
-	p.header = GC::REFINE_INFORMATION;
+	// MR-15: Fix refining by item
+	p.header = GC::REFINE_INFORMATION_NEW;
+	// MR-15: -- END OF -- Fix refining by item
 	p.length = sizeof(p);
 	p.pos = bCell;
 	p.src_vnum = item->GetVnum();

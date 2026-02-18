@@ -3169,12 +3169,16 @@ void CInputMain::Refine(LPCHARACTER ch, const char* c_pData)
 	if (p->type == REFINE_TYPE_NORMAL)
 	{
 		sys_log (0, "refine_type_noraml");
-		ch->DoRefine(item);
+		// MR-15: Fix refining by item
+		ch->DoRefine(item, false, p->type);
+		// MR-15: -- END OF -- Fix refining by item
 	}
 	else if (p->type == REFINE_TYPE_SCROLL || p->type == REFINE_TYPE_HYUNIRON || p->type == REFINE_TYPE_MUSIN || p->type == REFINE_TYPE_BDRAGON)
 	{
 		sys_log (0, "refine_type_scroll, ...");
-		ch->DoRefineWithScroll(item);
+		// MR-15: Fix refining by item
+		ch->DoRefineWithScroll(item, p->type);
+		// MR-15: -- END OF -- Fix refining by item
 	}
 	else if (p->type == REFINE_TYPE_MONEY_ONLY)
 	{
@@ -3190,7 +3194,9 @@ void CInputMain::Refine(LPCHARACTER ch, const char* c_pData)
 			{
 				if (ch->GetQuestFlag("deviltower_zone.can_refine"))
 				{
-					ch->DoRefine(item, true);
+					// MR-15: Fix refining by item
+					ch->DoRefine(item, true, p->type);
+					// MR-15: -- END OF -- Fix refining by item
 					ch->SetQuestFlag("deviltower_zone.can_refine", 0);
 				}
 				else

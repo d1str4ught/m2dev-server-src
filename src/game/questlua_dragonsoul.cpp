@@ -47,7 +47,7 @@ namespace quest
 		}
 
 		// MR-12: Check min level for Dragonsoul qualification
-		if (ch->GetLevel() <= 30)
+		if (ch->GetLevel() < 30)
 		{
 			sys_err("DS_QUEST_GIVE_QUALIFICATION:: LEVEL TOO LOW");
 			return 0;
@@ -71,7 +71,7 @@ namespace quest
 		}
 
 		// MR-12: Check min level for Dragonsoul qualification
-		if (ch->GetLevel() <= 30)
+		if (ch->GetLevel() < 30)
 		{
 			sys_err("DS_QUEST_IS_QUALIFIED:: LEVEL TOO LOW");
 			lua_pushnumber(L, 0);
