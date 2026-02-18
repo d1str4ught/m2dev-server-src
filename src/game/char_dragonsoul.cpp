@@ -50,7 +50,7 @@ bool CHARACTER::DragonSoul_IsQualified() const
 void CHARACTER::DragonSoul_GiveQualification()
 {
 	// MR-12: Check min level for Dragonsoul qualification
-	if (GetLevel() > 30)
+	if (GetLevel() < 30)
 	{
 		return;
 	}
