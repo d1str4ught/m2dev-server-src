@@ -330,7 +330,7 @@ LPCHARACTER CHARACTER_MANAGER::SpawnMobRandomPosition(DWORD dwVnum, long lMapInd
 	if (!ch->Show(lMapIndex, x, y, 0, false))
 	{
 		M2_DESTROY_CHARACTER(ch);
-		sys_err(0, "SpawnMobRandomPosition: cannot show monster");
+		sys_err("SpawnMobRandomPosition: cannot show monster");
 		return NULL;
 	}
 
