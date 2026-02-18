@@ -157,7 +157,7 @@ int socket_bind(const char * ip, int port, int protocol)
     sa.sin_family	= AF_INET;
 //윈도우 서버는 개발용으로만 쓰기 때문에 BIND ip를 INADDR_ANY로 고정
 //(테스트의 편의성을 위해)
-#ifndef OS_WINDOWS
+#ifdef OS_FREEBSD
     sa.sin_addr.s_addr	= inet_addr(ip);
 #else
 	sa.sin_addr.s_addr	= INADDR_ANY;
