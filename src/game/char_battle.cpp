@@ -37,6 +37,7 @@
 #include "threeway_war.h"
 #include "BlueDragon.h"
 #include "DragonLair.h"
+
 #include <random>
 #include <algorithm>
 
@@ -1895,6 +1896,10 @@ bool CHARACTER::Damage(LPCHARACTER pAttacker, int dam, EDamageType type) // retu
 					{
 						RemoveAffect(AFF_MANASHIELD);
 					}
+
+					// MR-16: Enable penetrate effect
+					EffectPacket(SE_PENETRATE);
+					// MR-16: -- END OF -- Enable penetrate effect
 				}
 			}
 		}
@@ -2014,7 +2019,12 @@ bool CHARACTER::Damage(LPCHARACTER pAttacker, int dam, EDamageType type) // retu
 
 					if (test_server)
 						ChatPacket(CHAT_TYPE_INFO, LC_TEXT("관통 추가 데미지 %d"), GetPoint(POINT_DEF_GRADE) * (100 + GetPoint(POINT_DEF_BONUS)) / 100);
+					
 					dam += GetPoint(POINT_DEF_GRADE) * (100 + GetPoint(POINT_DEF_BONUS)) / 100;
+
+					// MR-16: Enable penetrate effect
+					EffectPacket(SE_PENETRATE);
+					// MR-16: -- END OF -- Enable penetrate effect
 				}
 			}
 
