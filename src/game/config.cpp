@@ -87,7 +87,7 @@ int g_iSyncHackLimitCount = 20; // 10 -> 20 2013 09 11 CYH
 
 //시야 = VIEW_RANGE + VIEW_BONUS_RANGE
 //VIEW_BONUSE_RANGE : 클라이언트와 시야 처리에서너무 딱 떨어질경우 문제가 발생할수있어 500CM의 여분을 항상준다.
-int VIEW_RANGE = 5000;
+int VIEW_RANGE = 12000;
 int VIEW_BONUS_RANGE = 500;
 
 int g_server_id = 0;
