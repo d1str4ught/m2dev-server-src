@@ -1659,8 +1659,10 @@ void CHARACTER::EnterCombat()
 	if (!IsPC())
 		return;
 
-	if (!IsPosition(POS_FIGHTING))
+	// MR-18: Fix mobs attacking corpse
+	if (!IsPosition(POS_FIGHTING) && !IsPosition(POS_DEAD))
 		SetPosition(POS_FIGHTING);
+	// MR-18: -- END OF -- Fix mobs attacking corpse
 
 	// MR-3: Cancel logout on use skill
 	if (m_pkTimedEvent)
