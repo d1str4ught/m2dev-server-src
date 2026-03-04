@@ -40,11 +40,9 @@ void CGuildMarkImage::Create()
 	memset(m_apxImage, 0, sizeof(m_apxImage));
 }
 
-bool CGuildMarkImage::Save(const char* c_szFileName) 
+bool CGuildMarkImage::Save(const char* c_szFileName)
 {
-	if (stbi_write_tga(c_szFileName, WIDTH, HEIGHT, 4, m_apxImage) == 0)
-		return false;
-	return true;
+	return stbi_write_tga(c_szFileName, WIDTH, HEIGHT, 4, m_apxImage) != 0;
 }
 
 bool CGuildMarkImage::Build(const char * c_szFileName)
@@ -59,7 +57,26 @@ bool CGuildMarkImage::Build(const char * c_szFileName)
 	return true;
 }
 
-bool CGuildMarkImage::Load(const char * c_szFileName) 
+bool LoadSingleMarkFromFile(const char* path, Pixel* outBuf)
+{
+	int w, h, channels;
+	unsigned char* data = stbi_load(path, &w, &h, &channels, 4);
+	if (!data)
+		return false;
+
+	if (w != SGuildMark::WIDTH || h != SGuildMark::HEIGHT)
+	{
+		sys_err("LoadSingleMarkFromFile: '%s' is %dx%d, expected %dx%d", path, w, h, SGuildMark::WIDTH, SGuildMark::HEIGHT);
+		stbi_image_free(data);
+		return false;
+	}
+
+	memcpy(outBuf, data, SGuildMark::SIZE * sizeof(Pixel));
+	stbi_image_free(data);
+	return true;
+}
+
+bool CGuildMarkImage::Load(const char * c_szFileName)
 {
 	int w, h, channels;
 	unsigned char* data = stbi_load(c_szFileName, &w, &h, &channels, 4);
