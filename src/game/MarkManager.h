@@ -65,6 +65,8 @@ class CGuildMarkManager : public singleton<CGuildMarkManager>
 		CGuildMarkImage * __GetImage(DWORD imgIdx);
 		CGuildMarkImage * __GetImagePtr(DWORD idMark);
 
+		bool __LoadDefaultMark(Pixel* outBuf);
+
 		std::map<DWORD, CGuildMarkImage *> m_mapIdx_Image; // index = image index
 		std::map<DWORD, DWORD> m_mapGID_MarkID; // index = guild id
 

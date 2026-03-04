@@ -17,6 +17,7 @@
 #include "log.h"
 #include "questmanager.h"
 #include "MarkManager.h"
+#include "MarkImage.h"
 
 	SGuildMember::SGuildMember(LPCHARACTER ch, BYTE grade, DWORD offer_exp)
 : pid(ch->GetPlayerID()), grade(grade), is_general(0), job(ch->GetJob()), level(ch->GetLevel()), offer_exp(offer_exp), name(ch->GetName())
@@ -116,7 +117,16 @@ CGuild::CGuild(TGuildCreateParameter & cp)
 	RequestAddMember(cp.master, GUILD_LEADER_GRADE);
 
 	// Allocate a mark slot for the new guild
-	CGuildMarkManager::instance().AllocMark(GetID());
+	DWORD markID = CGuildMarkManager::instance().AllocMark(GetID());
+	sys_log(0, "Guild created: guildID=%u allocated markID=%u", GetID(), markID);
+
+	if (markID != CGuildMarkManager::INVALID_MARK_ID)
+	{
+		WORD imgIdx = static_cast<WORD>(markID / CGuildMarkImage::MARK_TOTAL_COUNT);
+		extern void BroadcastGuildMarkUpdate(DWORD dwGuildID, WORD wImgIdx);
+		BroadcastGuildMarkUpdate(GetID(), imgIdx);
+		sys_log(0, "Broadcast mark update for new guild %u imgIdx %u", GetID(), imgIdx);
+	}
 }
 
 void CGuild::Initialize()

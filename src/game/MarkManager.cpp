@@ -70,6 +70,41 @@ bool CGuildMarkManager::LoadMarkIndex()
 
 	LoadMarkImages();
 
+	// Re-apply default mark to any empty slots (handles deleted/rebuilt atlas on restart)
+	Pixel defaultPixels[SGuildMark::SIZE];
+	if (__LoadDefaultMark(defaultPixels))
+	{
+		std::set<DWORD> setModifiedImages;
+
+		for (std::map<DWORD, DWORD>::iterator it = m_mapGID_MarkID.begin(); it != m_mapGID_MarkID.end(); ++it)
+		{
+			DWORD mID = it->second;
+			DWORD imgIdx = mID / CGuildMarkImage::MARK_TOTAL_COUNT;
+			DWORD posMark = mID % CGuildMarkImage::MARK_TOTAL_COUNT;
+
+			CGuildMarkImage* pkImage = __GetImage(imgIdx);
+			if (!pkImage)
+				continue;
+
+			DWORD colMark = posMark % CGuildMarkImage::MARK_COL_COUNT;
+			DWORD rowMark = posMark / CGuildMarkImage::MARK_COL_COUNT;
+
+			SGuildMark kMark;
+			pkImage->GetData(colMark * SGuildMark::WIDTH, rowMark * SGuildMark::HEIGHT,
+				SGuildMark::WIDTH, SGuildMark::HEIGHT, kMark.m_apxBuf);
+
+			if (kMark.IsEmpty())
+			{
+				sys_log(0, "LoadMarkIndex: guild %u slot %u empty, re-applying default mark", it->first, mID);
+				pkImage->SaveMark(posMark, (BYTE*)defaultPixels);
+				setModifiedImages.insert(imgIdx);
+			}
+		}
+
+		for (std::set<DWORD>::iterator it = setModifiedImages.begin(); it != setModifiedImages.end(); ++it)
+			SaveMarkImage(*it);
+	}
+
 	fclose(fp);
 	return true;
 }
@@ -165,7 +200,10 @@ DWORD CGuildMarkManager::GetMarkID(DWORD guildID)
 	std::map<DWORD, DWORD>::iterator it = m_mapGID_MarkID.find(guildID);
 
 	if (it == m_mapGID_MarkID.end())
+	{
+		sys_log(0, "Server GetMarkID: guildID=%u NOT FOUND (map size=%zu)", guildID, m_mapGID_MarkID.size());
 		return INVALID_MARK_ID;
+	}
 
 	return it->second;
 }
@@ -203,8 +241,10 @@ void CGuildMarkManager::CopyMarkIdx(char * pcBuf) const
 {
 	WORD * pwBuf = (WORD *) pcBuf;
 
+	sys_log(0, "CopyMarkIdx: sending %zu entries", m_mapGID_MarkID.size());
 	for (std::map<DWORD, DWORD>::const_iterator it = m_mapGID_MarkID.begin(); it != m_mapGID_MarkID.end(); ++it)
 	{
+		sys_log(0, "CopyMarkIdx: guildID=%u -> markID=%u", it->first, it->second);
 		*(pwBuf++) = it->first; // guild id
 		*(pwBuf++) = it->second; // mark id
 	}
@@ -242,7 +282,28 @@ DWORD CGuildMarkManager::SaveMark(DWORD guildID, BYTE * pbMarkImage)
 	return idMark;
 }
 
-// SERVER - Allocate a mark slot with default (empty) image for a new guild
+bool CGuildMarkManager::__LoadDefaultMark(Pixel* outBuf)
+{
+	static const char* candidates[] = {
+		"mark/default_mark.tga",
+		"mark/default_mark.png",
+		"mark/default_mark.jpg",
+	};
+
+	for (size_t i = 0; i < sizeof(candidates) / sizeof(candidates[0]); ++i)
+	{
+		if (LoadSingleMarkFromFile(candidates[i], outBuf))
+		{
+			sys_log(0, "AllocMark: loaded default mark from '%s'", candidates[i]);
+			return true;
+		}
+	}
+
+	sys_log(0, "AllocMark: no default mark found (tried .tga/.png/.jpg); new guild slot will be transparent");
+	return false;
+}
+
+// SERVER - Allocate a mark slot for a new guild and fill it with the default mark.
 DWORD CGuildMarkManager::AllocMark(DWORD guildID)
 {
 	// Check if guild already has a mark
@@ -260,6 +321,18 @@ DWORD CGuildMarkManager::AllocMark(DWORD guildID)
 	}
 
 	sys_log(0, "AllocMark: allocated mark id %u for guild %u", idMark, guildID);
+
+	DWORD imgIdx = idMark / CGuildMarkImage::MARK_TOTAL_COUNT;
+	CGuildMarkImage* pkImage = __GetImage(imgIdx);
+	if (pkImage)
+	{
+		Pixel defaultPixels[SGuildMark::SIZE];
+		if (__LoadDefaultMark(defaultPixels))
+		{
+			pkImage->SaveMark(idMark % CGuildMarkImage::MARK_TOTAL_COUNT, (BYTE*)defaultPixels);
+			SaveMarkImage(imgIdx);
+		}
+	}
 
 	// Save the index so the mark slot is persisted
 	SaveMarkIndex();
