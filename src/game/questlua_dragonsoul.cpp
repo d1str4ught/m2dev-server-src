@@ -19,9 +19,9 @@ namespace quest
 			return 0;
 		}
 
-		if (ch->DragonSoul_IsQualified())
+		if (!ch->DragonSoul_IsQualified())
 		{
-			sys_err("DS_QUEST_OPEN_REFINE_WINDOW:: ALREADY QUALIFIED");
+			sys_err("DS_QUEST_OPEN_REFINE_WINDOW:: NOT QUALIFIED");
 			return 0;
 		}
 
