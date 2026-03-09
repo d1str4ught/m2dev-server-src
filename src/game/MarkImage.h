@@ -105,4 +105,6 @@ class CGuildMarkImage
 		Pixel m_apxImage[WIDTH * HEIGHT];
 };
 
+bool LoadSingleMarkFromFile(const char* path, Pixel* outBuf);
+
 #endif
