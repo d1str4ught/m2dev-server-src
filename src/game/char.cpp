@@ -1616,10 +1616,7 @@ void CHARACTER::PointsPacket()
 	pack.points[POINT_STAMINA]		= GetStamina();
 	pack.points[POINT_MAX_STAMINA]	= GetMaxStamina();
 
-	for (int i = POINT_ST; i < POINT_IQ + 1; ++i)
-		pack.points[i] = GetRealPoint(i);
-
-	for (int i = POINT_IQ + 1; i < POINT_MAX_NUM; ++i)
+	for (int i = POINT_ST; i < POINT_MAX_NUM; ++i)
 		pack.points[i] = GetPoint(i);
 
 	GetDesc()->Packet(&pack, sizeof(TPacketGCPoints));
