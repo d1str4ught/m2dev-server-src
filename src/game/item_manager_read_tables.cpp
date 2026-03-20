@@ -680,9 +680,7 @@ bool ITEM_MANAGER::ReadMonsterDropItemGroup(const char * c_pszFileName)
 					}
 
 					float fPercent = atof(pTok->at(2).c_str());
-					// MR-10: Drop Item Group Fix for handling drop percent
-					DWORD dwPct = (DWORD)(10000.0f * fPercent * 100.0f);
-					// MR-10: -- END OF -- Drop Item Group Fix for handling drop percent
+					DWORD dwPct = (DWORD)(10000.0f * fPercent);
 
 					sys_log(0, "        name %s pct %d count %d", name.c_str(), dwPct, iCount);
 					pkGroup->AddItem(dwVnum, dwPct, iCount);
@@ -732,9 +730,7 @@ bool ITEM_MANAGER::ReadMonsterDropItemGroup(const char * c_pszFileName)
 					}
 
 					float fPct = atof(pTok->at(2).c_str());
-					// MR-10: Drop Item Group Fix for handling drop percent
-					DWORD dwPct = (DWORD)(10000.0f * fPct * 100.0f);
-					// MR-10: -- END OF -- Drop Item Group Fix for handling drop percent
+					DWORD dwPct = (DWORD)(10000.0f * fPct);
 
 					pkLevelItemGroup->AddItem(dwItemVnum, dwPct, iCount);
 
@@ -785,9 +781,7 @@ bool ITEM_MANAGER::ReadMonsterDropItemGroup(const char * c_pszFileName)
 					}
 
 					float fPercent = atof(pTok->at(2).c_str());
-					// MR-10: Drop Item Group Fix for handling drop percent
-					DWORD dwPct = (DWORD)(10000.0f * fPercent * 100.0f);
-					// MR-10: -- END OF -- Drop Item Group Fix for handling drop percent
+					DWORD dwPct = (DWORD)(10000.0f * fPercent);
 
 					sys_log(0, "        name %s pct %d count %d", name.c_str(), dwPct, iCount);
 					pkGroup->AddItem(dwVnum, dwPct, iCount);
