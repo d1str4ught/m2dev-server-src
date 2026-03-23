@@ -1,4 +1,5 @@
 ﻿#include "stdafx.h"
+#include <sodium.h>
 #include "Config.h"
 #include "Peer.h"
 #include "DBManager.h"
@@ -59,6 +60,12 @@ void emergency_sig(int sig)
 int main()
 {
 	log_init();
+
+	if (sodium_init() < 0)
+	{
+		fprintf(stderr, "Could not initialize libsodium\n");
+		return 1;
+	}
 
 	WriteVersion();
 

@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <sodium.h>
 #include "constants.h"
 #include "config.h"
 #include "event.h"
@@ -515,6 +516,12 @@ int start(int argc, char **argv)
 	// LOCALE_SERVICE
 	config_init(st_localeServiceName);
 	// END_OF_LOCALE_SERVICE
+
+	if (sodium_init() < 0)
+	{
+		fprintf(stderr, "Could not initialize libsodium\n");
+		exit(0);
+	}
 
 #ifdef OS_WINDOWS
 	// In Windows dev mode, "verbose" option is [on] by default.

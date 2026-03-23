@@ -47,7 +47,7 @@ typedef struct SAccountTable
 {
 	uint32_t		id;
 	char		login[LOGIN_MAX_LEN + 1];
-	char		passwd[PASSWD_MAX_LEN + 1];
+	char		passwd[HASH_MAX_LEN + 1];
 	char		social_id[SOCIAL_ID_MAX_LEN + 1];
 	char		status[ACCOUNT_STATUS_MAX_LEN + 1];
 	uint8_t		bEmpire;
