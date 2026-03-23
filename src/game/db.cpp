@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <sodium.h>
 #include <sstream>
 #include "common/length.h"
 
@@ -265,9 +266,8 @@ void DBManager::AnalyzeReturnQuery(SQLMsg * pMsg)
 					MYSQL_ROW row = mysql_fetch_row(pMsg->Get()->pSQLResult);
 					int col = 0;
 
-					// PASSWORD('%s'), password, securitycode, social_id, id, status
-					char szEncrytPassword[45 + 1];
-					char szPassword[45 + 1];
+					// password, social_id, id, status
+					char szPassword[crypto_pwhash_STRBYTES];
 					char szSocialID[SOCIAL_ID_MAX_LEN + 1];
 					char szStatus[ACCOUNT_STATUS_MAX_LEN + 1];
 					DWORD dwID = 0;
@@ -279,15 +279,6 @@ void DBManager::AnalyzeReturnQuery(SQLMsg * pMsg)
 					   	break; 
 					}
 					
-					strlcpy(szEncrytPassword, row[col++], sizeof(szEncrytPassword));
-
-					if (!row[col]) 
-					{
-					   	sys_err("error column %d", col);
-						M2_DELETE(pinfo);
-					   	break;
-				   	}
-				
 					strlcpy(szPassword, row[col++], sizeof(szPassword));
 
 					if (!row[col])
@@ -360,7 +351,10 @@ void DBManager::AnalyzeReturnQuery(SQLMsg * pMsg)
 						}
 					}
 
-					int nPasswordDiff = strcmp(szEncrytPassword, szPassword);
+					int nPasswordDiff = crypto_pwhash_str_verify(szPassword, pinfo->passwd, strlen(pinfo->passwd));
+
+					// Wipe clear text password immediately
+					sodium_memzero(pinfo->passwd, sizeof(pinfo->passwd));
 
 					if (nPasswordDiff)
 					{
@@ -409,7 +403,7 @@ void DBManager::AnalyzeReturnQuery(SQLMsg * pMsg)
 
 						r.id = dwID;
 						trim_and_lower(pinfo->login, r.login, sizeof(r.login));
-						strlcpy(r.passwd, pinfo->passwd, sizeof(r.passwd));
+						strlcpy(r.passwd, "TEMP", sizeof(r.passwd));
 						strlcpy(r.social_id, szSocialID, sizeof(r.social_id));
 						DESC_MANAGER::instance().ConnectAccount(r.login, d);
 						ClearLoginFailure(d->GetHostName());

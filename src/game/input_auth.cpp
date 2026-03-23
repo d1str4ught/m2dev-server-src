@@ -236,9 +236,6 @@ void CInputAuth::Login(LPDESC d, const char * c_pData)
 	TPacketCGLogin3 * p = M2_NEW TPacketCGLogin3;
 	thecore_memcpy(p, pinfo, sizeof(TPacketCGLogin3));
 
-	char szPasswd[PASSWD_MAX_LEN * 2 + 1];
-	DBManager::instance().EscapeString(szPasswd, sizeof(szPasswd), passwd, strlen(passwd));
-
 	char szLogin[LOGIN_MAX_LEN * 2 + 1];
 	DBManager::instance().EscapeString(szLogin, sizeof(szLogin), login, strlen(login));
 
@@ -248,7 +245,7 @@ void CInputAuth::Login(LPDESC d, const char * c_pData)
 		sys_log(0, "ChannelServiceLogin [%s]", szLogin);
 
 		DBManager::instance().ReturnQuery(QID_AUTH_LOGIN, dwKey, p,
-				"SELECT '%s',password,social_id,id,status,availDt - NOW() > 0,"
+				"SELECT password,social_id,id,status,availDt - NOW() > 0,"
 				"UNIX_TIMESTAMP(silver_expire),"
 				"UNIX_TIMESTAMP(gold_expire),"
 				"UNIX_TIMESTAMP(safebox_expire),"
@@ -259,13 +256,13 @@ void CInputAuth::Login(LPDESC d, const char * c_pData)
 				"UNIX_TIMESTAMP(create_time)"
 				" FROM account WHERE login='%s'",
 
-				szPasswd, szLogin);
+				szLogin);
 	}
 	// END_OF_CHANNEL_SERVICE_LOGIN
 	else
 	{
 		DBManager::instance().ReturnQuery(QID_AUTH_LOGIN, dwKey, p, 
-				"SELECT PASSWORD('%s'),password,social_id,id,status,availDt - NOW() > 0,"
+				"SELECT password,social_id,id,status,availDt - NOW() > 0,"
 				"UNIX_TIMESTAMP(silver_expire),"
 				"UNIX_TIMESTAMP(gold_expire),"
 				"UNIX_TIMESTAMP(safebox_expire),"
@@ -275,7 +272,7 @@ void CInputAuth::Login(LPDESC d, const char * c_pData)
 				"UNIX_TIMESTAMP(money_drop_rate_expire),"
 				"UNIX_TIMESTAMP(create_time)"
 				" FROM account WHERE login='%s'",
-				szPasswd, szLogin);
+				szLogin);
 	}
 }
 

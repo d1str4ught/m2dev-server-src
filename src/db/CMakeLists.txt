@@ -13,6 +13,7 @@ target_link_libraries(db
 
 	# external
 	mariadbclient
+	sodium
 )
 
 if (WIN32)
